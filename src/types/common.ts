@@ -1,3 +1,11 @@
+import { ReactNode } from 'react';
+
 export interface IconProps {
-    classNames?:string;
+  classNames?: string;
+}
+
+export interface SidebarNavItemProps {
+  name: string;
+  icon: ReactNode;
+  href: string;
 }
