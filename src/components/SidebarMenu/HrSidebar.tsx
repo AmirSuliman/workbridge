@@ -36,7 +36,7 @@ const HrSidebar = () => {
         <SidebarNavItem
           name="Home"
           icon={<HiHome size={22} />}
-          href="/HR/Home"
+          href="/hr/home"
         />
         <SidebarNavItem
           name="My Information"

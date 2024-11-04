@@ -1,11 +1,14 @@
+import Image from 'next/image';
 import { FaAngleDown } from 'react-icons/fa';
 
 const UserProfileInfo = () => {
   return (
-    <button className="flex flex-nowrap gap-4 justify-end items-center">
-      <img
+    <button className="flex flex-nowrap gap-4 justify-end items-center mr-0">
+      <Image
         src="https://i.pravatar.cc/150?img=12"
         alt="user avatar"
+        height={2000}
+        width={2000}
         className="size-12 rounded-full"
       />
       <div>

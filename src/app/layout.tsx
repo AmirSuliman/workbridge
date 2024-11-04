@@ -13,11 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-      // className={`${geistSans.variable} ${geistMono.variable} antialiased h-[100vh]`}
-      >
-        {children}
-      </body>
+      <body className={`antialiased h-[100vh]`}>{children}</body>
     </html>
   );
 }
