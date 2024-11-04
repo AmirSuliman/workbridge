@@ -5,5 +5,5 @@ type LayoutProps = {
 };
 
 export default function DefaultLayout({ children }: LayoutProps) {
-  return <HRLayout children={children} />;
+  return <HRLayout>{children}</HRLayout>;
 }

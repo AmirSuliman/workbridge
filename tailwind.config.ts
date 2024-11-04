@@ -13,6 +13,16 @@ const config: Config = {
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
+        'dark-gray': '#282828',
+        'light-gray': '#D9D9D9',
+        'super-light-gray': '#0000009E',
+        'txt-dark-gray': '#000000CC',
+        'blue-base': '#007BB2',
+        'dark-navy': '#0F172A',
+        'gray-border': '#E8E8E8',
+      },
+      boxShadow: {
+        'custom-deep': '0px 4px 77px 0px rgba(0, 0, 0, 0.12)',
       },
     },
   },
