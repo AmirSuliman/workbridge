@@ -10,7 +10,9 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   href,
 }) => {
   const pathname = usePathname();
-  const isActive = pathname === href;
+
+  // Check if the pathname starts with the href to include sub-paths
+  const isActive = pathname.startsWith(href);
 
   return (
     <Link

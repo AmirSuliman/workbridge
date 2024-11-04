@@ -41,23 +41,27 @@ const HrSidebar = () => {
         <SidebarNavItem
           name="My Information"
           icon={<FaUserCircle size={22} />}
-          href=""
+          href="/HR/MyInfo"
         />
-        <SidebarNavItem name="Employees" icon={<HiUsers size={22} />} href="" />
+        <SidebarNavItem
+          name="Employees"
+          icon={<HiUsers size={22} />}
+          href="/HR/Employees"
+        />
         <SidebarNavItem
           name="Hiring"
           icon={<PiHandshakeFill size={22} />}
-          href=""
+          href="/HR/Hiring"
         />
         <SidebarNavItem
           name="Leave Requests"
           icon={<IoCalendarOutline size={22} />}
-          href=""
+          href="/HR/Leave-Requests"
         />
         <SidebarNavItem
           name="Files"
           icon={<IoIosFolderOpen size={22} />}
-          href=""
+          href="/HR/Files"
         />
       </nav>
     </>

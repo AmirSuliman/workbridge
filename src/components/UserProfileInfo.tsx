@@ -2,7 +2,7 @@ import { FaAngleDown } from 'react-icons/fa';
 
 const UserProfileInfo = () => {
   return (
-    <button className="flex flex-nowrap gap-4 justify-end items-center ml-auto mr-0">
+    <button className="flex flex-nowrap gap-4 justify-end items-center">
       <img
         src="https://i.pravatar.cc/150?img=12"
         alt="user avatar"
