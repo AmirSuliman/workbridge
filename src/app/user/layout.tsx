@@ -1,7 +1,7 @@
 import SideNavigation from '@/src/components/common/SideNavigation';
 import HomeIcon from '@/src/components/icons/home-icon';
 import UserIcon from '@/src/components/icons/user-icon';
-import EmployeesIcon from '../../../../../../../Documents/GitHub/workbridge-frontend/components/icons/employees-icon';
+import EmployeesIcon from '@/src/components/icons/employees-icon';
 import FileIcon from '@/src/components/icons/file-icon';
 
 const navItems = [
@@ -34,7 +34,7 @@ export default function DashboardLayout({
   return (
     <section className="flex h-screen w-full">
       <SideNavigation items={navItems}></SideNavigation>
-      <div className="flex flex-col flex-1 bg-gray-300">
+      <div className="flex flex-col flex-1">
         <header className="h-14 bg-white border-0 border-b-[1px] border-gray-border">
           {/* Header */}
         </header>
