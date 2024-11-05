@@ -1,8 +1,9 @@
+import MyInformation from '@/src/views/MyInformation/MyInformation'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>My Information</div>
+    <MyInformation />
   )
 }
 

@@ -1,4 +1,3 @@
-import { PiUmbrellaLight } from 'react-icons/pi';
 import IconWithBg from '../SingleAnnouncement/IconWithBg';
 import DaysCard from './DaysCard';
 import Button from '../Button';
@@ -12,11 +11,11 @@ const LeaveAndVacationCard = ({
   daysNum,
   name,
 }: {
-  title: String;
-  bgColor: String;
+  title: string;
+  bgColor: string;
   icon: React.ReactNode;
-  description: String;
-  daysNum: String;
+  description: string;
+  daysNum: string;
   name: string;
 }) => {
   return (

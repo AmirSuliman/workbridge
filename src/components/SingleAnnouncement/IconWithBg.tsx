@@ -4,7 +4,7 @@ const IconWithBg = ({
   bgColor,
   icon,
 }: {
-  bgColor: String;
+  bgColor: string;
   icon: React.ReactNode;
 }) => {
   return (
