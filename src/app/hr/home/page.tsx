@@ -1,7 +1,6 @@
 'use client';
 
 import Button from '@/src/components/Button';
-import LeaveAndVacationCard from '@/src/components/LeaveAndVacationCard/LeaveAndVacationCard';
 import SingleAnnouncement from '@/src/components/SingleAnnouncement/SingleAnnouncement';
 import WhosOut from '@/src/components/WhosOut/WhosOut';
 import Link from 'next/link';
