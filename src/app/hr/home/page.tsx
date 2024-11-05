@@ -1,6 +1,8 @@
 'use client';
 
 import Button from '@/src/components/Button';
+import Celebrations from '@/src/components/Celebrations/Celebrations';
+import LeaveRequests from '@/src/components/LeaveRequests/LeaveRequests';
 import SingleAnnouncement from '@/src/components/SingleAnnouncement/SingleAnnouncement';
 import WhosOut from '@/src/components/WhosOut/WhosOut';
 import Link from 'next/link';
@@ -60,6 +62,8 @@ const page = () => {
           description="Work from home policy update - Check your emails!"
         />
       </section>
+      <Celebrations />
+      <LeaveRequests />
     </main>
   );
 };
