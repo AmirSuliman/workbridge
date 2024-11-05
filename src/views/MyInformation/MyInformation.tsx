@@ -2,8 +2,9 @@ import ProfileCard from '@/src/components/common/ProfileCard'
 import Tab from '@/src/components/common/TabsComponent/Tab'
 import TabPanel from '@/src/components/common/TabsComponent/TabPanel'
 import TabsContainer from '@/src/components/common/TabsComponent/TabsContainer'
+import UserInfoSection from '@/src/components/UserInformation/UserInfoSection'
 import { Inter } from 'next/font/google'
-import React from 'react'
+import React, { useMemo } from 'react'
 
 const inter = Inter({
     subsets: ['latin'],
@@ -12,6 +13,7 @@ const inter = Inter({
     display: 'swap'
 })
 const MyInformation = () => {
+    const UserInfoSectionMemo = useMemo(() => <UserInfoSection />, []);
     return (
         <section className={`p-4 h-full ${inter.className}`}>
             <ProfileCard />
@@ -25,12 +27,11 @@ const MyInformation = () => {
                     <Tab index={5} tabStyles='text-xs px-[3%] py-3 text-dark-navy  ' activeTabStyle='font-semibold border-b-2 !border-dark-navy'>Notes</Tab>
                 </div>
                 <div>
-                    <TabPanel index={0}><p>User Information</p></TabPanel>
+                    <TabPanel index={0}>{UserInfoSectionMemo}</TabPanel>
                     <TabPanel index={1}><p>Change Password</p></TabPanel>
 
                 </div>
             </TabsContainer>
-
 
         </section>
     )
