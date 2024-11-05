@@ -9,7 +9,7 @@ const LeaveRequests = () => {
       <header className="px-4 flex items-center gap-4 justify-between">
         <h1 className="flex items-center gap-4 font-semibold text-xl mb-4">
           <IoCalendarOutline />
-          Announcements
+          Leave Requests
         </h1>
         <Link href="/HR/Home/All-Announcements">
           <Button
