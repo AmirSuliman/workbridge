@@ -6,20 +6,20 @@ import FormField from './FormField';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { HiMiniGlobeAmericas, HiMiniHomeModern } from 'react-icons/hi2';
 
-const UserInfoSection: React.FC = () => {
+const EmergencySection: React.FC = () => {
     console.log("rendered")
 
     return (<div className='p-4 rounded-md border-[1px] border-gray-border bg-white h-full'>
         {/* Basic Information */}
         <div className='my-5'>
-            <FormHeading icon={<BasicInfoIcon classNames='w-4' />} text='Basic Information' />
+            <FormHeading icon={<BasicInfoIcon classNames='w-4' />} text='Emergency Contact' />
             <div className="grid sm:grid-cols-3 gap-4 my-5">
                 <FormField onChange={() => { }} label='First Name' value='Juliet' />
                 <FormField onChange={() => { }} label='Middle Name' value='' />
                 <FormField onChange={() => { }} label='Surname' value='Nicolas' />
-                <FormField onChange={() => { }} label='Birthday' value='' />
-                <FormField onChange={() => { }} label='Gender' value='' />
-                <FormField onChange={() => { }} label='Marital Status' value='' />
+                <FormField onChange={() => { }} label='Phone' value='+123 456 78 90' />
+                <FormField onChange={() => { }} label='Work Phone' value='+123 456 78 90' />
+                <FormField onChange={() => { }} label='Email' value='emailaddress@gmail.com' />
             </div>
         </div>
         <hr className='text-white' />
@@ -36,29 +36,11 @@ const UserInfoSection: React.FC = () => {
                 <FormField onChange={() => { }} label=' State' value='Utah' />
             </div>
         </div>
-        <hr />
-        <div className='my-5'>
-            <FormHeading icon={<FaPhoneAlt className='w-4' />} text='Contact' />
-            <div className="grid sm:grid-cols-3 gap-4 mt-5">
-                <FormField onChange={() => { }} label='Phone' value='+389 71 735 326' />
-                <FormField onChange={() => { }} label='Work Phone' value='+389 71 735 326' />
-            </div>
-        </div>
-        <hr />
-        <div className='my-5'>
-
-            <FormHeading icon={<HiMiniGlobeAmericas className='w-4' />} text='Social Links' />
-            <div className="grid sm:grid-cols-3 gap-4 mt-5">
-                <FormField onChange={() => { }} label='LinkedIn' value='/in/JuliettNicolas' />
-                <FormField onChange={() => { }} label='Facebook' value='Juilett Nicolas' />
-                <FormField onChange={() => { }} label='Instagram' value='@juliettnicolas' />
-                <FormField onChange={() => { }} label='Personal Website' value='juliettnicolas.com' />
-            </div>
-        </div>
+       
 
 
 
     </div>)
 
 };
-export default UserInfoSection;
+export default EmergencySection;
