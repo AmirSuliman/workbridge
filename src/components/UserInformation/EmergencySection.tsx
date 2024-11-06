@@ -3,8 +3,7 @@ import React from 'react';
 import BasicInfoIcon from '../icons/basic-info-icon';
 import FormHeading from './FormHeading';
 import FormField from './FormField';
-import { FaPhoneAlt } from 'react-icons/fa';
-import { HiMiniGlobeAmericas, HiMiniHomeModern } from 'react-icons/hi2';
+import {  HiMiniHomeModern } from 'react-icons/hi2';
 
 const EmergencySection: React.FC = () => {
     console.log("rendered")

@@ -1,7 +1,5 @@
 import React from 'react'
 import FormHeading from './FormHeading'
-import { HiMiniBriefcase } from 'react-icons/hi2'
-import FormField from './FormField'
 import InfoGrid from './InfoGrid'
 import { FaEdit, FaTrash } from 'react-icons/fa'
 import { MdStickyNote2 } from 'react-icons/md'
