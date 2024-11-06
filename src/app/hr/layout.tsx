@@ -1,4 +1,4 @@
-import HRLayout from '@/src/Layouts/HRLayout';
+import HRLayout from '@//Layouts/HRLayout';
 
 type LayoutProps = {
   children: React.ReactNode;

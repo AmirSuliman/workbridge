@@ -1,3 +1,5 @@
+import UserCelebrationInfo from './UserCelebrationInfo';
+
 const Celebrations = () => {
   return (
     <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4">
@@ -16,9 +18,14 @@ const Celebrations = () => {
         </svg>
         Leave Requests
       </h1>
-      <main className="divide-y-[1px] divide-[#E8E8E8]">
-        <Celebrations />
-      </main>
+      <div className="divide-y-[1px] divide-[#E8E8E8] space-y-4">
+        <UserCelebrationInfo />
+        <UserCelebrationInfo />
+        <UserCelebrationInfo />
+        <UserCelebrationInfo />
+        <UserCelebrationInfo />
+        <UserCelebrationInfo />
+      </div>
     </section>
   );
 };

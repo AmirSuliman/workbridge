@@ -1,10 +1,12 @@
 'use client';
 
-import Button from '@/src/components/Button';
-import Celebrations from '@/src/components/Celebrations/Celebrations';
-import LeaveRequests from '@/src/components/LeaveRequests/LeaveRequests';
-import SingleAnnouncement from '@/src/components/SingleAnnouncement/SingleAnnouncement';
-import WhosOut from '@/src/components/WhosOut/WhosOut';
+import Button from '@//components/Button';
+import Celebrations from '@//components/Celebrations/Celebrations';
+import LeaveRequests from '@//components/LeaveRequests/LeaveRequests';
+import NewEmployees from '@//components/NewEmployees/NewEmployees';
+import SingleAnnouncement from '@//components/SingleAnnouncement/SingleAnnouncement';
+import Training from '@//components/Training/Training';
+import WhosOut from '@//components/WhosOut/WhosOut';
 import Link from 'next/link';
 import { GiFlowerEmblem } from 'react-icons/gi';
 import { HiSpeakerphone } from 'react-icons/hi';
@@ -64,6 +66,8 @@ const page = () => {
       </section>
       <Celebrations />
       <LeaveRequests />
+      <Training />
+      <NewEmployees />
     </main>
   );
 };
