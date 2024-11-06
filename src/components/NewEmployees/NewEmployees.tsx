@@ -1,3 +1,5 @@
+import NewEmployeeInfo from './NewEmployeeInfo';
+
 const NewEmployees = () => {
   return (
     <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4 space-y-4">
@@ -28,6 +30,29 @@ const NewEmployees = () => {
         </svg>
         New Employees
       </h1>
+      <main className="divide-y-[1px] divide-[#E8E8E8] space-y-4">
+        <NewEmployeeInfo
+          name="Jaiden Padilla"
+          title="Senior Software Engineer in Product Development"
+          location="Florida, USA"
+          startDate="Wednesday, December 25"
+        />
+        <NewEmployeeInfo
+          name="Jaiden Padilla"
+          img="https://i.pravatar.cc/150?img=14"
+          title="Senior Software Engineer in Product Development"
+          location="Florida, USA"
+          startDate="Wednesday, December 25"
+        />
+
+        <NewEmployeeInfo
+          name="Jaiden Padilla"
+          title="Senior Software Engineer in Product Development"
+          img="https://i.pravatar.cc/150?img=12"
+          location="Florida, USA"
+          startDate="Wednesday, December 25"
+        />
+      </main>
     </section>
   );
 };

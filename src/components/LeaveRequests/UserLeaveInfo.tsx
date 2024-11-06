@@ -11,15 +11,15 @@ const UserLeaveInfo = ({
   leaveDay,
   retruningDay,
 }: {
-  emplyeeName: String;
-  leaveDay: String;
-  retruningDay: String;
+  emplyeeName: string;
+  leaveDay: string;
+  retruningDay: string;
 }) => {
   return (
     <tbody className="py-4">
       <tr className="[&_td:p-1] pt-4">
         <td className="p-1 pt-4">
-          <UserImgPlaceholder />
+          <UserImgPlaceholder name={emplyeeName} />
         </td>
         <td className="p-1 pt-4">
           <p className="text-base capitalize whitespace-nowrap">

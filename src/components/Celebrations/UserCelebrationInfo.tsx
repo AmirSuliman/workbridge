@@ -5,7 +5,7 @@ import UserImgPlaceholder from '../LeaveRequests/UserImgPlaceholder';
 const UserCelebrationInfo = () => {
   return (
     <article className="flex gap-4 pt-4 items-center w-full">
-      <UserImgPlaceholder />
+      <UserImgPlaceholder name="Aaron Eaglewood" />
       <div>
         <h6 className="text-base">Aaron Eaglewood</h6>
         <p className="font-medium text-xs opacity-50">
