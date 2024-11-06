@@ -5,11 +5,13 @@ const Button = ({
   icon,
   bg,
   textColor,
+  classNames
 }: {
   name: string;
   icon: React.ReactNode;
-  bg: string;
-  textColor: string;
+  bg?: string;
+  textColor?: string;
+  classNames?: string;
 }) => {
   return (
     <button
@@ -17,7 +19,7 @@ const Button = ({
         background: `${bg}`,
         color: `${textColor}`,
       }}
-      className="px-4 py-2 bg-black text-white rounded flex gap-2 items-center justify-center text-sm border-[1px] border-[#E8E8E8] whitespace-normal md:whitespace-nowrap"
+      className={` ${classNames} px-4 py-2 bg-black text-white rounded flex gap-2 items-center justify-center text-sm border-[1px] border-[#E8E8E8] whitespace-normal md:whitespace-nowrap`}
     >
       {name}
       {icon}
