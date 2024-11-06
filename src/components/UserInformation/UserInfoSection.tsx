@@ -13,7 +13,7 @@ const UserInfoSection: React.FC = () => {
         {/* Basic Information */}
         <div className='my-5'>
             <FormHeading icon={<BasicInfoIcon classNames='w-4' />} text='Basic Information' />
-            <div className="grid grid-cols-3 gap-4 my-5">
+            <div className="grid sm:grid-cols-3 gap-4 my-5">
                 <FormField onChange={() => { }} label='First Name' value='Juliet' />
                 <FormField onChange={() => { }} label='Middle Name' value='' />
                 <FormField onChange={() => { }} label='Surname' value='Nicolas' />
@@ -27,7 +27,7 @@ const UserInfoSection: React.FC = () => {
 
 
             <FormHeading icon={<HiMiniHomeModern className='w-4' />} text='Address' />
-            <div className="grid grid-cols-3 gap-4 mt-5">
+            <div className="grid sm:grid-cols-3 gap-4 mt-5">
                 <FormField onChange={() => { }} label='Street 1' value='4799 Lamberts Branch Road' />
                 <FormField onChange={() => { }} label='Street 2' value='' />
                 <FormField onChange={() => { }} label='Zip' value='84116' />
@@ -39,7 +39,7 @@ const UserInfoSection: React.FC = () => {
         <hr />
         <div className='my-5'>
             <FormHeading icon={<FaPhoneAlt className='w-4' />} text='Contact' />
-            <div className="grid grid-cols-3 gap-4 mt-5">
+            <div className="grid sm:grid-cols-3 gap-4 mt-5">
                 <FormField onChange={() => { }} label='Phone' value='+389 71 735 326' />
                 <FormField onChange={() => { }} label='Work Phone' value='+389 71 735 326' />
             </div>
@@ -48,7 +48,7 @@ const UserInfoSection: React.FC = () => {
         <div className='my-5'>
 
             <FormHeading icon={<HiMiniGlobeAmericas className='w-4' />} text='Social Links' />
-            <div className="grid grid-cols-3 gap-4 mt-5">
+            <div className="grid sm:grid-cols-3 gap-4 mt-5">
                 <FormField onChange={() => { }} label='LinkedIn' value='/in/JuliettNicolas' />
                 <FormField onChange={() => { }} label='Facebook' value='Juilett Nicolas' />
                 <FormField onChange={() => { }} label='Instagram' value='@juliettnicolas' />
