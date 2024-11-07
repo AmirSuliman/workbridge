@@ -41,7 +41,7 @@ const HrSidebar = () => {
         <SidebarNavItem
           name="My Information"
           icon={<FaUserCircle size={22} />}
-          href="/HR/MyInfo"
+          href="/hr/my-information"
         />
         <SidebarNavItem
           name="Employees"
