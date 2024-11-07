@@ -19,7 +19,7 @@ const DocumentSection = () => {
             "",
             "",
             "",
-            <FaTrash className='text-dark-navy w-5' />
+            <FaTrash key={1} className='text-dark-navy w-5' />
         ],
         [
             SelectableCell("ABasdh22mvasd23a.pdf"),
@@ -29,7 +29,7 @@ const DocumentSection = () => {
             "",
             "",
             "",
-            <FaTrash className='text-dark-navy w-5' />
+            <FaTrash key={2} className='text-dark-navy w-5' />
         ],
         [
             SelectableCell("ABasdh22mvasd23a.pdf"),
@@ -39,7 +39,7 @@ const DocumentSection = () => {
             "",
             "",
             "",
-            <FaTrash className='text-dark-navy w-5' />
+            <FaTrash key={2} className='text-dark-navy w-5' />
         ]
     ];
     return (

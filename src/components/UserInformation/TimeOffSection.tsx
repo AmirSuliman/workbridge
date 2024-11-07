@@ -3,7 +3,6 @@ import UmbrellaIcon from '../icons/umbrella-icon'
 import VacationsCard from './VacationsCard'
 import InfoGrid from './InfoGrid'
 import FormHeading from './FormHeading'
-import { LuAlarmClockOff } from 'react-icons/lu'
 import ClockRotateIcon from '../icons/clock-rotate-icon'
 import SickPersonIcon from '../icons/sick-person-icon'
 import LabelWithIcon from '../common/LabelWithIcon'
@@ -13,45 +12,48 @@ const TimeOffSection = () => {
     const values = [
         [
             <LabelWithIcon
+                key={4}
                 icon={<UmbrellaIcon classNames="w-4 text-white" />}
                 title="Vacation"
                 iconStyles="bg-[#00B87D]"
             />,
             "28 August",
             "31 August",
-            <span className="text-[#25A244] font-[500]">Approved</span>,
+            <span key={7} className="text-[#25A244] font-[500]">Approved</span>,
             "",
             "",
             "",
-            <FaEdit className='text-dark-navy w-5' />
+            <FaEdit key={0} className='text-dark-navy w-5' />
         ],
         [
             <LabelWithIcon
                 icon={<SickPersonIcon classNames="w-4 text-white" />}
                 title="Sick Leave"
                 iconStyles="bg-[#F53649]"
+                key={5}
             />,
             "4 September",
             "5 September",
-            <span>Waiting for Approval</span>,
+            <span key={8} >Waiting for Approval</span>,
             "",
             "",
             "",
-            <FaEdit className='text-dark-navy w-5' />
+            <FaEdit key={1} className='text-dark-navy w-5' />
         ],
         [
             <LabelWithIcon
+                key={6}
                 icon={<UmbrellaIcon classNames="w-4 text-white" />}
                 title="Vacation"
                 iconStyles="bg-[#00B87D]"
             />,
             "28 August",
             "31 August",
-            <span>Waiting For Approval</span>,
+            <span key={9} >Waiting For Approval</span>,
             "",
             "",
             "",
-            <FaEdit className='text-dark-navy w-5' />
+            <FaEdit key={2} className='text-dark-navy w-5' />
         ]
     ];
 
