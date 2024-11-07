@@ -38,16 +38,16 @@ const InfoGrid: React.FC<InfoGridProps> = ({ headers, values, cols = 8, colSpans
                     {row.map((value, colIndex) => {
                         const span = colSpans[colIndex] || 1; // Use colSpans from prop or 1 by default
                         return (
-                            <p key={`${rowIndex}-${colIndex}`} className={classNames('text-xs text-dark-navy ', `col-span-${span}`)}>
+                            <div key={`${rowIndex}-${colIndex}`} className={classNames('text-xs text-dark-navy my-1.5 ', `col-span-${span}`)}>
                                 {value}
-                            </p>
+                            </div>
                         );
                     })}
 
                     {/* Fill empty columns if the row has fewer than 8 items */}
                     {row.length < 8 &&
                         Array.from({ length: 8 - row.length }).map((_, idx) => (
-                            <p key={`empty-row-${rowIndex}-${idx}`} />
+                            <div key={`empty-row-${rowIndex}-${idx}`} />
                         ))}
                 </React.Fragment>
             ))}
