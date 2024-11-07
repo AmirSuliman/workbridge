@@ -2,6 +2,7 @@
 
 import Button from '@//components/Button';
 import Celebrations from '@//components/Celebrations/Celebrations';
+import Companyinfo from '@//components/companyinformation/companyinformaion';
 import LeaveRequests from '@//components/LeaveRequests/LeaveRequests';
 import NewEmployees from '@//components/NewEmployees/NewEmployees';
 import SingleAnnouncement from '@//components/SingleAnnouncement/SingleAnnouncement';
@@ -68,6 +69,7 @@ const page = () => {
       <LeaveRequests />
       <Training />
       <NewEmployees />
+      <Companyinfo/>
     </main>
   );
 };
