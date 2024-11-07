@@ -1,5 +1,5 @@
-import Button from '@/src/components/Button';
-import SingleAnnouncement from '@/src/components/SingleAnnouncement/SingleAnnouncement';
+import Button from '../../../../components/Button';
+import SingleAnnouncement from '../../../../components/SingleAnnouncement/SingleAnnouncement';
 import { GiFlowerEmblem } from 'react-icons/gi';
 import { HiSpeakerphone } from 'react-icons/hi';
 import { IoCalendarOutline } from 'react-icons/io5';
