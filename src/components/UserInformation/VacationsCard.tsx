@@ -21,10 +21,10 @@ const VacationsCard: React.FC<ProfileCardProps> = ({
 }) => {
     return (
         <div className="flex items-center justify-between border border-gray-border rounded-[10px] bg-white p-6 gap-[3.3rem] max-w-[38rem] flex-1">
-            <div className="flex flex-col justify-between gap-[2rem]">
+            <div className="flex flex-col justify-between gap-[2rem] h-full">
                 <div>
-                    <div className="flex gap-2 items-center mb-2">
-                        <div className={`flex items-center justify-center rounded-full p-1  ${iconStyles}`}>
+                    <div className="flex gap-2 items-center mb-2 ">
+                        <div className={`flex items-center justify-center rounded-full p-1 ${iconStyles}`}>
                             {icon}
                         </div>
                         <h3 className="text-dark-navy font-[500] text-sm">{title}</h3>
