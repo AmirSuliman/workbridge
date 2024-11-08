@@ -2,9 +2,11 @@ import ProfileCard from '@/src/components/common/ProfileCard'
 import Tab from '@/src/components/common/TabsComponent/Tab'
 import TabPanel from '@/src/components/common/TabsComponent/TabPanel'
 import TabsContainer from '@/src/components/common/TabsComponent/TabsContainer'
+import DocumentSection from '@/src/components/UserInformation/DocumentSection'
 import EmergencySection from '@/src/components/UserInformation/EmergencySection'
 import EmploymentSection from '@/src/components/UserInformation/EmploymentSection'
 import NotesSection from '@/src/components/UserInformation/NotesSection'
+import TimeOffSection from '@/src/components/UserInformation/TimeOffSection'
 import UserInfoSection from '@/src/components/UserInformation/UserInfoSection'
 import { Inter } from 'next/font/google'
 import React, { useMemo } from 'react'
@@ -32,8 +34,10 @@ const MyInformation = () => {
                 <div>
                     <TabPanel index={0}>{UserInfoSectionMemo}</TabPanel>
                     <TabPanel index={1}><EmploymentSection /></TabPanel>
+                    <TabPanel index={2}><TimeOffSection /></TabPanel>
+                    <TabPanel index={3}><DocumentSection /></TabPanel>
                     <TabPanel index={4}><EmergencySection /></TabPanel>
-                    <TabPanel index={5}><NotesSection/></TabPanel>
+                    <TabPanel index={5}><NotesSection /></TabPanel>
                 </div>
             </TabsContainer>
 
