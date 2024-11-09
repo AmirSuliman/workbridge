@@ -1,5 +1,5 @@
 import React from 'react';
-import HrHeader from '../components/HrHeader/HrHeader';
+import HrHeader from '../components/Headers/HrHeader';
 import HrSidebar from '../components/SidebarMenu/HrSidebar';
 
 const HRLayout = ({ children }: { children: React.ReactNode }) => {
