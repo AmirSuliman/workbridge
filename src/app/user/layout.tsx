@@ -3,8 +3,6 @@ import HomeIcon from '@/src/components/icons/home-icon';
 import UserIcon from '@/src/components/icons/user-icon';
 import EmployeesIcon from '@/src/components/icons/employees-icon';
 import FileIcon from '@/src/components/icons/file-icon';
-import UserProfileInfo from '@/src/components/UserProfileInfo';
-import { GoBell } from 'react-icons/go';
 import UserHeader from '@/src/components/Headers/UserHeader';
 
 const navItems = [
