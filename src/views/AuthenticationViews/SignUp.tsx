@@ -27,7 +27,7 @@ const SignUp = () => {
           </p>
 
           <input
-            className="p-2 px-3 shadow-xs outline-0 placeholder-[#0000009E] border border-[#B8B8B8] rounded-sm my-1 rounded-xs text-sm text-[#0000009E] rounded-md w-full"
+            className="p-2 px-3 shadow-xs outline-0 placeholder-[#0000009E] border border-[#B8B8B8]  my-1 rounded-xs text-sm text-[#0000009E] rounded-md w-full"
             placeholder="Work Email"
             name="work email"
             type="text"
@@ -35,7 +35,7 @@ const SignUp = () => {
 
           <div className="relative  w-full">
             <input
-              className=" w-full p-2 px-3 shadow-xs outline-0 placeholder-[#0000009E] border border-[#B8B8B8] rounded-sm my-1 rounded-xs text-sm text-[#0000009E] rounded-md"
+              className=" w-full p-2 px-3 shadow-xs outline-0 placeholder-[#0000009E] border border-[#B8B8B8]  my-1 rounded-xs text-sm text-[#0000009E] rounded-md"
               placeholder="Password"
               name="password"
               type="text"

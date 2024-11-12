@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Provider } from 'react-redux';
+import { store } from '@/src/store/store';
+import Providers from '../Providers/Providers';
 
 export const metadata: Metadata = {
   title: 'ISA WorkBridge',
@@ -13,7 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased h-[100vh]  bg-[#f5f6fa]`}>{children}</body>
+      <Providers>
+        <body className={`antialiased h-[100vh]  bg-[#f5f6fa]`}>{children}</body>
+      </Providers>
+
     </html>
   );
 }
+
