@@ -70,7 +70,7 @@ const Auth = () => {
                   type={passwordVisible ? 'text' : 'password'} // Toggle input type based on visibility state
                   placeholder="Password"
                   register={register}
-                // error={errors.password?.message}
+                  error={errors.password?.message && ""}
                 />
                 <button
                   type="button"
