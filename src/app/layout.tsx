@@ -1,13 +1,16 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Provider } from 'react-redux';
-import { store } from '@/src/store/store';
+;
 import Providers from '../Providers/Providers';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]/auth-options';
 
 export const metadata: Metadata = {
   title: 'ISA WorkBridge',
   description: 'Some des',
 };
+
+const session = await getServerSession(authOptions);
 
 export default function RootLayout({
   children,
@@ -16,8 +19,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased h-[100vh]  bg-[#f5f6fa]`}>
-        <Providers>
+      <body className={`antialiased h-[100vh]  bg-[#f5f6fa]`} suppressHydrationWarning>
+        <Providers session={session}>
           {children}
         </Providers>
       </body>

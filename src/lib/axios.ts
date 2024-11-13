@@ -13,16 +13,17 @@ const axiosInstance = axios.create({
 export interface CustomSession extends Session {
     accessToken: string;
 }
-// axiosInstance.interceptors.request.use(
-    // async (config) => {
-    //     const session = await getSession() as CustomSession;
-    //     if (session && session.accessToken) {
-    //         config.headers['Authorization'] = `Bearer ${session.accessToken}`;
-    //     }
-    //     return config;
-    // },
-    // (error) => Promise.reject(error)
-// );
+
+axiosInstance.interceptors.request.use(
+    async (config) => {
+        const session = await getSession() as CustomSession;
+        if (session && session.accessToken) {
+            config.headers['Authorization'] = `Bearer ${session.accessToken}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
 
 // axiosInstance.interceptors.request.use(

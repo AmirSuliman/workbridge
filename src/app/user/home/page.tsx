@@ -1,8 +1,9 @@
 import React from 'react'
+import Logout from './Logout'
 
 const page = () => {
   return (
-    <div>Home</div>
+    <div>Home <Logout /></div>
   )
 }
 

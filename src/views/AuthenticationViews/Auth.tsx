@@ -8,13 +8,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { authSchema } from '@/src/validations/auth';
 import InputField from '@/src/components/common/InputField';
-import { z } from 'zod';
+import { set, z } from 'zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '@/src/store/slices/authSlice';
 import { RootState } from '@/src/store/store';
 import { BiLoaderCircle } from 'react-icons/bi';
 import Link from 'next/link';
-import { signIn } from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
 import { redirect } from 'next/dist/server/api-utils';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
@@ -31,6 +31,7 @@ type AuthFormInputs = z.infer<typeof authSchema>;
 const Auth = () => {
   const dispatch = useDispatch();
   const authState = useSelector((state: RootState) => state.auth);
+  const [loading, setLoading] = useState(false);
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const {
@@ -45,44 +46,43 @@ const Auth = () => {
   const router = useRouter();
 
   const onSubmit = async (data: AuthFormInputs) => {
-    // console.log(data, 'Data');
-    // const res = await signIn('credentials', {
-    //   email: data.email,
-    //   password: data.password,
-    //   redirect: false,
-    // });
+    console.log(data, 'Data');
+    setLoading(true);
+    const res = await signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
 
-    // if (res && res.ok) {
-    //   console.log(res,"res")
-    //   // return router.push('/');
-    // } else {
-    //   toast.error('Invalid Email or Password!');
-    // }
-    try {
-      const response = await axiosInstance.post(API_ROUTES.LOGIN, {
-        email: data.email,
-        password: data.password,
-      });
-
-      router.push('/user/home');
-      localStorage.setItem('token', response.data.accessToken.accessToken);
-      toast.success('Login Successful');
-    } catch (error: any) {
-      localStorage.removeItem('token');
-      console.log(error, 'error');
-      toast.error(error?.response?.data?.message ?? 'Network Error');
-      throw error;
+    if (res && res.ok) {
+      console.log(res, "res")
+      toast.success('Login Successfull!');
+      setLoading(false);
+      return router.push('/user/home');
+    } else {
+      setLoading(false);
+      toast.error('Invalid Email or Password!');
     }
     // dispatch(login({ email: data.email, password: data.password }) as any);
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    
-    if (token) {
-      router.push('/user/home');
-    }
-  }, []);
+    const checkSession = async () => {
+      const session: any = await getSession();
+      if (session) {
+        // Redirect based on user role
+        console.log(session, "session");
+        if (session.user?.role === "Admin") {
+          router.push("/user/home");
+        } else {
+          router.push("/HR/dashboard");
+        }
+      }
+
+    };
+
+    checkSession();
+  }, [router]);
 
   return (
     <div
@@ -143,17 +143,13 @@ const Auth = () => {
               type="submit"
               className="p-[10px] bg-[#0F172A] text-center text-sm text-white w-full rounded-md mt-4"
             >
-              {authState.status == 'loading' ? (
+              {loading ? (
                 <BiLoaderCircle className="h-4 w-4 animate-spin mx-auto" />
               ) : (
                 'Continue'
               )}
             </button>
-            {authState.error && (
-              <p className="text-red-500 text-xs font-semibold mt-2">
-                {authState.error ?? 'Something Went Wrong'}
-              </p>
-            )}
+          
           </form>
           <p className="text-black text-xs w-full mt-3 ms-[1px]">
             Don &apos;t have an account?{' '}

@@ -4,6 +4,8 @@ import UserIcon from '@/src/components/icons/user-icon';
 import EmployeesIcon from '@/src/components/icons/employees-icon';
 import FileIcon from '@/src/components/icons/file-icon';
 import UserHeader from '@/src/components/Headers/UserHeader';
+import { useEffect } from 'react';
+import { getServerSession } from 'next-auth';
 
 const navItems = [
   {
@@ -32,6 +34,7 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+
   return (
     <section className="flex w-full h-full overflow-hidden">
       <SideNavigation items={navItems}></SideNavigation>
