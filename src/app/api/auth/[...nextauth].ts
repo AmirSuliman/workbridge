@@ -1,63 +1,90 @@
 // pages/api/auth/[...nextauth].ts
-import NextAuth from "next-auth";
+import NextAuth, { User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios from "axios";
+import axiosInstance from "@/src/lib/axios";
+import { API_ROUTES } from "@/src/constants/apiRoutes";
+import { jwtDecode } from "jwt-decode";
 
 export default NextAuth({
     providers: [
         CredentialsProvider({
-            name: "Credentials",
+            id: "credentials",
+            name: "credentials",
             credentials: {
-                username: { label: "Username", type: "text" },
-                password: { label: "Password", type: "password" },
             },
-            authorize: async (credentials) => {
+            authorize: async (credentials: any) => {
                 try {
-                    const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
-                        username: credentials?.username,
-                        password: credentials?.password,
+                    const res = await axiosInstance.post(API_ROUTES.LOGIN, {
+                        email: credentials.email,
+                        password: credentials.password,
                     });
-                    const user = res.data;
 
-                    if (user) {
-                        return user;
+                    // Extract and clean up the accessToken
+                    let accessToken = res.data?.data?.accessToken?.accessToken;
+
+                    // Remove 'Bearer' prefix if present
+                    if (accessToken?.startsWith("Bearer ")) {
+                        accessToken = accessToken.replace("Bearer ", "");
                     }
-                    return null;
+
+                    if (accessToken) {
+                        const user = jwtDecode(accessToken) as User;
+                        return { ...user, accessToken }; // Pass the cleaned access token to the user object
+                    }
+
+                    throw new Error("No access token provided");
                 } catch (error) {
-                    console.error("Login failed:", error);
-                    return null;
+                    console.error("Authorization failed:", error);
+                    return null; // Stop redirection to an error page
                 }
             },
         }),
     ],
     session: {
         strategy: "jwt",
+        maxAge: 60 * 10 * 6  // 1 hour
     },
     callbacks: {
         async jwt({ token, user }) {
+            console.log(token, "token")
+            console.log(user, "user")
             if (user) {
-                const newUser: any = { ...user };
-                const modifiedToken = { ...token, role: newUser.role };
+                token.user = user;
             }
             return token;
         },
         async session({ session, token }) {
-
-            const modifiedSession = { ...session, accessToken: token.accessToken, role: token.role };
-            // modifiedSession.user = { ...session.user, role: token.role };
-            // modifiedSession.accessToken = token.accessToken;
-            return modifiedSession;
+            console.log(session, "session")
+            console.log(token, "token")
+            const nToken = token as any;
+            return {
+                ...session, user: token.user, accessToken: nToken.user?.accessToken,
+            } as any;
         },
         async redirect({ url, baseUrl }) {
             // Redirect to role-based dashboard or to a specified callback URL if provided
-            const isAuthPage = url === `${baseUrl}/login`;
-            if (isAuthPage) {
-                return baseUrl;
+
+            const parsedUrl = new URL(url, baseUrl);
+            console.log("redirectimng+++++++++++++++++++++++++++++++++++++++++");
+            console.log(parsedUrl, "parsedURL")
+            if (parsedUrl.searchParams.has("callbackUrl")) {
+                return parsedUrl.searchParams.get("callbackUrl");
             }
-            return url.startsWith(baseUrl) ? url : baseUrl;
+            if (parsedUrl.origin === baseUrl) {
+                return url;
+            }
+
+            return baseUrl as any;
+
+            // const isAuthPage = url === `${baseUrl}/login`;
+            // if (isAuthPage) {
+            //     return baseUrl;
+            // }
+            // return url.startsWith(baseUrl) ? url : baseUrl;
         },
     },
     pages: {
-        signIn: "/login",
+        // signIn: "/",
+        // error: '/sign-in',
     },
 });

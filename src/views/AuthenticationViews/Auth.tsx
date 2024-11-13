@@ -14,6 +14,10 @@ import { login } from '@/src/store/slices/authSlice';
 import { RootState } from '@/src/store/store';
 import { BiLoaderCircle } from 'react-icons/bi';
 import Link from 'next/link';
+import { signIn } from 'next-auth/react';
+import { redirect } from 'next/dist/server/api-utils';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const lato = Lato({
   subsets: ['latin'], // Define subsets as needed
@@ -26,7 +30,6 @@ const Auth = () => {
   const dispatch = useDispatch();
   const authState = useSelector((state: RootState) => state.auth);
 
-
   const [passwordVisible, setPasswordVisible] = useState(false);
   const {
     register,
@@ -34,12 +37,26 @@ const Auth = () => {
     formState: { errors },
   } = useForm<AuthFormInputs>({
     resolver: zodResolver(authSchema),
-    mode: "onChange",
+    mode: 'onChange',
   });
 
-  const onSubmit = (data: AuthFormInputs) => {
-    console.log(data, "Data");
-    dispatch(login({ email: data.email, password: data.password }) as any);
+  const router = useRouter();
+
+  const onSubmit = async (data: AuthFormInputs) => {
+    console.log(data, 'Data');
+    const res = await signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+
+    if (res && res.ok) {
+      console.log(res,"res")
+      // return router.push('/');
+    } else {
+      toast.error('Invalid Email or Password!');
+    }
+    // dispatch(login({ email: data.email, password: data.password }) as any);
   };
 
   return (
@@ -72,7 +89,7 @@ const Auth = () => {
                   type={passwordVisible ? 'text' : 'password'} // Toggle input type based on visibility state
                   placeholder="Password"
                   register={register}
-                  error={errors.password?.message && ""}
+                  error={errors.password?.message && ''}
                 />
                 <button
                   type="button"
@@ -88,20 +105,37 @@ const Auth = () => {
                 </p>
               )}
             </div>
-            <div className='text-right'>
-              <Link href={"forgot-password"} className="text-blue-base ml-auto font-semibold !text-xs !text-right my-2 w-full hover:cursor-pointer">
+            <div className="text-right">
+              <Link
+                href={'forgot-password'}
+                className="text-blue-base ml-auto font-semibold !text-xs !text-right my-2 w-full hover:cursor-pointer"
+              >
                 Forgot Password?
               </Link>
             </div>
 
-            <button type="submit" className="p-[10px] bg-[#0F172A] text-center text-sm text-white w-full rounded-md mt-4">
-              {authState.status == "loading" ? <BiLoaderCircle className='h-4 w-4 animate-spin mx-auto' /> : "Continue"}
+            <button
+              type="submit"
+              className="p-[10px] bg-[#0F172A] text-center text-sm text-white w-full rounded-md mt-4"
+            >
+              {authState.status == 'loading' ? (
+                <BiLoaderCircle className="h-4 w-4 animate-spin mx-auto" />
+              ) : (
+                'Continue'
+              )}
             </button>
-            {authState.error && <p className="text-red-500 text-xs font-semibold mt-2">{authState.error ?? "Something Went Wrong"}</p>}
+            {authState.error && (
+              <p className="text-red-500 text-xs font-semibold mt-2">
+                {authState.error ?? 'Something Went Wrong'}
+              </p>
+            )}
           </form>
           <p className="text-black text-xs w-full mt-3 ms-[1px]">
             Don &apos;t have an account?{' '}
-            <Link href={"/sign-up"} className="text-blue-base"> Sign Up</Link>
+            <Link href={'/sign-up'} className="text-blue-base">
+              {' '}
+              Sign Up
+            </Link>
           </p>
 
           <div className="flex items-center my-4 w-full">

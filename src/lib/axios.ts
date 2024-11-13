@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { BASE_URL } from '../constants/apiRoutes';
-import { getSession } from 'next-auth/react';
+import { getSession, signOut } from 'next-auth/react';
+import { Session } from 'next-auth';
 
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -9,22 +10,20 @@ const axiosInstance = axios.create({
     },
 });
 
+export interface CustomSession extends Session {
+    accessToken: string;
+}
 axiosInstance.interceptors.request.use(
     async (config) => {
-        // Get session (which includes the JWT token)
-        // const session: any = await getSession();
-        // console.log('session', session);
-        // if (session && session.accessToken) {
-        // Attach the token to the Authorization header
-        // config.headers['Authorization'] = `Bearer ${session.accessToken}`;
-        // }
-
+        const session = await getSession() as CustomSession;
+        if (session && session.accessToken) {
+            config.headers['Authorization'] = `Bearer ${session.accessToken}`;
+        }
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
+
 
 // axiosInstance.interceptors.request.use(
 //     (config) => {
@@ -38,16 +37,16 @@ axiosInstance.interceptors.request.use(
 //     }
 // );
 
-// axiosInstance.interceptors.response.use(
-//     (response) => response,
-//     (error) => {
-//         if (error.response && error.response.status === 401) {
-//             console.error('Unauthorized! Redirecting to login...');
-//         } else if (error.response && error.response.status >= 500) {
-//             console.error('Server Error! Please try again later.');
-//         }
-//         return Promise.reject(error);
-//     }
-// );
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        if (error.response && error.response.status === 401) {
+            await signOut();
+            window.location.href = '/';
+            console.error('Unauthorized! Redirecting to login...');
+        }
+        return Promise.reject(error);
+    }
+);
 
 export default axiosInstance;
