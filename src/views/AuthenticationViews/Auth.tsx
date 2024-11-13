@@ -11,6 +11,9 @@ import InputField from '@/src/components/common/InputField';
 import { z } from 'zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '@/src/store/slices/authSlice';
+import { RootState } from '@/src/store/store';
+import { BiLoaderCircle } from 'react-icons/bi';
+import Link from 'next/link';
 
 const lato = Lato({
   subsets: ['latin'], // Define subsets as needed
@@ -21,9 +24,8 @@ type AuthFormInputs = z.infer<typeof authSchema>;
 
 const Auth = () => {
   const dispatch = useDispatch();
-  const store = useSelector(state => state);
+  const authState = useSelector((state: RootState) => state.auth);
 
-  console.log(store, "store")
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const {
@@ -86,18 +88,20 @@ const Auth = () => {
                 </p>
               )}
             </div>
+            <div className='text-right'>
+              <Link href={"forgot-password"} className="text-blue-base ml-auto font-semibold !text-xs !text-right my-2 w-full hover:cursor-pointer">
+                Forgot Password?
+              </Link>
+            </div>
 
-            <p className="text-blue-base  font-semibold text-xs text-right my-2 w-full hover:cursor-pointer">
-              Forgot Password?
-            </p>
-
-            <button type="submit" className="p-[10px] bg-[#0F172A] text-sm text-white w-full rounded-md mt-4">
-              Continue
+            <button type="submit" className="p-[10px] bg-[#0F172A] text-center text-sm text-white w-full rounded-md mt-4">
+              {authState.status == "loading" ? <BiLoaderCircle className='h-4 w-4 animate-spin mx-auto' /> : "Continue"}
             </button>
+            {authState.error && <p className="text-red-500 text-xs font-semibold mt-2">{authState.error ?? "Something Went Wrong"}</p>}
           </form>
           <p className="text-black text-xs w-full mt-3 ms-[1px]">
             Don &apos;t have an account?{' '}
-            <span className="text-blue-base "> Sign Up</span>
+            <Link href={"/sign-up"} className="text-blue-base"> Sign Up</Link>
           </p>
 
           <div className="flex items-center my-4 w-full">

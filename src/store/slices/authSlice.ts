@@ -6,12 +6,14 @@ interface AuthState {
     isAuthenticated: boolean;
     user: object | null;
     error: string | null;
+    status: "idle" | "loading" | "success" | "failed";
 }
 
 const initialState: AuthState = {
     isAuthenticated: false,
     user: null,
     error: null,
+    status: "idle"
 };
 
 // Async thunk for logging in
@@ -35,13 +37,16 @@ const authSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(login.pending, (state) => {
+                state.status = "loading"
                 state.error = null;
             })
             .addCase(login.fulfilled, (state, action) => {
+                state.status = "success";
                 state.isAuthenticated = true;
                 state.user = action.payload.user; // Assuming payload contains user info
             })
             .addCase(login.rejected, (state, action) => {
+                state.status = "failed"
                 state.error = action.payload as string;
             });
     },
