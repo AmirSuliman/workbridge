@@ -1,7 +1,7 @@
 'use client';
 import GoogleLogo from '@/src/components/icons/google-logo';
 import WorkBridgeLogo from '@/src/components/icons/work-bridge-logo';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Lato } from 'next/font/google';
 import EyeIcon from '@/src/components/icons/eye-icon';
 import { useForm } from 'react-hook-form';
@@ -18,6 +18,8 @@ import { signIn } from 'next-auth/react';
 import { redirect } from 'next/dist/server/api-utils';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import axiosInstance from '@/src/lib/axios';
+import { API_ROUTES } from '@/src/constants/apiRoutes';
 
 const lato = Lato({
   subsets: ['latin'], // Define subsets as needed
@@ -43,21 +45,44 @@ const Auth = () => {
   const router = useRouter();
 
   const onSubmit = async (data: AuthFormInputs) => {
-    console.log(data, 'Data');
-    const res = await signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-    });
+    // console.log(data, 'Data');
+    // const res = await signIn('credentials', {
+    //   email: data.email,
+    //   password: data.password,
+    //   redirect: false,
+    // });
 
-    if (res && res.ok) {
-      console.log(res,"res")
-      // return router.push('/');
-    } else {
-      toast.error('Invalid Email or Password!');
+    // if (res && res.ok) {
+    //   console.log(res,"res")
+    //   // return router.push('/');
+    // } else {
+    //   toast.error('Invalid Email or Password!');
+    // }
+    try {
+      const response = await axiosInstance.post(API_ROUTES.LOGIN, {
+        email: data.email,
+        password: data.password,
+      });
+
+      router.push('/user/home');
+      localStorage.setItem('token', response.data.accessToken.accessToken);
+      toast.success('Login Successful');
+    } catch (error: any) {
+      localStorage.removeItem('token');
+      console.log(error, 'error');
+      toast.error(error?.response?.data?.message ?? 'Network Error');
+      throw error;
     }
     // dispatch(login({ email: data.email, password: data.password }) as any);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    
+    if (token) {
+      router.push('/user/home');
+    }
+  }, []);
 
   return (
     <div

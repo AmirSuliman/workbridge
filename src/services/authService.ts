@@ -2,16 +2,17 @@ import axiosInstance from "@/src/lib/axios";
 import { API_ROUTES } from "@/src/constants/apiRoutes";
 import toast from "react-hot-toast";
 
-export const loginUser = async (email: string, password: string) => {
+export const loginUser = async ({ email, password, onSuccess }: { email: string, password: string, onSuccess?: any }) => {
     try {
         const response = await axiosInstance.post(API_ROUTES.LOGIN, { email, password });
+        onSuccess?.();
         toast.success('Login Successful');
         alert('Login Successful');
         return response.data;
 
     } catch (error: any) {
         console.log(error, "error")
-        toast.error(error.message ?? "Login Failed");
+        toast.error(error?.response?.data?.message ?? "Network Error");
         throw error;
     }
 };
