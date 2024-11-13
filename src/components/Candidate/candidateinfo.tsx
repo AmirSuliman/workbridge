@@ -28,7 +28,7 @@ const CandidateInfo = () =>{
             
             <div className='mt-8 space-y-8'>
               <div className='text-[18px] font-medium flex gap-3 flex-row items-center'> 
-                <img src='/compensation.png' alt='img' className='w-5 h-5'/> Documents
+                <img src='/jobdescription.png' alt='img' className='w-5 h-5'/> Documents
               </div>
                <div className='flex sm:flex-row flex-col items-center justify-between sm:gap-8 gap-2 '>
                    <div className='flex flex-col w-full'>
@@ -58,7 +58,7 @@ const CandidateInfo = () =>{
 
                <div className='mt-8 space-y-8'>
               <div className='text-[18px] font-medium flex gap-3 flex-row items-center'> 
-                <img src='/compensation.png' alt='img' className='w-5 h-5'/>Education
+                <img src='/education.png' alt='img' className='w-5 h-5'/>Education
               </div>
                <div className='flex sm:flex-row flex-col items-center w-full sm:w-[70%] justify-between sm:gap-8 gap-2 '>
                    <div className='flex flex-col w-full'>
@@ -76,7 +76,7 @@ const CandidateInfo = () =>{
 
             <div className='mt-8 space-y-8'>
               <div className='text-[18px] font-medium flex gap-3 flex-row items-center'> 
-                <img src='/compensation.png' alt='img' className='w-5 h-5'/>Address
+                <img src='/location.png' alt='img' className='w-5 h-5'/>Address
               </div>
                <div className='flex sm:flex-row flex-col items-center  justify-between sm:gap-8 gap-2 '>
                    <div className='flex flex-col w-full'>
@@ -111,7 +111,7 @@ const CandidateInfo = () =>{
   
             <div className='mt-8 space-y-8'>
               <div className='text-[18px] font-medium flex gap-3 flex-row items-center'> 
-                <img src='/compensation.png' alt='img' className='w-5 h-5'/>Social Links
+                <img src='/jobpost.png' alt='img' className='w-5 h-5'/>Social Links
               </div>
                <div className='flex sm:flex-row flex-col items-center w-full sm:w-[70%] justify-between sm:gap-8 gap-2 '>
                    <div className='flex flex-col w-full'>
