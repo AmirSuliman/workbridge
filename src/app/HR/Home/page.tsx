@@ -25,7 +25,7 @@ const page = () => {
             <HiSpeakerphone />
             Announcements
           </h1>
-          <Link href="/HR/Home/All-Announcements">
+          <Link href="/hr/home/All-Announcements">
             <Button
               name="See All"
               icon={<PiArrowUpRightThin size={18} />}
@@ -70,8 +70,8 @@ const page = () => {
       <LeaveRequests />
       <Training />
       <NewEmployees />
-      <Companyinfo/>
-      <Employeementreport/>
+      <Companyinfo />
+      <Employeementreport />
     </main>
   );
 };

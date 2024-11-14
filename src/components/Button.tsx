@@ -1,17 +1,18 @@
 import React from 'react';
+import cn from 'classnames';
 
 const Button = ({
   name,
   icon,
   bg,
   textColor,
-  classNames
+  className,
 }: {
   name: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   bg?: string;
   textColor?: string;
-  classNames?: string;
+  className?: string;
 }) => {
   return (
     <button
@@ -19,7 +20,10 @@ const Button = ({
         background: `${bg}`,
         color: `${textColor}`,
       }}
-      className={` ${classNames} px-4 py-2 bg-black text-white rounded flex gap-2 items-center justify-center text-sm border-[1px] border-[#E8E8E8] whitespace-normal md:whitespace-nowrap`}
+      className={cn(
+        'px-4 py-2 bg-black text-white rounded flex gap-2 items-center justify-center text-sm border-[1px] border-[#E8E8E8] whitespace-normal md:whitespace-nowrap',
+        className
+      )}
     >
       {name}
       {icon}
