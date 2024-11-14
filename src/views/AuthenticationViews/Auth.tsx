@@ -57,7 +57,7 @@ const Auth = () => {
     if (res && res.ok) {
       toast.success('Login Successfull!');
       setLoading(false);
-      return router.push('/HR/Home');
+      return router.push('/hr/home');
     } else {
       setLoading(false);
       toast.error('Invalid Email or Password!');
@@ -148,7 +148,6 @@ const Auth = () => {
                 'Continue'
               )}
             </button>
-          
           </form>
           <p className="text-black text-xs w-full mt-3 ms-[1px]">
             Don &apos;t have an account?{' '}
