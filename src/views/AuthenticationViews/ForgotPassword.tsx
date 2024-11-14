@@ -23,11 +23,11 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const searchParams = useSearchParams()
-  const token = searchParams.get('token')
+  const searchParams = useSearchParams();
+  const token = searchParams.get('token');
 
-  const [step, setStep] = useState<"email" | "confirmation">(
-    token ? "confirmation" : "email"
+  const [step, setStep] = useState<'email' | 'confirmation'>(
+    token ? 'confirmation' : 'email'
   );
 
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -38,48 +38,48 @@ const ForgotPassword = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(step == "email" ? emailSchema : resetPasswordSchema),
+    resolver: zodResolver(step == 'email' ? emailSchema : resetPasswordSchema),
     mode: 'onChange',
   });
   console.log(errors, 'Errors');
   const onSubmit = async (data: any) => {
     setLoading(true);
-    if (step == "email") {
-      await axiosInstance.post(API_ROUTES.FORGOT_PASSWORD, { email: data.email }).then((res) => {
-        toast.success('Password reset instructions sent to your email');
-        setLoading(false);
-        router.push('/sing-in');
-      }).catch((error) => {
-        setLoading(false);
-        toast.error(error.response.data.message ?? 'An error occurred');
-      });
-
-    } else if (step == "confirmation") {
-      console.log(data, 'Data confirmation');
-      await axiosInstance.post(API_ROUTES.CONFIRM_RESET_PASSWORD, {
-        token,
-        newPassword: data.password,
-      })
+    if (step == 'email') {
+      await axiosInstance
+        .post(API_ROUTES.FORGOT_PASSWORD, { email: data.email })
         .then((res) => {
-          toast.success('Password reset successful');
+          toast.success('Password reset instructions sent to your email');
           setLoading(false);
-          router.push('/login');
-
+          router.push('/sing-in');
         })
         .catch((error) => {
           setLoading(false);
           toast.error(error.response.data.message ?? 'An error occurred');
         });
-
+    } else if (step == 'confirmation') {
+      console.log(data, 'Data confirmation');
+      await axiosInstance
+        .post(API_ROUTES.CONFIRM_RESET_PASSWORD, {
+          token,
+          newPassword: data.password,
+        })
+        .then((res) => {
+          toast.success('Password reset successful');
+          setLoading(false);
+          router.push('/login');
+        })
+        .catch((error) => {
+          setLoading(false);
+          toast.error(error.response.data.message ?? 'An error occurred');
+        });
     }
-
-  }
+  };
 
   useEffect(() => {
     if (token) {
-      setStep("confirmation")
+      setStep('confirmation');
     }
-  }, [token])
+  }, [token]);
 
   return (
     <div
@@ -91,32 +91,36 @@ const ForgotPassword = () => {
             <WorkBridgeLogo classNames="max-w-[14rem] my-[2rem] mb-[2.8rem]" />
 
             <h3 className="mb-2 text-lg font-semibold text-dark-gray">
-              {step == "confirmation" ? "Enter New Password" : "Forgot Your Password?"}
+              {step == 'confirmation'
+                ? 'Enter New Password'
+                : 'Forgot Your Password?'}
             </h3>
             <p className="w-full text-md mb-6 text-center text-dark-gray">
-              {step == "confirmation" ? "Please Enter New Password" : `Enter your work email and we will send you instructions to reset
+              {step == 'confirmation'
+                ? 'Please Enter New Password'
+                : `Enter your work email and we will send you instructions to reset
               your password.`}
             </p>
             <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-              {step == "email" &&
+              {step == 'email' && (
                 <InputField
-                  error={errors.email?.message as any}
+                  error={errors.email?.message as string}
                   register={register}
                   placeholder="Work email"
                   name="email"
                   type="text"
-                />}
+                />
+              )}
 
-              {step == "confirmation" &&
+              {step == 'confirmation' && (
                 <>
                   <div className="relative w-full">
                     <div className="relative flex items-center">
                       <InputField
-
                         register={register}
                         placeholder="New Password"
                         name="password"
-                        type={passwordVisible ? "text" : "password"}
+                        type={passwordVisible ? 'text' : 'password'}
                       />
                       <button
                         type="button"
@@ -134,16 +138,17 @@ const ForgotPassword = () => {
                   </div>
                   <div className="relative w-full">
                     <div className="relative flex items-center">
-
                       <InputField
                         register={register}
                         placeholder="Confirm Password"
                         name="confirmPassword"
-                        type={confirmPasswordVisible ? "text" : "password"}
+                        type={confirmPasswordVisible ? 'text' : 'password'}
                       />
                       <button
                         type="button"
-                        onClick={() => setconfirmPasswordVisible(!confirmPasswordVisible)} // Toggle visibility on click
+                        onClick={() =>
+                          setconfirmPasswordVisible(!confirmPasswordVisible)
+                        } // Toggle visibility on click
                         className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 pointer-events-auto"
                       >
                         <EyeIcon classNames="w-4" />
@@ -155,11 +160,13 @@ const ForgotPassword = () => {
                       </p>
                     )}
                   </div>
-
                 </>
-              }
+              )}
 
-              <button type='submit' className="p-[10px] bg-dark-navy text-sm text-white rounded-md w-full mt-4 mb-6">
+              <button
+                type="submit"
+                className="p-[10px] bg-dark-navy text-sm text-white rounded-md w-full mt-4 mb-6"
+              >
                 {loading ? (
                   <BiLoaderCircle className="h-4 w-4 animate-spin mx-auto" />
                 ) : (
