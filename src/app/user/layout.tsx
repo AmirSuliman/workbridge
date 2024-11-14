@@ -4,8 +4,7 @@ import UserIcon from '@/src/components/icons/user-icon';
 import EmployeesIcon from '@/src/components/icons/employees-icon';
 import FileIcon from '@/src/components/icons/file-icon';
 import UserHeader from '@/src/components/Headers/UserHeader';
-import { useEffect } from 'react';
-import { getServerSession } from 'next-auth';
+
 
 const navItems = [
   {

@@ -50,7 +50,7 @@ const ForgotPassword = () => {
         .then((res) => {
           toast.success('Password reset instructions sent to your email');
           setLoading(false);
-          router.push('/sing-in');
+          router.push('/sign-in');
         })
         .catch((error) => {
           setLoading(false);
@@ -70,7 +70,7 @@ const ForgotPassword = () => {
         })
         .catch((error) => {
           setLoading(false);
-          toast.error(error.response.data.message ?? 'An error occurred');
+          toast.error(error?.response?.data?.message ?? 'An error occurred');
         });
     }
   };

@@ -19,7 +19,7 @@ export const authOptions: NextAuthOptions = {
                     email: credentials.email,
                     password: credentials.password,
                 });
-                console.log(res, "res_____=++++L")
+                // console.log(res, "res_____=++++L")
                 // Extract and clean up the accessToken
                 let accessToken = res.data?.data?.accessToken?.accessToken;
 
@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
 
                 if (accessToken) {
                     const user = jwtDecode(accessToken.trim()) as User;
-                    console.log(user, "user++++++++")
+                    // console.log(user, "user++++++++")
                     return { ...user, accessToken }; // Pass the cleaned access token to the user object
                 }
 
@@ -46,7 +46,7 @@ export const authOptions: NextAuthOptions = {
     },
     callbacks: {
         async jwt({ token, user }) {
-            console.log(token, "token")
+            // console.log(token, "token")
             if (user) {
                 // return user as JWT
                 token.user = user;
@@ -54,8 +54,8 @@ export const authOptions: NextAuthOptions = {
             return token;
         },
         async session({ session, token }) {
-            console.log(session, "session")
-            console.log(token, "token")
+            // console.log(session, "session")
+            // console.log(token, "token")
             const nToken = token as any;
             return {
                 ...session, user: token.user, accessToken: nToken.user?.accessToken,
@@ -65,9 +65,9 @@ export const authOptions: NextAuthOptions = {
 
     
             const parsedUrl = new URL(url, baseUrl);
-            console.log(parsedUrl, "parsedUrl")
-            console.log(baseUrl, "baseUrl")
-            console.log(url, "url")
+            // console.log(parsedUrl, "parsedUrl")
+            // console.log(baseUrl, "baseUrl")
+            // console.log(url, "url")
 
             if (parsedUrl.searchParams.has('callbackUrl')) {
                 return `${baseUrl}${parsedUrl.searchParams.get('callbackUrl')}`;

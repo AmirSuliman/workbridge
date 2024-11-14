@@ -55,10 +55,9 @@ const Auth = () => {
     });
 
     if (res && res.ok) {
-      console.log(res, "res")
       toast.success('Login Successfull!');
       setLoading(false);
-      return router.push('/user/home');
+      return router.push('/HR/Home');
     } else {
       setLoading(false);
       toast.error('Invalid Email or Password!');
@@ -66,23 +65,23 @@ const Auth = () => {
     // dispatch(login({ email: data.email, password: data.password }) as any);
   };
 
-  useEffect(() => {
-    const checkSession = async () => {
-      const session: any = await getSession();
-      if (session) {
-        // Redirect based on user role
-        console.log(session, "session");
-        if (session.user?.role === "Admin") {
-          router.push("/user/home");
-        } else {
-          router.push("/HR/dashboard");
-        }
-      }
+  // useEffect(() => {
+  //   const checkSession = async () => {
+  //     const session: any = await getSession();
+  //     if (session) {
+  //       // Redirect based on user role
+  //       console.log(session, "session");
+  //       if (session.user?.role === "Admin") {
+  //         router.push("/user/home");
+  //       } else {
+  //         router.push("/HR/dashboard");
+  //       }
+  //     }
 
-    };
+  //   };
 
-    checkSession();
-  }, [router]);
+  //   checkSession();
+  // }, [router]);
 
   return (
     <div
