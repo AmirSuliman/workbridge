@@ -1,7 +1,7 @@
 'use client';
-import Candidatecomponent from '@//components/Candidate/candidate';
-import CandidateInfo from '@//components/Candidate/candidateinfo';
-import Jobapplied from '@//components/Candidate/jobapplied';
+import Candidatecomponent from '@/components/Candidatecomponent/candidate';
+import CandidateInfo from '@/components/Candidatecomponent/candidateinfo';
+import Jobapplied from '@/components/Candidatecomponent/jobapplied';
 import { useState } from 'react';
 
 const InterviewProcess = () => {
