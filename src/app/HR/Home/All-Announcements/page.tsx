@@ -6,6 +6,7 @@ import { IoCalendarOutline } from 'react-icons/io5';
 import { PiPlusCircleBold } from 'react-icons/pi';
 
 const page = () => {
+  
   return (
     <main className="space-y-8">
       {/* all announcements */}

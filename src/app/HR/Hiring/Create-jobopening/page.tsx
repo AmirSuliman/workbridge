@@ -29,7 +29,6 @@ const Createjobopening =()=>{
         <h2 className="text-xl font-semibold mb-4">Confirm Save</h2>
         
       </Modal>
-
           <form className="bg-white rounded-lg border ">      
 
             <div className=" w-ful p-8">

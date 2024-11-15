@@ -32,7 +32,6 @@ const Hiring = () => {
     },
   ];
 
-  // Sample data
   const [candidates, setCandidates] = useState([
     { id: 1, name: "11", jobOpening: "Frontend Developer", type: "Full-Time", hiringLead: "Marco James", Createdon: "Apr 1, 2021", status: "Active" },
     { id: 2, name: "22", jobOpening: "Backend Developer", type: "Part-Time", hiringLead: "Marco James", Createdon: "Apr 1, 2021", status: "Pending" },

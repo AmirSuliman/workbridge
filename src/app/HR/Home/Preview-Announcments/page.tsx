@@ -34,6 +34,7 @@ const Previewannouncments = () =>{
              </div>
           </div>
 
+
           <div className="">
           <h1 className="text-[#0D1322] font-bold text-[22px] mb-2">Exciting News!</h1>
           <p className="mb-14">

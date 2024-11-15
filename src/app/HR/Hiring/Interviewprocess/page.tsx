@@ -5,11 +5,10 @@ import Jobapplied from '@/components/Candidatecomponent/jobapplied';
 import { useState } from 'react';
 
 const InterviewProcess = () => {
-  const [activeTab, setActiveTab] = useState('jobOpenings'); // State for the active tab
+  const [activeTab, setActiveTab] = useState('jobOpenings'); 
 
   return (
     <main className="space-y-6">
-      {/* Job Title Section */}
       <div className="flex items-center gap-2 text-[22px] font-medium">
         <img src="/jobicon.png" alt="img" className="w-5" />
         Software Engineer

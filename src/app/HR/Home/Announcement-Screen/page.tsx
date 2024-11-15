@@ -37,6 +37,7 @@ const Announcmentscreen =()=>{
             className="w-[600px] mb-8  mx-auto"
           />
 
+
           <h1 className="text-[#0D1322] text-[22px] font-bold mb-1">Key Updates</h1>
           <h1 className="text-[#0D1322] text-[18px] font-bold mb-1">Extended Remote Work Days</h1>
           <p className="mb-8  text-[#121416] text-[18px]">Employees can now work from home up to three days a week, giving you more flexibility to manage your work-life balance.</p>
