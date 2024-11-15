@@ -1,8 +1,12 @@
 import Button from '../Button';
 import InviteSent from './InviteSent';
 import OfferAndNegotiation from './OfferAndNegotiation';
+import SecondRoundInviteSent from './SecondRoundInviteSent';
+import SecondRoundSendInvite from './SecondRoundSendInvite';
 import SendInvite from './SendInvite';
 import Stepper from './Stepper';
+import TechnicalInterview from './TechnicalInterview';
+import TechnicalInterviewInviteSent from './TechnicalInterviewInviteSent';
 
 const InterviewLayout = () => {
   const renderButtonName = () => {
@@ -23,7 +27,11 @@ const InterviewLayout = () => {
         <br />
         {/* <SendInvite /> */}
         {/* <InviteSent /> */}
-        <OfferAndNegotiation />
+        <TechnicalInterview />
+        {/* <TechnicalInterviewInviteSent/> */}
+        <SecondRoundSendInvite />
+        <SecondRoundInviteSent />
+        {/* <OfferAndNegotiation /> */}
       </section>
       <Button name={renderButtonName()} className="w-full max-w-xl mx-auto" />
     </>
