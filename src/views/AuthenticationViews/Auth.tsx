@@ -139,7 +139,7 @@ const Auth = () => {
             </div>
 
             <button
-              type="submit"
+              type="submit" 
               className="p-[10px] bg-[#0F172A] text-center text-sm text-white w-full rounded-md mt-4"
             >
               {loading ? (

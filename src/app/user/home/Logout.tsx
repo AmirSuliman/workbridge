@@ -1,11 +1,14 @@
 'use client';
 import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const Logout = () => {
+  const router = useRouter();
   const onLogout = async () => {
+    console.log('Logging out');
     await signOut();
-    window.location.href = '/sign-in';
+    router.replace('/sign-in');
   };
 
   return (

@@ -5,8 +5,8 @@ import UserProfileInfo from '../UserProfileInfo';
 import { GoBell } from 'react-icons/go';
 import Logout from '@/src/app/user/home/Logout';
 import { useState } from 'react';
-import AddNewUser from '../AddNewUser/AddNewUser';
 import Modal from '../Modal/Modal';
+import CreateUserForm from '../UserForms/CreateUserForm';
 
 const HrHeader = () => {
   // State to manage modal visibility
@@ -35,7 +35,7 @@ const HrHeader = () => {
 
       {isModalOpen && (
         <Modal onClose={toggleModal}>
-          <AddNewUser />
+          <CreateUserForm />
         </Modal>
       )}
     </>
