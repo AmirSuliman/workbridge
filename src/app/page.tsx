@@ -1,5 +1,3 @@
-import SignUp from '../views/AuthenticationViews/SignUp';
-
 export default function Home() {
-  return <SignUp />;
+  return <h1>ISA Work Bridge</h1>;
 }
