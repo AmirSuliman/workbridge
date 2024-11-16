@@ -84,6 +84,11 @@ const HRForm = () => {
                             <EyeIcon classNames="w-4" />
                         </button>
                     </div>
+                    {errors.password && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.password.message}
+                </p>
+              )}
                 </div>
             </div>
             <div className='flex justify-start mt-4'>
