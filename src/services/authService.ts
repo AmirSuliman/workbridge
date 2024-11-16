@@ -17,3 +17,13 @@ export const loginUser = async ({ email, password, onSuccess }: { email: string,
     }
 };
 
+
+export const getUserRoles = async () => {
+    try {
+        const response = await axiosInstance.get(API_ROUTES.USER_ROLES);
+        return response.data.data;
+    } catch (error: any) {
+        toast.error(error?.response?.data?.message ?? "Network Error");
+        throw error;
+    }
+}

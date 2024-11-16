@@ -2,7 +2,7 @@
 
 import { HiHome, HiUsers } from 'react-icons/hi';
 import SidebarNavItem from './SidebarNavItem';
-import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle, FaUsers } from 'react-icons/fa';
 import { PiHandshakeFill } from 'react-icons/pi';
 import { IoCalendarOutline } from 'react-icons/io5';
 import { IoIosFolderOpen } from 'react-icons/io';
@@ -26,9 +26,8 @@ const HrSidebar = () => {
       </button>
 
       <nav
-        className={`flex flex-col gap-2 w-[300px] bg-white fixed top-0 bottom-0 left-0 border-r-[1px] border-[#E8E8E8] z-10 transition-transform duration-300 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0`}
+        className={`flex flex-col gap-2 w-[300px] bg-white fixed top-0 bottom-0 left-0 border-r-[1px] border-[#E8E8E8] z-10 transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'
+          } md:translate-x-0`}
       >
         <h1 className="text-center px-8 wull text-2xl py-8">
           <b>work</b>Bridge
@@ -46,22 +45,27 @@ const HrSidebar = () => {
         <SidebarNavItem
           name="Employees"
           icon={<HiUsers size={22} />}
-          href="/HR/Employees"
+          href="/hr/employees"
         />
         <SidebarNavItem
           name="Hiring"
           icon={<PiHandshakeFill size={22} />}
-          href="/HR/Hiring"
+          href="/hr/hiring"
         />
         <SidebarNavItem
           name="Leave Requests"
           icon={<IoCalendarOutline size={22} />}
-          href="/HR/Leave-Requests"
+          href="/hr/leave-requests"
         />
         <SidebarNavItem
           name="Files"
           icon={<IoIosFolderOpen size={22} />}
-          href="/HR/Files"
+          href="/hr/files"
+        />
+        <SidebarNavItem
+          name="Admins"
+          icon={<FaUsers size={22} />}
+          href="/hr/admins"
         />
       </nav>
     </>

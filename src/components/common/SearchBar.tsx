@@ -10,7 +10,7 @@ interface SearchInputProps {
 
 const SearchInput: React.FC<SearchInputProps> = ({ placeholder, value = '', onChange = () => { } }) => {
     return (
-        <div className="relative w-full max-w-xs">
+        <div className="relative w-full max-w-sm">
             <input
                 type="text"
                 value={value}

@@ -1,16 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import WorkBridgeLogo from '../icons/work-bridge-logo';
 import TabsContainer from '../common/TabsComponent/TabsContainer';
 import Tab from '../common/TabsComponent/Tab';
 import TabPanel from '../common/TabsComponent/TabPanel';
 import { Lato } from 'next/font/google';
 import HRForm from './HRForm';
+import { useDispatch } from 'react-redux';
+import { fetchUserRoles } from '@/src/store/slices/userRolesSlice';
 // Main User Management Form component
 const lato = Lato({
   subsets: ['latin'],
   weight: ['400', '300', '700'],
 });
 export default function CreateUserForm() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUserRoles() as any)
+  }, []);
+
 
   return (
     <div className={` bg-white justify-content-center rounded-sm md:min-w-[30rem] px-8 p-4`}>

@@ -11,57 +11,6 @@ import { MdOutlineKeyboardArrowRight } from 'react-icons/md'
 
 
 const EmployeesTab = () => {
-
-    // const values = [
-    //     [<ProfileAvatarItem src={IMAGES.dummyImage.src} title='Darlene Peterson' subtitle='#12343' />, <p className='text-sm text-dark-navy font-[500]'>HR MANAGER</p>,
-    //     <p className='text-sm text-dark-navy font-[500] whitespace-nowrap'>Human Resources</p>,
-    //     <p className='text-xs text-dark-navy font-[500] whitespace-nowrap'>darlene.robertson@gmail.com</p>,
-    //     <div className='flex flex-col '>
-    //         <div className='text-sm text-dark-navy font-[500]'>24.01.2024</div>
-    //         <div className='text-[10px] text-dark-navy font-[500]'>1 Year 4 Months </div>
-    //     </div>, <MdOutlineKeyboardArrowRight
-    //         className='w-6 h-6 border border-gray-border rounded-sm' />],
-    //     [<ProfileAvatarItem src={IMAGES.dummyImage.src} title='Darlene Peterson' subtitle='#12343' />, <p className='text-sm text-dark-navy font-[500]'>HR MANAGER</p>,
-    //     <p className='text-sm text-dark-navy font-[500]'>Human Resources</p>,
-    //     <p className='text-sm text-dark-navy font-[500]'>darlene.robertson@gmail.com</p>,
-    //     <div className='flex flex-col '>
-    //         <div className='text-sm text-dark-navy font-[500]'>24.01.2024</div>
-    //         <div className='text-[10px] text-dark-navy font-[500]'>1 Year 4 Months </div>
-    //     </div>, <MdOutlineKeyboardArrowRight
-    //         className='w-6 h-6 border border-gray-border rounded-sm' />],
-    //     [<ProfileAvatarItem src={IMAGES.dummyImage.src} title='Darlene Peterson' subtitle='#12343' />, <p className='text-sm text-dark-navy font-[500]'>HR MANAGER</p>,
-    //     <p className='text-sm text-dark-navy font-[500]'>Human Resources</p>,
-    //     <p className='text-sm text-dark-navy font-[500]'>darlene.robertson@gmail.com</p>,
-    //     <div className='flex flex-col '>
-    //         <div className='text-sm text-dark-navy font-[500]'>24.01.2024</div>
-    //         <div className='text-[10px] text-dark-navy font-[500]'>1 Year 4 Months </div>
-    //     </div>, <MdOutlineKeyboardArrowRight
-    //         className='w-6 h-6 border border-gray-border rounded-sm' />],
-    //     [<ProfileAvatarItem src={IMAGES.dummyImage.src} title='Darlene Peterson' subtitle='#12343' />, <p className='text-sm text-dark-navy font-[500]'>HR MANAGER</p>,
-    //     <p className='text-sm text-dark-navy font-[500]'>Human Resources</p>,
-    //     <p className='text-sm text-dark-navy font-[500]'>darlene.robertson@gmail.com</p>,
-    //     <div className='flex flex-col '>
-    //         <div className='text-sm text-dark-navy font-[500]'>24.01.2024</div>
-    //         <div className='text-[10px] text-dark-navy font-[500]'>1 Year 4 Months </div>
-    //     </div>, <MdOutlineKeyboardArrowRight
-    //         className='w-6 h-6 border border-gray-border rounded-sm' />],
-    //     [<ProfileAvatarItem src={IMAGES.dummyImage.src} title='Darlene Peterson' subtitle='#12343' />, <p className='text-sm text-dark-navy font-[500]'>HR MANAGER</p>,
-    //     <p className='text-sm text-dark-navy font-[500]'>Human Resources</p>,
-    //     <p className='text-sm text-dark-navy font-[500]'>darlene.robertson@gmail.com</p>,
-    //     <div className='flex flex-col '>
-    //         <div className='text-sm text-dark-navy font-[500]'>24.01.2024</div>
-    //         <div className='text-[10px] text-dark-navy font-[500]'>1 Year 4 Months </div>
-    //     </div>, <MdOutlineKeyboardArrowRight
-    //         className='w-6 h-6 border border-gray-border rounded-sm' />],
-    //     [<ProfileAvatarItem src={IMAGES.dummyImage.src} title='Darlene Peterson' subtitle='#12343' />, <p className='text-sm text-dark-navy font-[500]'>HR MANAGER</p>,
-    //     <p className='text-sm text-dark-navy font-[500]'>Human Resources</p>,
-    //     <p className='text-sm text-dark-navy font-[500]'>darlene.robertson@gmail.com</p>,
-    //     <div className='flex flex-col '>
-    //         <div className='text-sm text-dark-navy font-[500]'>24.01.2024</div>
-    //         <div className='text-[10px] text-dark-navy font-[500]'>1 Year 4 Months </div>
-    //     </div>, <MdOutlineKeyboardArrowRight
-    //         className='w-6 h-6 border border-gray-border rounded-sm' />],
-    // ]
     const headers = [
         { title: "Employee ID", accessor: "employeeId", render: () => <ProfileAvatarItem src={IMAGES.dummyImage.src} title="Darlene Peterson" subtitle="#12343" /> },
         { title: "Job Title", accessor: "2" },

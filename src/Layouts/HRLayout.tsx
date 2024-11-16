@@ -8,7 +8,7 @@ const HRLayout = ({ children }: { children: React.ReactNode }) => {
       {/* hr sidebar is fixed positioned so the above classes will have no effect on it */}
       <HrSidebar />
       <HrHeader />
-      <div className="p-8">{children}</div>
+      <div className="p-4 2xl:p-8">{children}</div>
     </main>
   );
 };

@@ -8,9 +8,12 @@
 // };
 
 import userImage from '@/src/assets/images/userImage.png';
+import placeholderAvatar from '@/src/assets/images/avatar.png';
 // import myImage from './path/to/image.png';
 
 export const IMAGES = {
   dummyImage: userImage,
+  placeholderAvatar: placeholderAvatar,
+
   // myImage,
 };
