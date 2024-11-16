@@ -9,6 +9,7 @@ import CreateUserForm from '@/src/components/UserForms/CreateUserForm';
 import FormHeading from '@/src/components/UserInformation/FormHeading';
 import Table from '@/src/components/UserInformation/Table';
 import { IMAGES } from '@/src/constants/images';
+import { fetchUserRoles } from '@/src/store/slices/userRolesSlice';
 import { getUsers } from '@/src/store/slices/userSlice';
 import { RootState } from '@/src/store/store';
 import Link from 'next/link';
@@ -114,6 +115,10 @@ const AdminScreen = () => {
         sortOrder: 'asc',
       }) as any
     );
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchUserRoles() as any);
   }, []);
 
   return (

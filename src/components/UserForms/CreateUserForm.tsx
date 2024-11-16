@@ -21,7 +21,7 @@ export default function CreateUserForm() {
 
   return (
     <div
-      className={` bg-white justify-content-center rounded-sm md:min-w-[35rem] md:min-h-[30rem] px-8 p-4`}
+      className={` bg-white justify-content-center rounded-sm md:min-w-[35rem] md:min-h-[28rem] px-8 p-4`}
     >
       <WorkBridgeLogo classNames="max-w-[9rem]  mb-[1.5rem]" />
 
