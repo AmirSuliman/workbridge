@@ -1,4 +1,4 @@
-import Auth from '@/src/views/AuthenticationViews/Auth';
+import Auth from '@/views/AuthenticationViews/Auth';
 import React from 'react';
 
 const page = () => {

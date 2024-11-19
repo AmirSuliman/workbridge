@@ -1,4 +1,4 @@
-import SignUp from '@/src/views/AuthenticationViews/SignUp';
+import SignUp from '@/views/AuthenticationViews/SignUp';
 import React from 'react';
 
 const page = () => {
