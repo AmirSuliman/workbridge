@@ -7,5 +7,7 @@ export const API_ROUTES = {
     USER_ROLES: `roles`,
     LOGIN: `user/login`,
     CREATE_USER: `user`,
+    CONFIRM_ACCOUNT: `user/confirmAccount`,
+
 }
 
