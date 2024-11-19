@@ -1,4 +1,4 @@
-import { IconProps } from '@/src/types/common';
+import { IconProps } from '@/types/common';
 import React from 'react';
 
 const WorkBridgeLogo: React.FC<IconProps> = ({ classNames }) => {

@@ -1,17 +1,16 @@
 'use client';
-import WorkBridgeLogo from '@/src/components/icons/work-bridge-logo';
-import React, { useEffect, useState } from 'react';
-import { Inter } from 'next/font/google';
-import InputField from '@/src/components/common/InputField';
-import { useForm } from 'react-hook-form';
+import InputField from '@/components/common/InputField';
+import EyeIcon from '@/components/icons/eye-icon';
+import WorkBridgeLogo from '@/components/icons/work-bridge-logo';
+import { API_ROUTES } from '@/constants/apiRoutes';
+import axiosInstance from '@/lib/axios';
+import { emailSchema, resetPasswordSchema } from '@/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { emailSchema, resetPasswordSchema } from '@/src/validations/auth';
-import { z } from 'zod';
-import axiosInstance from '@/src/lib/axios';
-import { API_ROUTES } from '@/src/constants/apiRoutes';
-import toast from 'react-hot-toast';
+import { Inter } from 'next/font/google';
 import { useRouter, useSearchParams } from 'next/navigation';
-import EyeIcon from '@/src/components/icons/eye-icon';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 
 const inter = Inter({

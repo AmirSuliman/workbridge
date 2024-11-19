@@ -1,18 +1,15 @@
-import React, { useState } from 'react';
-import InputField from '../common/InputField';
-import { useForm } from 'react-hook-form';
+import { createUser } from '@/store/slices/userSlice';
+import { RootState } from '@/store/store';
+import { hrFormSchema } from '@/validations/formValidations';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { hrFormSchema } from '@/src/validations/formValidations';
-import EyeIcon from '../icons/eye-icon';
-import axiosInstance from '@/src/lib/axios';
-import { API_ROUTES } from '@/src/constants/apiRoutes';
-import toast from 'react-hot-toast';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { BiLoaderCircle } from 'react-icons/bi';
-import { RootState } from '@/src/store/store';
 import { useDispatch, useSelector } from 'react-redux';
+import { z } from 'zod';
+import InputField from '../common/InputField';
 import SelectField from '../common/SelectField';
-import { createUser } from '@/src/store/slices/userSlice';
+import EyeIcon from '../icons/eye-icon';
 
 type HRFormInputs = z.infer<typeof hrFormSchema>;
 const HRForm = () => {

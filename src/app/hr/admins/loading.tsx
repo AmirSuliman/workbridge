@@ -1,8 +1,8 @@
-import ScreenLoader from '@/src/components/common/ScreenLoader'
-import React from 'react'
+import ScreenLoader from '@/components/common/ScreenLoader';
+import React from 'react';
 
 const loading = () => {
-    return <ScreenLoader/>
-}
+  return <ScreenLoader />;
+};
 
-export default loading
+export default loading;

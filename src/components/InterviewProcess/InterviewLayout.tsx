@@ -1,14 +1,5 @@
 import Button from '../Button';
-import InviteSent from './InviteSent';
-import OfferAndNegotiation from './OfferAndNegotiation';
-import OfferApproval from './OfferApproval';
-import Onboarding from './Onboarding';
-import SecondRoundInviteSent from './SecondRoundInviteSent';
-import SecondRoundSendInvite from './SecondRoundSendInvite';
-import SendInvite from './SendInvite';
 import Stepper from './Stepper';
-import TechnicalInterview from './TechnicalInterview';
-import TechnicalInterviewInviteSent from './TechnicalInterviewInviteSent';
 
 const InterviewLayout = () => {
   const renderButtonName = () => {

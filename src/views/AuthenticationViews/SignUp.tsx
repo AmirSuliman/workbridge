@@ -1,9 +1,9 @@
 'use client';
-import GoogleLogo from '@/src/components/icons/google-logo';
-import WorkBridgeLogo from '@/src/components/icons/work-bridge-logo';
+import GoogleLogo from '@/components/icons/google-logo';
+import WorkBridgeLogo from '@/components/icons/work-bridge-logo';
 import React from 'react';
 import { Lato } from 'next/font/google';
-import EyeIcon from '@/src/components/icons/eye-icon';
+import EyeIcon from '@/components/icons/eye-icon';
 
 const lato = Lato({
   subsets: ['latin'], // Define subsets as needed

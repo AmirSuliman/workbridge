@@ -1,11 +1,8 @@
-import AdminScreen from '@/src/views/HR/Admins/AdminScreen'
-import React from 'react'
+import AdminScreen from '@/views/HR/Admins/AdminScreen';
+import React from 'react';
 
 const page = () => {
-    return (
-        
-        <AdminScreen />
-    )
-}
+  return <AdminScreen />;
+};
 
-export default page
+export default page;

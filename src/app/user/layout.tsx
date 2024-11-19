@@ -1,4 +1,5 @@
 import SideNavigation from '@/components/common/SideNavigation';
+import UserHeader from '@/components/Headers/UserHeader';
 import EmployeesIcon from '@/components/icons/employees-icon';
 import FileIcon from '@/components/icons/file-icon';
 import HomeIcon from '@/components/icons/home-icon';
@@ -33,7 +34,6 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   return (
     <section className="flex w-full h-full overflow-hidden">
       <SideNavigation items={navItems}></SideNavigation>

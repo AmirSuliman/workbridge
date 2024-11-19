@@ -1,6 +1,6 @@
 'use client';
 
-import { SidebarNavItemProps } from '@/src/types/common';
+import { SidebarNavItemProps } from '@/types/common';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 

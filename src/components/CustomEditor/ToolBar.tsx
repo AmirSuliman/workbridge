@@ -3,6 +3,7 @@ import { GrTextAlignCenter, GrTextAlignLeft } from 'react-icons/gr';
 import { LuAlignJustify } from 'react-icons/lu';
 import { MdLink, MdLinkOff } from 'react-icons/md';
 import { Editor } from '@tiptap/react'; // Import the Editor type from TipTap
+import { FaUnderline } from 'react-icons/fa6';
 
 interface ToolBarProps {
   editor: Editor; // Define the editor prop type
@@ -48,6 +49,17 @@ const ToolBar: React.FC<ToolBarProps> = ({ editor }) => {
         } disabled:bg-gray-100 disabled:cursor-not-allowed`}
       >
         <FaItalic size={14} />
+      </button>
+      <button
+        onClick={() => editor.chain().focus().toggleUnderline().run()}
+        disabled={!editor.can().chain().focus().toggleUnderline().run()}
+        className={`px-3 py-1 grow-0 shrink-0 ${
+          editor.isActive('underline')
+            ? 'bg-blue-500 text-white'
+            : 'hover:bg-gray-300'
+        } disabled:bg-gray-100 disabled:cursor-not-allowed`}
+      >
+        <FaUnderline size={14} />
       </button>
 
       {/* Alignment Options */}

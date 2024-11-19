@@ -3,13 +3,19 @@
 import Link from '@tiptap/extension-link';
 import TextAlign from '@tiptap/extension-text-align';
 import { EditorContent, useEditor } from '@tiptap/react';
+import Underline from '@tiptap/extension-underline';
 import StarterKit from '@tiptap/starter-kit';
 import ToolBar from './ToolBar';
 
-const CustomTextEditor = () => {
+const CustomTextEditor = ({
+  setContent,
+}: {
+  setContent: (content: string) => void;
+}) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
+      Underline,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
       }),
@@ -17,9 +23,15 @@ const CustomTextEditor = () => {
         openOnClick: true,
         autolink: true,
         defaultProtocol: 'https',
+        HTMLAttributes: {
+          class: 'text-blue-500',
+        },
       }),
     ],
     content: '<p>Hello World! 🌎️</p>',
+    onUpdate: ({ editor }) => {
+      setContent(editor.getHTML()); // Pass updated content to the parent component
+    },
   });
 
   if (!editor) {
@@ -33,7 +45,7 @@ const CustomTextEditor = () => {
       {/* Editor */}
       <EditorContent
         editor={editor}
-        className="border border-gray-300 p-4 rounded bg-white focus:outline-none w-full"
+        className="p-8 bg-white rounded-lg border"
       />
     </div>
   );

@@ -49,6 +49,7 @@ const Auth = () => {
       password: data.password,
       redirect: false,
     });
+    console.log(res);
 
     if (res && res.ok) {
       toast.success('Login Successfull!');
@@ -81,7 +82,6 @@ const Auth = () => {
 
   return (
     <div
-      className={`${lato.className} flex flex-col items-center justify-center my-auto h-[100%]  bg-gray-100`}
       className={`${lato.className} flex flex-col items-center justify-center my-auto h-[100%]  bg-gray-100`}
     >
       <div className="min-w-[90%] sm:min-w-[24rem]">

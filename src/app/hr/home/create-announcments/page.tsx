@@ -1,11 +1,50 @@
 'use client';
 import CustomTextEditor from '@/components/CustomEditor/CustomTextEditor';
+import axiosInstance from '@/lib/axios';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { BiLoaderCircle } from 'react-icons/bi';
 import { FaEdit } from 'react-icons/fa';
 
 const Createannouncment = () => {
+  const [loading, setLoading] = useState(false);
+  const [title, setTitle] = useState('');
+  const [status, setStatus] = useState('Draft');
+  const [body, setBody] = useState('');
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      setStatus('Published');
+      const payload = { title, body, status };
+      const response = await axiosInstance.post('/announcement/', payload);
+      toast.success('Announcement published successfully!');
+      console.log('Response:', response.data);
+      setLoading(false);
+    } catch (error: any) {
+      console.error('Error publishing announcement:', error);
+      setLoading(false);
+
+      if (error.response) {
+        const { status, data } = error.response;
+
+        // Check for validation errors and display them
+        if (status === 422) {
+          const validationErrors = data?.message || 'Validation failed.';
+          toast.error(`Error: ${validationErrors}`);
+        } else {
+          // General error message for other statuses
+          toast.error('An error occurred while publishing the announcement.');
+        }
+      } else {
+        // Handle other types of errors (e.g., network issues)
+        toast.error('A network error occurred.');
+      }
+    }
+  };
   return (
     <main className="space-y-4">
-      <div className="flex flex-row items-center justify-between mb-4">
+      <nav className="flex flex-row items-center justify-between mb-4">
         <div className="flex flex-row items-center gap-2">
           <FaEdit size={22} />
           <h1 className="font-bold text-[22px]">Create Announcement</h1>
@@ -19,44 +58,33 @@ const Createannouncment = () => {
           </button>
           <button>Cancel</button>
         </div>
-      </div>
+      </nav>
 
-      <div className=" bg-white rounded-lg border">
+      <div className="bg-white rounded-lg border">
         <div className="flex flex-col p-8 ">
           <label className="text-[#0F172A] text-[14px] p-2">Title</label>
           <input
             type="text"
             placeholder="Add a title for your post"
             className="p-3 w-full border rounded-lg text-black"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </div>
         <div className="w-full h-[1px] bg-gray-300  mb-2" />
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-          <CustomTextEditor />
-        </div>
+        <CustomTextEditor setContent={setBody} />
       </div>
 
-      <div className="p-8 bg-white rounded-lg border">
-        <div className="">
-          <h1 className="text-[#0D1322] font-bold text-[22px] mb-2">
-            Exciting News!
-          </h1>
-          <p className="mb-14">
-            We are thrilled to announce an important update to our Work from
-            Home policy. With the evolving nature of the workplace, we have made
-            some adjustments to better accommodate your needs and ensure a more
-            flexible, productive environment for everyone.
-          </p>
-          <img
-            src="/solen-feyissa-TaOGbz_S-Qw-unsplash.png"
-            alt="img"
-            className="w-[600px] mb-8  mx-auto"
-          />
-        </div>
-      </div>
       <div className="flex justify-center items-center">
-        <button className="p-3 rounded-lg bg-[#0F172A] text-white text-[16px] flex justify-center w-[300px]">
-          Save & Publish
+        <button
+          onClick={handleSubmit}
+          className="p-3 rounded-lg bg-[#0F172A] text-white text-[16px] flex justify-center w-[300px]"
+        >
+          {loading ? (
+            <BiLoaderCircle className="h-4 w-4 animate-spin mx-auto" />
+          ) : (
+            'Save & Publish'
+          )}
         </button>
       </div>
     </main>
