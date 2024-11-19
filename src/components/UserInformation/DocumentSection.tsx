@@ -43,8 +43,8 @@ const DocumentSection = () => {
         ]
     ];
     return (
-        <div className='p-5 rounded-md  h-full bg-white border-gray-border mt-4'>
-            <div className="flex items-center justify-between mb-5">
+        <div className='p-2 md:p-5 rounded-md  h-full bg-white border-gray-border '>
+            <div className="flex flex-col md:flex-row gap-2 md:gap-0 md:items-center md:justify-between mb-5">
                 <FormHeading icon={<FileIcon classNames='w-5 h-5' />} text='Documents' />
                 <div className='flex items-center gap-4'>
                     <div className="flex gap-2 items-center text-dark-navy ms-2 ">

@@ -33,18 +33,13 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+
   return (
-    <section className="flex h-screen w-full">
+    <section className="flex w-full h-full overflow-hidden">
       <SideNavigation items={navItems}></SideNavigation>
       <div className="flex flex-col flex-1">
-        <header className=" bg-white border-0 border-b-[1px] border-gray-border flex  items-center py-2 px-3">
-          {/* Header */}
-          <button className="border-[1px] border-[#E0E0E0] rounded-full size-8 mr-3 flex items-center justify-center ml-auto ">
-            <GoBell size={18} />
-          </button>
-          <UserProfileInfo />
-        </header>
-        <div className="flex-1 overflow-y-scroll ">{children}</div>
+        <UserHeader />
+        <div className="flex-1 overflow-y-scroll">{children}</div>
       </div>
     </section>
   );

@@ -14,7 +14,7 @@ const Tab: React.FC<TabProps> = ({ index, children, tabStyles, activeTabStyle = 
 
     return (
         <button
-            className={` ${tabStyles} ${activeTab === index ? activeTabStyle : ''}`}
+            className={`outline-none focus:outline-none whitespace-nowrap ${tabStyles} ${activeTab === index ? activeTabStyle : ''}`}
             onClick={() => setActiveTab(index)}
         >
             {children}

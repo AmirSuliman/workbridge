@@ -1,3 +1,6 @@
+import Auth from "../views/AuthenticationViews/Auth";
+
 export default function Home() {
-  return <h1>ISA Work Bridge</h1>;
+  // return <Auth/>;
+  return <h1>Go to sign-in</h1>
 }

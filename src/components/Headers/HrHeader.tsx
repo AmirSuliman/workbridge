@@ -1,7 +1,9 @@
+'use client';
 import { PiPlusCircleBold } from 'react-icons/pi';
 import BlackButton from '../Button';
 import UserProfileInfo from '../UserProfileInfo';
 import { GoBell } from 'react-icons/go';
+import Logout from '@/src/app/user/home/Logout';
 
 const HrHeader = () => {
   return (
@@ -15,6 +17,7 @@ const HrHeader = () => {
         <GoBell size={18} />
       </button>
       <UserProfileInfo />
+      <Logout />
     </nav>
   );
 };

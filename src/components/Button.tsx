@@ -6,16 +6,21 @@ const Button = ({
   icon,
   bg,
   textColor,
+  classNames,
+  onClick,
   className,
 }: {
   name: string;
   icon?: React.ReactNode;
   bg?: string;
   textColor?: string;
+  classNames?: string;
+  onClick?: () => void;
   className?: string;
 }) => {
   return (
     <button
+      onClick={onClick}
       style={{
         background: `${bg}`,
         color: `${textColor}`,

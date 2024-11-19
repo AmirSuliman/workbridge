@@ -58,12 +58,12 @@ const TimeOffSection = () => {
     ];
 
     return (
-        <div className='p-4 rounded-md  h-full'>
-            <div className="flex gap-6">
+        <div className='p-1 rounded-md  h-full'>
+            <div className="flex flex-col md:flex-row gap-6">
                 <VacationsCard buttonText='Request Vaction' title='Request Vacation' daysCount={32} icon={<UmbrellaIcon classNames='w-4 h-4 font-bold text-white' />} iconStyles='bg-[#00B87D]' subtitle='Requests need to be made at least 48 hours prior.' />
                 <VacationsCard buttonText='Request Sick Leave' title='Sick Leave Days' daysCount={21} icon={<SickPersonIcon classNames='w-4 h-4 font-bold text-white' />} iconStyles='bg-[#F53649]' subtitle='' />
             </div>
-            <div className='bg-white rounded-sm mt-5 border-gray-border p-5'>
+            <div className='bg-white  mt-5 border border-gray-border rounded-[10px] p-3 md:p-5 w-full '>
                 <FormHeading classNames='mb-[2rem]' icon={<UmbrellaIcon classNames='w-4 text-dark-navy' />} text='Upcoming Time Off' />
                 <InfoGrid
                     headers={["Time Off Type", "Time Off Start", "Time Off End", "Status"]}
@@ -72,7 +72,7 @@ const TimeOffSection = () => {
                 />
 
             </div>
-            <div className='bg-white rounded-sm mt-5 border-gray-border p-5'>
+            <div className='bg-white  mt-5 border border-gray-border rounded-[10px] p-3 md:p-5 w-full '>
                 <FormHeading classNames='mb-5' icon={<ClockRotateIcon classNames='w-4' />} text='Time Off History' />
                 <InfoGrid
                     headers={["Type", "Date From", "Date to", "Approved By"]}

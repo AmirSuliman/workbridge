@@ -82,6 +82,7 @@ const Auth = () => {
   return (
     <div
       className={`${lato.className} flex flex-col items-center justify-center my-auto h-[100%]  bg-gray-100`}
+      className={`${lato.className} flex flex-col items-center justify-center my-auto h-[100%]  bg-gray-100`}
     >
       <div className="min-w-[90%] sm:min-w-[24rem]">
         <div className="flex flex-col items-center bg-white h-full shadow-custom-deep pt-[2rem] px-[1rem]">
