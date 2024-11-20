@@ -22,3 +22,7 @@ body {
   font-family: Inter, sans-serif;
   color: black;
 }
+
+::-ms-reveal {
+  display: none;
+}

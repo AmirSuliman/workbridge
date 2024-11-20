@@ -1,13 +1,14 @@
 import axios from 'axios';
-import { BASE_URL } from '../constants/apiRoutes';
-import { getSession, signOut } from 'next-auth/react';
 import { Session } from 'next-auth';
+import { getSession } from 'next-auth/react';
+import { BASE_URL } from '../constants/apiRoutes';
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 export interface CustomSession extends Session {

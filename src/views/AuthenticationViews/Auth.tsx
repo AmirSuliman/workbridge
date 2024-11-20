@@ -146,13 +146,13 @@ const Auth = () => {
               )}
             </button>
           </form>
-          <p className="text-black text-xs w-full mt-3 ms-[1px]">
+          {/* <p className="text-black text-xs w-full mt-3 ms-[1px]">
             Don &apos;t have an account?{' '}
             <Link href={'/sign-up'} className="text-blue-base">
               {' '}
               Sign Up
             </Link>
-          </p>
+          </p> */}
 
           <div className="flex items-center my-4 w-full">
             <hr className="flex-grow border-t-[2px] border-light-gray" />

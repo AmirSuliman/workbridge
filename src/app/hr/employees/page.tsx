@@ -1,9 +1,12 @@
-import React from 'react'
+import MyInformation from '@/views/MyInformation/MyInformation';
+import React from 'react';
 
 const page = () => {
   return (
-    <div>page</div>
-  )
-}
+    <div>
+      <MyInformation />
+    </div>
+  );
+};
 
-export default page
+export default page;

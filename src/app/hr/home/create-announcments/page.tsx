@@ -27,17 +27,13 @@ const Createannouncment = () => {
 
       if (error.response) {
         const { status, data } = error.response;
-
-        // Check for validation errors and display them
         if (status === 422) {
           const validationErrors = data?.message || 'Validation failed.';
           toast.error(`Error: ${validationErrors}`);
         } else {
-          // General error message for other statuses
           toast.error('An error occurred while publishing the announcement.');
         }
       } else {
-        // Handle other types of errors (e.g., network issues)
         toast.error('A network error occurred.');
       }
     }
