@@ -18,8 +18,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { z } from 'zod';
 
 const lato = Lato({
-  subsets: ['latin'], // Define subsets as needed
-  weight: ['400', '700'], // Choose weights (e.g., 400 for normal, 700 for bold)
+  subsets: ['latin'],
+  weight: ['400', '700'],
 });
 
 type AuthFormInputs = z.infer<typeof authSchema>;
@@ -42,14 +42,13 @@ const Auth = () => {
   const router = useRouter();
 
   const onSubmit = async (data: AuthFormInputs) => {
-    console.log(data, 'Data');
     setLoading(true);
     const res = await signIn('credentials', {
       email: data.email,
       password: data.password,
       redirect: false,
     });
-    console.log(res);
+    console.log('Response: ', res);
 
     if (res && res.ok) {
       toast.success('Login Successfull!');
@@ -59,26 +58,7 @@ const Auth = () => {
       setLoading(false);
       toast.error('Invalid Email or Password!');
     }
-    // dispatch(login({ email: data.email, password: data.password }) as any);
   };
-
-  // useEffect(() => {
-  //   const checkSession = async () => {
-  //     const session: any = await getSession();
-  //     if (session) {
-  //       // Redirect based on user role
-  //       console.log(session, "session");
-  //       if (session.user?.role === "Admin") {
-  //         router.push("/user/home");
-  //       } else {
-  //         router.push("/HR/dashboard");
-  //       }
-  //     }
-
-  //   };
-
-  //   checkSession();
-  // }, [router]);
 
   return (
     <div

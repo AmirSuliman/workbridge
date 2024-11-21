@@ -1,12 +1,8 @@
-import MyInformation from '@/views/MyInformation/MyInformation';
 import React from 'react';
+import Employees from './components/Employees';
 
 const page = () => {
-  return (
-    <div>
-      <MyInformation />
-    </div>
-  );
+  return <Employees />;
 };
 
 export default page;

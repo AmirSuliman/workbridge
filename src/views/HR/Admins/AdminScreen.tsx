@@ -16,39 +16,61 @@ import { useEffect, useState } from 'react';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
+import { z } from 'zod';
+
+// Zod schema for email validation and other fields
+const userSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+});
 
 const AdminScreen = () => {
-  // State to manage modal visibility
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const dispatch = useDispatch();
-  // Function to toggle modal visibility
-  const toggleModal = () => {
-    setIsModalOpen((prev) => !prev);
-  };
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filter, setFilter] = useState('');
+  const [sortBy, setSortBy] = useState('');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
+  const dispatch = useDispatch();
   const users = useSelector((state: RootState) => state.users);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const totalItems = 100;
   const pageSize = 4;
-  console.log(users, 'users');
+
+  // Handle page change for pagination
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    console.log(`Current Page: ${page}`);
-    // Perform additional actions here, such as fetching new data based on `page`
   };
 
+  // Fetch users on page change or filter/sort update
   useEffect(() => {
     dispatch(
       getUsers({
         page: currentPage,
-        pageSize: pageSize,
-        filter: '',
-        sortBy: '',
-        sortOrder: 'asc',
+        pageSize,
+        filter,
+        sortBy,
+        searchQuery: searchQuery,
+        sortOrder,
       }) as any
     );
-  }, [currentPage]);
+  }, [currentPage, filter, sortBy, sortOrder, searchQuery]);
+
+  // Search handler
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    dispatch(
+      getUsers({
+        page: currentPage,
+        pageSize,
+        filter,
+        sortBy,
+        sortOrder,
+        searchQuery: query,
+      }) as any
+    );
+  };
 
   const headers = [
     {
@@ -63,11 +85,10 @@ const AdminScreen = () => {
       ),
     },
     { title: 'Role', accessor: 'Role.name' },
-    // { title: 'Department', accessor: '3', render: (cellValue) => 'Department' },
     {
       title: 'Status',
-      accessor: 'active', // Matches the field in the response
-      render: (cellValue: any) => (cellValue ? 'Active' : 'Inactive'), // Custom rendering logic
+      accessor: 'active',
+      render: (cellValue: any) => (cellValue ? 'Active' : 'Inactive'),
     },
     {
       title: 'Email',
@@ -82,19 +103,14 @@ const AdminScreen = () => {
       title: 'Hire Date',
       accessor: 'hireDate',
       render: () => (
-        <div className="flex flex-col ">
-          {' '}
-          <div className="text-sm text-dark-navy font-[500]">
-            24.01.2024
-          </div>{' '}
+        <div className="flex flex-col">
+          <div className="text-sm text-dark-navy font-[500]">24.01.2024</div>
           <div className="text-[10px] text-dark-navy font-[500]">
-            1 Year 4 Months{' '}
-          </div>{' '}
+            1 Year 4 Months
+          </div>
         </div>
       ),
     },
-    { title: '', accessor: '' },
-    { title: '', accessor: 'x' },
     {
       title: '',
       accessor: 'actions',
@@ -105,59 +121,53 @@ const AdminScreen = () => {
   ];
 
   useEffect(() => {
-    dispatch(
-      getUsers({
-        page: currentPage,
-        pageSize: pageSize,
-        filter: '',
-        sortBy: '',
-        sortOrder: 'asc',
-      }) as any
-    );
-  }, []);
-
-  useEffect(() => {
     dispatch(fetchUserRoles() as any);
   }, []);
 
   return (
     <div className="h-full">
       <FormHeading
-        textClasses="text-xl font-[600] font-semibold "
+        textClasses="text-xl font-[600] font-semibold"
         classNames="mb-4"
         icon={<EmployeesIcon classNames="w-6" />}
         text="Admins"
       />
-
-      <div className="bg-white border border-gray-border rounded-md p-3 ">
+      <div className="bg-white border border-gray-border rounded-md p-3">
         <div className="flex justify-between items-center mb-3">
           <div className="flex gap-3 my-3">
-            {' '}
-            <SearchInput placeholder="Search Employees" value="" />
+            <SearchInput
+              placeholder="Search Employees"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
             <div className="flex gap-2 items-center w-full">
               <label className="text-sm text-[#abaeb4]">Sort</label>
-              <select className="p-2 border w-full max-w-xs border-gray-border rounded-[5px] outline-none focus:outline-none ring-0 text-xs text-dark-gray ">
-                <option>Select</option>
-                <option>Recently Added</option>
-                <option>Recently Added</option>
-                <option>Recently Added</option>
+              <select
+                className="p-2 border w-full max-w-xs border-gray-border rounded-[5px] outline-none focus:outline-none ring-0 text-xs text-dark-gray"
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="">Select</option>
+                <option value="recently_added">Recently Added</option>
+                <option value="name">Name</option>
               </select>
             </div>
-            <div className="flex gap-2  items-center w-full">
+            <div className="flex gap-2 items-center w-full">
               <label className="text-sm text-[#abaeb4]">Filter</label>
-              <select className="p-2 border w-full max-w-xs border-gray-border rounded-[5px] outline-none focus:outline-none ring-0 text-xs text-dark-gray ">
-                <option>Select</option>
-                <option>Recently Added</option>
-                <option>Recently Added</option>
-                <option>Recently Added</option>
+              <select
+                className="p-2 border w-full max-w-xs border-gray-border rounded-[5px] outline-none focus:outline-none ring-0 text-xs text-dark-gray"
+                onChange={(e) => setFilter(e.target.value)}
+              >
+                <option value="">Select</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
               </select>
             </div>
           </div>
           <Button
             name="Add New Admin"
-            onClick={toggleModal}
+            onClick={() => setIsModalOpen(true)}
             icon={<IoIosAddCircleOutline className="w-4" />}
-            classNames="bg-dark-navy text-white text-xs "
+            classNames="bg-dark-navy text-white text-xs"
           />
         </div>
         <div>
@@ -172,13 +182,13 @@ const AdminScreen = () => {
             totalItems={users.total}
             pageSize={users.pageSize}
             currentPage={currentPage}
-            maxPagesToShow={4} // Show up to 5 pages at once
+            maxPagesToShow={4}
             setCurrentPage={handlePageChange}
           />
         </div>
       </div>
       {isModalOpen && (
-        <Modal onClose={toggleModal}>
+        <Modal onClose={() => setIsModalOpen(false)}>
           <CreateUserForm />
         </Modal>
       )}

@@ -8,6 +8,7 @@ interface UserState {
   total: number;
   currentPage: number;
   pageSize: number;
+  searchQuery?: string;
   error: string | null;
   status: 'idle' | 'loading' | 'success' | 'failed';
   createStatus: 'idle' | 'loading' | 'success' | 'failed';
@@ -21,6 +22,7 @@ const initialState: UserState = {
   total: 0,
   currentPage: 1,
   pageSize: 10,
+  searchQuery: '',
   error: null,
   status: 'idle',
   createStatus: 'idle',
@@ -28,28 +30,36 @@ const initialState: UserState = {
   sortOrder: null,
   filter: null,
 };
-
-// Async thunk for fetching users with pagination, sorting, and filtering
 export const getUsers = createAsyncThunk(
   'users/fetchUsers',
   async (
     {
       page,
       pageSize = 5,
-      sortBy,
-      sortOrder,
-      filter,
+      searchQuery = '',
+      sortBy = null,
+      sortOrder = null,
+      filter = null,
     }: {
       page: number;
       pageSize: number;
-      sortBy: string | null;
-      sortOrder: 'asc' | 'desc' | null;
-      filter: string | null;
+      searchQuery?: string;
+      sortBy?: string | null;
+      sortOrder?: 'asc' | 'desc' | null;
+      filter?: string | null;
     },
     { rejectWithValue }
   ) => {
     try {
-      const response = await fetchUsers({ page, pageSize });
+      // Include all necessary parameters in the API request
+      const response = await fetchUsers({
+        page,
+        pageSize,
+        searchQuery: searchQuery,
+        sortBy: sortBy || undefined,
+        sortOrder: sortOrder || undefined,
+        filter: filter || undefined,
+      });
       return { ...response, pageSize };
     } catch (error: any) {
       return rejectWithValue(

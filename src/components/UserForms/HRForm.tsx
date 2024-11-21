@@ -19,8 +19,6 @@ const HRForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const { items } = useSelector((state: RootState) => state.userRoles.roles);
-  // console.log(rolesData, "rolesdata");
-  // const roles = [{ label: 'HR', value: '1' }, { label: 'Admin', value: '2' }];
   const roles = items.map((role) => ({
     label: role.name as string,
     value: role.id as string,
@@ -43,15 +41,6 @@ const HRForm = () => {
   };
   const onSubmit = (data: HRFormInputs) => {
     dispatch(createUser(data) as any);
-    // setLoading(true);
-    // axiosInstance.post(API_ROUTES.CREATE_USER, data).then(res => {
-    //     toast.success("HR created Successfully!");
-    //     setLoading(false);
-    // }).catch(err => {
-    //     toast.error(err?.response?.data?.message);
-    //     setLoading(false);
-    // })
-    // console.log(data, 'Data');
   };
 
   return (
@@ -78,8 +67,6 @@ const HRForm = () => {
           styles={{ ...style, container: 'col-span-2' }}
           error={errors.email?.message}
         />
-
-        {/* <InputField styles={{ ...style, container: "col-span-2" }} name='roleId' placeholder='Role ID' register={register} error={errors.roleId?.message} /> */}
 
         <SelectField
           name="roleId"

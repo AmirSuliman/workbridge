@@ -9,8 +9,10 @@ import ToolBar from './ToolBar';
 
 const CustomTextEditor = ({
   setContent,
+  body,
 }: {
   setContent: (content: string) => void;
+  body: string;
 }) => {
   const editor = useEditor({
     extensions: [
@@ -28,7 +30,7 @@ const CustomTextEditor = ({
         },
       }),
     ],
-    content: '<p>Hello World! 🌎️</p>',
+    content: body,
     onUpdate: ({ editor }) => {
       setContent(editor.getHTML()); // Pass updated content to the parent component
     },
