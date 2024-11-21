@@ -35,12 +35,14 @@ const page = () => {
           </Link>
         </header>
         <SingleAnnouncement
+          onClick={() => console.log('Hello world')}
           bgColor=""
           icon={<IoCalendarOutline />}
           description="Upcoming holiday on 31.12.2024 - Happy New years!"
         />
         <hr />
         <SingleAnnouncement
+          onClick={() => console.log('Hello world')}
           bgColor=""
           icon={<IoCalendarOutline />}
           description="Upcoming holiday on 25.12.2024 - Marry Christmas!"
@@ -48,6 +50,7 @@ const page = () => {
         <hr />
 
         <SingleAnnouncement
+          onClick={() => console.log('Hello world')}
           bgColor="#00B87D"
           icon={<GiFlowerEmblem />}
           description="Company Anniversary! We are celebrating 10 years with ISA Consulting."
@@ -55,12 +58,14 @@ const page = () => {
         <hr />
 
         <SingleAnnouncement
+          onClick={() => console.log('Hello world')}
           bgColor="#00B87D"
           icon={<GiFlowerEmblem />}
           description="Referral benefits reward program has been updated."
         />
         <hr />
         <SingleAnnouncement
+          onClick={() => console.log('Hello world')}
           bgColor="#F53649"
           icon={<GiFlowerEmblem />}
           description="Work from home policy update - Check your emails!"
