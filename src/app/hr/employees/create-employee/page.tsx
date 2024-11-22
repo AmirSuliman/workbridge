@@ -9,7 +9,7 @@ import Employment from '../components/form/Employement';
 import Documents from '../components/form/Documents';
 const page = () => {
   return (
-    <section>
+    <main>
       <div className="flex justify-between">
         <p className="flex items-center gap-x-2">
           <TbEdit />
@@ -60,7 +60,7 @@ const page = () => {
           </TabPanel>
         </div>
       </TabsContainer>
-    </section>
+    </main>
   );
 };
 
