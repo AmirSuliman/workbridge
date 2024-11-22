@@ -1,5 +1,5 @@
 // pages/api/auth/[...nextauth].ts
-import axios from 'axios';
+import axiosInstance from '@/lib/axios';
 import { jwtDecode } from 'jwt-decode';
 import { NextAuthOptions, User } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -11,13 +11,10 @@ export const authOptions: NextAuthOptions = {
       name: 'credentials',
       credentials: {},
       authorize: async (credentials: any) => {
-        const res = await axios.post(
-          'https://devbackend.isaworkbridge.com/user/login',
-          {
-            email: credentials.email,
-            password: credentials.password,
-          }
-        );
+        const res = await axiosInstance.post('/user/login', {
+          email: credentials.email,
+          password: credentials.password,
+        });
         let accessToken = res.data?.data?.accessToken?.accessToken;
         if (accessToken?.startsWith('Bearer ')) {
           accessToken = accessToken.replace('Bearer ', '');

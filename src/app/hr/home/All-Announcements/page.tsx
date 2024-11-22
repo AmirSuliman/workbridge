@@ -62,7 +62,7 @@ const Page = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPublishedAnnouncements, setTotalPublishedAnnouncements] =
     useState(0);
-  const [totalDraftAnnouncements, setTotalDraftAnnouncements] = useState(0);
+  const [, setTotalDraftAnnouncements] = useState(0);
   const pageSize = 20; // Set page size for pagination
 
   useEffect(() => {

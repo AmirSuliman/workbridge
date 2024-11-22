@@ -3,19 +3,20 @@ import InputField from '@/components/common/InputField';
 import EyeIcon from '@/components/icons/eye-icon';
 import GoogleLogo from '@/components/icons/google-logo';
 import WorkBridgeLogo from '@/components/icons/work-bridge-logo';
-import { RootState } from '@/store/store';
 import { authSchema } from '@/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { Lato } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { setUser } from '@/store/slices/myInfoSlice';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
-import { useDispatch, useSelector } from 'react-redux';
 import { z } from 'zod';
+import { useDispatch } from 'react-redux';
+import axiosInstance from '@/lib/axios';
 
 const lato = Lato({
   subsets: ['latin'],
@@ -26,10 +27,10 @@ type AuthFormInputs = z.infer<typeof authSchema>;
 
 const Auth = () => {
   const dispatch = useDispatch();
-  const authState = useSelector((state: RootState) => state.auth);
   const [loading, setLoading] = useState(false);
-
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const { data: session } = useSession();
+
   const {
     register,
     handleSubmit,
@@ -43,17 +44,34 @@ const Auth = () => {
 
   const onSubmit = async (data: AuthFormInputs) => {
     setLoading(true);
+
+    // Authenticate the user
     const res = await signIn('credentials', {
       email: data.email,
       password: data.password,
       redirect: false,
     });
-    console.log('Response: ', res);
 
-    if (res && res.ok) {
-      toast.success('Login Successfull!');
-      setLoading(false);
-      return router.push('/hr/home');
+    if (res && res.ok && session?.user?.accessToken) {
+      const accessToken = session.user.accessToken; // Assuming the token is returned here
+
+      try {
+        // Fetch user data using accessToken
+        const response = await axiosInstance.get('/user/my', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+
+        // Store user data in Redux
+        dispatch(setUser(response.data.data));
+
+        toast.success('Login Successful!');
+        router.push('/hr/home');
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        toast.error('Failed to load user data!');
+      } finally {
+        setLoading(false);
+      }
     } else {
       setLoading(false);
       toast.error('Invalid Email or Password!');
