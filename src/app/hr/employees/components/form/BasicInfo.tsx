@@ -175,8 +175,8 @@ const BasicInfo = () => {
         </div>
       </section>
       <article className="flex justify-end mt-6 gap-x-4">
-        <Button name="cancel" bg="white" textColor="black" className="px-10" />
-        <Button name="Next" className="px-10" />
+        <Button name="Cancel" bg="white" textColor="black" className="px-14" />
+        <Button name="Next" className="px-14" />
       </article>
     </div>
   );
