@@ -4,13 +4,14 @@ import { Heading, Label } from '../Helpers';
 import Button from '@/components/Button';
 import { useFormContext } from 'react-hook-form';
 import { employeeFormData } from '../../create-employee/page';
+import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
 
 const Employment = () => {
   const {
     register,
     formState: { errors },
   } = useFormContext<employeeFormData>();
-
+  const { activeTab, setActiveTab } = useTabsContext();
   return (
     <>
       <section className="bg-white rounded-lg border">
@@ -144,8 +145,20 @@ const Employment = () => {
         </div>
       </section>
       <article className="flex justify-end mt-6 gap-x-4">
-        <Button name="Back" bg="white" textColor="black" className="px-14" />
-        <Button name="Next" className="px-14" />
+        <Button
+          type="button"
+          name="Back"
+          bg="white"
+          textColor="black"
+          className="px-16"
+          onClick={() => setActiveTab(activeTab - 1)}
+        />
+        <Button
+          type="button"
+          name="Next"
+          className="px-16"
+          onClick={() => setActiveTab(activeTab + 1)}
+        />
       </article>
     </>
   );

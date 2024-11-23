@@ -10,6 +10,7 @@ import Employment from '../components/form/Employement';
 import Documents from '../components/form/Documents';
 import { FormProvider, useForm } from 'react-hook-form';
 export type employeeFormData = {
+  profilePicture: FileList;
   firstName: string;
   middleName: string;
   lastName: string;

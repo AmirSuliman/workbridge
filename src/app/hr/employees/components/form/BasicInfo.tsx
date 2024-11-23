@@ -6,13 +6,14 @@ import { MdOutlineFileUpload } from 'react-icons/md';
 import Button from '@/components/Button';
 import { useFormContext } from 'react-hook-form';
 import { employeeFormData } from '../../create-employee/page';
+import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
 
 const BasicInfo = () => {
   const {
     register,
     formState: { errors },
   } = useFormContext<employeeFormData>();
-
+  const { activeTab, setActiveTab } = useTabsContext();
   return (
     <div>
       <section className="bg-white rounded-lg border">
@@ -21,11 +22,28 @@ const BasicInfo = () => {
           <Heading icon={<AiFillContacts />} text="Basic Information" />
           <Label text="Profile Picture" />
           <article className="w-[30%] p-10 rounded-md border border-dashed hover:bg-slate-200 cursor-pointer">
-            <p className="flex items-center justify-center gap-x-2">
+            <label
+              htmlFor="profilePicture"
+              className="flex items-center justify-center gap-x-2 cursor-pointer"
+            >
               <span>Upload a profile picture</span>
               <MdOutlineFileUpload />
-            </p>
+            </label>
+            <input
+              id="profilePicture"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              {...register('profilePicture', {
+                required: 'Profile picture is required',
+              })}
+            />
           </article>
+          {errors.profilePicture && (
+            <span className="text-red-500">
+              {errors.profilePicture.message}
+            </span>
+          )}
           <p className="text-sm py-8 text-[#abaeb4]">
             Make sure profile image is a valid image format (.jpg, .png)
           </p>
@@ -212,8 +230,19 @@ const BasicInfo = () => {
         </div>
       </section>
       <article className="flex justify-end mt-6 gap-x-4">
-        <Button name="Cancel" bg="white" textColor="black" className="px-14" />
-        <Button name="Next" className="px-14" />
+        <Button
+          type="button"
+          name="Cancel"
+          bg="white"
+          textColor="black"
+          className="px-16"
+        />
+        <Button
+          type="button"
+          name="Next"
+          className="px-16"
+          onClick={() => setActiveTab(activeTab + 1)}
+        />
       </article>
     </div>
   );

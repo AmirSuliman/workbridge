@@ -7,6 +7,7 @@ import { CiCirclePlus } from 'react-icons/ci';
 import { TbEdit } from 'react-icons/tb';
 import { IoTrash } from 'react-icons/io5';
 import { MdOutlineFileUpload } from 'react-icons/md';
+import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
 const files = [
   {
     name: 'ioasdh22mvasd23a.pdf',
@@ -17,6 +18,7 @@ const files = [
   // Add more files as needed
 ];
 const Documents = () => {
+  const { activeTab, setActiveTab } = useTabsContext();
   return (
     <>
       <section className="bg-white  rounded-lg border p-4">
@@ -97,6 +99,16 @@ const Documents = () => {
           </table>
         </div>
       </section>
+      <article className="flex justify-end mt-6 gap-x-4">
+        <Button
+          name="Back"
+          bg="white"
+          textColor="black"
+          className="px-16"
+          onClick={() => setActiveTab(activeTab - 1)}
+        />
+        <Button name="Finish" className="px-16" type="submit" />
+      </article>
     </>
   );
 };
