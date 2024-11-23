@@ -1,7 +1,6 @@
 // types/next-auth.d.ts
 
-import { Session } from 'next-auth';
-import { User } from 'next-auth';
+import 'next-auth';
 
 // Extending the Session type to include `accessToken`
 declare module 'next-auth' {

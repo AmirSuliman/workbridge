@@ -1,13 +1,17 @@
 import axiosInstance from '@/lib/axios';
 import axios from 'axios';
 
-export const getEmployeeInfo = async (token: string, id: number) => {
+export const getEmployeeInfo = async (
+  token: string | undefined,
+  id: string | undefined
+) => {
   try {
     const response = await axiosInstance.get(`/employee/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log('get employee res:', response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

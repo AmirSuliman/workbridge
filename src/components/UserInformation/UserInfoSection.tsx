@@ -1,12 +1,60 @@
 'use client';
-import React from 'react';
-import BasicInfoIcon from '../icons/basic-info-icon';
-import FormHeading from './FormHeading';
-import FormField from './FormField';
+import { getEmployeeInfo } from '@/services/getEmployeeInfo';
+import { useSession } from 'next-auth/react';
+import React, { useEffect, useState } from 'react';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { HiMiniGlobeAmericas, HiMiniHomeModern } from 'react-icons/hi2';
+import BasicInfoIcon from '../icons/basic-info-icon';
+import FormField from './FormField';
+import FormHeading from './FormHeading';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setEmployeeData,
+  setEmployeeError,
+} from '@/store/slices/employeeInfoSlice';
+import { RootState } from '@/store/store';
 
 const UserInfoSection: React.FC = () => {
+  const { data: session } = useSession();
+  const dispatch = useDispatch();
+  const employeeData = useSelector((state: RootState) => state.employee.data);
+  const error = useSelector((state: RootState) => state.employee.error);
+
+  useEffect(() => {
+    const fetchEmployeeInfo = async () => {
+      if (!session?.user.accessToken || !session?.user.userId) {
+        dispatch(setEmployeeError('Invalid session or employee ID'));
+        return;
+      }
+
+      try {
+        const { data } = await getEmployeeInfo(
+          session.user.accessToken,
+          session.user.userId
+        );
+        dispatch(setEmployeeData(data));
+        console.log('employee data: ', data);
+      } catch (err: any) {
+        console.error('Error fetching employee data:', err);
+        dispatch(
+          setEmployeeError(
+            err.message || 'An error occurred while fetching employee data.'
+          )
+        );
+      }
+    };
+
+    fetchEmployeeInfo();
+  }, [session?.user.accessToken, session?.user.id]);
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!employeeData) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="p-4 rounded-md border-[1px] border-gray-border bg-white h-full">
       {/* Basic Information */}
@@ -16,12 +64,36 @@ const UserInfoSection: React.FC = () => {
           text="Basic Information"
         />
         <div className="grid sm:grid-cols-3 gap-4 my-5">
-          <FormField onChange={() => {}} label="First Name" value="Juliet" />
-          <FormField onChange={() => {}} label="Middle Name" value="" />
-          <FormField onChange={() => {}} label="Surname" value="Nicolas" />
-          <FormField onChange={() => {}} label="Birthday" value="" />
-          <FormField onChange={() => {}} label="Gender" value="" />
-          <FormField onChange={() => {}} label="Marital Status" value="" />
+          <FormField
+            onChange={() => {}}
+            label="First Name"
+            value={employeeData.firstName || 'N/A'}
+          />
+          <FormField
+            onChange={() => {}}
+            label="Middle Name"
+            value={employeeData.middleName || 'N/A'}
+          />
+          <FormField
+            onChange={() => {}}
+            label="Surname"
+            value={employeeData.lastName || 'N/A'}
+          />
+          <FormField
+            onChange={() => {}}
+            label="Birthday"
+            value={employeeData.birthday || 'N/A'}
+          />
+          <FormField
+            onChange={() => {}}
+            label="Gender"
+            value={employeeData.gender || 'N/A'}
+          />
+          <FormField
+            onChange={() => {}}
+            label="Marital Status"
+            value={employeeData.marritialStatus || 'N/A'}
+          />
         </div>
       </div>
       <hr className="text-white" />
@@ -34,13 +106,33 @@ const UserInfoSection: React.FC = () => {
           <FormField
             onChange={() => {}}
             label="Street 1"
-            value="4799 Lamberts Branch Road"
+            value={employeeData.location.street1 || 'N/A'}
           />
-          <FormField onChange={() => {}} label="Street 2" value="" />
-          <FormField onChange={() => {}} label="Zip" value="84116" />
-          <FormField onChange={() => {}} label="City" value="Salt Lake City" />
-          <FormField onChange={() => {}} label="Country" value="Utah" />
-          <FormField onChange={() => {}} label=" State" value="Utah" />
+          <FormField
+            onChange={() => {}}
+            label="Street 2"
+            value={employeeData.location.street2 || 'N/A'}
+          />
+          <FormField
+            onChange={() => {}}
+            label="Zip"
+            value={employeeData.location.zipCode || 'N/A'}
+          />
+          <FormField
+            onChange={() => {}}
+            label="City"
+            value={employeeData.location.city || 'N/A'}
+          />
+          <FormField
+            onChange={() => {}}
+            label="Country"
+            value={employeeData.location.country || 'N/A'}
+          />
+          <FormField
+            onChange={() => {}}
+            label=" State"
+            value={employeeData.location.state || 'N/A'}
+          />
         </div>
       </div>
       <hr />
@@ -50,12 +142,12 @@ const UserInfoSection: React.FC = () => {
           <FormField
             onChange={() => {}}
             label="Phone"
-            value="+389 71 735 326"
+            value={employeeData.phoneNumber || 'N/A'}
           />
           <FormField
             onChange={() => {}}
             label="Work Phone"
-            value="+389 71 735 326"
+            value={employeeData.workPhone || 'N/A'}
           />
         </div>
       </div>
@@ -69,22 +161,22 @@ const UserInfoSection: React.FC = () => {
           <FormField
             onChange={() => {}}
             label="LinkedIn"
-            value="/in/JuliettNicolas"
+            value={employeeData.linkedin || 'N/A'}
           />
           <FormField
             onChange={() => {}}
             label="Facebook"
-            value="Juilett Nicolas"
+            value={employeeData.facebook || 'N/A'}
           />
           <FormField
             onChange={() => {}}
             label="Instagram"
-            value="@juliettnicolas"
+            value={employeeData.instagram || 'N/A'}
           />
           <FormField
             onChange={() => {}}
             label="Personal Website"
-            value="juliettnicolas.com"
+            value={employeeData.website || 'N/A'}
           />
         </div>
       </div>

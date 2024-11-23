@@ -1,3 +1,5 @@
+'use client';
+
 import { IMAGES } from '@/constants/images';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
@@ -12,6 +14,9 @@ import FacebookIcon from '../icons/fb-icon';
 import InstagramIcon from '../icons/instagram-icon';
 import LinkedinIcon from '../icons/linkedin-icon';
 import ProfileInfoItem from './ProfileInfoItem';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
+import { useSession } from 'next-auth/react';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -20,6 +25,8 @@ const inter = Inter({
   display: 'swap',
 });
 const ProfileCard = () => {
+  const employeeData = useSelector((state: RootState) => state.employee.data);
+  const { data: session } = useSession();
   return (
     <article
       className={`bg-white shadow-md rounded-md border border-gray-border p-4 pb-6 ${inter.className}`}
@@ -28,7 +35,7 @@ const ProfileCard = () => {
         <div className="flex flex-col items-center">
           <Image
             className="rounded-full max-w-[6rem] object-contain"
-            src={IMAGES.dummyImage}
+            src={session?.user?.user?.profilePictureUrl || IMAGES.dummyImage}
             height={1000}
             width={1000}
             alt={'User Image'}
@@ -45,8 +52,12 @@ const ProfileCard = () => {
         <div className="flex flex-col w-full">
           <div className="flex justify-between">
             <div className="flex flex-col">
-              <h1 className={`text-lg`}>Juliette Nicolas</h1>
-              <p className="text-xs text-gray-500">Human Resources</p>
+              <h1 className={`text-lg`}>{`${
+                session?.user?.user?.firstName || ''
+              } ${session?.user?.user?.lastName || ''}`}</h1>
+              <p className="text-xs text-gray-500">
+                {session?.user?.user?.role || 'N/A'}
+              </p>
             </div>
             <div className="h-5">
               <Button
@@ -59,7 +70,7 @@ const ProfileCard = () => {
           <div className="flex mt-3 gap-4">
             <ProfileInfoItem
               icon={CiMobile3}
-              text="+123 456 78 90"
+              text={employeeData?.phoneNumber || 'N/A'}
               title="Phone Number"
             />
             <ProfileInfoItem
