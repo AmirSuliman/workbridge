@@ -1,3 +1,4 @@
+'use client';
 import Button from '@/components/Button';
 import React from 'react';
 import { TbEdit } from 'react-icons/tb';
@@ -7,7 +8,38 @@ import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
 import BasicInfo from '../components/form/BasicInfo';
 import Employment from '../components/form/Employement';
 import Documents from '../components/form/Documents';
+import { FormProvider, useForm } from 'react-hook-form';
+export type employeeFormData = {
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  birthday: string;
+  gender: string;
+  martialStatus: string;
+  street1: string;
+  street2: string;
+  zip: string;
+  city: string;
+  state: string;
+  country: string;
+  linkedin: string;
+  facebook: string;
+  instagram: string;
+  website: string;
+  jobTitle: string;
+  department: string;
+  reportingManager: string;
+  employmentType: string;
+  compensation: string;
+  schedule: string;
+  effectiveDate: string;
+};
 const page = () => {
+  const formMethods = useForm<employeeFormData>();
+  const { handleSubmit, reset } = formMethods;
+  const onSubmit = (data) => {
+    console.log(data);
+  };
   return (
     <main>
       <div className="flex justify-between">
@@ -49,15 +81,20 @@ const page = () => {
           </Tab>
         </div>
         <div>
-          <TabPanel index={0}>
-            <BasicInfo />
-          </TabPanel>
-          <TabPanel index={1}>
-            <Employment />
-          </TabPanel>
-          <TabPanel index={2}>
-            <Documents />
-          </TabPanel>
+          {/* using form provider for multi-step form */}
+          <FormProvider {...formMethods}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <TabPanel index={0}>
+                <BasicInfo />
+              </TabPanel>
+              <TabPanel index={1}>
+                <Employment />
+              </TabPanel>
+              <TabPanel index={2}>
+                <Documents />
+              </TabPanel>
+            </form>
+          </FormProvider>
         </div>
       </TabsContainer>
     </main>
