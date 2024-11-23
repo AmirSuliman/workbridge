@@ -7,8 +7,9 @@ import Button from '@/components/Button';
 import { useFormContext } from 'react-hook-form';
 import { employeeFormData } from '../../create-employee/page';
 import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
-
+import { useRouter } from 'next/navigation';
 const BasicInfo = () => {
+  const router = useRouter();
   const {
     register,
     formState: { errors },
@@ -236,6 +237,7 @@ const BasicInfo = () => {
           bg="white"
           textColor="black"
           className="px-16"
+          onClick={() => router.push('/hr/employees')}
         />
         <Button
           type="button"
