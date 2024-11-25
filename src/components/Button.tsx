@@ -9,6 +9,7 @@ const Button = ({
   classNames,
   onClick,
   className,
+  type = 'submit',
 }: {
   name: string;
   icon?: React.ReactNode;
@@ -17,10 +18,12 @@ const Button = ({
   classNames?: string;
   onClick?: () => void;
   className?: string;
+  type?: 'submit' | 'reset' | 'button' | undefined;
 }) => {
   return (
     <button
       onClick={onClick}
+      type={type}
       style={{
         background: `${bg}`,
         color: `${textColor}`,
