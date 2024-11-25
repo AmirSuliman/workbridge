@@ -2,13 +2,35 @@
 
 import 'next-auth';
 
-// Extending the Session type to include `accessToken`
+interface InnerUser {
+  active: boolean;
+  email: string;
+  firstName: string;
+  id: number;
+  lastName: string;
+  permissions: string[];
+  profilePictureUrl: string;
+  role: string;
+  roleId: number;
+}
+
 declare module 'next-auth' {
   interface Session {
-    user: User & { accessToken: string }; // Include the `accessToken` in the session's user object
-  }
-
-  interface User {
-    accessToken: string; // Add the `accessToken` property to the user object
+    user: {
+      active: boolean;
+      email: string;
+      firstName: string;
+      id: number;
+      lastName: string;
+      permissions: string[];
+      profilePictureUrl: string;
+      role: string;
+      roleId: number;
+      userId: string;
+      accessToken: string;
+      user: InnerUser;
+    };
+    accessToken: string; // Move accessToken to the root
+    expires: string; // Expiration date of the session
   }
 }

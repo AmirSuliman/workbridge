@@ -1,8 +1,6 @@
 import Tab from '@/components/common/TabsComponent/Tab';
 import TabPanel from '@/components/common/TabsComponent/TabPanel';
 import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
-import EmployeesTab from '@/components/Employees/EmployeesTab';
-import React from 'react';
 import EmployeesTable from './EmployeesTable';
 
 const Employees = () => {

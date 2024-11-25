@@ -5,6 +5,7 @@ import { FaAngleDown } from 'react-icons/fa';
 
 const UserProfileInfo = () => {
   const { data: session } = useSession();
+  console.log('Session from userinfo: ', session);
 
   return (
     <button className="flex flex-nowrap gap-4 justify-end items-center mr-0">

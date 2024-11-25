@@ -1,7 +1,7 @@
 'use client';
 import { getEmployeeInfo } from '@/services/getEmployeeInfo';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { HiMiniGlobeAmericas, HiMiniHomeModern } from 'react-icons/hi2';
 import BasicInfoIcon from '../icons/basic-info-icon';

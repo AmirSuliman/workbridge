@@ -30,6 +30,7 @@ export interface EmployeeData {
   hireDate: string;
   marritialStatus: string;
   linkedin: string | null;
+  employmentType: string | null;
   facebook: string | null;
   instagram: string | null;
   website: string | null;

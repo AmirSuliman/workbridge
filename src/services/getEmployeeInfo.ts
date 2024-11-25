@@ -10,6 +10,7 @@ export const getEmployeeInfo = async (
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      params: { associations: true },
     });
     console.log('get employee res:', response);
     return response.data;

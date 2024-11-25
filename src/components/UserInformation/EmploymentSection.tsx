@@ -1,10 +1,53 @@
+'use client';
+
 import React from 'react';
 import FormHeading from './FormHeading';
 import { HiMiniBriefcase } from 'react-icons/hi2';
 import FormField from './FormField';
 import InfoGrid from './InfoGrid';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const EmploymentSection = () => {
+  const employeeData = useSelector((state: RootState) => state.employee.data);
+
+  const hireDate = employeeData?.hireDate
+    ? employeeData.hireDate.split('T')[0]
+    : 'N/A';
+
+  const calculateDuration = (startDate: string | undefined): string => {
+    if (!startDate) return 'N/A';
+
+    const start = new Date(startDate);
+    const now = new Date();
+
+    // Get the difference in milliseconds
+    const differenceInMilliseconds = now.getTime() - start.getTime();
+
+    // Calculate the difference in days
+    const days = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
+
+    // Calculate the difference in months
+    const months =
+      now.getMonth() -
+      start.getMonth() +
+      12 * (now.getFullYear() - start.getFullYear());
+
+    // If less than a month, return days
+    if (months < 1) return `${days}d`;
+
+    // If less than a year, return months
+    if (months < 12) return `${months}m`;
+
+    // Otherwise, calculate years and months
+    const years = Math.floor(months / 12);
+    const remainingMonths = months % 12;
+
+    return `${years}y ${remainingMonths}m`;
+  };
+
+  const duration = employeeData?.hireDate ? calculateDuration(hireDate) : 'N/A';
+
   return (
     <div className="p-1 md:p-4 rounded-md  h-full">
       <div className="p-3 sm:p-6 rounded-[10px] border-gray-border border-[1px] bg-white mb-4">
@@ -12,8 +55,8 @@ const EmploymentSection = () => {
           <FormHeading icon={<HiMiniBriefcase className="w-4" />} text="Job" />
         </div>
         <div className="grid md:grid-cols-3 gap-4">
-          <FormField label="Hire Date" value="24.01.2023" />
-          <FormField label="Duration" value="1 Years 4 Months" />
+          <FormField label="Hire Date" value={hireDate} />
+          <FormField label="Duration" value={duration} />
         </div>
       </div>
 
@@ -26,7 +69,13 @@ const EmploymentSection = () => {
         </div>
         <InfoGrid
           headers={['Effective Date', 'Work Type', 'Note']}
-          values={[['24.01.2023', 'Fulltime', '']]}
+          values={[
+            [
+              `${employeeData?.effectiveDate || 'N/A'}`,
+              `${employeeData?.employmentType || 'N/A'}`,
+              '',
+            ],
+          ]}
         />
       </div>
 
@@ -50,12 +99,12 @@ const EmploymentSection = () => {
           ]}
           values={[
             [
-              '24.01.2023',
-              'London, Utah',
-              'USA',
-              'Operations',
-              'Human Resources',
-              'John McAfee',
+              `${employeeData?.effectiveDate || 'N/A'}`,
+              `${employeeData?.location.country}, ${employeeData?.location.state}`,
+              `${employeeData?.location.country}`,
+              `${employeeData?.department.name || 'N/A'}`,
+              `${employeeData?.tittle || 'N/A'}`,
+              `${employeeData?.reportingManagerId || 'N/A'}`,
             ],
           ]}
         />
@@ -79,8 +128,14 @@ const EmploymentSection = () => {
             'Note',
           ]}
           values={[
-            ['24.01.2023', '$200,000', 'Once a Month', 'Salary', 'Exempt', ''],
-            ['24.01.2023', '$200,000', 'Once a Month', 'Salary', 'Exempt', ''],
+            [
+              `${employeeData?.effectiveDate || 'N/A'}`,
+              `${employeeData?.salary || 'N/A'}`,
+              `${employeeData?.paymentSchedule || 'N/A'}`,
+              'Salary',
+              'Exempt',
+              '',
+            ],
           ]}
         />
       </div>
