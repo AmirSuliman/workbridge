@@ -1,17 +1,19 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import Modal from '@/components/modal/Modal';
 import { useForm } from 'react-hook-form';
 import Button from '@/components/Button';
-import { boolean } from 'zod';
+import toast from 'react-hot-toast';
+import axiosInstance from '@/lib/axios';
+import { API_ROUTES } from '@/constants/apiRoutes';
 type question = {
   title: string;
   id: number;
   required: boolean;
 };
 type JobFormFields = {
-  title: string;
+  tittle: string;
   departmentId: string;
   employmentType: string;
   hiringLeadId: string;
@@ -32,6 +34,25 @@ type JobFormFields = {
   glassdoor: string | boolean;
   indeed: string | boolean;
 };
+type department = {
+  id: number;
+  name: string;
+};
+const dummyHiringLeads = [
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' },
+  { id: 3, name: 'Charlie' },
+  { id: 4, name: 'Diana' },
+  { id: 5, name: 'Eve' },
+];
+const dummyReportingManagers = [
+  { id: 101, name: 'Frank' },
+  { id: 102, name: 'Grace' },
+  { id: 103, name: 'Hank' },
+  { id: 104, name: 'Ivy' },
+  { id: 105, name: 'Jack' },
+];
+
 const Createjobopening = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
@@ -41,6 +62,23 @@ const Createjobopening = () => {
     id: 0,
   });
   const [questions, setQuestions] = useState<question[]>([]);
+  const [departments, setDepartments] = useState<department[]>([]);
+  // this will get all departments
+  useEffect(() => {
+    const getAllDepartments = async () => {
+      try {
+        const {
+          data: {
+            data: { items },
+          },
+        } = await axiosInstance(API_ROUTES.GET_DEPARTMENTS);
+        setDepartments(items);
+      } catch (error) {
+        toast.error('Failed to load all departments');
+      }
+    };
+    getAllDepartments();
+  }, []);
   const {
     register,
     formState: { errors },
@@ -65,8 +103,8 @@ const Createjobopening = () => {
   };
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  // form submission handler
-  const onSubmit = handleSubmit((data) => {
+  // Form submission handler
+  const onSubmit = handleSubmit(async (data) => {
     const req = [
       'Resume',
       'Portfolio',
@@ -85,14 +123,16 @@ const Createjobopening = () => {
         name: key,
         required: toggleStates[key] || false,
       }));
+
     const location = {
       street1: data?.street1,
       street2: data?.street2,
-      zipCode: data?.zipCode,
+      zipCode: Number(data?.zipCode), // Convert to number
       city: data?.city,
       country: data?.country,
       state: data?.state,
     };
+
     const shareWebsites: string[] = [];
     const websites = [
       'linkedin',
@@ -104,9 +144,10 @@ const Createjobopening = () => {
         shareWebsites.push(item);
       }
     });
+
     let jobData = {};
     const otherFields = [
-      'title',
+      'tittle',
       'description',
       'departmentId',
       'salary',
@@ -114,7 +155,18 @@ const Createjobopening = () => {
       'hiringLeadId',
       'reportingToEmployeeId',
       'minYearsExperience',
-    ].forEach((item) => (jobData[item] = data[item] || ''));
+    ].forEach((item) => {
+      jobData[item] = [
+        'departmentId',
+        'salary',
+        'hiringLeadId',
+        'reportingToEmployeeId',
+        'minYearsExperience',
+      ].includes(item)
+        ? Number(data[item] || 0) // Convert specified fields to numbers
+        : data[item] || '';
+    });
+
     jobData = {
       ...jobData,
       requirements,
@@ -125,11 +177,23 @@ const Createjobopening = () => {
         required: question.required,
       })),
     };
-    console.log(jobData);
+
+    try {
+      const res = await axiosInstance.post(API_ROUTES.POST_JOB, {
+        ...jobData,
+        status: 'Posted',
+      });
+      console.log(res);
+      toast.success('Job created successfully');
+    } catch (error) {
+      console.log(error);
+      toast.error('Failed to create job');
+    }
 
     // console.log(questions);
     // console.log(data);
   });
+
   // this will toggle the question required state while adding the question
   const handleToggleQuestion = () => {
     setIsRequired(!isRequired);
@@ -197,10 +261,10 @@ const Createjobopening = () => {
                   type="text"
                   placeholder="Add job title"
                   className="p-3 border rounded-lg w-full"
-                  {...register('title', { required: 'Job title is required' })}
+                  {...register('tittle', { required: 'Job title is required' })}
                 />
-                {errors.title && (
-                  <span className="text-red-500">{errors.title.message}</span>
+                {errors.tittle && (
+                  <span className="text-red-500">{errors.tittle.message}</span>
                 )}
               </label>
 
@@ -215,21 +279,16 @@ const Createjobopening = () => {
                   <option value="" className="text-gray-400">
                     Select a Department
                   </option>
-                  <option value="marketing" className="text-gray-400">
-                    Marketing
-                  </option>
-                  <option value="engineering" className="text-gray-400">
-                    Engineering
-                  </option>
-                  <option value="hr" className="text-gray-400">
-                    Human Resources
-                  </option>
-                  <option value="sales" className="text-gray-400">
-                    Sales
-                  </option>
-                  <option value="support" className="text-gray-400">
-                    Customer Support
-                  </option>
+
+                  {departments?.map((department) => (
+                    <option
+                      value={department?.id}
+                      key={department.id}
+                      className="text-gray-400"
+                    >
+                      {department?.name}
+                    </option>
+                  ))}
                 </select>
                 {errors.departmentId && (
                   <span className="text-red-500">
@@ -250,13 +309,13 @@ const Createjobopening = () => {
                   <option value="" className="text-gray-400">
                     Select employment type
                   </option>
-                  <option value="marketing" className="text-gray-400">
+                  <option value="Fulltime" className="text-gray-400">
                     Full time
                   </option>
-                  <option value="engineering" className="text-gray-400">
+                  <option value="Parttime" className="text-gray-400">
                     Part time
                   </option>
-                  <option value="hr" className="text-gray-400">
+                  <option value="Internship" className="text-gray-400">
                     Internship
                   </option>
                 </select>
@@ -280,21 +339,15 @@ const Createjobopening = () => {
                   <option value="" className="text-gray-400">
                     Select hiring leads
                   </option>
-                  <option value="marketing" className="text-gray-400">
-                    lead
-                  </option>
-                  <option value="engineering" className="text-gray-400">
-                    lead
-                  </option>
-                  <option value="hr" className="text-gray-400">
-                    lead
-                  </option>
-                  <option value="sales" className="text-gray-400">
-                    lead
-                  </option>
-                  <option value="support" className="text-gray-400">
-                    lead
-                  </option>
+                  {dummyHiringLeads.map((lead) => (
+                    <option
+                      key={lead.id}
+                      value={lead.id}
+                      className="text-gray-400"
+                    >
+                      {lead.name}
+                    </option>
+                  ))}
                 </select>
                 {errors.hiringLeadId && (
                   <span className="text-red-500">
@@ -316,21 +369,11 @@ const Createjobopening = () => {
                   <option value="" className="text-gray-400">
                     Select a reporting manager
                   </option>
-                  <option value="marketing" className="text-gray-400">
-                    lead
-                  </option>
-                  <option value="engineering" className="text-gray-400">
-                    lead
-                  </option>
-                  <option value="hr" className="text-gray-400">
-                    lead
-                  </option>
-                  <option value="sales" className="text-gray-400">
-                    lead
-                  </option>
-                  <option value="support" className="text-gray-400">
-                    lead
-                  </option>
+                  {dummyReportingManagers.map((manager) => (
+                    <option key={manager.id} value={manager.id}>
+                      {manager.name}
+                    </option>
+                  ))}
                 </select>
                 {errors.reportingToEmployeeId && (
                   <span className="text-red-500">
