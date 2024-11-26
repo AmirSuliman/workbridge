@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import Modal from '@/components/modal/Modal';
 const Createjobopening = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [, setIsModalOpen] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);

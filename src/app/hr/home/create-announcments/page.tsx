@@ -17,7 +17,7 @@ const announcementSchema = z.object({
 const CreateAnnouncement = () => {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
-  const [status, setStatus] = useState('Draft');
+  const [, setStatus] = useState('Draft');
   const [body, setBody] = useState('');
   const [errors, setErrors] = useState<{ title?: string; body?: string }>({});
   const [isPreview, setIsPreview] = useState(false);
