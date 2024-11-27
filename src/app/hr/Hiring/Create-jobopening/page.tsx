@@ -7,6 +7,10 @@ import Button from '@/components/Button';
 import toast from 'react-hot-toast';
 import axiosInstance from '@/lib/axios';
 import { API_ROUTES } from '@/constants/apiRoutes';
+import { BiLoaderCircle } from 'react-icons/bi';
+import { useRouter } from 'next/navigation';
+import JobPreview from './JobPreview';
+
 type question = {
   title: string;
   id: number;
@@ -46,16 +50,21 @@ const dummyHiringLeads = [
   { id: 5, name: 'Eve' },
 ];
 const dummyReportingManagers = [
-  { id: 101, name: 'Frank' },
-  { id: 102, name: 'Grace' },
-  { id: 103, name: 'Hank' },
-  { id: 104, name: 'Ivy' },
-  { id: 105, name: 'Jack' },
+  { id: 1, name: 'Frank' },
+  { id: 2, name: 'Grace' },
+  { id: 3, name: 'Hank' },
+  { id: 4, name: 'Ivy' },
+  { id: 5, name: 'Jack' },
 ];
 
 const Createjobopening = () => {
-  const [, setIsModalOpen] = useState(false);
+  const router = useRouter();
+  const [jobData, setJobData] = useState({});
+  const [formData, setFormData] = useState<JobFormFields | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
+  const [jobPreviewData, setJobPreviewData] = useState(null);
   const [question, setQuestion] = useState({
     title: '',
     required: false,
@@ -71,7 +80,7 @@ const Createjobopening = () => {
           data: {
             data: { items },
           },
-        } = await axiosInstance(API_ROUTES.GET_DEPARTMENTS);
+        } = await axiosInstance.get(API_ROUTES.GET_DEPARTMENTS);
         setDepartments(items);
       } catch (error) {
         toast.error('Failed to load all departments');
@@ -82,8 +91,11 @@ const Createjobopening = () => {
   const {
     register,
     formState: { errors },
+    watch,
     handleSubmit,
   } = useForm<JobFormFields>();
+  const formValues = watch();
+
   const [toggleStates, setToggleStates] = useState({
     Resume: false,
     Address: false,
@@ -103,8 +115,10 @@ const Createjobopening = () => {
   };
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
   // Form submission handler
   const onSubmit = handleSubmit(async (data) => {
+    setLoading(true);
     const req = [
       'Resume',
       'Portfolio',
@@ -181,13 +195,15 @@ const Createjobopening = () => {
     try {
       const res = await axiosInstance.post(API_ROUTES.POST_JOB, {
         ...jobData,
-        status: 'Posted',
+        status: 'Published',
       });
       console.log(res);
       toast.success('Job created successfully');
+      setLoading(false);
     } catch (error) {
       console.log(error);
       toast.error('Failed to create job');
+      setLoading(false);
     }
 
     // console.log(questions);
@@ -221,6 +237,64 @@ const Createjobopening = () => {
     });
     setQuestions(updatedQuestions);
   };
+
+  const handlePreview = () => {
+    const data = formValues;
+
+    // Requirements array
+    const requirements = Object.keys(toggleStates)
+      .filter((key) => data[key])
+      .map((key) => ({
+        name: key,
+        required: toggleStates[key],
+      }));
+
+    // Location object
+    const location = {
+      street1: data.street1 || '',
+      street2: data.street2 || '',
+      zipCode: Number(data.zipCode || 0),
+      city: data.city || '',
+      country: data.country || '',
+      state: data.state || '',
+    };
+
+    // Share websites array
+    const shareWebsites = [
+      'linkedin',
+      'glassdoor',
+      'indeed',
+      'companyWebsite',
+    ].filter((key) => data[key]);
+
+    // Job data object
+    const previewData = {
+      tittle: data.tittle || '',
+      description: data.description || '',
+      department:
+        departments.find((d) => d.id === Number(data.departmentId))?.name || '',
+      salary: Number(data.salary || 0),
+      employmentType: data.employmentType || '',
+      hiringLead:
+        dummyHiringLeads.find((h) => h.id === Number(data.hiringLeadId))
+          ?.name || '',
+      reportingTo:
+        dummyReportingManagers.find(
+          (r) => r.id === Number(data.reportingToEmployeeId)
+        )?.name || '',
+      minYearsExperience: Number(data.minYearsExperience || 0),
+      requirements,
+      location,
+      shareWebsites,
+      questions: questions.map((question) => ({
+        question: question.title,
+        required: question.required,
+      })),
+    };
+
+    setJobPreviewData(previewData);
+    openModal(); // Open modal to preview
+  };
   return (
     <main className="space-y-8">
       <div className="flex flex-row items-start sm:items-center justify-between">
@@ -235,16 +309,23 @@ const Createjobopening = () => {
           </button>
           <button
             className="bg-white p-2 px-3 rounded-lg border"
-            onClick={openModal}
+            onClick={handlePreview}
           >
             Preview Job
           </button>
-          <button className=" p-2  ">Cancel</button>
+          <button
+            onClick={() => {
+              router.back();
+            }}
+            className=" p-2  "
+          >
+            Cancel
+          </button>
         </div>
       </div>
       {isModalOpen && (
         <Modal onClose={closeModal}>
-          <h2 className="text-xl font-semibold mb-4">Confirm Save</h2>
+          {jobPreviewData && <JobPreview jobData={jobPreviewData} />}
         </Modal>
       )}
       <form onSubmit={onSubmit}>
@@ -752,8 +833,15 @@ const Createjobopening = () => {
           </div>
         </div>
         <Button
-          name="Save & Publish Job Opening"
+          name={loading ? '' : 'Save & Publish Job Opening'}
           className="mx-auto inline-block mt-4"
+          icon={
+            loading ? (
+              <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+            ) : (
+              ''
+            )
+          }
         ></Button>
       </form>
     </main>

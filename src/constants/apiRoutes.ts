@@ -10,4 +10,5 @@ export const API_ROUTES = {
   CONFIRM_ACCOUNT: `user/confirmAccount`,
   GET_DEPARTMENTS: 'departments',
   POST_JOB: 'openPosition',
+  GET_JOBS: 'openPositions',
 };
