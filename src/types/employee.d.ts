@@ -42,3 +42,32 @@ export interface EmployeeData {
   effectiveDate: string | null;
   reportingManagerId: number | null;
 }
+
+type question = {
+  title: string;
+  id: number;
+  required: boolean;
+};
+
+type JobFormFields = {
+  tittle: string;
+  departmentId: string;
+  employmentType: string;
+  hiringLeadId: string;
+  reportingToEmployeeId: string;
+  minYearsExperience: string;
+  description: string;
+  street1: string;
+  street2?: string;
+  zipCode: string;
+  country: string;
+  state: string;
+  city: string;
+  salary: string;
+  Resume: string | boolean;
+  Address: string | boolean;
+  linkedin: string | boolean;
+  companyWebsite: string | boolean;
+  glassdoor: string | boolean;
+  indeed: string | boolean;
+};

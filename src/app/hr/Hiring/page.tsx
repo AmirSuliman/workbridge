@@ -1,7 +1,7 @@
 'use client';
 import { AllJobsTable } from '@/components/JobsOpening/AllJobsTable';
 import { useState } from 'react';
-import { FaChevronRight, FaPlus, FaSearch, FaUsers } from 'react-icons/fa';
+import { FaChevronRight, FaSearch, FaUsers } from 'react-icons/fa';
 
 const Hiring = () => {
   const jobApplications = [

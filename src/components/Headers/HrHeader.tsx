@@ -6,19 +6,21 @@ import BlackButton from '../Button';
 import UserProfileInfo from '../UserProfileInfo';
 import { GoBell } from 'react-icons/go';
 import Logout from '@/app/user/home/Logout';
+import { IoIosArrowRoundBack } from 'react-icons/io';
 
 const HrHeader = () => {
   const pathname = usePathname(); // Get the current URL path
   const router = useRouter(); // Router instance for navigation
 
-  const isAnnouncementPage = pathname?.startsWith('/hr/home/announcement/'); // Check if on the announcement page
+  const isHomePage = pathname?.startsWith('/hr/home'); // Check if on the announcement page
 
   return (
     <nav className="flex items-center gap-4 bg-white px-8 py-4 border-b-[1px] border-[#E8E8E8]">
-      {isAnnouncementPage ? (
+      {!isHomePage ? (
         <BlackButton
           name="Back"
-          icon={null}
+          icon={<IoIosArrowRoundBack size={25} />}
+          className="flex-row-reverse"
           bg="black"
           onClick={() => router.back()} // Navigate back
         />

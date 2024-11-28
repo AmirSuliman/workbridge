@@ -10,38 +10,8 @@ import { API_ROUTES } from '@/constants/apiRoutes';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { useRouter } from 'next/navigation';
 import JobPreview from './JobPreview';
+import { Department, JobFormFields, question } from '@/types/employee';
 
-type question = {
-  title: string;
-  id: number;
-  required: boolean;
-};
-type JobFormFields = {
-  tittle: string;
-  departmentId: string;
-  employmentType: string;
-  hiringLeadId: string;
-  reportingToEmployeeId: string;
-  minYearsExperience: string;
-  description: string;
-  street1: string;
-  street2?: string;
-  zipCode: string;
-  country: string;
-  state: string;
-  city: string;
-  salary: string;
-  Resume: string | boolean;
-  Address: string | boolean;
-  linkedin: string | boolean;
-  companyWebsite: string | boolean;
-  glassdoor: string | boolean;
-  indeed: string | boolean;
-};
-type department = {
-  id: number;
-  name: string;
-};
 const dummyHiringLeads = [
   { id: 1, name: 'Alice' },
   { id: 2, name: 'Bob' },
@@ -59,20 +29,44 @@ const dummyReportingManagers = [
 
 const Createjobopening = () => {
   const router = useRouter();
-  const [jobData, setJobData] = useState({});
-  const [formData, setFormData] = useState<JobFormFields | null>(null);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
   const [jobPreviewData, setJobPreviewData] = useState(null);
+  const [jobStatus, setJobStatus] = useState<'Draft' | 'Published' | ''>(''); // Job status state
   const [question, setQuestion] = useState({
     title: '',
     required: false,
     id: 0,
   });
   const [questions, setQuestions] = useState<question[]>([]);
-  const [departments, setDepartments] = useState<department[]>([]);
-  // this will get all departments
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const handleToggleQuestion = () => {
+    setIsRequired(!isRequired);
+    setQuestion({ ...question, required: !question.required });
+  };
+  const addQuestionHandler = () => {
+    setQuestions([...questions, { ...question, id: Date.now() }]);
+    setIsRequired(false);
+    setQuestion({ title: '', required: false, id: 0 });
+  };
+  // this will remove question from array
+  const removeQuestion = (index: number) => {
+    const remainingQuestions = questions.filter(
+      (question) => question.id !== index
+    );
+    setQuestions(remainingQuestions);
+  };
+  const toggleRequired = (id: number) => {
+    const updatedQuestions = questions.map((question) => {
+      if (question.id == id) {
+        return { ...question, required: !question.required };
+      }
+      return question;
+    });
+    setQuestions(updatedQuestions);
+  };
+  // Fetch departments
   useEffect(() => {
     const getAllDepartments = async () => {
       try {
@@ -84,10 +78,12 @@ const Createjobopening = () => {
         setDepartments(items);
       } catch (error) {
         toast.error('Failed to load all departments');
+        console.log(error);
       }
     };
     getAllDepartments();
   }, []);
+
   const {
     register,
     formState: { errors },
@@ -107,60 +103,45 @@ const Createjobopening = () => {
     Referral: false,
     Website: false,
   });
+
   const handleToggle = (name: string) => {
     setToggleStates((prev) => ({
       ...prev,
       [name]: !prev[name],
     }));
   };
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  // Form submission handler
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
-    const req = [
-      'Resume',
-      'Portfolio',
-      'CoverLetter',
-      'Address',
-      'DesiredSalary',
-      'Education',
-      'LinkedinProfile',
-      'Website',
-      'Referral',
-    ];
-    // Dynamically create the requirements array
-    const requirements = req
+
+    const requirements = Object.keys(toggleStates)
       .filter((key) => data[key])
       .map((key) => ({
         name: key,
-        required: toggleStates[key] || false,
+        required: toggleStates[key],
       }));
 
     const location = {
-      street1: data?.street1,
-      street2: data?.street2,
-      zipCode: Number(data?.zipCode), // Convert to number
-      city: data?.city,
-      country: data?.country,
-      state: data?.state,
+      street1: data.street1 || '',
+      street2: data.street2 || '',
+      zipCode: Number(data.zipCode || 0),
+      city: data.city || '',
+      country: data.country || '',
+      state: data.state || '',
     };
 
-    const shareWebsites: string[] = [];
-    const websites = [
+    const shareWebsites = [
       'linkedin',
       'glassdoor',
       'indeed',
       'companyWebsite',
-    ].forEach((item) => {
-      if (data[item]) {
-        shareWebsites.push(item);
-      }
-    });
+    ].filter((key) => data[key]);
 
     let jobData = {};
-    const otherFields = [
+    [
       'tittle',
       'description',
       'departmentId',
@@ -177,7 +158,7 @@ const Createjobopening = () => {
         'reportingToEmployeeId',
         'minYearsExperience',
       ].includes(item)
-        ? Number(data[item] || 0) // Convert specified fields to numbers
+        ? Number(data[item] || 0)
         : data[item] || '';
     });
 
@@ -190,58 +171,33 @@ const Createjobopening = () => {
         question: question.title,
         required: question.required,
       })),
+      status: jobStatus, // Dynamically set status
     };
 
     try {
-      const res = await axiosInstance.post(API_ROUTES.POST_JOB, {
-        ...jobData,
-        status: 'Published',
-      });
-      console.log(res);
-      toast.success('Job created successfully');
+      await axiosInstance.post(API_ROUTES.POST_JOB, jobData);
+      toast.success(
+        jobStatus === 'Published'
+          ? 'Job published successfully'
+          : 'Job saved as draft successfully'
+      );
       setLoading(false);
     } catch (error) {
-      console.log(error);
-      toast.error('Failed to create job');
+      console.error(error);
+      toast.error(
+        jobStatus === 'Published'
+          ? 'Failed to publish job'
+          : 'Failed to save draft'
+      );
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
-
-    // console.log(questions);
-    // console.log(data);
   });
-
-  // this will toggle the question required state while adding the question
-  const handleToggleQuestion = () => {
-    setIsRequired(!isRequired);
-    setQuestion({ ...question, required: !question.required });
-  };
-  const addQuestionHandler = () => {
-    setQuestions([...questions, { ...question, id: Date.now() }]);
-    setIsRequired(false);
-    setQuestion({ title: '', required: false, id: 0 });
-  };
-  // this will remove question from array
-  const removeQuestion = (index: number) => {
-    const remainingQuestions = questions.filter(
-      (question) => question.id !== index
-    );
-    setQuestions(remainingQuestions);
-  };
-  // after question is added this will change its required value
-  const toggleRequired = (id: number) => {
-    const updatedQuestions = questions.map((question) => {
-      if (question.id == id) {
-        return { ...question, required: !question.required };
-      }
-      return question;
-    });
-    setQuestions(updatedQuestions);
-  };
 
   const handlePreview = () => {
     const data = formValues;
 
-    // Requirements array
     const requirements = Object.keys(toggleStates)
       .filter((key) => data[key])
       .map((key) => ({
@@ -249,7 +205,6 @@ const Createjobopening = () => {
         required: toggleStates[key],
       }));
 
-    // Location object
     const location = {
       street1: data.street1 || '',
       street2: data.street2 || '',
@@ -259,7 +214,6 @@ const Createjobopening = () => {
       state: data.state || '',
     };
 
-    // Share websites array
     const shareWebsites = [
       'linkedin',
       'glassdoor',
@@ -267,7 +221,6 @@ const Createjobopening = () => {
       'companyWebsite',
     ].filter((key) => data[key]);
 
-    // Job data object
     const previewData = {
       tittle: data.tittle || '',
       description: data.description || '',
@@ -293,19 +246,40 @@ const Createjobopening = () => {
     };
 
     setJobPreviewData(previewData);
-    openModal(); // Open modal to preview
+    openModal();
   };
+
+  // Button Handlers
+  const handlePublish = () => setJobStatus('Published');
+  const handleSaveDraft = () => setJobStatus('Draft');
+
   return (
-    <main className="space-y-8">
-      <div className="flex flex-row items-start sm:items-center justify-between">
+    <main className="">
+      {isModalOpen && (
+        <Modal onClose={closeModal}>
+          {jobPreviewData && <JobPreview jobData={jobPreviewData} />}
+        </Modal>
+      )}
+      <div className="flex flex-row items-start sm:items-center justify-between mb-4">
         <div className="flex flex-row gap-2 text-[#0F172A] items-center text-[22px]">
           <FaEdit />
           <p className="font-semibold">Add Job Opening</p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-3">
-          <button className="bg-[#0F172A] p-2 px-3 rounded-lg text-white">
-            Save Draft
+          <button
+            onClick={() => {
+              handleSaveDraft();
+              console.log(jobStatus);
+            }}
+            disabled={loading}
+            className="bg-[#0F172A] p-2 px-3 rounded-lg text-white"
+          >
+            {jobStatus === 'Draft' && loading ? (
+              <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+            ) : (
+              'Save Draft'
+            )}
           </button>
           <button
             className="bg-white p-2 px-3 rounded-lg border"
@@ -323,11 +297,7 @@ const Createjobopening = () => {
           </button>
         </div>
       </div>
-      {isModalOpen && (
-        <Modal onClose={closeModal}>
-          {jobPreviewData && <JobPreview jobData={jobPreviewData} />}
-        </Modal>
-      )}
+
       <form onSubmit={onSubmit}>
         <div className="bg-white rounded-lg border">
           <div className=" w-ful p-8">
@@ -393,12 +363,12 @@ const Createjobopening = () => {
                   <option value="Fulltime" className="text-gray-400">
                     Full time
                   </option>
-                  <option value="Parttime" className="text-gray-400">
-                    Part time
-                  </option>
-                  <option value="Internship" className="text-gray-400">
-                    Internship
-                  </option>
+                  {/* <option value="Parttime" className="text-gray-400">
+                      Part time
+                    </option>
+                    <option value="Internship" className="text-gray-400">
+                      Internship
+                    </option> */}
                 </select>
                 {errors.employmentType && (
                   <span className="text-red-500">
@@ -832,17 +802,27 @@ const Createjobopening = () => {
             </div>
           </div>
         </div>
-        <Button
-          name={loading ? '' : 'Save & Publish Job Opening'}
-          className="mx-auto inline-block mt-4"
-          icon={
-            loading ? (
-              <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
-            ) : (
-              ''
-            )
-          }
-        ></Button>
+        {/* <button onClick={handleSubmit(onSubmit)} disabled={loading}>
+          {jobStatus === 'Published' && loading
+            ? 'Publishing...'
+            : 'Publish Job'}
+        </button> */}
+        <div
+          onClick={handlePublish}
+          className="w-fit h-fit mx-auto inline-block mt-4"
+        >
+          <Button
+            name={loading ? '' : 'Save & Publish Job Opening'}
+            className=""
+            icon={
+              jobStatus === 'Published' && loading ? (
+                <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+              ) : (
+                ''
+              )
+            }
+          ></Button>
+        </div>
       </form>
     </main>
   );

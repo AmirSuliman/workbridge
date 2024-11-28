@@ -1,12 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FaChevronRight, FaPlus, FaUsers } from 'react-icons/fa';
 import { fetchOpenPositions } from '@/store/slices/getOpenPositionSlice';
-import { RootState } from '@/store/store';
+import { AppDispatch, RootState } from '@/store/store';
 import Link from 'next/link';
+import ScreenLoader from '../common/ScreenLoader';
+import { useRouter } from 'next/navigation';
 
 export const AllJobsTable = () => {
-  const dispatch = useDispatch();
+  const router = useRouter();
+  const [sortCriteria, setSortCriteria] = useState<string>('');
+
+  const dispatch = useDispatch<AppDispatch>();
   const { items, loading, error } = useSelector(
     (state: RootState) => state.jobs
   );
@@ -15,8 +20,31 @@ export const AllJobsTable = () => {
     dispatch(fetchOpenPositions());
   }, [dispatch]);
 
+  // Sorting logic
+  const sortedItems = [...items].sort((a, b) => {
+    switch (sortCriteria) {
+      case 'Latest':
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      case 'Oldest':
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+      case 'Most Candidates':
+        return b.jobApplicationCount - a.jobApplicationCount;
+      case 'Least Candidates':
+        return a.jobApplicationCount - b.jobApplicationCount;
+      case 'Status ascending':
+        return a.status.localeCompare(b.status);
+      case 'Status descending':
+        return b.status.localeCompare(a.status);
+      default:
+        return 0; // No sorting
+    }
+  });
   if (loading) {
-    return <p>Loading...</p>;
+    return <ScreenLoader />;
   }
 
   if (error) {
@@ -40,12 +68,19 @@ export const AllJobsTable = () => {
             <label htmlFor="sort" className="mr-2 text-gray-400 text-[12px]">
               Sort
             </label>
-            <select id="sort" className="border rounded px-2 py-1 text-[12px]">
+            <select
+              id="sort"
+              className="border rounded px-2 py-1 divide-y-2 text-[12px]"
+              value={sortCriteria}
+              onChange={(e) => setSortCriteria(e.target.value)}
+            >
               <option value="">Select</option>
-              <option value="nameAZ">A-Z</option>
-              <option value="nameZA">Z-A</option>
-              <option value="dateAsc">Date Ascending</option>
-              <option value="dateDesc">Date Descending</option>
+              <option value="Latest">Latest</option>
+              <option value="Oldest">Oldest</option>
+              <option value="Most Candidates">Most Candidates</option>
+              <option value="Least Candidates">Least Candidates</option>
+              <option value="Status ascending">Status ascending</option>
+              <option value="Status descending">Status descending</option>
             </select>
           </div>
           <div>
@@ -78,10 +113,13 @@ export const AllJobsTable = () => {
             </tr>
           </thead>
           <tbody>
-            {items.map((job) => (
+            {sortedItems.map((job) => (
               <tr
+                onClick={() => {
+                  router.push(`hiring/job/${job.id}`);
+                }}
                 key={job.id}
-                className="hover:bg-gray-50 text-[#0F172A] text-[14px]"
+                className="hover:bg-gray-50 text-[#0F172A] text-[14px] cursor-pointer"
               >
                 <td className="py-3 px-4 border-b">
                   <span className="flex items-center gap-2">
