@@ -175,18 +175,7 @@ const EmployeesTable = () => {
           headers={headers}
           values={Tvalues}
           tableConfig={{ rowBorder: true, selectable: true }}
-
-          // cols={6}
-          // colSpans={[1, 1, 1, 1, 1]}
-          // tableConfig={{ selectable: false, rowBorder: false }}
-          // onSelectionChange={(selectedRows) => console.log(selectedRows)}
         />
-        {/* <InfoGrid
-                    headers={["Employee ID", "Job Title", "Department", "Email", "Hire Date", ""]}
-                    values={values}
-                    cols={6}
-                    colSpans={[1, 1, 1, 1, 1, 1]}
-                /> */}
       </div>
     </div>
   );

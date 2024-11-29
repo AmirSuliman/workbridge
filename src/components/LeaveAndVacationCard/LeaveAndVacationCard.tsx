@@ -2,6 +2,7 @@ import IconWithBg from '../SingleAnnouncement/IconWithBg';
 import DaysCard from './DaysCard';
 import Button from '../Button';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 const LeaveAndVacationCard = ({
   title,
@@ -18,6 +19,11 @@ const LeaveAndVacationCard = ({
   daysNum: string;
   name: string;
 }) => {
+  const router = useRouter();
+
+  const navigateToTimeRequestTab = () => {
+    router.push('/hr/my-information?tab=2'); // Pass tab index via query param
+  };
   return (
     <div className="border-[0.5px] border-[#E8E8E8] bg-[#F5F6FA] p-4 rounded space-y-2">
       <div className="flex items-center gap-2">
@@ -29,7 +35,7 @@ const LeaveAndVacationCard = ({
         <DaysCard daysNum={daysNum} />
       </div>
 
-      <div className="">
+      <div onClick={navigateToTimeRequestTab} className="w-fit h-fit">
         <Button name={name} icon="" bg="black" textColor="white" />
       </div>
     </div>

@@ -1,14 +1,14 @@
 'use client';
 import Button from '@/components/Button';
-import React from 'react';
-import { TbEdit } from 'react-icons/tb';
 import Tab from '@/components/common/TabsComponent/Tab';
 import TabPanel from '@/components/common/TabsComponent/TabPanel';
 import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
-import BasicInfo from '../components/form/BasicInfo';
-import Employment from '../components/form/Employement';
-import Documents from '../components/form/Documents';
 import { FormProvider, useForm } from 'react-hook-form';
+import { TbEdit } from 'react-icons/tb';
+import BasicInfo from '../components/form/BasicInfo';
+import Documents from '../components/form/Documents';
+import Employment from '../components/form/Employement';
+
 export type employeeFormData = {
   profilePicture: FileList;
   firstName: string;
@@ -35,10 +35,11 @@ export type employeeFormData = {
   schedule: string;
   effectiveDate: string;
 };
-const page = () => {
+const CreateEmployee = () => {
   const formMethods = useForm<employeeFormData>();
   const { handleSubmit, reset } = formMethods;
   const onSubmit = (data) => {
+    reset();
     console.log(data);
   };
   return (
@@ -102,4 +103,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default CreateEmployee;

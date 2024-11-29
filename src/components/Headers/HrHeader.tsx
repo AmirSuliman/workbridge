@@ -1,21 +1,19 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
+import { GoBell } from 'react-icons/go';
+import { IoIosArrowRoundBack } from 'react-icons/io';
 import { PiPlusCircleBold } from 'react-icons/pi';
 import BlackButton from '../Button';
 import UserProfileInfo from '../UserProfileInfo';
-import { GoBell } from 'react-icons/go';
-import Logout from '@/app/user/home/Logout';
-import { IoIosArrowRoundBack } from 'react-icons/io';
 
 const HrHeader = () => {
-  const pathname = usePathname(); // Get the current URL path
-  const router = useRouter(); // Router instance for navigation
-
-  const isHomePage = pathname?.startsWith('/hr/home'); // Check if on the announcement page
+  const pathname = usePathname();
+  const router = useRouter();
+  const isHomePage = pathname?.startsWith('/hr/home');
 
   return (
-    <nav className="flex items-center gap-4 bg-white px-8 py-4 border-b-[1px] border-[#E8E8E8]">
+    <nav className="relative flex items-center gap-4 bg-white px-8 py-4 border-b-[1px] border-[#E8E8E8]">
       {!isHomePage ? (
         <BlackButton
           name="Back"
@@ -36,7 +34,7 @@ const HrHeader = () => {
         <GoBell size={18} />
       </button>
       <UserProfileInfo />
-      <Logout />
+      {/* <Logout /> */}
     </nav>
   );
 };

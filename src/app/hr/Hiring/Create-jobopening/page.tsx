@@ -1,16 +1,22 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { FaEdit, FaTrash } from 'react-icons/fa';
-import Modal from '@/components/modal/Modal';
-import { useForm } from 'react-hook-form';
 import Button from '@/components/Button';
-import toast from 'react-hot-toast';
-import axiosInstance from '@/lib/axios';
+import Modal from '@/components/modal/Modal';
 import { API_ROUTES } from '@/constants/apiRoutes';
-import { BiLoaderCircle } from 'react-icons/bi';
+import axiosInstance from '@/lib/axios';
+import {
+  Department,
+  JobFormFields,
+  JobPreviewData,
+  question,
+} from '@/types/employee';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { BiLoaderCircle } from 'react-icons/bi';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import JobPreview from './JobPreview';
-import { Department, JobFormFields, question } from '@/types/employee';
+import Image from 'next/image';
 
 const dummyHiringLeads = [
   { id: 1, name: 'Alice' },
@@ -32,7 +38,9 @@ const Createjobopening = () => {
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
-  const [jobPreviewData, setJobPreviewData] = useState(null);
+  const [jobPreviewData, setJobPreviewData] = useState<
+    JobPreviewData | undefined
+  >(undefined);
   const [jobStatus, setJobStatus] = useState<'Draft' | 'Published' | ''>(''); // Job status state
   const [question, setQuestion] = useState({
     title: '',
@@ -302,7 +310,7 @@ const Createjobopening = () => {
         <div className="bg-white rounded-lg border">
           <div className=" w-ful p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium ">
-              <img src="/jobicon.png" alt="img" className="w-5" />
+              <Image src="/jobicon.png" alt="img" className="w-5" />
               Job Information
             </div>
             <div className="flex mt-8 flex-col sm:flex-row sm:gap-4 gap-2 items-center justify-between w-full">
@@ -455,7 +463,7 @@ const Createjobopening = () => {
           <div className="w-full h-[0.7px] bg-gray-200 " />
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium ">
-              <img src="/jobdescription.png" alt="img" className="w-5" />
+              <Image src="/jobdescription.png" alt="img" className="w-5" />
               Job Description
             </div>
             <label className="flex flex-col mb-4 sm:w-1/3 w-full mt-8">
@@ -480,7 +488,7 @@ const Createjobopening = () => {
 
           <div className=" w-ful p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium ">
-              <img src="/loctaion.png" alt="img" className="w-5" />
+              <Image src="/loctaion.png" alt="img" className="w-5" />
               Location
             </div>
             <div className="flex mt-8 flex-col sm:flex-row sm:gap-4 gap-2 items-center justify-between w-full">
@@ -563,7 +571,7 @@ const Createjobopening = () => {
 
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium ">
-              <img src="/compensation.png" alt="img" className="w-5" />
+              <Image src="/compensation.png" alt="img" className="w-5" />
               Compensation
             </div>
             <label className="flex flex-col mb-4 sm:w-1/3 w-full mt-8">
@@ -586,7 +594,7 @@ const Createjobopening = () => {
 
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium mb-8">
-              <img src="/jobicon.png" alt="img" className="w-5" />
+              <Image src="/jobicon.png" alt="img" className="w-5" />
               Application Requirements
             </div>
             <div className="flex flex-wrap gap-5">
@@ -655,7 +663,7 @@ const Createjobopening = () => {
           <div className="w-full h-[0.7px] bg-gray-200 " />
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium mb-8">
-              <img src="/question.png" alt="img" className="w-5" />
+              <Image src="/question.png" alt="img" className="w-5" />
               Custom Questions
             </div>
             {/* Existing Questions */}
@@ -747,7 +755,7 @@ const Createjobopening = () => {
           <div className="h-[1px] w-full bg-gray-300" />
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium mb-8">
-              <img src="/jobpost.png" alt="img" className="w-5" />
+              <Image src="/jobpost.png" alt="img" className="w-5" />
               Share Job Posting
             </div>
             <div className="flex flex-wrap gap-2 sm:gap-12">

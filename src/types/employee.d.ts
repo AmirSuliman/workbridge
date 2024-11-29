@@ -71,3 +71,25 @@ type JobFormFields = {
   glassdoor: string | boolean;
   indeed: string | boolean;
 };
+
+interface JobPreviewData {
+  tittle: string;
+  description: string;
+  department: string;
+  salary: number;
+  employmentType: string;
+  hiringLead: string;
+  reportingTo: string;
+  minYearsExperience: number;
+  requirements: { name: string; required: boolean }[];
+  location: {
+    street1: string;
+    street2: string;
+    zipCode: number;
+    city: string;
+    country: string;
+    state: string;
+  };
+  shareWebsites: string[];
+  questions: { question: string; required: boolean }[];
+}

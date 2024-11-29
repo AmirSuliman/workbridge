@@ -9,19 +9,33 @@ import { useRouter } from 'next/navigation';
 
 export const AllJobsTable = () => {
   const router = useRouter();
-  const [sortCriteria, setSortCriteria] = useState<string>('');
-
   const dispatch = useDispatch<AppDispatch>();
+
   const { items, loading, error } = useSelector(
     (state: RootState) => state.jobs
   );
+  console.log('Jobs: ', items);
+  const [sortCriteria, setSortCriteria] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [typeFilter, setTypeFilter] = useState<string>('');
 
   useEffect(() => {
     dispatch(fetchOpenPositions());
   }, [dispatch]);
 
+  // Filtering logic
+  const filteredItems = items.filter((job) => {
+    const matchesStatus =
+      !statusFilter || job.status.toLowerCase() === statusFilter.toLowerCase();
+    const matchesType =
+      !typeFilter ||
+      job.employmentType.toLowerCase() === typeFilter.toLowerCase();
+
+    return matchesStatus && matchesType;
+  });
+
   // Sorting logic
-  const sortedItems = [...items].sort((a, b) => {
+  const sortedItems = [...filteredItems].sort((a, b) => {
     switch (sortCriteria) {
       case 'Latest':
         return (
@@ -43,6 +57,7 @@ export const AllJobsTable = () => {
         return 0; // No sorting
     }
   });
+
   if (loading) {
     return <ScreenLoader />;
   }
@@ -64,6 +79,7 @@ export const AllJobsTable = () => {
           </div>
         </Link>
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+          {/* Sort Dropdown */}
           <div>
             <label htmlFor="sort" className="mr-2 text-gray-400 text-[12px]">
               Sort
@@ -83,22 +99,51 @@ export const AllJobsTable = () => {
               <option value="Status descending">Status descending</option>
             </select>
           </div>
+
+          {/* Status Filter */}
           <div>
-            <label htmlFor="filter" className="mr-2 text-gray-400 text-[12px]">
-              Filter
+            <label
+              htmlFor="statusFilter"
+              className="mr-2 text-gray-400 text-[12px]"
+            >
+              Status
             </label>
             <select
-              id="filter"
+              id="statusFilter"
               className="border rounded px-2 py-1 text-[12px]"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
             >
-              <option value="">Select</option>
+              <option value="">All</option>
               <option value="active">Active</option>
               <option value="pending">Pending</option>
               <option value="closed">Closed</option>
             </select>
           </div>
+
+          {/* Type Filter */}
+          <div>
+            <label
+              htmlFor="typeFilter"
+              className="mr-2 text-gray-400 text-[12px]"
+            >
+              Job Type
+            </label>
+            <select
+              id="typeFilter"
+              className="border rounded px-2 py-1 text-[12px]"
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+            >
+              <option value="">All</option>
+              <option value="FullTime">Full Time</option>
+              <option value="PartTime">Part Time</option>
+              <option value="Contract">Contract</option>
+            </select>
+          </div>
         </div>
       </div>
+
       <div className="mt-12 overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>

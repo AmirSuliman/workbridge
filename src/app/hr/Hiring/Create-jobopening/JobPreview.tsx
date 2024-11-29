@@ -1,30 +1,7 @@
+import { JobPreviewData } from '@/types/employee';
 import React from 'react';
 
-type JobPreviewProps = {
-  jobData: {
-    tittle: string;
-    department: string;
-    employmentType: string;
-    hiringLead: string;
-    reportingTo: string;
-    minYearsExperience: string;
-    description: string;
-    location: {
-      street1: string;
-      street2?: string;
-      zipCode: number;
-      city: string;
-      state: string;
-      country: string;
-    };
-    salary: string;
-    requirements: { name: string; required: boolean }[];
-    shareWebsites: string[];
-    questions: { question: string; required: boolean }[];
-  };
-};
-
-const JobPreview: React.FC<JobPreviewProps> = ({ jobData }) => {
+const JobPreview = ({ jobData }: { jobData: JobPreviewData }) => {
   return (
     <div className=" p-4 border border-gray-300 rounded shadow-md">
       <div>

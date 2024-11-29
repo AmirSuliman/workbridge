@@ -96,7 +96,7 @@ const Auth = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="w-full">
             <InputField
               name="email"
-              type="text"
+              type="email"
               placeholder="Work Email"
               register={register}
               error={errors.email?.message}

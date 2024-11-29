@@ -2,23 +2,22 @@
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { CiLogout } from 'react-icons/ci';
 
 const Logout = () => {
   const router = useRouter();
   const onLogout = async () => {
-    console.log('Logging out');
     await signOut();
     router.replace('/sign-in');
   };
 
   return (
-    <div>
-      <button
-        className="border-md bg-red-500 border-gray-border text-xs font-semibold text-white rounded-md p-2"
-        onClick={onLogout}
-      >
-        Logout
-      </button>
+    // it is div becuse button causes hydration error - button inside button
+    <div
+      className="flex gap-2 items-center text-xs px-4 py-2 bg-white hover:bg-opacity-50"
+      onClick={onLogout}
+    >
+      <CiLogout /> Logout
     </div>
   );
 };

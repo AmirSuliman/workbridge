@@ -1,3 +1,4 @@
+'use client';
 import ProfileCard from '@/components/common/ProfileCard';
 import Tab from '@/components/common/TabsComponent/Tab';
 import TabPanel from '@/components/common/TabsComponent/TabPanel';
@@ -9,7 +10,7 @@ import NotesSection from '@/components/UserInformation/NotesSection';
 import TimeOffSection from '@/components/UserInformation/TimeOffSection';
 import UserInfoSection from '@/components/UserInformation/UserInfoSection';
 import { Inter } from 'next/font/google';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -19,6 +20,7 @@ const inter = Inter({
 });
 const MyInformation = () => {
   const UserInfoSectionMemo = useMemo(() => <UserInfoSection />, []);
+
   return (
     <section className={`p-4 h-full  ${inter.className}`}>
       <ProfileCard />
