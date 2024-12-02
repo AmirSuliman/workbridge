@@ -50,7 +50,7 @@ const HrSidebar = () => {
         <SidebarNavItem
           name="Hiring"
           icon={<PiHandshakeFill size={22} />}
-          href="/hr/hiring"
+          href="/hr/Hiring"
         />
         <SidebarNavItem
           name="Leave Requests"

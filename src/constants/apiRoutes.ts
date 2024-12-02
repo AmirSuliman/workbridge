@@ -8,6 +8,7 @@ export const API_ROUTES = {
     LOGIN: `user/login`,
     CREATE_USER: `user`,
     CONFIRM_ACCOUNT: `user/confirmAccount`,
+    Candidate: `candidates`,
 
 }
 
