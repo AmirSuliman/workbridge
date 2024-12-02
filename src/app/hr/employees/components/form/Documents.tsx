@@ -1,13 +1,11 @@
-import React from 'react';
-import { FaFileAlt } from 'react-icons/fa';
-import { AiFillContacts } from 'react-icons/ai';
-import { Heading, Label } from '../Helpers';
 import Button from '@/components/Button';
+import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
 import { CiCirclePlus } from 'react-icons/ci';
-import { TbEdit } from 'react-icons/tb';
+import { FaFileAlt } from 'react-icons/fa';
 import { IoTrash } from 'react-icons/io5';
 import { MdOutlineFileUpload } from 'react-icons/md';
-import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
+import { TbEdit } from 'react-icons/tb';
+import { Label } from '../Helpers';
 const files = [
   {
     name: 'ioasdh22mvasd23a.pdf',

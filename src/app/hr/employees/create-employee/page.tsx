@@ -8,35 +8,10 @@ import { TbEdit } from 'react-icons/tb';
 import BasicInfo from '../components/form/BasicInfo';
 import Documents from '../components/form/Documents';
 import Employment from '../components/form/Employement';
+import { EmployeeData } from '@/types/employee';
 
-export type employeeFormData = {
-  profilePicture: FileList;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  birthday: string;
-  gender: string;
-  martialStatus: string;
-  street1: string;
-  street2: string;
-  zip: string;
-  city: string;
-  state: string;
-  country: string;
-  linkedin: string;
-  facebook: string;
-  instagram: string;
-  website: string;
-  jobTitle: string;
-  department: string;
-  reportingManager: string;
-  employmentType: string;
-  compensation: string;
-  schedule: string;
-  effectiveDate: string;
-};
 const CreateEmployee = () => {
-  const formMethods = useForm<employeeFormData>();
+  const formMethods = useForm<EmployeeData>();
   const { handleSubmit, reset } = formMethods;
   const onSubmit = (data) => {
     reset();

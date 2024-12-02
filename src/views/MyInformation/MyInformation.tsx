@@ -10,6 +10,7 @@ import NotesSection from '@/components/UserInformation/NotesSection';
 import TimeOffSection from '@/components/UserInformation/TimeOffSection';
 import UserInfoSection from '@/components/UserInformation/UserInfoSection';
 import { Inter } from 'next/font/google';
+import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
 
 const inter = Inter({
@@ -20,7 +21,7 @@ const inter = Inter({
 });
 const MyInformation = () => {
   const UserInfoSectionMemo = useMemo(() => <UserInfoSection />, []);
-
+  const { empId } = useParams();
   return (
     <section className={`p-4 h-full  ${inter.className}`}>
       <ProfileCard />
@@ -61,13 +62,15 @@ const MyInformation = () => {
           >
             Emergency
           </Tab>
-          <Tab
-            index={5}
-            tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-            activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-          >
-            Notes
-          </Tab>
+          {!empId && (
+            <Tab
+              index={5}
+              tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
+              activeTabStyle="font-semibold border-b-2 !border-dark-navy"
+            >
+              Notes
+            </Tab>
+          )}
         </div>
         <div>
           <TabPanel index={0}>{UserInfoSectionMemo}</TabPanel>
@@ -83,9 +86,11 @@ const MyInformation = () => {
           <TabPanel index={4}>
             <EmergencySection />
           </TabPanel>
-          <TabPanel index={5}>
-            <NotesSection />
-          </TabPanel>
+          {!empId && (
+            <TabPanel index={5}>
+              <NotesSection />
+            </TabPanel>
+          )}
         </div>
       </TabsContainer>
     </section>

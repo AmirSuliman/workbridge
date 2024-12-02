@@ -6,15 +6,21 @@ import ScreenLoader from '@/components/common/ScreenLoader';
 import SearchInput from '@/components/common/SearchBar';
 import { IMAGES } from '@/constants/images';
 import { getAllEmployees } from '@/services/getAllEmployees';
+import { addEmployees } from '@/store/slices/allEmployeesSlice';
+import { AppDispatch } from '@/store/store';
 import { AllEmployeeData } from '@/types/employee';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { CiCirclePlus } from 'react-icons/ci';
 import { FaChevronRight } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
 
 export const AllEmployees = () => {
   const router = useRouter();
-  const [employees, setEmployees] = useState<AllEmployeeData | undefined>();
+  const dispatch = useDispatch<AppDispatch>();
+  const [employees, setEmployeesState] = useState<
+    AllEmployeeData | undefined
+  >();
   const [filteredEmployees, setFilteredEmployees] = useState<
     AllEmployeeData['items'] | undefined
   >([]);
@@ -26,13 +32,14 @@ export const AllEmployees = () => {
   const [uniqueJobTitles, setUniqueJobTitles] = useState<string[]>([]);
   const [uniqueDepartments, setUniqueDepartments] = useState<string[]>([]);
   const pageSize = 10;
+
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         setLoading(true);
         const { data } = await getAllEmployees(currentPage, pageSize);
         console.log('Employees: ', data);
-
+        dispatch(addEmployees(data.items));
         // Extract unique job titles and departments
         const jobTitles: string[] = Array.from(
           new Set(data.items.map((employee) => employee.tittle))
@@ -41,7 +48,7 @@ export const AllEmployees = () => {
           new Set(data.items.map((employee) => employee.department.name))
         );
 
-        setEmployees(data);
+        setEmployeesState(data);
         setFilteredEmployees(data.items);
         setUniqueJobTitles(jobTitles);
         setUniqueDepartments(departments);
@@ -201,7 +208,7 @@ export const AllEmployees = () => {
               return (
                 <tr
                   onClick={() => {
-                    router.push(`hiring/employee/${employee.id}`);
+                    router.push(`employees/employee-info/${employee.id}`);
                   }}
                   key={employee.id}
                   className="hover:bg-gray-50 text-[#0F172A] text-[14px] cursor-pointer"

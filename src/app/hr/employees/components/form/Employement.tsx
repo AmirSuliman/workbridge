@@ -1,16 +1,18 @@
-import React from 'react';
+import Button from '@/components/Button';
+import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
+import { EmployeeData } from '@/types/employee';
+import { useFormContext } from 'react-hook-form';
 import { AiFillContacts } from 'react-icons/ai';
 import { Heading, Label } from '../Helpers';
-import Button from '@/components/Button';
-import { useFormContext } from 'react-hook-form';
-import { employeeFormData } from '../../create-employee/page';
-import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const Employment = () => {
+  const employees = useSelector((state: RootState) => state.employees.items);
   const {
     register,
     formState: { errors },
-  } = useFormContext<employeeFormData>();
+  } = useFormContext<EmployeeData>();
   const { activeTab, setActiveTab } = useTabsContext();
   return (
     <>
@@ -25,12 +27,12 @@ const Employment = () => {
                 type="text"
                 placeholder="Add job title"
                 className="p-2 rounded-md bg-transparent border w-full"
-                {...register('jobTitle', {
+                {...register('tittle', {
                   required: 'Job title is required',
                 })}
               />
-              {errors.jobTitle && (
-                <span className="text-red-500">{errors.jobTitle.message}</span>
+              {errors.tittle && (
+                <span className="text-red-500">{errors.tittle.message}</span>
               )}
             </article>
             <article>
@@ -55,17 +57,20 @@ const Employment = () => {
               <Label text="Reporting Manager*" /> <br />
               <select
                 className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
-                {...register('reportingManager', {
+                {...register('reportingManagerId', {
                   required: 'Reporting Manager is required',
                 })}
               >
                 <option value="">Select Manager</option>
-                <option value="manager1">Manager 1</option>
-                <option value="manager2">Manager 2</option>
+                {employees.map((employee) => (
+                  <option key={employee.id} value="manager1">
+                    {employee.firstName} {employee.lastName} - {employee.tittle}
+                  </option>
+                ))}
               </select>
-              {errors.reportingManager && (
+              {errors.reportingManagerId && (
                 <span className="text-red-500">
-                  {errors.reportingManager.message}
+                  {errors.reportingManagerId.message}
                 </span>
               )}
             </article>
@@ -80,6 +85,7 @@ const Employment = () => {
                 <option value="">Select Type</option>
                 <option value="fullTime">Full-Time</option>
                 <option value="partTime">Part-Time</option>
+                <option value="Freelance">Freelance</option>
               </select>
               {errors.employmentType && (
                 <span className="text-red-500">
@@ -99,31 +105,32 @@ const Employment = () => {
                 type="text"
                 placeholder="Add annual compensation amount"
                 className="p-2 rounded-md bg-transparent border w-full"
-                {...register('compensation', {
+                {...register('salary', {
                   required: 'Compensation is required',
                   valueAsNumber: true,
                 })}
               />
-              {errors.compensation && (
-                <span className="text-red-500">
-                  {errors.compensation.message}
-                </span>
+              {errors.salary && (
+                <span className="text-red-500">{errors.salary.message}</span>
               )}
             </article>
             <article>
               <Label text="Schedule*" /> <br />
               <select
                 className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
-                {...register('schedule', {
+                {...register('paymentSchedule', {
                   required: 'Schedule is required',
                 })}
               >
                 <option value="">Select Schedule</option>
-                <option value="morning">Morning</option>
-                <option value="evening">Evening</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Biweekly">Biweekly</option>
+                <option value="Once a month">Once a month</option>
               </select>
-              {errors.schedule && (
-                <span className="text-red-500">{errors.schedule.message}</span>
+              {errors.paymentSchedule && (
+                <span className="text-red-500">
+                  {errors.paymentSchedule.message}
+                </span>
               )}
             </article>
             <article>

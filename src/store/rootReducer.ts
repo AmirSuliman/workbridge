@@ -5,6 +5,7 @@ import usersReducer from './slices/userSlice';
 import myInfoReducer from './slices/myInfoSlice';
 import employeeReducer from './slices/employeeInfoSlice';
 import jobsReducer from './slices/getOpenPositionSlice';
+import allEmployeesReducer from './slices/allEmployeesSlice';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
@@ -12,5 +13,6 @@ export const rootReducer = combineReducers({
   users: usersReducer,
   myInfo: myInfoReducer,
   employee: employeeReducer,
+  employees: allEmployeesReducer,
   jobs: jobsReducer,
 });

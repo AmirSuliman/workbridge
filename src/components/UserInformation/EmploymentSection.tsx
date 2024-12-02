@@ -55,8 +55,16 @@ const EmploymentSection = () => {
           <FormHeading icon={<HiMiniBriefcase className="w-4" />} text="Job" />
         </div>
         <div className="grid md:grid-cols-3 gap-4">
-          <FormField label="Hire Date" value={hireDate} />
-          <FormField label="Duration" value={duration} />
+          <FormField
+            onChange={() => console.log('')}
+            label="Hire Date"
+            value={hireDate}
+          />
+          <FormField
+            onChange={() => console.log('')}
+            label="Duration"
+            value={duration}
+          />
         </div>
       </div>
 

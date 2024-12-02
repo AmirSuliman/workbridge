@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const getEmployeeInfo = async (
   token: string | undefined,
-  id: string | undefined
+  id: string | string[] | undefined
 ) => {
   try {
     const response = await axiosInstance.get(`/employee/${id}`, {

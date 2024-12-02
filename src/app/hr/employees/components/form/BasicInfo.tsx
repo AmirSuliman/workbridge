@@ -5,15 +5,16 @@ import { Heading, Label } from '../Helpers';
 import { MdOutlineFileUpload } from 'react-icons/md';
 import Button from '@/components/Button';
 import { useFormContext } from 'react-hook-form';
-import { employeeFormData } from '../../create-employee/page';
 import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
 import { useRouter } from 'next/navigation';
+import { EmployeeData } from '@/types/employee';
+
 const BasicInfo = () => {
   const router = useRouter();
   const {
     register,
     formState: { errors },
-  } = useFormContext<employeeFormData>();
+  } = useFormContext<EmployeeData>();
   const { activeTab, setActiveTab } = useTabsContext();
   return (
     <div>
@@ -35,14 +36,14 @@ const BasicInfo = () => {
               type="file"
               accept="image/*"
               className="hidden"
-              {...register('profilePicture', {
+              {...register('profilePictureUrl', {
                 required: 'Profile picture is required',
               })}
             />
           </article>
-          {errors.profilePicture && (
+          {errors.profilePictureUrl && (
             <span className="text-red-500">
-              {errors.profilePicture.message}
+              {errors.profilePictureUrl.message}
             </span>
           )}
           <p className="text-sm py-8 text-[#abaeb4]">
@@ -125,7 +126,7 @@ const BasicInfo = () => {
               <Label text="Marital Status" /> <br />
               <select
                 className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
-                {...register('martialStatus', {
+                {...register('marritialStatus', {
                   required: 'Marital status is required',
                 })}
               >
@@ -133,9 +134,9 @@ const BasicInfo = () => {
                 <option value="single">Single</option>
                 <option value="married">Married</option>
               </select>
-              {errors.martialStatus && (
+              {errors.marritialStatus && (
                 <span className="text-red-500">
-                  {errors.martialStatus.message}
+                  {errors.marritialStatus.message}
                 </span>
               )}
             </article>
@@ -171,7 +172,7 @@ const BasicInfo = () => {
                   type="text"
                   placeholder={`Add ${field.label.toLowerCase()}`}
                   className="p-2 rounded-md bg-transparent border w-full"
-                  {...register(field.name as keyof employeeFormData, {
+                  {...register(field.name as keyof EmployeeData, {
                     required: field.message,
                   })}
                 />
@@ -216,7 +217,7 @@ const BasicInfo = () => {
                   type="text"
                   placeholder={`Add ${field.label.toLowerCase()}`}
                   className="p-2 rounded-md bg-transparent border w-full"
-                  {...register(field.name as keyof employeeFormData, {
+                  {...register(field.name as keyof EmployeeData, {
                     required: field.message,
                   })}
                 />
