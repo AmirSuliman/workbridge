@@ -1,7 +1,7 @@
 import Tab from '@/components/common/TabsComponent/Tab';
 import TabPanel from '@/components/common/TabsComponent/TabPanel';
 import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
-import EmployeesTable from './EmployeesTable';
+import { AllEmployees } from './AllEmployees';
 
 const Employees = () => {
   return (
@@ -25,7 +25,7 @@ const Employees = () => {
         </div>
         <div>
           <TabPanel index={0}>
-            <EmployeesTable />
+            <AllEmployees />
           </TabPanel>
           <TabPanel index={1}>Dep</TabPanel>
         </div>

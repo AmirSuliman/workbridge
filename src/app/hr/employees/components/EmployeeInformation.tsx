@@ -1,20 +1,20 @@
 'use client';
+import BasicInfoIcon from '@/components/icons/basic-info-icon';
+import FormField from '@/components/UserInformation/FormField';
+import FormHeading from '@/components/UserInformation/FormHeading';
 import { getEmployeeInfo } from '@/services/getEmployeeInfo';
-import { useSession } from 'next-auth/react';
-import React, { useEffect } from 'react';
-import { FaPhoneAlt } from 'react-icons/fa';
-import { HiMiniGlobeAmericas, HiMiniHomeModern } from 'react-icons/hi2';
-import BasicInfoIcon from '../icons/basic-info-icon';
-import FormField from './FormField';
-import FormHeading from './FormHeading';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   setEmployeeData,
   setEmployeeError,
 } from '@/store/slices/employeeInfoSlice';
 import { RootState } from '@/store/store';
+import { useSession } from 'next-auth/react';
+import React, { useEffect } from 'react';
+import { FaPhoneAlt } from 'react-icons/fa';
+import { HiMiniGlobeAmericas, HiMiniHomeModern } from 'react-icons/hi2';
+import { useDispatch, useSelector } from 'react-redux';
 
-const UserInfoSection: React.FC = () => {
+export const EmployeeInformation = () => {
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const employeeData = useSelector((state: RootState) => state.employee.data);
@@ -183,4 +183,3 @@ const UserInfoSection: React.FC = () => {
     </div>
   );
 };
-export default UserInfoSection;

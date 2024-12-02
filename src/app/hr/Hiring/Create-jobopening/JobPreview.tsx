@@ -1,4 +1,4 @@
-import { JobPreviewData } from '@/types/employee';
+import { JobPreviewData } from '@/types/job';
 import React from 'react';
 
 const JobPreview = ({ jobData }: { jobData: JobPreviewData }) => {

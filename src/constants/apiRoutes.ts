@@ -11,4 +11,5 @@ export const API_ROUTES = {
   GET_DEPARTMENTS: 'departments',
   POST_JOB: 'openPosition',
   GET_JOBS: 'openPositions',
+  GET_EMPLOYEES: 'employees',
 };

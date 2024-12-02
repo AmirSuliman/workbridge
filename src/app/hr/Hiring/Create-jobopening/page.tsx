@@ -3,12 +3,7 @@ import Button from '@/components/Button';
 import Modal from '@/components/modal/Modal';
 import { API_ROUTES } from '@/constants/apiRoutes';
 import axiosInstance from '@/lib/axios';
-import {
-  Department,
-  JobFormFields,
-  JobPreviewData,
-  question,
-} from '@/types/employee';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -16,7 +11,8 @@ import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import JobPreview from './JobPreview';
-import Image from 'next/image';
+import { JobFormFields, JobPreviewData } from '@/types/job';
+import { Department, question } from '@/types/employee';
 
 const dummyHiringLeads = [
   { id: 1, name: 'Alice' },

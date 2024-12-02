@@ -2,16 +2,10 @@
 import WorkBridgeLogo from '@/components/icons/work-bridge-logo';
 import { API_ROUTES } from '@/constants/apiRoutes';
 import axiosInstance from '@/lib/axios';
-import { Inter } from 'next/font/google';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
-
-const inter = Inter({
-  variable: '--font-inter',
-  preload: false,
-});
 
 const ConfirmAccount = () => {
   const [loading, setLoading] = useState(true);
@@ -60,7 +54,7 @@ const ConfirmAccount = () => {
 
   return (
     <div
-      className={`${inter.className} flex flex-col items-center justify-center h-screen bg-gray-100`}
+      className={` flex flex-col items-center justify-center h-screen bg-gray-100`}
     >
       <div className="max-w-[90%] min-w-[26rem] sm:max-w-[70%]">
         <div className="flex flex-col bg-gray-100">
