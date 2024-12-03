@@ -1,3 +1,5 @@
+import { Location } from './employee';
+
 // Define types for a job form
 export interface JobFormFields {
   tittle: string;
@@ -85,4 +87,42 @@ export interface JobListing {
       required: boolean;
     }>;
   };
+}
+
+type JobFormFields = {
+  tittle: string;
+  departmentId: string;
+  employmentType: string;
+  hiringLeadId: string;
+  reportingToEmployeeId: string;
+  minYearsExperience: string;
+  description: string;
+  street1: string;
+  street2?: string;
+  zipCode: string;
+  country: string;
+  state: string;
+  city: string;
+  salary: string;
+  Resume: string | boolean;
+  Address: string | boolean;
+  linkedin: string | boolean;
+  companyWebsite: string | boolean;
+  glassdoor: string | boolean;
+  indeed: string | boolean;
+};
+
+interface JobPreviewData {
+  tittle: string;
+  description: string;
+  department: string;
+  salary: number;
+  employmentType: string;
+  hiringLead: string;
+  reportingTo: string;
+  minYearsExperience: number;
+  requirements: { name: string; required: boolean }[];
+  location: Location;
+  shareWebsites: string[];
+  questions: { question: string; required: boolean }[];
 }

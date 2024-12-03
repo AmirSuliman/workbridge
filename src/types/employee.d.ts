@@ -1,11 +1,11 @@
 export interface Location {
-  id: number;
+  id?: number;
   city: string;
   country: string;
   state: string;
   street1: string;
   street2: string | null;
-  zipCode: string;
+  zipCode: number;
 }
 
 export interface Department {
@@ -27,6 +27,7 @@ export interface EmployeeData {
   workPhone: string | null;
   salary: number;
   paymentSchedule: string;
+  payType?: string;
   hireDate: string;
   marritialStatus: string;
   linkedin: string | null;
@@ -49,47 +50,9 @@ type question = {
   required: boolean;
 };
 
-type JobFormFields = {
-  tittle: string;
-  departmentId: string;
-  employmentType: string;
-  hiringLeadId: string;
-  reportingToEmployeeId: string;
-  minYearsExperience: string;
-  description: string;
-  street1: string;
-  street2?: string;
-  zipCode: string;
-  country: string;
-  state: string;
-  city: string;
-  salary: string;
-  Resume: string | boolean;
-  Address: string | boolean;
-  linkedin: string | boolean;
-  companyWebsite: string | boolean;
-  glassdoor: string | boolean;
-  indeed: string | boolean;
-};
-
-interface JobPreviewData {
-  tittle: string;
-  description: string;
-  department: string;
-  salary: number;
-  employmentType: string;
-  hiringLead: string;
-  reportingTo: string;
-  minYearsExperience: number;
-  requirements: { name: string; required: boolean }[];
-  location: {
-    street1: string;
-    street2: string;
-    zipCode: number;
-    city: string;
-    country: string;
-    state: string;
-  };
-  shareWebsites: string[];
-  questions: { question: string; required: boolean }[];
+export interface AllEmployeeData {
+  totalItems: number;
+  items: EmployeeData[];
+  totalPages: number;
+  currentPage: number;
 }

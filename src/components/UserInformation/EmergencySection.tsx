@@ -71,7 +71,7 @@ const EmergencySection: React.FC = () => {
           <FormField
             onChange={() => {}}
             label="Zip"
-            value={employeeData?.location.zipCode || 'N/A'}
+            value={String(employeeData?.location.zipCode) || 'N/A'}
           />
           <FormField
             onChange={() => {}}

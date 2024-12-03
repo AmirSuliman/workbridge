@@ -1,41 +1,40 @@
 import React from 'react';
 import cn from 'classnames';
 
-const Button = ({
-  name,
-  icon,
-  bg,
-  textColor,
-  classNames,
-  onClick,
-  className,
-  type = 'submit',
-}: {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   name: string;
   icon?: React.ReactNode;
   bg?: string;
   textColor?: string;
-  classNames?: string;
-  onClick?: () => void;
   className?: string;
-  type?: 'submit' | 'reset' | 'button' | undefined;
+}
+
+const Button: React.FC<ButtonProps> = ({
+  name,
+  icon,
+  bg,
+  textColor,
+  className,
+  type = 'button', // Default type is 'button'
+  ...props
 }) => {
   return (
     <button
-      onClick={onClick}
       type={type}
       style={{
-        background: `${bg}`,
-        color: `${textColor}`,
+        background: bg || undefined,
+        color: textColor || undefined,
       }}
       className={cn(
         'px-4 py-2 bg-black text-white rounded flex gap-2 items-center justify-center text-sm border-[1px] border-[#E8E8E8] whitespace-normal md:whitespace-nowrap',
         className
       )}
+      {...props} // Spread all other button props
     >
       {name}
       {icon}
     </button>
   );
 };
+
 export default Button;

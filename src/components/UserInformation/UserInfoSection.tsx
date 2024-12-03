@@ -13,8 +13,10 @@ import {
   setEmployeeError,
 } from '@/store/slices/employeeInfoSlice';
 import { RootState } from '@/store/store';
+import { useParams } from 'next/navigation';
 
 const UserInfoSection: React.FC = () => {
+  const { empId } = useParams();
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const employeeData = useSelector((state: RootState) => state.employee.data);
@@ -30,7 +32,7 @@ const UserInfoSection: React.FC = () => {
       try {
         const { data } = await getEmployeeInfo(
           session.user.accessToken,
-          session.user.userId
+          empId || session.user.userId
         );
         dispatch(setEmployeeData(data));
         console.log('employee data: ', data);
@@ -116,7 +118,7 @@ const UserInfoSection: React.FC = () => {
           <FormField
             onChange={() => {}}
             label="Zip"
-            value={employeeData.location.zipCode || 'N/A'}
+            value={String(employeeData.location.zipCode) || 'N/A'}
           />
           <FormField
             onChange={() => {}}

@@ -16,14 +16,6 @@ import { useEffect, useState } from 'react';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import { z } from 'zod';
-
-// Zod schema for email validation and other fields
-const userSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-});
 
 const AdminScreen = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -167,7 +159,7 @@ const AdminScreen = () => {
             name="Add New Admin"
             onClick={() => setIsModalOpen(true)}
             icon={<IoIosAddCircleOutline className="w-4" />}
-            classNames="bg-dark-navy text-white text-xs"
+            className="bg-dark-navy text-white text-xs"
           />
         </div>
         <div>
