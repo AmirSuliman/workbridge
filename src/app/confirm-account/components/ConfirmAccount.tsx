@@ -56,7 +56,7 @@ const ConfirmAccount = () => {
     <div
       className={` flex flex-col items-center justify-center h-screen bg-gray-100`}
     >
-      <div className="max-w-[90%] min-w-[26rem] sm:max-w-[70%]">
+      <div className="max-w-[90%] min`-w-[26rem] sm:max-w-[70%]">
         <div className="flex flex-col bg-gray-100">
           <div className="py-12 flex flex-col items-center bg-white shadow-custom-deep px-8">
             <WorkBridgeLogo classNames="max-w-[14rem] mb-8" />

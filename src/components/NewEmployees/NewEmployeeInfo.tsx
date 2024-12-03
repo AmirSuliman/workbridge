@@ -1,8 +1,7 @@
 import { FaLocationDot } from 'react-icons/fa6';
-import UserImgPlaceholder from '../LeaveRequests/UserImgPlaceholder';
-import Button from '../Button';
 import { GoArrowUpRight } from 'react-icons/go';
-import { DiVim } from 'react-icons/di';
+import Button from '../Button';
+import UserImgPlaceholder from '../LeaveRequests/UserImgPlaceholder';
 
 interface NewEmployeeInfoProps {
   name: string;
@@ -37,7 +36,7 @@ const NewEmployeeInfo = ({
           name="See more"
           icon={<GoArrowUpRight />}
           bg="transparent"
-          classNames="mt-4 !text-black !text-[10px]"
+          className="mt-4 !text-black !text-[10px]"
         />
       </main>
     </article>

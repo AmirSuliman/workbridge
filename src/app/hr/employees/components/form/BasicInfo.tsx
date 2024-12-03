@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import { AiFillContacts } from 'react-icons/ai';
 import { Heading, Label } from '../Helpers';
 import { MdOutlineFileUpload } from 'react-icons/md';
@@ -8,14 +8,29 @@ import { useFormContext } from 'react-hook-form';
 import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
 import { useRouter } from 'next/navigation';
 import { EmployeeData } from '@/types/employee';
+import Image from 'next/image';
 
 const BasicInfo = () => {
   const router = useRouter();
+  const { activeTab, setActiveTab } = useTabsContext();
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
   const {
     register,
+    setValue,
     formState: { errors },
   } = useFormContext<EmployeeData>();
-  const { activeTab, setActiveTab } = useTabsContext();
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Create a blob URL for the uploaded file
+      const blobUrl = URL.createObjectURL(file);
+      setPreviewUrl(blobUrl); // Update the preview URL state
+      setValue('profilePictureUrl', blobUrl); // Set the blob URL to the form value
+    }
+  };
+
   return (
     <div>
       <section className="bg-white rounded-lg border">
@@ -36,11 +51,20 @@ const BasicInfo = () => {
               type="file"
               accept="image/*"
               className="hidden"
-              {...register('profilePictureUrl', {
-                required: 'Profile picture is required',
-              })}
+              onChange={handleFileChange}
             />
           </article>
+          {previewUrl && (
+            <div className="mt-4">
+              <Image
+                width={300}
+                height={150}
+                src={previewUrl}
+                alt="Profile Preview"
+                className="w-24 h-24 rounded-full border"
+              />
+            </div>
+          )}
           {errors.profilePictureUrl && (
             <span className="text-red-500">
               {errors.profilePictureUrl.message}
@@ -115,8 +139,9 @@ const BasicInfo = () => {
                 {...register('gender', { required: 'Gender is required' })}
               >
                 <option value="">Select Gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Prefer not to say">Prefer not to say</option>
               </select>
               {errors.gender && (
                 <span className="text-red-500">{errors.gender.message}</span>
@@ -131,8 +156,10 @@ const BasicInfo = () => {
                 })}
               >
                 <option value="">Select Status</option>
-                <option value="single">Single</option>
-                <option value="married">Married</option>
+                <option value="Single">Single</option>
+                <option value="Married">Married</option>
+                <option value="Enganged">Enganged</option>
+                <option value="Divorced">Divorced</option>
               </select>
               {errors.marritialStatus && (
                 <span className="text-red-500">
@@ -209,6 +236,11 @@ const BasicInfo = () => {
                 name: 'website',
                 label: 'Personal Website',
                 message: 'Personal website is required',
+              },
+              {
+                name: 'email',
+                label: 'Email',
+                message: 'Email is required',
               },
             ].map((field) => (
               <article key={field.name}>

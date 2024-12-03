@@ -1,19 +1,47 @@
 import Button from '@/components/Button';
 import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
-import { EmployeeData } from '@/types/employee';
+import axiosInstance from '@/lib/axios';
+import { getAllEmployees } from '@/services/getAllEmployees';
+import { Department, EmployeeData } from '@/types/employee';
+import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { AiFillContacts } from 'react-icons/ai';
+import { BiLoaderCircle } from 'react-icons/bi';
 import { Heading, Label } from '../Helpers';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
 
-const Employment = () => {
-  const employees = useSelector((state: RootState) => state.employees.items);
+const Employment = ({ loader }: { loader: boolean }) => {
+  const [employees, setEmployees] = useState<EmployeeData[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const { activeTab, setActiveTab } = useTabsContext();
+
   const {
     register,
     formState: { errors },
   } = useFormContext<EmployeeData>();
-  const { activeTab, setActiveTab } = useTabsContext();
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const { data } = await getAllEmployees(1, 1000);
+        console.log('Employees API Response: ', data);
+        setEmployees(data.items);
+      } catch (error) {
+        console.error('Error fetching employees: ', error);
+      }
+    };
+    const fetchDepartments = async () => {
+      try {
+        const { data } = await axiosInstance.get('/departments');
+        console.log('Departments API Response: ', data);
+        setDepartments(data.data.items);
+      } catch (error) {
+        console.error('Error fetching Departments: ', error);
+      }
+    };
+    fetchDepartments();
+    fetchEmployees();
+  }, []);
+
   return (
     <>
       <section className="bg-white rounded-lg border">
@@ -39,17 +67,20 @@ const Employment = () => {
               <Label text="Department*" /> <br />
               <select
                 className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
-                {...register('department', {
+                {...register('departmentId', {
                   required: 'Department is required',
                 })}
               >
                 <option value="">Select Department</option>
-                <option value="IT">IT</option>
-                <option value="HR">HR</option>
+                {departments.map((department) => (
+                  <option key={department.id} value={Number(department.id)}>
+                    {department.name}
+                  </option>
+                ))}
               </select>
-              {errors.department && (
+              {errors.departmentId && (
                 <span className="text-red-500">
-                  {errors.department.message}
+                  {errors.departmentId.message}
                 </span>
               )}
             </article>
@@ -63,7 +94,7 @@ const Employment = () => {
               >
                 <option value="">Select Manager</option>
                 {employees.map((employee) => (
-                  <option key={employee.id} value="manager1">
+                  <option key={employee.id} value={Number(employee.id)}>
                     {employee.firstName} {employee.lastName} - {employee.tittle}
                   </option>
                 ))}
@@ -83,8 +114,8 @@ const Employment = () => {
                 })}
               >
                 <option value="">Select Type</option>
-                <option value="fullTime">Full-Time</option>
-                <option value="partTime">Part-Time</option>
+                <option value="Fulltime">Full-Time</option>
+                <option value="Part Time">Part-Time</option>
                 <option value="Freelance">Freelance</option>
               </select>
               {errors.employmentType && (
@@ -112,6 +143,22 @@ const Employment = () => {
               />
               {errors.salary && (
                 <span className="text-red-500">{errors.salary.message}</span>
+              )}
+            </article>
+            <article>
+              <Label text="Pay type*" /> <br />
+              <select
+                className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
+                {...register('payType', {
+                  required: 'Paytype is required',
+                })}
+              >
+                <option value="">Select PayType</option>
+                <option value="Salary">Salary</option>
+                <option value="Contract">Contract</option>
+              </select>
+              {errors.payType && (
+                <span className="text-red-500">{errors.payType.message}</span>
               )}
             </article>
             <article>
@@ -161,10 +208,16 @@ const Employment = () => {
           onClick={() => setActiveTab(activeTab - 1)}
         />
         <Button
-          type="button"
-          name="Next"
+          type="submit"
+          name={loader ? '' : 'Finish'}
+          disabled={loader}
           className="px-16"
-          onClick={() => setActiveTab(activeTab + 1)}
+          icon={
+            loader && (
+              <BiLoaderCircle className="h-8 w-8 duration-100 animate-spin" />
+            )
+          }
+          // onClick={() => setActiveTab(activeTab + 1)}
         />
       </article>
     </>

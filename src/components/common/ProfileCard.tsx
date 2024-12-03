@@ -121,7 +121,7 @@ const ProfileCard = () => {
             </div>
             <div className="h-5">
               <Button
-                classNames={'!bg-dark-navy !text-white !text-xs'}
+                className={'!bg-dark-navy !text-white !text-xs'}
                 icon={<FaEdit />}
                 name="Edit Profile"
               />

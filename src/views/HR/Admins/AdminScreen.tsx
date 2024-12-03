@@ -159,7 +159,7 @@ const AdminScreen = () => {
             name="Add New Admin"
             onClick={() => setIsModalOpen(true)}
             icon={<IoIosAddCircleOutline className="w-4" />}
-            classNames="bg-dark-navy text-white text-xs"
+            className="bg-dark-navy text-white text-xs"
           />
         </div>
         <div>

@@ -60,7 +60,7 @@ export const AllEmployees = () => {
       }
     };
     fetchEmployees();
-  }, [currentPage]);
+  }, [currentPage, dispatch]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

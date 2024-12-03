@@ -27,6 +27,7 @@ export interface EmployeeData {
   workPhone: string | null;
   salary: number;
   paymentSchedule: string;
+  payType?: string;
   hireDate: string;
   marritialStatus: string;
   linkedin: string | null;
