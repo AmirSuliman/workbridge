@@ -9,22 +9,70 @@ import EmploymentSection from '@/components/UserInformation/EmploymentSection';
 import NotesSection from '@/components/UserInformation/NotesSection';
 import TimeOffSection from '@/components/UserInformation/TimeOffSection';
 import UserInfoSection from '@/components/UserInformation/UserInfoSection';
-import { Inter } from 'next/font/google';
+import axiosInstance from '@/lib/axios';
+import {
+  setEmployeeData,
+  setEmployeeError,
+} from '@/store/slices/employeeInfoSlice';
+import { RootState } from '@/store/store';
 import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  style: ['normal', 'italic'],
-  display: 'swap',
-});
 const MyInformation = () => {
-  const UserInfoSectionMemo = useMemo(() => <UserInfoSection />, []);
+  const employeeData = useSelector((state: RootState) => state.employee.data);
+  const dispatch = useDispatch();
+  const [editEmployee, setEditEmployee] = useState<boolean>(false);
+
   const { empId } = useParams();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    // watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: employeeData || undefined,
+  });
+
+  const onSubmit = async (data: any) => {
+    try {
+      const { data: updatedData } = await axiosInstance.put(
+        `/employee/${empId}`,
+        data
+      );
+      dispatch(setEmployeeData(updatedData));
+      alert('Employee information updated successfully!');
+    } catch (err) {
+      console.error('Error updating employee data:', err);
+      dispatch(setEmployeeError('Failed to update employee information.'));
+    }
+  };
+
+  //  if (employeeData) {
+  //    Object.keys(employeeData).forEach((key) => {
+  //      setValue(key, employeeData[key]);
+  //    });
+  //  }
+
+  const UserInfoSectionMemo = useMemo(
+    () => (
+      <UserInfoSection
+        editEmployee={editEmployee}
+        register={register}
+        errors={errors}
+      />
+    ),
+    [editEmployee, errors, register]
+  );
   return (
-    <section className={`p-4 h-full  ${inter.className}`}>
-      <ProfileCard />
+    <form onSubmit={handleSubmit(onSubmit)} className={`p-4 h-full`}>
+      <ProfileCard
+        setEditEmployee={setEditEmployee}
+        editEmployee={editEmployee}
+      />
       <TabsContainer containerClasses="my-1 pb-2 md:pb-4">
         <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
           <Tab
@@ -75,7 +123,11 @@ const MyInformation = () => {
         <div>
           <TabPanel index={0}>{UserInfoSectionMemo}</TabPanel>
           <TabPanel index={1}>
-            <EmploymentSection />
+            <EmploymentSection
+              register={register}
+              errors={errors}
+              editEmployee={editEmployee}
+            />
           </TabPanel>
           <TabPanel index={2}>
             <TimeOffSection />
@@ -93,7 +145,7 @@ const MyInformation = () => {
           )}
         </div>
       </TabsContainer>
-    </section>
+    </form>
   );
 };
 

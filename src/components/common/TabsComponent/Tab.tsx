@@ -19,6 +19,7 @@ const Tab: React.FC<TabProps> = ({
 
   return (
     <button
+      type="button"
       className={`outline-none focus:outline-none whitespace-nowrap ${tabStyles} ${
         activeTab === index ? activeTabStyle : ''
       }`}

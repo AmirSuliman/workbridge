@@ -2,7 +2,6 @@
 
 import { IMAGES } from '@/constants/images';
 import { RootState } from '@/store/store';
-import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import { CiMobile3 } from 'react-icons/ci';
 import { FaEdit, FaPhoneAlt, FaRegCalendar } from 'react-icons/fa';
@@ -17,13 +16,13 @@ import InstagramIcon from '../icons/instagram-icon';
 import LinkedinIcon from '../icons/linkedin-icon';
 import ProfileInfoItem from './ProfileInfoItem';
 
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400'],
-  style: ['normal', 'italic'],
-  display: 'swap',
-});
-const ProfileCard = () => {
+const ProfileCard = ({
+  setEditEmployee,
+  editEmployee,
+}: {
+  setEditEmployee: (value: boolean) => void;
+  editEmployee: boolean;
+}) => {
   const employeeData = useSelector((state: RootState) => state.employee.data);
 
   const hireDate = employeeData?.hireDate
@@ -63,11 +62,9 @@ const ProfileCard = () => {
 
   const duration = employeeData?.hireDate ? calculateDuration(hireDate) : 'N/A';
 
-  console.log('employeeData: ', employeeData);
-
   return (
     <article
-      className={`bg-white shadow-md rounded-md border border-gray-border p-4 pb-6 ${inter.className}`}
+      className={`bg-white shadow-md rounded-md border border-gray-border p-4 pb-6 `}
     >
       <div className="flex gap-4">
         <div className="flex flex-col items-center">
@@ -119,12 +116,25 @@ const ProfileCard = () => {
                 {employeeData?.tittle || 'N/A'}
               </p>
             </div>
-            <div className="h-5">
+            <div className="flex items-center gap-4">
               <Button
+                type={!editEmployee ? 'submit' : 'button'}
+                onClick={() => {
+                  setEditEmployee(true);
+                }}
                 className={'!bg-dark-navy !text-white !text-xs'}
-                icon={<FaEdit />}
-                name="Edit Profile"
+                icon={!editEmployee && <FaEdit />}
+                name={editEmployee ? 'Save Changes' : 'Edit Profile'}
               />
+              {editEmployee && (
+                <button
+                  onClick={() => {
+                    setEditEmployee(false);
+                  }}
+                >
+                  Cancel
+                </button>
+              )}
             </div>
           </div>
           <div className="flex mt-3 gap-4 flex-wrap">
