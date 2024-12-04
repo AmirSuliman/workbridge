@@ -12,28 +12,31 @@ import { BiLoaderCircle } from 'react-icons/bi';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import JobPreview from './JobPreview';
 import { JobFormFields, JobPreviewData } from '@/types/job';
-import { Department, question } from '@/types/employee';
+import { Department, EmployeeData, question } from '@/types/employee';
+import { getAllEmployees } from '@/services/getAllEmployees';
 
-const dummyHiringLeads = [
-  { id: 1, name: 'Alice' },
-  { id: 2, name: 'Bob' },
-  { id: 3, name: 'Charlie' },
-  { id: 4, name: 'Diana' },
-  { id: 5, name: 'Eve' },
-];
-const dummyReportingManagers = [
-  { id: 1, name: 'Frank' },
-  { id: 2, name: 'Grace' },
-  { id: 3, name: 'Hank' },
-  { id: 4, name: 'Ivy' },
-  { id: 5, name: 'Jack' },
-];
+// const dummyHiringLeads = [
+//   { id: 1, name: 'Alice' },
+//   { id: 2, name: 'Bob' },
+//   { id: 3, name: 'Charlie' },
+//   { id: 4, name: 'Diana' },
+//   { id: 5, name: 'Eve' },
+// ];
+// const dummyReportingManagers = [
+//   { id: 1, name: 'Frank' },
+//   { id: 2, name: 'Grace' },
+//   { id: 3, name: 'Hank' },
+//   { id: 4, name: 'Ivy' },
+//   { id: 5, name: 'Jack' },
+// ];
 
 const Createjobopening = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
+  const [employees, setEmployees] = useState<EmployeeData[]>([]);
+  // const [departments, setDepartments] = useState<Department[]>([]);
   const [jobPreviewData, setJobPreviewData] = useState<
     JobPreviewData | undefined
   >(undefined);
@@ -86,6 +89,28 @@ const Createjobopening = () => {
       }
     };
     getAllDepartments();
+  }, []);
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const { data } = await getAllEmployees(1, 1000);
+        console.log('Employees API Response: ', data);
+        setEmployees(data.items);
+      } catch (error) {
+        console.error('Error fetching employees: ', error);
+      }
+    };
+    const fetchDepartments = async () => {
+      try {
+        const { data } = await axiosInstance.get('/departments');
+        console.log('Departments API Response: ', data);
+        setDepartments(data.data.items);
+      } catch (error) {
+        console.error('Error fetching Departments: ', error);
+      }
+    };
+    fetchDepartments();
+    fetchEmployees();
   }, []);
 
   const {
@@ -233,12 +258,11 @@ const Createjobopening = () => {
       salary: Number(data.salary || 0),
       employmentType: data.employmentType || '',
       hiringLead:
-        dummyHiringLeads.find((h) => h.id === Number(data.hiringLeadId))
-          ?.name || '',
+        employees.find((h) => h.id === Number(data.hiringLeadId))?.firstName ||
+        '',
       reportingTo:
-        dummyReportingManagers.find(
-          (r) => r.id === Number(data.reportingToEmployeeId)
-        )?.name || '',
+        employees.find((r) => r.id === Number(data.reportingToEmployeeId))
+          ?.firstName || '',
       minYearsExperience: Number(data.minYearsExperience || 0),
       requirements,
       location,
@@ -264,34 +288,42 @@ const Createjobopening = () => {
           {jobPreviewData && <JobPreview jobData={jobPreviewData} />}
         </Modal>
       )}
-      <div className="flex flex-row items-start sm:items-center justify-between mb-4">
+      <form
+        onSubmit={onSubmit}
+        className="flex flex-row items-start sm:items-center justify-between mb-4"
+      >
         <div className="flex flex-row gap-2 text-[#0F172A] items-center text-[22px]">
           <FaEdit />
           <p className="font-semibold">Add Job Opening</p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-3">
+          <div className="w-fit h-fit">
+            <button
+              onClick={() => {
+                handleSaveDraft();
+                console.log(jobStatus);
+              }}
+              type="submit"
+              disabled={loading}
+              className="bg-[#0F172A] p-2 px-3 rounded-lg text-white"
+            >
+              {jobStatus === 'Draft' && loading ? (
+                <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+              ) : (
+                'Save Draft'
+              )}
+            </button>
+          </div>
           <button
-            onClick={() => {
-              handleSaveDraft();
-              console.log(jobStatus);
-            }}
-            disabled={loading}
-            className="bg-[#0F172A] p-2 px-3 rounded-lg text-white"
-          >
-            {jobStatus === 'Draft' && loading ? (
-              <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
-            ) : (
-              'Save Draft'
-            )}
-          </button>
-          <button
+            type="button"
             className="bg-white p-2 px-3 rounded-lg border"
             onClick={handlePreview}
           >
             Preview Job
           </button>
           <button
+            type="reset"
             onClick={() => {
               router.back();
             }}
@@ -300,13 +332,19 @@ const Createjobopening = () => {
             Cancel
           </button>
         </div>
-      </div>
+      </form>
 
-      <form onSubmit={onSubmit}>
+      <div>
         <div className="bg-white rounded-lg border">
           <div className=" w-ful p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium ">
-              <Image src="/jobicon.png" alt="img" className="w-5" />
+              <Image
+                src="/jobicon.png"
+                alt="img"
+                className="w-5"
+                width={300}
+                height={150}
+              />
               Job Information
             </div>
             <div className="flex mt-8 flex-col sm:flex-row sm:gap-4 gap-2 items-center justify-between w-full">
@@ -367,12 +405,8 @@ const Createjobopening = () => {
                   <option value="Fulltime" className="text-gray-400">
                     Full time
                   </option>
-                  {/* <option value="Parttime" className="text-gray-400">
-                      Part time
-                    </option>
-                    <option value="Internship" className="text-gray-400">
-                      Internship
-                    </option> */}
+                  <option value="Part Time">Part-Time</option>
+                  <option value="Freelance">Freelance</option>
                 </select>
                 {errors.employmentType && (
                   <span className="text-red-500">
@@ -394,13 +428,13 @@ const Createjobopening = () => {
                   <option value="" className="text-gray-400">
                     Select hiring leads
                   </option>
-                  {dummyHiringLeads.map((lead) => (
+                  {employees.map((lead) => (
                     <option
                       key={lead.id}
                       value={lead.id}
                       className="text-gray-400"
                     >
-                      {lead.name}
+                      {lead.firstName} {lead.lastName}
                     </option>
                   ))}
                 </select>
@@ -424,9 +458,9 @@ const Createjobopening = () => {
                   <option value="" className="text-gray-400">
                     Select a reporting manager
                   </option>
-                  {dummyReportingManagers.map((manager) => (
+                  {employees.map((manager) => (
                     <option key={manager.id} value={manager.id}>
-                      {manager.name}
+                      {manager.firstName} {manager.lastName}
                     </option>
                   ))}
                 </select>
@@ -459,7 +493,13 @@ const Createjobopening = () => {
           <div className="w-full h-[0.7px] bg-gray-200 " />
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium ">
-              <Image src="/jobdescription.png" alt="img" className="w-5" />
+              <Image
+                src="/jobdescription.png"
+                alt="img"
+                className="w-5"
+                width={300}
+                height={150}
+              />
               Job Description
             </div>
             <label className="flex flex-col mb-4 sm:w-1/3 w-full mt-8">
@@ -484,7 +524,13 @@ const Createjobopening = () => {
 
           <div className=" w-ful p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium ">
-              <Image src="/loctaion.png" alt="img" className="w-5" />
+              <Image
+                src="/loctaion.png"
+                alt="img"
+                className="w-5"
+                width={300}
+                height={150}
+              />
               Location
             </div>
             <div className="flex mt-8 flex-col sm:flex-row sm:gap-4 gap-2 items-center justify-between w-full">
@@ -567,7 +613,13 @@ const Createjobopening = () => {
 
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium ">
-              <Image src="/compensation.png" alt="img" className="w-5" />
+              <Image
+                src="/compensation.png"
+                alt="img"
+                className="w-5"
+                width={300}
+                height={150}
+              />
               Compensation
             </div>
             <label className="flex flex-col mb-4 sm:w-1/3 w-full mt-8">
@@ -590,7 +642,13 @@ const Createjobopening = () => {
 
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium mb-8">
-              <Image src="/jobicon.png" alt="img" className="w-5" />
+              <Image
+                src="/jobicon.png"
+                alt="img"
+                className="w-5"
+                width={300}
+                height={150}
+              />
               Application Requirements
             </div>
             <div className="flex flex-wrap gap-5">
@@ -659,7 +717,13 @@ const Createjobopening = () => {
           <div className="w-full h-[0.7px] bg-gray-200 " />
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium mb-8">
-              <Image src="/question.png" alt="img" className="w-5" />
+              <Image
+                src="/question.png"
+                alt="img"
+                className="w-5"
+                width={300}
+                height={150}
+              />
               Custom Questions
             </div>
             {/* Existing Questions */}
@@ -751,7 +815,13 @@ const Createjobopening = () => {
           <div className="h-[1px] w-full bg-gray-300" />
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium mb-8">
-              <Image src="/jobpost.png" alt="img" className="w-5" />
+              <Image
+                src="/jobpost.png"
+                alt="img"
+                className="w-5"
+                width={300}
+                height={150}
+              />
               Share Job Posting
             </div>
             <div className="flex flex-wrap gap-2 sm:gap-12">
@@ -811,11 +881,9 @@ const Createjobopening = () => {
             ? 'Publishing...'
             : 'Publish Job'}
         </button> */}
-        <div
-          onClick={handlePublish}
-          className="w-fit h-fit mx-auto inline-block mt-4"
-        >
+        <div onClick={handlePublish} className="w-fit h-fit mx-auto mt-4">
           <Button
+            type="submit"
             name={loading ? '' : 'Save & Publish Job Opening'}
             className=""
             icon={
@@ -827,7 +895,7 @@ const Createjobopening = () => {
             }
           ></Button>
         </div>
-      </form>
+      </div>
     </main>
   );
 };
