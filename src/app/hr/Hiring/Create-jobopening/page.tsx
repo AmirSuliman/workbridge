@@ -10,25 +10,10 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import JobPreview from './JobPreview';
 import { JobFormFields, JobPreviewData } from '@/types/job';
 import { Department, EmployeeData, question } from '@/types/employee';
 import { getAllEmployees } from '@/services/getAllEmployees';
-
-// const dummyHiringLeads = [
-//   { id: 1, name: 'Alice' },
-//   { id: 2, name: 'Bob' },
-//   { id: 3, name: 'Charlie' },
-//   { id: 4, name: 'Diana' },
-//   { id: 5, name: 'Eve' },
-// ];
-// const dummyReportingManagers = [
-//   { id: 1, name: 'Frank' },
-//   { id: 2, name: 'Grace' },
-//   { id: 3, name: 'Hank' },
-//   { id: 4, name: 'Ivy' },
-//   { id: 5, name: 'Jack' },
-// ];
+import JobPreview from './JobPreview';
 
 const Createjobopening = () => {
   const router = useRouter();
@@ -36,11 +21,10 @@ const Createjobopening = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
   const [employees, setEmployees] = useState<EmployeeData[]>([]);
-  // const [departments, setDepartments] = useState<Department[]>([]);
   const [jobPreviewData, setJobPreviewData] = useState<
     JobPreviewData | undefined
   >(undefined);
-  const [jobStatus, setJobStatus] = useState<'Draft' | 'Published' | ''>(''); // Job status state
+  const [jobStatus, setJobStatus] = useState<'Draft' | 'Published' | ''>('');
   const [question, setQuestion] = useState({
     title: '',
     required: false,
