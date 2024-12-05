@@ -6,19 +6,32 @@ import {
   FaMobileAlt,
   FaUsers,
 } from 'react-icons/fa';
-const Candidatecomponent = () => {
+import UserImgPlaceholder from '../LeaveRequests/UserImgPlaceholder';
+import Image from 'next/image';
+const Candidatecomponent = ({ data }) => {
   return (
     <>
       <div className="flex flex-row items-center gap-3 text-[18px] font-medium">
         <FaUsers /> Candidate
       </div>
       <div className="flex flex-col sm:flex-row items-start gap-8 mt-8">
-        <div className="p-10 rounded-full text-[45px] bg-[#F5F6FA] w-28 h-28 flex items-center justify-center text-gray-500 border">
-          JB
-        </div>
+        {data.data.profilePictureUrl ? (
+          <Image
+            width={300}
+            height={150}
+            src={data.data.profilePictureUrl}
+            alt="avatar"
+            className="rounded-full size-20"
+          />
+        ) : (
+          <UserImgPlaceholder
+            name={`${data.data.firstName} ${data.data.lastName}`}
+            className="size-20 !text-3xl"
+          />
+        )}
         <div className="flex flex-col ">
           <h1 className="text-[#0F172A] text-[24px] font-normal">
-            Jordan Birkenstock
+            {`${data.data.firstName} ${data.data.lastName}`}
           </h1>
           <p className="text-gray-400 text-[16px]">
             Applying for Software Engineer

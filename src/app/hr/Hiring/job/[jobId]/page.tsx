@@ -1,16 +1,19 @@
 'use client';
 
 import ScreenLoader from '@/components/common/ScreenLoader';
+import { JobCandidates } from '@/components/JobsOpening/JobCandidates';
+import Modal from '@/components/modal/Modal';
 import { IMAGES } from '@/constants/images';
 import axiosInstance from '@/lib/axios';
 import { JobListing } from '@/types/job';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { BiChevronRight } from 'react-icons/bi';
-import { FaEdit, FaUsers } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
+import FullJobPreview from '../FullJobPreview';
 
 const SingleJob = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { jobId } = useParams();
   const [singleJobData, setSingleJobData] = useState<JobListing | undefined>();
   const [loading, setLoading] = useState(false);
@@ -24,9 +27,7 @@ const SingleJob = () => {
             associations: true,
           },
         });
-        console.log('Single job: ', data);
         setSingleJobData(data);
-        // toast.success()
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -34,7 +35,7 @@ const SingleJob = () => {
       }
     };
     fetchSingleJob();
-  }, []);
+  }, [jobId]);
 
   if (loading) {
     return <ScreenLoader />;
@@ -42,9 +43,20 @@ const SingleJob = () => {
 
   return (
     <main className="space-y-8">
+      {isModalOpen && (
+        <Modal onClose={() => setIsModalOpen(false)}>
+          {singleJobData && <FullJobPreview jobData={singleJobData} />}
+        </Modal>
+      )}
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-3 text-[22px] text-[#0F172A] font-semibold">
-          <img src="/jobicon.png" alt="img" className="w-5" />
+          <Image
+            height={2000}
+            width={2000}
+            src="/jobicon.png"
+            alt="img"
+            className="w-5"
+          />
           {singleJobData?.data.tittle || 'N/A'}
         </div>
         <button className="bg-[#0F172A] p-3 rounded-lg text-white flex flex-row gap-4 items-center">
@@ -74,7 +86,10 @@ const SingleJob = () => {
                 </h1>
               </div>
             </div>
-            <button className="bg-[#0F172A] rounded-lg p-3 text-white text-[12px]">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-[#0F172A] rounded-lg p-3 text-white text-[12px]"
+            >
               See full job opening
             </button>
           </div>
@@ -106,92 +121,7 @@ const SingleJob = () => {
           {/* <p className="underline">See full hiring leads</p> */}
         </div>
       </div>
-
-      <div className="p-4 bg-white mt-8 rounded-lg border">
-        <div className="flex flex-row items-center justify-between p-2 mb-8">
-          <div className="flex flex-row items-center gap-4 text-[18px] font-medium">
-            <FaUsers />
-            Candidates (4)
-          </div>
-          <div className="flex flex-row items-center gap-2">
-            <p className="text-sm text-gray-600 font-medium">Sort</p>
-            <select className="border border-gray-300 rounded-lg p-2 text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="asc">Select</option>
-              <option value="desc">Descending</option>
-              <option value="nameAZ">A-Z</option>
-              <option value="nameZA">Z-A</option>
-            </select>
-          </div>
-        </div>
-        {/* Table */}
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="text-gray-400 font-medium p-4">
-            <tr>
-              <th className="px-6 py-4 text-left text-sm font-medium ">
-                Candidate Information
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium">
-                Status
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium ">
-                Rating
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium">
-                Applied
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-medium">Email</th>
-              <th className="px-6 py-4 text-left text-sm font-medium"></th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {/* Sample Rows */}
-            <tr>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                John Bourgie
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                Interview Round 2
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                No rating yet
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                24.03.2025
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                john.borgie@gmail.com
-              </td>
-              <td className="px-6 py-4">
-                <span className="border border-gray-300 rounded-lg p-2 flex items-center justify-center hover:bg-gray-100 cursor-pointer">
-                  <BiChevronRight className="text-gray-600 text-lg" />
-                </span>
-              </td>
-            </tr>
-            <tr>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                John Bourgie
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                Interview Round 2
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                No rating yet
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                24.03.2025
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                john.borgie@gmail.com
-              </td>
-              <td className="px-6 py-4">
-                <span className="border border-gray-300 rounded-lg p-2 flex items-center justify-center hover:bg-gray-100 cursor-pointer">
-                  <BiChevronRight className="text-gray-600 text-lg" />
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <JobCandidates />
     </main>
   );
 };

@@ -1,21 +1,20 @@
-import { JobPreviewData } from '@/types/job';
-import React from 'react';
+import { JobListing } from '@/types/job';
 
-const JobPreview = ({ jobData }: { jobData: JobPreviewData }) => {
+const FullJobPreview = ({ jobData }: { jobData: JobListing }) => {
   return (
     <div className=" p-4 border border-gray-300 rounded shadow-md">
       <div>
         {/* <p>
-        <strong>Hiring Lead:</strong> {jobData.hiringLead}
+        <strong>Hiring Lead:</strong> {jobData.data.hiringLead}
       </p>
       <p>
-        <strong>Reporting To:</strong> {jobData.reportingTo}
+        <strong>Reporting To:</strong> {jobData.data.reportingTo}
       </p>
 
       <div>
         <strong>Location:</strong>
-        <p>{jobData.location.street1}</p>
-        {jobData.location.street2 && <p>{jobData.location.street2}</p>}
+        <p>{jobData.data.location.street1}</p>
+        {jobData.data.location.street2 && <p>{jobData.data.location.street2}</p>}
       </div> */}
 
         {/* Modal Header */}
@@ -27,7 +26,7 @@ const JobPreview = ({ jobData }: { jobData: JobPreviewData }) => {
         <div className="flex flex-col mt-8">
           <p className="text-gray-400 text-[12px]">Job Title</p>
           <h1 className="text-[#0F172A] text-[22px] font-medium">
-            {jobData.tittle}
+            {jobData.data.tittle}
           </h1>
         </div>
 
@@ -36,19 +35,19 @@ const JobPreview = ({ jobData }: { jobData: JobPreviewData }) => {
           <div className="flex flex-col mt-8">
             <p className="text-gray-400 text-[12px]">Department</p>
             <h1 className="text-[#0F172A] text-[16px] font-medium">
-              {jobData.department}
+              {jobData.data.department.name}
             </h1>
           </div>
           <div className="flex flex-col mt-8">
             <p className="text-gray-400 text-[12px]">Employment Type</p>
             <h1 className="text-[#0F172A] text-[16px] font-medium">
-              {jobData.employmentType}
+              {jobData.data.employmentType}
             </h1>
           </div>
           <div className="flex flex-col mt-8">
             <p className="text-gray-400 text-[12px]">Min. Exp.</p>
             <h1 className="text-[#0F172A] text-[16px] font-medium">
-              {jobData.minYearsExperience} years
+              {jobData.data.minYearsExperience} years
             </h1>
           </div>
         </div>
@@ -57,7 +56,7 @@ const JobPreview = ({ jobData }: { jobData: JobPreviewData }) => {
         <div className="flex flex-col mt-8">
           <p className="text-gray-400 text-[12px]">Description</p>
           <h1 className="text-[#0F172A] text-[16px] font-medium">
-            {jobData.description}
+            {jobData.data.description}
           </h1>
         </div>
 
@@ -65,61 +64,9 @@ const JobPreview = ({ jobData }: { jobData: JobPreviewData }) => {
         <div className="flex flex-col mt-8">
           <p className="text-gray-400 text-[12px]">Compensation</p>
           <h1 className="text-[#0F172A] text-[16px] font-medium">
-            {jobData.salary}
+            {jobData.data.salary}
           </h1>
         </div>
-
-        {/* Divider */}
-        <div className="w-full h-[1.5px] bg-gray-300 mt-8" />
-
-        {/* Upload Buttons Section */}
-        {jobData?.requirements && (
-          <div className="mt-8 flex flex-col gap-5">
-            {/* <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-5">
-          {['Resume', 'Portfolio', 'Cover Letter'].map((label) => (
-            <div key={label} className="flex flex-col gap-1">
-              <p className="text-gray-400 text-[14px]">{label}*</p>
-              <button className="bg-[#0F172A] flex flex-row p-3 w-[270px] items-center justify-between rounded-lg text-white">
-                Upload {label} <FaCloudUploadAlt />
-              </button>
-            </div>
-          ))}
-        </div> */}
-
-            {/* Additional Details Section */}
-            <div>
-              <strong>Requirements:</strong>
-              <ul>
-                {jobData?.requirements.map((req, index) => (
-                  <li key={index}>
-                    {req.name} {req.required && <span>(Required)</span>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <strong>Websites to Share:</strong>
-              <ul>
-                {jobData?.shareWebsites.map((site, index) => (
-                  <li key={index}>{site}</li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <strong>Questions:</strong>
-              <ul>
-                {jobData?.questions.map((question, index) => (
-                  <li key={index}>
-                    {question.question}{' '}
-                    {question.required && <span>(Required)</span>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
-
-        {/* Divider */}
 
         {/* Example Question Section */}
         {/* <div className="flex flex-col gap-2">
@@ -149,26 +96,26 @@ const JobPreview = ({ jobData }: { jobData: JobPreviewData }) => {
           <div className="flex flex-col ">
             <p className="text-gray-400 text-[12px]">Address</p>
             <h1 className="text-[#0F172A] text-[16px] font-medium">
-              {jobData.location.city}, {jobData.location.state},{' '}
-              {jobData.location.country} - {jobData.location.zipCode}
+              {jobData.data.location.city}, {jobData.data.location.state},{' '}
+              {jobData.data.location.country} - {jobData.data.location.zipCode}
             </h1>
           </div>
           <div className="flex flex-col ">
             <p className="text-gray-400 text-[12px]">Country</p>
             <h1 className="text-[#0F172A] text-[16px] font-medium">
-              {jobData.location.country}
+              {jobData.data.location.country}
             </h1>
           </div>
           <div className="flex flex-col ">
             <p className="text-gray-400 text-[12px]">City</p>
             <h1 className="text-[#0F172A] text-[16px] font-medium">
-              {jobData.location.city}
+              {jobData.data.location.city}
             </h1>
           </div>
           <div className="flex flex-col ">
             <p className="text-gray-400 text-[12px]">Postal Code</p>
             <h1 className="text-[#0F172A] text-[16px] font-medium">
-              {jobData.location.zipCode}
+              {jobData.data.location.zipCode}
             </h1>
           </div>
         </div>
@@ -177,4 +124,4 @@ const JobPreview = ({ jobData }: { jobData: JobPreviewData }) => {
   );
 };
 
-export default JobPreview;
+export default FullJobPreview;
