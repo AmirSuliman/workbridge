@@ -23,7 +23,7 @@ const OpendepartmentTable = () => {
   const [EmployeeName, setEmployeeName] = useState('');
   const [departmentData, setDepartmentData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [employees, setEmployees] = useState([]); // Employee data
+  const [employees, setEmployees] = useState([]); 
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
