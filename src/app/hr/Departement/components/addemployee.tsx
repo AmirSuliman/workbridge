@@ -1,12 +1,30 @@
 'use client';
-import { IoMdClose } from "react-icons/io";
-import { useEffect, useState } from "react";
-import axiosInstance from "@/lib/axios";
+import { IoMdClose } from 'react-icons/io';
+import { useEffect, useState } from 'react';
+import axiosInstance from '@/lib/axios';
 
-const Addemployee = ({ setIsModalOpen,  EmployeeName, setEmployeeName, handleAddEmployee }) => {
+interface Employee {
+  id: number;
+  firstName: string;
+  lastName: string;
+}
+
+interface AddEmployeeProps {
+  setIsModalOpen: (isOpen: boolean) => void;
+  EmployeeName: string;
+  setEmployeeName: (name: string) => void;
+  handleAddEmployee: () => void;
+}
+
+const Addemployee: React.FC<AddEmployeeProps> = ({
+  setIsModalOpen,
+  EmployeeName,
+  setEmployeeName,
+  handleAddEmployee,
+}) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [localEmployees, setLocalEmployees] = useState([]); 
-  
+  const [localEmployees, setLocalEmployees] = useState<Employee[]>([]);
+
   useEffect(() => {
     const fetchEmployees = async () => {
       setIsLoading(true);
@@ -18,11 +36,20 @@ const Addemployee = ({ setIsModalOpen,  EmployeeName, setEmployeeName, handleAdd
             associations: 'true',
           },
         });
-        console.log(response, 'res');
-        const employeesData = Array.isArray(response.data.data)
-          ? response.data.data
+
+        console.log(response.data, 'API response data');
+
+        // Extract employees from the "items" array in the response
+        const employeesData = Array.isArray(response.data?.data?.items)
+          ? response.data.data.items
           : [];
-        setLocalEmployees(employeesData); 
+
+        if (employeesData.length) {
+          console.log('Mapped employees:', employeesData);
+          setLocalEmployees(employeesData);
+        } else {
+          console.warn('No employees found in API response.');
+        }
       } catch (error) {
         console.error('Error fetching employees:', error);
         alert('Failed to fetch employees. Please try again later.');
@@ -30,6 +57,7 @@ const Addemployee = ({ setIsModalOpen,  EmployeeName, setEmployeeName, handleAdd
         setIsLoading(false);
       }
     };
+
     fetchEmployees();
   }, []);
 
@@ -37,7 +65,7 @@ const Addemployee = ({ setIsModalOpen,  EmployeeName, setEmployeeName, handleAdd
     if (isLoading) {
       return <option>Loading employees...</option>;
     }
-    if (!localEmployees.length) {
+    if (localEmployees.length === 0) {
       return <option>No employees available</option>;
     }
     return localEmployees.map((employee) => (

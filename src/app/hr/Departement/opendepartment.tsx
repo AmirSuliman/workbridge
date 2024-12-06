@@ -11,7 +11,6 @@ import Button from '@/components/Button';
 import { CiCirclePlus } from 'react-icons/ci';
 import { FaArrowRight, FaDownload } from 'react-icons/fa';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
-import { IoMdClose } from 'react-icons/io';
 import axiosInstance from '@/lib/axios';
 import { useParams } from 'next/navigation';
 import Addemployee from './components/addemployee';
