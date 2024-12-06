@@ -7,14 +7,22 @@ import { BiChevronRight } from 'react-icons/bi';
 import Link from 'next/link';
 import CreateDepartment from '../../Departement/components/createdepartment';
 import axiosInstance from '@/lib/axios';
-
+type Department = {
+  id: string;
+  name: string;
+  employeeCount: number;
+  head: string;
+  openPositions: any[]; // Replace `any` with the actual type if known
+};
 const DepartmentTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [departments, setDepartments] = useState([]);
-  const [filteredDepartments, setFilteredDepartments] = useState([]);
+  const [departments, setDepartments] = useState<Department[]>([]); // Explicitly define the type
+  const [filteredDepartments, setFilteredDepartments] = useState<Department[]>(
+    []
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null); // Specify the type
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -29,11 +37,11 @@ const DepartmentTable = () => {
         const items = response.data.data?.items;
 
         if (items) {
-          const processedDepartments = items.map((dept) => ({
+          const processedDepartments: Department[] = items.map((dept: any) => ({
             id: dept.id,
             name: dept.name,
             employeeCount: dept.employees?.length || 0,
-            head: dept.openPositions && dept.openPositions[0]?.hiringLeadId || 'N/A',
+            head: dept.openPositions?.[0]?.hiringLeadId || 'N/A',
             openPositions: dept.openPositions || [],
           }));
 
@@ -42,9 +50,12 @@ const DepartmentTable = () => {
         } else {
           throw new Error('Departments data not found.');
         }
-
       } catch (err) {
-        setError(err.message || 'Failed to fetch departments');
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unexpected error occurred');
+        }
       } finally {
         setLoading(false);
       }
@@ -70,7 +81,11 @@ const DepartmentTable = () => {
           <h1 className="font-semibold text-[22px]">Departments</h1>
         </div>
         <button className="flex flex-row items-center gap-2 p-2 px-4 bg-white rounded-lg font-medium text-[12px]">
-          See Employee Charter <FaArrowRight size={14} style={{ transform: 'rotate(310deg)', color: '#0F172A' }} />
+          See Employee Charter{' '}
+          <FaArrowRight
+            size={14}
+            style={{ transform: 'rotate(310deg)', color: '#0F172A' }}
+          />
         </button>
       </div>
 
@@ -90,7 +105,9 @@ const DepartmentTable = () => {
               />
             </div>
             <div>
-              <label htmlFor="sort" className="mr-2 text-gray-400 text-[12px]">Sort</label>
+              <label htmlFor="sort" className="mr-2 text-gray-400 text-[12px]">
+                Sort
+              </label>
               <select
                 id="sort"
                 className="border rounded px-2 py-1 text-[12px]"
@@ -149,7 +166,9 @@ const DepartmentTable = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={4} className="text-center">No departments match your search</td>
+                    <td colSpan={4} className="text-center">
+                      No departments match your search
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -159,7 +178,10 @@ const DepartmentTable = () => {
       </div>
 
       {/* Modal */}
-      <CreateDepartment isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <CreateDepartment
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      />
     </div>
   );
 };

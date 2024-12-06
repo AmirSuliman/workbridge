@@ -18,13 +18,12 @@ import { useSearchParams } from 'next/navigation';
 
 const OpendepartmentTable = () => {
   const searchParams = useSearchParams();
-  const id = searchParams.get('id'); 
+  const id = searchParams.get('id');
   console.log(id, 'id');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [EmployeeName, setEmployeeName] = useState('');
   const [departmentData, setDepartmentData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  
 
   useEffect(() => {
     if (id) {
@@ -131,15 +130,18 @@ const OpendepartmentTable = () => {
   return (
     <div className="h-full p-2 ">
       <div className="flex flex-row items-center justify-between">
-        <FormHeading
+        {/* <FormHeading
           textClasses="text-xl font-[600] font-semibold "
           classNames="mb-4"
           icon={<EmployeesIcon classNames="w-6" />}
           text={departmentData?.name || 'Department Name'}
-        />
+        /> */}
         <button className="flex flex-row items-center gap-2 p-2 px-4 bg-white rounded-lg font-medium text-[12px] border">
           See Employee Charter{' '}
-          <FaArrowRight size={14} style={{ transform: 'rotate(310deg)', color: '#0F172A' }} />
+          <FaArrowRight
+            size={14}
+            style={{ transform: 'rotate(310deg)', color: '#0F172A' }}
+          />
         </button>
       </div>
 
@@ -155,23 +157,37 @@ const OpendepartmentTable = () => {
               </select>
             </div>
           </div>
-          <Button name="Add new Employee" icon={<CiCirclePlus />} onClick={() => setIsModalOpen(true)} />
+          <Button
+            name="Add new Employee"
+            icon={<CiCirclePlus />}
+            onClick={() => setIsModalOpen(true)}
+          />
         </div>
-        <Table headers={headers} values={Tvalues} tableConfig={{ rowBorder: true, selectable: true }} />
+        {/* <Table headers={headers} values={Tvalues} tableConfig={{ rowBorder: true, selectable: true }} /> */}
 
         <div className="mt-16 flex flex-col sm:flex-row items-center justify-between">
           <p className="text-[13px] text-gray-400">
-            Showing <span className="font-semibold text-[#0F172A]">1 to 5 of 120</span> employees
+            Showing{' '}
+            <span className="font-semibold text-[#0F172A]">1 to 5 of 120</span>{' '}
+            employees
           </p>
 
           <div className="flex flex-row items-center gap-2">
             <button className="p-2 border bg-gray-200 rounded-lg">
               <BiChevronLeft size={24} />
             </button>
-            <button className="p-2 border w-10 rounded-lg hover:bg-black hover:text-white">1</button>
-            <button className="p-2 border w-10 rounded-lg hover:bg-black hover:text-white">2</button>
-            <button className="p-2 border w-10 rounded-lg hover:bg-black hover:text-white">... </button>
-            <button className="p-2 border w-10 rounded-lg hover:bg-black hover:text-white">24</button>
+            <button className="p-2 border w-10 rounded-lg hover:bg-black hover:text-white">
+              1
+            </button>
+            <button className="p-2 border w-10 rounded-lg hover:bg-black hover:text-white">
+              2
+            </button>
+            <button className="p-2 border w-10 rounded-lg hover:bg-black hover:text-white">
+              ...{' '}
+            </button>
+            <button className="p-2 border w-10 rounded-lg hover:bg-black hover:text-white">
+              24
+            </button>
 
             <button className="p-2 border bg-gray-200 rounded-lg">
               <BiChevronRight size={24} />
@@ -191,7 +207,9 @@ const OpendepartmentTable = () => {
             </div>
             <form onSubmit={(e) => e.preventDefault()}>
               <div className="mb-4 mt-10">
-                <label className="block text-gray-400 mb-2 text-[14px]">Employees</label>
+                <label className="block text-gray-400 mb-2 text-[14px]">
+                  Employees
+                </label>
                 <select
                   value={EmployeeName}
                   onChange={(e) => setEmployeeName(e.target.value)}

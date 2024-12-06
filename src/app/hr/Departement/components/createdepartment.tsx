@@ -11,16 +11,13 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
 
   // Yup Validation Schema
   const departmentSchema = yup.object().shape({
-    name: yup
-      .string()
-      .required('Department name is required')
-      
+    name: yup.string().required('Department name is required'),
   });
 
   const handleAddDepartment = async () => {
     try {
       await departmentSchema.validate({ name: departmentName });
-      setErrorMessage(''); 
+      setErrorMessage('');
 
       setIsLoading(true);
 
@@ -33,11 +30,16 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
       setDepartmentName('');
       setIsModalOpen(false);
     } catch (error) {
-      if (error.name === 'ValidationError') {
+      if (error instanceof yup.ValidationError) {
         setErrorMessage(error.message); // Display validation error
+      } else if (error instanceof Error) {
+        console.error('Error creating department:', error.message);
+        alert(
+          'An error occurred while creating the department. Please try again.'
+        );
       } else {
-        console.error('Error creating department:', error);
-        alert('An error occurred while creating the department. Please try again.');
+        console.error('Unexpected error:', error);
+        alert('An unexpected error occurred.');
       }
     } finally {
       setIsLoading(false);
@@ -57,7 +59,9 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
         </div>
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="mb-4 mt-10">
-            <label className="block text-gray-400 mb-2 text-[14px]">Department Name*</label>
+            <label className="block text-gray-400 mb-2 text-[14px]">
+              Department Name*
+            </label>
             <input
               type="text"
               value={departmentName}
@@ -65,7 +69,9 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
               className="border w-full px-3 py-3 rounded-[5px] text-sm text-gray-800 focus:outline-none"
               placeholder="Type department name"
             />
-            {errorMessage && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
+            {errorMessage && (
+              <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+            )}
           </div>
           <div className="flex justify-center items-center flex-row w-full gap-6 p-6 mt-52">
             <button
