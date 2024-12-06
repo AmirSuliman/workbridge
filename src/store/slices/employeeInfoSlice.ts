@@ -2,7 +2,7 @@ import { EmployeeData } from '@/types/employee';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface EmployeeState {
-  data: EmployeeData | null; // Replace `any` with the correct type of your employee data if available
+  data: EmployeeData | null; 
   error: string | null;
 }
 
