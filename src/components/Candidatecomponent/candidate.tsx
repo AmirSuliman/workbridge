@@ -1,3 +1,4 @@
+import { IMAGES } from '@/constants/images';
 import {
   FaEnvelope,
   FaGlobe,
@@ -7,7 +8,6 @@ import {
   FaUsers,
 } from 'react-icons/fa';
 import UserImgPlaceholder from '../LeaveRequests/UserImgPlaceholder';
-import Image from 'next/image';
 const Candidatecomponent = ({ data }) => {
   return (
     <>
@@ -16,10 +16,10 @@ const Candidatecomponent = ({ data }) => {
       </div>
       <div className="flex flex-col sm:flex-row items-start gap-8 mt-8">
         {data.data.profilePictureUrl ? (
-          <Image
+          <img
             width={300}
             height={150}
-            src={data.data.profilePictureUrl}
+            src={data.data.profilePictureUrl || IMAGES.placeholderAvatar}
             alt="avatar"
             className="rounded-full size-20"
           />
@@ -41,12 +41,12 @@ const Candidatecomponent = ({ data }) => {
             <div className="flex flex-row gap-2 items-center text-[12px] text-gray-400">
               <FaMobileAlt />
               Phone Number
-              <span className="text-black">+123 456 78 90</span>
+              <span className="text-black">{data.data.phone || 'N/A'}</span>
             </div>
             <div className="flex flex-row gap-2 items-center text-[12px] text-gray-400">
               <FaMapMarkerAlt />
               Address
-              <span className="text-black">N. Macedonia, Skopje, 1200</span>
+              <span className="text-black">{data.data.address || 'N/A'}</span>
             </div>
           </div>
 
@@ -54,23 +54,28 @@ const Candidatecomponent = ({ data }) => {
             <div className="flex flex-row gap-2 items-center text-[12px] text-gray-400">
               <FaEnvelope />
               Email Address
-              <span className="text-black">j.Birkenstock@domain.com</span>
+              <span className="text-black">{data.data.email || 'N/A'}</span>
             </div>
             <div className="flex flex-row gap-2 items-center text-[12px] text-gray-400">
               <FaGlobe />
               Website
-              <span className="text-black">personalweb.com</span>
+              <span className="text-black">{data.data.website || 'N/A'}</span>
             </div>
           </div>
         </div>
       </div>
       <div className="flex flex-row gap-2 items-center p-2">
-        <div className="p-2 rounded-full bg-black text-white  items-center">
+        <a
+          href={data.data.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="p-2 rounded-full bg-black text-white  items-center"
+        >
           <FaLinkedin size={18} />{' '}
-        </div>
-        <div className="p-2 rounded-full bg-black text-white items-center">
+        </a>
+        {/* <div className="p-2 rounded-full bg-black text-white items-center">
           <img src="/asdasd.png" alt="img" className="w-4" />
-        </div>
+        </div> */}
       </div>
     </>
   );

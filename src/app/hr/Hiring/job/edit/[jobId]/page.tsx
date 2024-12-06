@@ -4,16 +4,16 @@ import Modal from '@/components/modal/Modal';
 import { API_ROUTES } from '@/constants/apiRoutes';
 import axiosInstance from '@/lib/axios';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { JobFormFields, JobPreviewData } from '@/types/job';
+import { JobFormFields, JobListing, JobPreviewData } from '@/types/job';
 import { Department, EmployeeData, question } from '@/types/employee';
 import { getAllEmployees } from '@/services/getAllEmployees';
-import JobPreview from './JobPreview';
+import JobPreview from '../../../Create-jobopening/JobPreview';
 
 const Createjobopening = () => {
   const router = useRouter();
@@ -58,27 +58,26 @@ const Createjobopening = () => {
     setQuestions(updatedQuestions);
   };
   // Fetch departments
-  useEffect(() => {
-    const getAllDepartments = async () => {
-      try {
-        const {
-          data: {
-            data: { items },
-          },
-        } = await axiosInstance.get(API_ROUTES.GET_DEPARTMENTS);
-        setDepartments(items);
-      } catch (error) {
-        toast.error('Failed to load all departments');
-        console.log(error);
-      }
-    };
-    getAllDepartments();
-  }, []);
+  // useEffect(() => {
+  //   const getAllDepartments = async () => {
+  //     try {
+  //       const {
+  //         data: {
+  //           data: { items },
+  //         },
+  //       } = await axiosInstance.get(API_ROUTES.GET_DEPARTMENTS);
+  //       setDepartments(items);
+  //     } catch (error) {
+  //       toast.error('Failed to load all departments');
+  //       console.log(error);
+  //     }
+  //   };
+  //   getAllDepartments();
+  // }, []);
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const { data } = await getAllEmployees(1, 1000);
-        console.log('Employees API Response: ', data);
         setEmployees(data.items);
       } catch (error) {
         console.error('Error fetching employees: ', error);
@@ -87,7 +86,6 @@ const Createjobopening = () => {
     const fetchDepartments = async () => {
       try {
         const { data } = await axiosInstance.get('/departments');
-        console.log('Departments API Response: ', data);
         setDepartments(data.data.items);
       } catch (error) {
         console.error('Error fetching Departments: ', error);
@@ -188,12 +186,13 @@ const Createjobopening = () => {
     };
 
     try {
-      await axiosInstance.post(API_ROUTES.POST_JOB, jobData);
+      await axiosInstance.post(API_ROUTES.PUT_JOB, jobData);
       toast.success(
         jobStatus === 'Published'
-          ? 'Job published successfully'
+          ? 'Job updated successfully'
           : 'Job saved as draft successfully'
       );
+      router.push('/hr/hiring');
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -263,7 +262,27 @@ const Createjobopening = () => {
 
   // Button Handlers
   const handlePublish = () => setJobStatus('Published');
-  const handleSaveDraft = () => setJobStatus('Draft');
+  const { jobId } = useParams();
+  const [singleJobData, setSingleJobData] = useState<JobListing | undefined>();
+
+  useEffect(() => {
+    const fetchSingleJob = async () => {
+      setLoading(true);
+      try {
+        const { data } = await axiosInstance.get(`openPosition/${jobId}`, {
+          params: {
+            associations: true,
+          },
+        });
+        setSingleJobData(data);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
+    };
+    fetchSingleJob();
+  }, [jobId]);
 
   return (
     <main className="">
@@ -282,22 +301,19 @@ const Createjobopening = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-3">
-          <div className="w-fit h-fit">
-            <button
-              onClick={() => {
-                handleSaveDraft();
-                console.log(jobStatus);
-              }}
+          <div onClick={handlePublish} className="w-fit h-fit mx-auto">
+            <Button
               type="submit"
-              disabled={loading}
-              className="bg-[#0F172A] p-2 px-3 rounded-lg text-white"
-            >
-              {jobStatus === 'Draft' && loading ? (
-                <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
-              ) : (
-                'Save Draft'
-              )}
-            </button>
+              name={loading ? '' : 'Update job'}
+              className=""
+              icon={
+                jobStatus === 'Published' && loading ? (
+                  <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+                ) : (
+                  ''
+                )
+              }
+            ></Button>
           </div>
           <button
             type="button"
@@ -339,6 +355,7 @@ const Createjobopening = () => {
                   placeholder="Add job title"
                   className="p-3 border rounded-lg w-full"
                   {...register('tittle', { required: 'Job title is required' })}
+                  defaultValue={singleJobData?.data.tittle}
                 />
                 {errors.tittle && (
                   <span className="text-red-500">{errors.tittle.message}</span>
@@ -359,6 +376,7 @@ const Createjobopening = () => {
 
                   {departments?.map((department) => (
                     <option
+                      defaultValue={singleJobData?.data.departmentId}
                       value={department?.id}
                       key={department.id}
                       className="text-gray-400"
@@ -465,6 +483,7 @@ const Createjobopening = () => {
                   {...register('minYearsExperience', {
                     required: 'Experience is required',
                   })}
+                  defaultValue={singleJobData?.data.minYearsExperience}
                 />
                 {errors.minYearsExperience && (
                   <span className="text-red-500">
@@ -496,6 +515,7 @@ const Createjobopening = () => {
                 {...register('description', {
                   required: 'Description is required',
                 })}
+                defaultValue={singleJobData?.data.description}
               />
               {errors.description && (
                 <span className="text-red-500">
@@ -526,6 +546,7 @@ const Createjobopening = () => {
                   placeholder="Add street"
                   className="p-3 border rounded-lg w-full"
                   {...register('street1', { required: 'Street1 is required' })}
+                  defaultValue={singleJobData?.data.location.street1}
                 />
                 {errors.street1 && (
                   <span className="text-red-500">{errors.street1.message}</span>
@@ -538,6 +559,7 @@ const Createjobopening = () => {
                   placeholder="Add street"
                   className="p-3 border rounded-lg w-full"
                   {...register('street2', { required: false })}
+                  defaultValue={singleJobData?.data.location.street2}
                 />
               </label>
               <label className="flex flex-col mb-4 sm:w-1/3 w-full">
@@ -547,6 +569,7 @@ const Createjobopening = () => {
                   placeholder="Add Zip"
                   className="p-3 border rounded-lg w-full"
                   {...register('zipCode', { required: 'Zip code is required' })}
+                  defaultValue={singleJobData?.data.location.zipCode}
                 />
                 {errors.zipCode && (
                   <span className="text-red-500">{errors.zipCode.message}</span>
@@ -562,6 +585,7 @@ const Createjobopening = () => {
                   placeholder="Add country"
                   className="p-3 border rounded-lg w-full"
                   {...register('country', { required: 'Country is required' })}
+                  defaultValue={singleJobData?.data.location.country}
                 />
                 {errors.country && (
                   <span className="text-red-500">{errors.country.message}</span>
@@ -574,6 +598,7 @@ const Createjobopening = () => {
                   placeholder="Add state"
                   className="p-3 border rounded-lg w-full"
                   {...register('state', { required: 'State is required' })}
+                  defaultValue={singleJobData?.data.location.state}
                 />
                 {errors.state && (
                   <span className="text-red-500">{errors.state.message}</span>
@@ -586,6 +611,7 @@ const Createjobopening = () => {
                   placeholder="Add city"
                   className="p-3 border rounded-lg w-full"
                   {...register('city', { required: 'City is required' })}
+                  defaultValue={singleJobData?.data.location.city}
                 />
                 {errors.city && (
                   <span className="text-red-500">{errors.city.message}</span>
@@ -616,6 +642,7 @@ const Createjobopening = () => {
                 {...register('salary', {
                   required: 'Compensation is required',
                 })}
+                defaultValue={singleJobData?.data.salary}
               />
               {errors.salary && (
                 <span className="text-red-500">{errors.salary.message}</span>
@@ -860,12 +887,8 @@ const Createjobopening = () => {
             </div>
           </div>
         </div>
-        {/* <button onClick={handleSubmit(onSubmit)} disabled={loading}>
-          {jobStatus === 'Published' && loading
-            ? 'Publishing...'
-            : 'Publish Job'}
-        </button> */}
-        <div onClick={handlePublish} className="w-fit h-fit mx-auto mt-4">
+
+        {/* <div onClick={handlePublish} className="w-fit h-fit mx-auto mt-4">
           <Button
             type="submit"
             name={loading ? '' : 'Save & Publish Job Opening'}
@@ -878,7 +901,7 @@ const Createjobopening = () => {
               )
             }
           ></Button>
-        </div>
+        </div> */}
       </div>
     </main>
   );

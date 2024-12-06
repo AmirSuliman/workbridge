@@ -115,8 +115,8 @@ export const AllJobsTable = () => {
               onChange={(e) => setStatusFilter(e.target.value)}
             >
               <option value="">All</option>
-              <option value="active">Active</option>
-              <option value="pending">Pending</option>
+              <option value="Published">Active</option>
+              <option value="Draft">Pending</option>
               <option value="closed">Closed</option>
             </select>
           </div>
@@ -137,7 +137,7 @@ export const AllJobsTable = () => {
             >
               <option value="">All</option>
               <option value="FullTime">Full Time</option>
-              <option value="PartTime">Part Time</option>
+              <option value="Part Time">Part Time</option>
               <option value="Contract">Contract</option>
             </select>
           </div>

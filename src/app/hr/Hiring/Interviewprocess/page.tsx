@@ -5,7 +5,7 @@ import Jobapplied from '@/components/Candidatecomponent/jobapplied';
 import { useState } from 'react';
 
 const InterviewProcess = () => {
-  const [activeTab, setActiveTab] = useState('jobOpenings'); 
+  const [activeTab, setActiveTab] = useState('jobOpenings');
 
   return (
     <main className="space-y-6">
@@ -13,21 +13,29 @@ const InterviewProcess = () => {
         <img src="/jobicon.png" alt="img" className="w-5" />
         Software Engineer
       </div>
-       
-       <div className='p-6 bg-white border rounded-lg'>
-            <Candidatecomponent/>
-       </div>
+
+      <div className="p-6 bg-white border rounded-lg">
+        <Candidatecomponent data={{}} />
+      </div>
       {/* Tab Navigation */}
       <div className="relative flex items-center gap-8 border-b border-gray-300">
         <button
           onClick={() => setActiveTab('jobOpenings')}
-          className={`py-2 px-4 ${activeTab === 'jobOpenings' ? 'text-black font-semibold' : 'text-gray-600'}`}
+          className={`py-2 px-4 ${
+            activeTab === 'jobOpenings'
+              ? 'text-black font-semibold'
+              : 'text-gray-600'
+          }`}
         >
           Interview Process
         </button>
         <button
           onClick={() => setActiveTab('candidates')}
-          className={`py-2 px-4 ${activeTab === 'candidates' ? 'text-black font-semibold' : 'text-gray-600'}`}
+          className={`py-2 px-4 ${
+            activeTab === 'candidates'
+              ? 'text-black font-semibold'
+              : 'text-gray-600'
+          }`}
         >
           Candidate Information
         </button>
@@ -50,11 +58,11 @@ const InterviewProcess = () => {
         </div>
       ) : (
         <div className="pt-6">
-          <div className='p-6 bg-white rounded-lg border'>
-              <CandidateInfo/>
+          <div className="p-6 bg-white rounded-lg border">
+            <CandidateInfo data={{}} />
           </div>
-          <div className='mt-6'>
-          <Jobapplied/>
+          <div className="mt-6">
+            <Jobapplied candidateId={''} />
           </div>
         </div>
       )}

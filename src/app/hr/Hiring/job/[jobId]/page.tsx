@@ -7,16 +7,17 @@ import { IMAGES } from '@/constants/images';
 import axiosInstance from '@/lib/axios';
 import { JobListing } from '@/types/job';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import FullJobPreview from '../FullJobPreview';
 
 const SingleJob = () => {
+  const route = useRouter();
+  const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { jobId } = useParams();
   const [singleJobData, setSingleJobData] = useState<JobListing | undefined>();
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchSingleJob = async () => {
@@ -59,7 +60,10 @@ const SingleJob = () => {
           />
           {singleJobData?.data.tittle || 'N/A'}
         </div>
-        <button className="bg-[#0F172A] p-3 rounded-lg text-white flex flex-row gap-4 items-center">
+        <button
+          onClick={() => route.push(`/hr/hiring/job/edit/${jobId}`)}
+          className="bg-[#0F172A] p-3 rounded-lg text-white flex flex-row gap-4 items-center"
+        >
           Edit Job Posting <FaEdit />{' '}
         </button>
       </div>

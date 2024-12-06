@@ -18,7 +18,7 @@ const InterviewProcess = () => {
       </div>
 
       <div className="p-6 bg-white border rounded-lg">
-        <Candidatecomponent />
+        <Candidatecomponent data={{}} />
       </div>
       {/* Tab Navigation */}
       <nav className="relative flex items-center gap-8 border-b border-gray-300">
@@ -64,10 +64,10 @@ const InterviewProcess = () => {
       {activeTab === 'candidates' && (
         <div className="pt-6">
           <div className="p-6 bg-white rounded-lg border">
-            <CandidateInfo />
+            <CandidateInfo data={{}} />
           </div>
           <div className="mt-6">
-            <Jobapplied />
+            <Jobapplied candidateId="" />
           </div>
         </div>
       )}

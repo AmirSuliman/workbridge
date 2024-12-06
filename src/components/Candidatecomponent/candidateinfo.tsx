@@ -1,5 +1,3 @@
-import { FaArrowRight } from 'react-icons/fa';
-
 const CandidateInfo = ({ data }) => {
   return (
     <>
@@ -14,7 +12,7 @@ const CandidateInfo = ({ data }) => {
               Full Name
             </span>
             <div className="p-3 border rounded-lg w-full text-[14px] font-medium">
-              Jordan Birkenstock
+              {`${data.data.firstName} ${data.data.lastName}`}
             </div>
           </div>
           <div className="flex flex-col w-full">
@@ -22,15 +20,15 @@ const CandidateInfo = ({ data }) => {
               Phone Number
             </span>
             <div className="p-3 border rounded-lg w-full text-[14px] font-medium">
-              Jordan Birkenstock
+              {data.data.phone || 'N/A'}
             </div>
           </div>
           <div className="flex flex-col w-full">
             <span className="text-gray-400 text-[14px] mb-2 font-medium">
-              Full Name
+              Email Address
             </span>
             <div className="p-3 border rounded-lg w-full text-[14px] font-medium">
-              Jordan Birkenstock
+              {data.data.email || 'N/A'}
             </div>
           </div>
         </div>
@@ -39,7 +37,7 @@ const CandidateInfo = ({ data }) => {
       <div className="w-full h-[1.5px] bg-gray-300 mt-8" />
 
       <div className="mt-8 space-y-8">
-        <div className="text-[18px] font-medium flex gap-3 flex-row items-center">
+        {/* <div className="text-[18px] font-medium flex gap-3 flex-row items-center">
           <img src="/jobdescription.png" alt="img" className="w-5 h-5" />{' '}
           Documents
         </div>
@@ -71,9 +69,9 @@ const CandidateInfo = ({ data }) => {
               <FaArrowRight className=" text-xl transform -rotate-45" />
             </div>
           </div>
-        </div>
+        </div> */}
 
-        <div className="w-full h-[1.5px] bg-gray-300 mt-8" />
+        {/* <div className="w-full h-[1.5px] bg-gray-300 mt-8" /> */}
 
         <div className="mt-8 space-y-8">
           <div className="text-[18px] font-medium flex gap-3 flex-row items-center">
@@ -86,7 +84,7 @@ const CandidateInfo = ({ data }) => {
                 University
               </span>
               <div className="p-3 border rounded-lg w-full text-[14px] font-medium">
-                Massachusetts Institute of Technology
+                {data.data.educationUniversity || 'N/A'}
               </div>
             </div>
             <div className="flex flex-col w-full">
@@ -94,7 +92,7 @@ const CandidateInfo = ({ data }) => {
                 Country
               </span>
               <div className="p-3 border rounded-lg w-full text-[14px] font-medium">
-                Massachusetts
+                {data.data.educationCountry || 'N/A'}
               </div>
             </div>
           </div>
@@ -113,7 +111,7 @@ const CandidateInfo = ({ data }) => {
                 Street
               </span>
               <div className="p-3 border rounded-lg w-full text-[14px] font-medium">
-                4799 Lamberts Branch Road
+                {data.data.location.street1 || 'N/A'}
               </div>
             </div>
             <div className="flex flex-col w-full">
@@ -121,7 +119,7 @@ const CandidateInfo = ({ data }) => {
                 Street 2
               </span>
               <div className="p-3 border rounded-lg w-full text-[14px] font-medium">
-                Massachusetts
+                {data.data.location.street2 || 'N/A'}
               </div>
             </div>
             <div className="flex flex-col w-full">
@@ -129,7 +127,7 @@ const CandidateInfo = ({ data }) => {
                 Zip
               </span>
               <div className="p-3 border rounded-lg w-full text-[14px] font-medium">
-                84116
+                {data.data.location.zipCode || 'N/A'}
               </div>
             </div>
           </div>
@@ -139,7 +137,7 @@ const CandidateInfo = ({ data }) => {
                 City
               </span>
               <div className="p-3 border rounded-lg w-full text-[14px] font-medium">
-                Salt Lake City
+                {data.data.location.city || 'N/A'}
               </div>
             </div>
             <div className="flex flex-col w-full">
@@ -147,7 +145,7 @@ const CandidateInfo = ({ data }) => {
                 Country
               </span>
               <div className="p-3 border rounded-lg w-full text-[14px] font-medium">
-                Utah
+                {data.data.location.country || 'N/A'}
               </div>
             </div>
             <div className="flex flex-col w-full">
@@ -155,7 +153,7 @@ const CandidateInfo = ({ data }) => {
                 State
               </span>
               <div className="p-3 border rounded-lg w-full text-[14px] font-medium">
-                Utah
+                {data.data.location.state || 'N/A'}
               </div>
             </div>
           </div>
@@ -173,7 +171,7 @@ const CandidateInfo = ({ data }) => {
                 LinkedIn
               </span>
               <div className="p-3 border rounded-lg w-full text-[14px] font-medium">
-                /in/JuliettNicolas
+                {data.data.linkedin || 'N/A'}
               </div>
             </div>
             <div className="flex flex-col w-full">
@@ -181,7 +179,7 @@ const CandidateInfo = ({ data }) => {
                 Personal Website
               </span>
               <div className="p-3 border rounded-lg w-full text-[14px] font-medium">
-                juliettnicolas.com
+                {data.data.website || 'N/A'}
               </div>
             </div>
           </div>

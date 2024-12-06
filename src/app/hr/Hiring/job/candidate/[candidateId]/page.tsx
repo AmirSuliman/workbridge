@@ -5,6 +5,7 @@ import CandidateInfo from '@/components/Candidatecomponent/candidateinfo';
 import Jobapplied from '@/components/Candidatecomponent/jobapplied';
 import ScreenLoader from '@/components/common/ScreenLoader';
 import { fetchCandidateData } from '@/store/slices/candidateSlice';
+import { AppDispatch, RootState } from '@/store/store';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
@@ -13,15 +14,16 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const Candidate = () => {
   const { candidateId } = useParams();
-  const dispatch = useDispatch();
-
-  const { data, loading, error } = useSelector((state) => state.candidate);
-  console.log('candidate: ', data);
+  const dispatch = useDispatch<AppDispatch>();
+  const { data, loading, error } = useSelector(
+    (state: RootState) => state.candidate
+  );
   useEffect(() => {
     if (candidateId) {
       dispatch(fetchCandidateData(candidateId));
     }
   }, [candidateId, dispatch]);
+
   return (
     <main className="space-y-6">
       <div className="flex flex-row items-center justify-between">
@@ -35,7 +37,7 @@ const Candidate = () => {
           />
           Software Engineer
         </div>
-        <a href="/hr/Hiring/interview-process">
+        <a href="/hr/hiring/interview-process">
           <button className="flex flex-row items-center gap-4 p-3 bg-[#0F172A] text-white text-[12px] rounded-lg">
             Proceed to First Round Interview <FaArrowRight />{' '}
           </button>
