@@ -153,7 +153,7 @@ const OpendepartmentTable: React.FC = () => {
     },
     {
       title: (
-        <button className="p-2 px-3 bg-gray-200 text-black text-sm rounded-md flex flex-row items-center gap-2">
+        <button className="p-2 px-3 bg-gray-200 text-gray-400 text-sm rounded-md flex flex-row items-center gap-2 ">
           <FaDownload />
           Download
         </button>
@@ -215,7 +215,7 @@ const OpendepartmentTable: React.FC = () => {
             </div>
             <Button name="Add new Employee" icon={<CiCirclePlus />} onClick={() => setIsModalOpen(true)} />
           </div>
-          <Table headers={headers} values={Tvalues} tableConfig={{ rowBorder: true, selectable: true }} />
+          <Table headers={headers} values={Tvalues} tableConfig={{ rowBorder: true, selectable: true }} className="w-full"/>
 
           {totalPages > 1 && (
             <div className="mt-16 flex justify-between items-center">
@@ -258,7 +258,6 @@ const OpendepartmentTable: React.FC = () => {
       {isModalOpen && (
         <Addemployee
           setIsModalOpen={setIsModalOpen}
-          employees={employees}
           EmployeeName={EmployeeName}
           setEmployeeName={setEmployeeName}
           handleAddEmployee={handleAddEmployee}
