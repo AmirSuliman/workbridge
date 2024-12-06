@@ -9,7 +9,8 @@ interface FetchParams {
   sort?: string;
   page: number;
   size: number;
-  candidateId?: string;
+  candidateId?: string | string[] | undefined;
+  jobId?: string | string[] | undefined;
 }
 
 export const fetchJobApplications = createAsyncThunk<

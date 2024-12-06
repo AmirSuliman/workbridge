@@ -1,7 +1,12 @@
 import Tab from '@/components/common/TabsComponent/Tab';
 import TabPanel from '@/components/common/TabsComponent/TabPanel';
 import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
+<<<<<<< HEAD
 import { AllEmployees } from './AllEmployees';
+=======
+import EmployeesTable from './EmployeesTable';
+import DepartmentTable from './DepartmentTable';
+>>>>>>> 300d1b77d361081a703153a333f2ecafe4956647
 
 const Employees = () => {
   return (
@@ -27,7 +32,9 @@ const Employees = () => {
           <TabPanel index={0}>
             <AllEmployees />
           </TabPanel>
-          <TabPanel index={1}>Dep</TabPanel>
+          <TabPanel index={1}>
+            <DepartmentTable/>
+          </TabPanel>
         </div>
       </TabsContainer>
     </div>
