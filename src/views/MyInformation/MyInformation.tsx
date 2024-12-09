@@ -15,12 +15,15 @@ import {
   setEmployeeError,
 } from '@/store/slices/employeeInfoSlice';
 import { RootState } from '@/store/store';
+import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 const MyInformation = () => {
+  const { data: session } = useSession();
   const employeeData = useSelector((state: RootState) => state.employee.data);
   const dispatch = useDispatch();
   const [editEmployee, setEditEmployee] = useState<boolean>(false);
@@ -30,23 +33,32 @@ const MyInformation = () => {
   const {
     register,
     handleSubmit,
-    setValue,
-    // watch,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: employeeData || undefined,
   });
+  useEffect(() => {
+    if (employeeData) {
+      reset(employeeData); // Sync form state with `employeeData`
+    }
+  }, [employeeData]);
 
   const onSubmit = async (data: any) => {
+    console.log('put employee: ', data);
     try {
       const { data: updatedData } = await axiosInstance.put(
-        `/employee/${empId}`,
-        data
+        `/employee/${empId || session?.user.userId}`,
+        { ...employeeData, data }
       );
       dispatch(setEmployeeData(updatedData));
-      alert('Employee information updated successfully!');
+      toast.success('Employee information updated successfully!');
     } catch (err) {
       console.error('Error updating employee data:', err);
+      toast.error(
+        err?.response?.data?.message || 'Failed to update employee data.'
+      );
+
       dispatch(setEmployeeError('Failed to update employee information.'));
     }
   };

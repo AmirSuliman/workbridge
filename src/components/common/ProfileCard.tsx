@@ -118,7 +118,7 @@ const ProfileCard = ({
             </div>
             <div className="flex items-center gap-4">
               <Button
-                type={!editEmployee ? 'submit' : 'button'}
+                type={editEmployee ? 'submit' : 'button'}
                 onClick={() => {
                   setEditEmployee(true);
                 }}
