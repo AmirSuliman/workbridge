@@ -215,8 +215,9 @@ const OpendepartmentTable: React.FC = () => {
             </div>
             <Button name="Add new Employee" icon={<CiCirclePlus />} onClick={() => setIsModalOpen(true)} />
           </div>
+          <div  className='overflow-x-auto'>
           <Table headers={headers} values={Tvalues} tableConfig={{ rowBorder: true, selectable: true }} className="w-full"/>
-
+          </div>
           {totalPages > 1 && (
             <div className="mt-16 flex justify-between items-center">
               <p className="text-[13px] text-gray-400">
