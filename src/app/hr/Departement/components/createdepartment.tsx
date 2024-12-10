@@ -9,7 +9,6 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Yup Validation Schema
   const departmentSchema = yup.object().shape({
     name: yup
       .string()
@@ -20,30 +19,33 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
   const handleAddDepartment = async () => {
     try {
       await departmentSchema.validate({ name: departmentName });
-      setErrorMessage(''); 
-
+      setErrorMessage('');
+  
       setIsLoading(true);
-
+  
       const response = await axiosInstance.post('/department', {
         name: departmentName,
       });
-
+  
       console.log('Department created successfully:', response.data);
-
+  
       setDepartmentName('');
       setIsModalOpen(false);
     } catch (error) {
-      if (error.name === 'ValidationError') {
-        setErrorMessage(error.message); // Display validation error
+      if (error instanceof yup.ValidationError) {
+        setErrorMessage(error.message);
+      } else if (axios.isAxiosError(error)) {
+        console.error('Server error:', error.response?.data || error.message);
+        setErrorMessage('An error occurred while creating the department. Please try again.');
       } else {
-        console.error('Error creating department:', error);
-        alert('An error occurred while creating the department. Please try again.');
+        console.error('Unexpected error:', error);
+        setErrorMessage('An unexpected error occurred.');
       }
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   if (!isModalOpen) return null;
 
   return (

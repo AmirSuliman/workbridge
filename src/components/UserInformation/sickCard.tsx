@@ -14,7 +14,7 @@ interface ProfileCardProps {
     onButtonClick?: () => void;
 }
 
-const VacationsCard: React.FC<ProfileCardProps> = ({
+const SickCard: React.FC<ProfileCardProps> = ({
     title,
     subtitle,
     icon,
@@ -62,7 +62,7 @@ const VacationsCard: React.FC<ProfileCardProps> = ({
             leaveDay: formatDate(startDate),
             returningDay: formatDate(endDate),
             duration: duration,
-            type: 'Vacation', 
+            type: 'Sick', 
         };
 
         try {
@@ -102,11 +102,10 @@ const VacationsCard: React.FC<ProfileCardProps> = ({
                     <div>
                         <div className="flex gap-2 items-center mb-2">
                             <div className="flex items-center justify-center rounded-full p-1">
-                                <Image src="/vaction.png" alt="img" width={25} height={25} />
+                                <Image src="/sickleave.png" alt="img" width={25} height={25} />
                             </div>
-                            <h3 className="text-dark-navy font-[500] text-sm">Request Vacation</h3>
+                            <h3 className="text-dark-navy font-[500] text-sm">Request Sick Leave</h3>
                         </div>
-                        <p className="font-[400] text-[#878b94] text-xs">Requests need to be made at least 48 hours prior.</p>
                     </div>
                     <button
                         onClick={handleButtonClick}
@@ -126,8 +125,8 @@ const VacationsCard: React.FC<ProfileCardProps> = ({
     <Modal onClose={() => setIsModalOpen(false)}>
         <div className="p-6 w-[600px]">
             <div className="flex flex-row items-center gap-2">
-                <Image src="/vaction.png" alt="img" width={40} height={40} />
-                <h2 className="text-2xl font-semibold">Request Vacation</h2>
+                <Image src="/sickleave.png" alt="img" width={40} height={40} />
+                <h2 className="text-2xl font-semibold">Request Sick Leave</h2>
             </div>
 
             <div className="flex flex-row items-center gap-4 w-full mt-8">
@@ -184,4 +183,4 @@ const VacationsCard: React.FC<ProfileCardProps> = ({
     );
 };
 
-export default VacationsCard;
+export default SickCard;

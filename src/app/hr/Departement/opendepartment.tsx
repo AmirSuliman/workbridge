@@ -14,15 +14,15 @@ import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import axiosInstance from '@/lib/axios';
 import { useParams } from 'next/navigation';
 import Addemployee from './components/addemployee';
+import Modal from '@/components/modal/Modal';
 
-// Define types for the data structures
 interface Employee {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
   hireDate?: string;
-  tittle?: string; // Assuming typo, corrected to title if that's intended
+  tittle?: string; 
 }
 
 interface DepartmentData {
@@ -257,12 +257,13 @@ const OpendepartmentTable: React.FC = () => {
       )}
 
       {isModalOpen && (
-        <Addemployee
-          setIsModalOpen={setIsModalOpen}
-          EmployeeName={EmployeeName}
-          setEmployeeName={setEmployeeName}
-          handleAddEmployee={handleAddEmployee}
-        />
+        
+          <Modal>
+            <Addemployee
+              setIsModalOpen={setIsModalOpen}
+            />
+          </Modal>
+        
       )}
     </div>
   );
