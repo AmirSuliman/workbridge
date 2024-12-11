@@ -149,25 +149,24 @@ const TimeOffSection = () => {
 
             </div>
             <div className='bg-white mt-5 border border-gray-border rounded-[10px] p-3 md:p-5 w-full'>
-               <FormHeading classNames='mb-5' icon={<ClockRotateIcon classNames='w-4' />} text='Time Off History' />
-               
-               {loading ? (
-                 <p>Loading...</p>
-               ) : error ? (
-                 <p className="text-red-500">{error}</p>
-               ) : (
-                 <InfoGrid
-                   headers={["Type", "Date From", "Date To", "Status"]}
-                   values={timeOffData.map((item, index) => [
-                     item.type,
-                     new Date(item.leaveDay).toLocaleDateString(),
-                     new Date(item.returningDay).toLocaleDateString(),
-                     item.status === "Confirmed" ? "Confirm" : item.status === "Pending" ? "Denied" : item.status || "N/A",
-                   ])}
-                 />
-               )}
-             </div>
-             
+              <FormHeading classNames='mb-5' icon={<ClockRotateIcon classNames='w-4' />} text='Time Off History' />
+              
+              {loading ? (
+                <p>Loading...</p>
+              ) : error ? (
+                <p className="text-red-500">{error}</p>
+              ) : (
+                <InfoGrid
+                  headers={["Type", "Date From", "Date To", "Status"]}
+                  values={timeOffData.map((item, index) => [
+                    item.type,
+                    new Date(item.leaveDay).toLocaleDateString(),
+                    new Date(item.returningDay).toLocaleDateString(),
+                    item.status || "N/A", 
+                  ])}
+                />
+              )}
+            </div>
 
 
             {isModalOpen && (
