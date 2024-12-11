@@ -20,10 +20,11 @@ export interface Employee {
   allowance: 'Approved' | 'Pending' | 'Denied';
 }
 
-interface TableProps {
+
+type TableProps = {
   filter: string;
-  sort: 'duration' | 'leaveEarliest' | 'default';
-}
+  sort: 'default' | 'duration' | 'leaveEarliest' | 'returnEarliest';
+};
 
 const Table: React.FC<TableProps> = ({ filter, sort }) => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);

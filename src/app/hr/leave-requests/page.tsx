@@ -3,18 +3,18 @@ import React, { useState } from 'react';
 import { FaRegCalendarAlt } from 'react-icons/fa';
 import Table from './components/table';
 
+type SortOption = 'default' | 'duration' | 'leaveEarliest' | 'returnEarliest'; 
+
 const Page = () => {
   const [filter, setFilter] = useState('All');
-  const [sort, setSort] = useState('');
+  const [sort, setSort] = useState<SortOption>('default'); 
 
-  // Handle filter change
-  const handleFilterChange = (e) => {
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilter(e.target.value);
   };
 
-  // Handle sort change
-  const handleSortChange = (e) => {
-    setSort(e.target.value);
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSort(e.target.value as SortOption); 
   };
 
   return (
@@ -35,7 +35,7 @@ const Page = () => {
               value={sort}
               onChange={handleSortChange}
             >
-              <option value="">Select</option>
+              <option value="default">Select</option>
               <option value="duration">Duration</option>
               <option value="leaveEarliest">Leave Earliest</option>
               <option value="returnEarliest">Return Earliest</option>
