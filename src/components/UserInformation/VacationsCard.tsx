@@ -124,7 +124,7 @@ const VacationsCard: React.FC<ProfileCardProps> = ({
 
             {isModalOpen && (
     <Modal onClose={() => setIsModalOpen(false)}>
-        <div className="p-6 w-[600px]">
+        <div className="p-6 w-full sm:w-[600px]">
             <div className="flex flex-row items-center gap-2">
                 <Image src="/vaction.png" alt="img" width={40} height={40} />
                 <h2 className="text-2xl font-semibold">Request Vacation</h2>

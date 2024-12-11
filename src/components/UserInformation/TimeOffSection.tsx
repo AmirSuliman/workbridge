@@ -1,88 +1,232 @@
-import React from 'react'
-import UmbrellaIcon from '../icons/umbrella-icon'
-import VacationsCard from './VacationsCard'
-import InfoGrid from './InfoGrid'
-import FormHeading from './FormHeading'
-import ClockRotateIcon from '../icons/clock-rotate-icon'
-import SickPersonIcon from '../icons/sick-person-icon'
-import LabelWithIcon from '../common/LabelWithIcon'
-import { FaEdit } from 'react-icons/fa'
-import SickCard from './sickCard'
+'use client';
+import React, { useState, useEffect } from 'react';
+import UmbrellaIcon from '../icons/umbrella-icon';
+import VacationsCard from './VacationsCard';
+import InfoGrid from './InfoGrid';
+import FormHeading from './FormHeading';
+import ClockRotateIcon from '../icons/clock-rotate-icon';
+import SickPersonIcon from '../icons/sick-person-icon';
+import LabelWithIcon from '../common/LabelWithIcon';
+import { FaEdit } from 'react-icons/fa';
+import SickCard from './sickCard';
+import Modal from '@/components/modal/Modal';
+import Image from 'next/image';
+import axiosInstance from '@/lib/axios';
 
 const TimeOffSection = () => {
-    const values = [
-        [
-            <LabelWithIcon
-                key={4}
-                icon={<UmbrellaIcon classNames="w-4 text-white" />}
-                title="Vacation"
-                iconStyles="bg-[#00B87D]"
-            />,
-            "28 August",
-            "31 August",
-            <span key={7} className="text-[#25A244] font-[500]">Approved</span>,
-            "",
-            "",
-            "",
-            <FaEdit key={0} className='text-dark-navy w-5' />
-        ],
-        [
-            <LabelWithIcon
-                icon={<SickPersonIcon classNames="w-4 text-white" />}
-                title="Sick Leave"
-                iconStyles="bg-[#F53649]"
-                key={5}
-            />,
-            "4 September",
-            "5 September",
-            <span key={8} >Waiting for Approval</span>,
-            "",
-            "",
-            "",
-            <FaEdit key={1} className='text-dark-navy w-5' />
-        ],
-        [
-            <LabelWithIcon
-                key={6}
-                icon={<UmbrellaIcon classNames="w-4 text-white" />}
-                title="Vacation"
-                iconStyles="bg-[#00B87D]"
-            />,
-            "28 August",
-            "31 August",
-            <span key={9} >Waiting For Approval</span>,
-            "",
-            "",
-            "",
-            <FaEdit key={2} className='text-dark-navy w-5' />
-        ]
-    ];
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedTimeOff, setSelectedTimeOff] = useState(null);
+    const [timeOffData, setTimeOffData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [leaveDate, setLeaveDate] = useState('');
+    const [returningDate, setReturningDate] = useState('');
+    const [duration, setDuration] = useState(0);
+
+    // Fetch time-off data using axiosInstance
+    useEffect(() => {
+        const fetchTimeOffData = async () => {
+            try {
+                const response = await axiosInstance.get('/timeoffs/my');
+                setTimeOffData(response.data.data.items);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTimeOffData();
+    }, []);
+
+    const handleEditClick = (item) => {
+        setSelectedTimeOff(item);
+        setLeaveDate(new Date(item.leaveDay).toISOString().split('T')[0]);
+        setReturningDate(new Date(item.returningDay).toISOString().split('T')[0]);
+        calculateDuration(new Date(item.leaveDay), new Date(item.returningDay));
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedTimeOff(null);
+        setLeaveDate('');
+        setReturningDate('');
+        setDuration(0);
+    };
+
+    const calculateDuration = (start, end) => {
+        const diffTime = end - start;
+        const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
+        setDuration(days);
+    };
+
+    const handleLeaveDateChange = (e) => {
+        const newLeaveDate = new Date(e.target.value);
+        setLeaveDate(e.target.value);
+        calculateDuration(newLeaveDate, new Date(returningDate));
+    };
+
+    const handleReturningDateChange = (e) => {
+        const newReturningDate = new Date(e.target.value);
+        setReturningDate(e.target.value);
+        calculateDuration(new Date(leaveDate), newReturningDate);
+    };
+
+    const handleUpdateTimeOff = async () => {
+        if (!selectedTimeOff) return;
+
+        const payload = {
+            leaveDay: new Date(leaveDate).toISOString(),
+            returningDay: new Date(returningDate).toISOString(),
+            duration,
+            type: selectedTimeOff.type
+        };
+
+        try {
+            await axiosInstance.put(`/timeoff/${selectedTimeOff.id}`, payload);
+            closeModal();
+            // Refresh data after update
+            const response = await axiosInstance.get('/timeoffs/my');
+            setTimeOffData(response.data.data.items);
+        } catch (err) {
+            console.error('Error updating time off:', err);
+            setError('Failed to update time off');
+        }
+    };
+
+    // Map API data to the format expected by InfoGrid
+    const values = timeOffData.map((item, index) => [
+        
+        <LabelWithIcon
+            key={index}
+            icon={
+                item.type === 'Vacation' ? (
+                    <UmbrellaIcon classNames="w-4 text-white" />
+                ) : (
+                    <SickPersonIcon classNames="w-4 text-white" />
+                )
+            }
+            title={item.type}
+            iconStyles={item.type === 'Vacation' ? 'bg-[#00B87D]' : 'bg-[#F53649]'}
+            
+        />,
+        new Date(item.leaveDay).toLocaleDateString(),
+        new Date(item.returningDay).toLocaleDateString(),
+        <span key={`status-${index}`} className={item.status === 'Confirmed' ? 'text-[#25A244] font-[500]' : 'text-[#F53649]'}>
+            {item.status}
+        </span>,
+        "",
+        "",
+        "",
+        <FaEdit
+            key={`edit-${index}`}
+            className='text-dark-navy w-5 cursor-pointer '
+            onClick={() => handleEditClick(item)}
+        />
+    ]);
 
     return (
-        <div className='p-1 rounded-md  h-full'>
+        <div className='p-1 rounded-md h-full'>
             <div className="flex flex-col md:flex-row gap-6">
                 <VacationsCard />
-                <SickCard/>
+                <SickCard />
             </div>
-            <div className='bg-white  mt-5 border border-gray-border rounded-[10px] p-3 md:p-5 w-full '>
+
+            <div className='bg-white mt-5 border border-gray-border rounded-[10px] p-3 md:p-5 w-full '>
                 <FormHeading classNames='mb-[2rem]' icon={<UmbrellaIcon classNames='w-4 text-dark-navy' />} text='Upcoming Time Off' />
-                <InfoGrid
-                    headers={["Time Off Type", "Time Off Start", "Time Off End", "Status"]}
-                    values={values}
+                {loading ? (
+                    <p>Loading...</p>
+                ) : error ? (
+                    <p className="text-red-500">{error}</p>
+                ) : (
+                    <InfoGrid
+                        headers={["Time Off Type", "Time Off Start", "Time Off End", "Status"]}
+                        values={values}
+                    />
+                )}
 
-                />
 
             </div>
-            <div className='bg-white  mt-5 border border-gray-border rounded-[10px] p-3 md:p-5 w-full '>
-                <FormHeading classNames='mb-5' icon={<ClockRotateIcon classNames='w-4' />} text='Time Off History' />
-                <InfoGrid
-                    headers={["Type", "Date From", "Date to", "Approved By"]}
-                    values={[["Vacation", "24.03.2024", "01.04.2024", "Eliott Page"]]}
+            <div className='bg-white mt-5 border border-gray-border rounded-[10px] p-3 md:p-5 w-full'>
+               <FormHeading classNames='mb-5' icon={<ClockRotateIcon classNames='w-4' />} text='Time Off History' />
+               
+               {loading ? (
+                 <p>Loading...</p>
+               ) : error ? (
+                 <p className="text-red-500">{error}</p>
+               ) : (
+                 <InfoGrid
+                   headers={["Type", "Date From", "Date To", "Status"]}
+                   values={timeOffData.map((item, index) => [
+                     item.type,
+                     new Date(item.leaveDay).toLocaleDateString(),
+                     new Date(item.returningDay).toLocaleDateString(),
+                     item.status === "Confirmed" ? "Confirm" : item.status === "Pending" ? "Denied" : item.status || "N/A",
+                   ])}
+                 />
+               )}
+             </div>
+             
 
-                />
+
+            {isModalOpen && (
+    <Modal onClose={closeModal}>
+        <div className="p-6 w-full sm:w-[600px]">
+            <div className="flex flex-row items-center gap-2">
+                <Image src="/vaction.png" alt="img" width={40} height={40} />
+                <h2 className="text-2xl font-semibold">Edit Request {selectedTimeOff?.type}</h2>
+            </div>
+
+            <div className="flex flex-row items-center gap-4 w-full mt-8">
+                <label className="flex flex-col w-full">
+                    <span className="text-gray-400 text-[12px]">Leaving Date</span>
+                    <input
+                        type="date"
+                        value={leaveDate}
+                        onChange={handleLeaveDateChange}
+                        className="p-3 border rounded w-full"
+                    />
+                </label>
+                <label className="flex flex-col w-full">
+                    <span className="text-gray-400 text-[12px]">Returning Date</span>
+                    <input
+                        type="date"
+                        value={returningDate}
+                        onChange={handleReturningDateChange}
+                        className="p-3 border rounded w-full"
+                    />
+                </label>
+            </div>
+
+            <p className='text-[13px] text-gray-600 mt-3'>
+                This {selectedTimeOff?.type?.toLowerCase()} is {selectedTimeOff?.status}. Changing the dates will require reapproval.
+            </p>
+            <div className="h-[1px] w-full bg-gray-200 mt-8" />
+
+           
+            <div className="flex flex-row gap-4 items-center mt-4">
+                <p className="text-[14px]">Duration of Leave</p>
+                <div className="text-[14px] border rounded p-3 px-12">
+                    {/* Show the calculated duration */}
+                    {duration} days
+                </div>
+            </div>
+
+            <div className="flex flex-row p-8 px-4 w-full gap-4 mt-24">
+                <button onClick={handleUpdateTimeOff} className="px-4 py-3 bg-dark-navy text-white rounded w-full">
+                    Confirm
+                </button>
+                <button onClick={closeModal} className="px-4 py-3 border rounded w-full">
+                    Close
+                </button>
             </div>
         </div>
-    )
-}
+    </Modal>
+)}
 
-export default TimeOffSection
+        </div>
+    );
+};
+
+export default TimeOffSection;
