@@ -12,7 +12,7 @@ import SickCard from './sickCard';
 import Modal from '@/components/modal/Modal';
 import Image from 'next/image';
 import axiosInstance from '@/lib/axios';
-
+import axios from 'axios';
 const TimeOffSection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTimeOff, setSelectedTimeOff] = useState(null);

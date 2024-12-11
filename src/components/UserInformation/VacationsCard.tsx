@@ -15,11 +15,6 @@ interface ProfileCardProps {
 }
 
 const VacationsCard: React.FC<ProfileCardProps> = ({
-    title,
-    subtitle,
-    icon,
-    buttonText,
-    iconStyles = '',
     daysCount,
     onButtonClick,
 }) => {
