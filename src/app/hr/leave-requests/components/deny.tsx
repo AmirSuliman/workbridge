@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaTimes } from 'react-icons/fa';
-
+import { Employee } from './table';
 interface DenyProps {
   employee: Employee | null;
   onClose: () => void;

@@ -9,7 +9,7 @@ import Deny from './deny';
 
 const ITEMS_PER_PAGE = 7;
 
-interface Employee {
+export interface Employee {
   id: number;
   avatar: string;
   name: string;

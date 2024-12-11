@@ -1,5 +1,5 @@
 import { FaCheck } from "react-icons/fa";
-
+import { Employee } from "./table";
 interface ConfirmProps {
   employee: Employee | null;
   onClose: () => void;
