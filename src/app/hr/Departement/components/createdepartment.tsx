@@ -3,7 +3,7 @@ import { IoMdClose } from 'react-icons/io';
 import { useState } from 'react';
 import axiosInstance from '@/lib/axios';
 import * as yup from 'yup';
-
+import axios from 'axios';
 const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
   const [departmentName, setDepartmentName] = useState('');
   const [isLoading, setIsLoading] = useState(false);

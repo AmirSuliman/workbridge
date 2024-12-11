@@ -3,7 +3,7 @@ import { IoMdClose } from 'react-icons/io';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import axiosInstance from '@/lib/axios';
-import axios from 'axios'; // Import axios for isAxiosError check
+import axios from 'axios';
 
 interface Employee {
   id: number;

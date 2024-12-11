@@ -15,6 +15,7 @@ import axiosInstance from '@/lib/axios';
 import { useParams } from 'next/navigation';
 import Addemployee from './components/addemployee';
 import Modal from '@/components/modal/Modal';
+import axios from 'axios';
 
 interface Employee {
   id: string;
@@ -30,6 +31,7 @@ interface DepartmentData {
   name: string;
   employees: Employee[];
 }
+
 
 const ITEMS_PER_PAGE = 7;
 
@@ -102,11 +104,7 @@ const OpendepartmentTable: React.FC = () => {
     setFilteredEmployees(sorted);
   };
 
-  const handleAddEmployee = () => {
-    console.log({ EmployeeName });
-    setIsModalOpen(false);
-    setEmployeeName('');
-  };
+ 
 
   const Tvalues = filteredEmployees
     .slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
@@ -152,17 +150,19 @@ const OpendepartmentTable: React.FC = () => {
       ),
     },
     {
-      title: (
-        <button className="p-2 px-3 bg-gray-200 text-gray-400 text-sm rounded-md flex flex-row items-center gap-2 ">
-          <FaDownload />
-          Download
-        </button>
-      ),
+      title: <button className="p-2 px-3 bg-gray-200 text-gray-400 text-sm rounded-md flex flex-row items-center gap-2">
+      <FaDownload />
+      Download
+    </button>,
       accessor: 'actions',
       render: () => (
-        <MdOutlineKeyboardArrowRight className="w-6 h-6 border border-gray-border rounded-sm hover:cursor-pointer hover:bg-gray-100 ml-12" />
+        <div className="flex items-center">
+          
+          <MdOutlineKeyboardArrowRight className="w-6 h-6 border border-gray-border rounded-sm hover:cursor-pointer hover:bg-gray-100 ml-12" />
+        </div>
       ),
-    },
+    }
+    
   ];
 
   const totalPages = Math.ceil(filteredEmployees.length / ITEMS_PER_PAGE);
