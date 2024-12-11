@@ -38,10 +38,16 @@ const Table = ({ filter, sort }) => {
     switch (sort) {
       case 'duration':
         return employees.sort((a, b) => a.duration - b.duration);
-      case 'leaveEarliest':
-        return employees.sort((a, b) => new Date(a.leaveDay) - new Date(b.leaveDay));
-      case 'returnEarliest':
-        return employees.sort((a, b) => new Date(a.returningDay) - new Date(b.returningDay));
+     
+        case 'leaveEarliest':
+          return employees.sort((a, b) => {
+            const dateA = new Date(a.leaveDay).getTime();
+            const dateB = new Date(b.leaveDay).getTime();
+            
+            if (isNaN(dateA) || isNaN(dateB)) return 0; 
+            return dateA - dateB;
+          });
+        
       default:
         return employees;
     }

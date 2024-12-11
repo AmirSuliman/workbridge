@@ -31,6 +31,11 @@ interface DepartmentData {
   name: string;
   employees: Employee[];
 }
+interface Header {
+  title: string | React.ReactNode;
+  accessor: string;
+  render?: (value: any) => React.ReactNode;
+}
 
 
 const ITEMS_PER_PAGE = 7;
@@ -117,53 +122,49 @@ const OpendepartmentTable: React.FC = () => {
       jobTitle: employee.tittle || 'N/A',
     }));
 
-  const headers = [
-    {
-      title: 'Employee Name',
-      accessor: 'employeeId',
-      render: (value: string) => {
-        const employee = employees.find((emp) => emp.id === value);
-        return (
-          <ProfileAvatarItem
-            src={IMAGES.dummyImage.src}
-            title={`${employee?.firstName || ''} ${employee?.lastName || ''}`}
-            subtitle={`#${value}`}
-          />
-        );
+    const headers = [
+      {
+        title: 'Employee Name',
+        accessor: 'employeeId',
+        render: (value: string) => {
+          const employee = employees.find((emp) => emp.id === value);
+          return (
+            <ProfileAvatarItem
+              src={IMAGES.dummyImage.src}
+              title={`${employee?.firstName || ''} ${employee?.lastName || ''}`}
+              subtitle={`#${value}`}
+            />
+          );
+        },
       },
-    },
-    { title: 'Job Title', accessor: 'jobTitle' },
-    {
-      title: 'Email',
-      accessor: 'user.email',
-      render: (value: string) => (
-        <a href={`mailto:${value}`} className="text-black">
-          {value}
-        </a>
-      ),
-    },
-    {
-      title: 'Hire Date',
-      accessor: 'hireDate',
-      render: (value: string) => (
-        <div className="text-sm text-dark-navy font-[500] mr-12">{value}</div>
-      ),
-    },
-    {
-      title: <button className="p-2 px-3 bg-gray-200 text-gray-400 text-sm rounded-md flex flex-row items-center gap-2">
-      <FaDownload />
-      Download
-    </button>,
-      accessor: 'actions',
-      render: () => (
-        <div className="flex items-center">
-          
-          <MdOutlineKeyboardArrowRight className="w-6 h-6 border border-gray-border rounded-sm hover:cursor-pointer hover:bg-gray-100 ml-12" />
-        </div>
-      ),
-    }
+      { title: 'Job Title', accessor: 'jobTitle' },
+      {
+        title: 'Email',
+        accessor: 'user.email',
+        render: (value: string) => (
+          <a href={`mailto:${value}`} className="text-black">
+            {value}
+          </a>
+        ),
+      },
+      {
+        title: 'Hire Date',
+        accessor: 'hireDate',
+        render: (value: string) => (
+          <div className="text-sm text-dark-navy font-[500] mr-12">{value}</div>
+        ),
+      },
+      {
+        title: 'Download', 
+        accessor: 'actions',
+        render: () => (
+          <div className="flex items-center">
+            <MdOutlineKeyboardArrowRight className="w-6 h-6 border border-gray-border rounded-sm hover:cursor-pointer hover:bg-gray-100 ml-12" />
+          </div>
+        ),
+      },
+    ];
     
-  ];
 
   const totalPages = Math.ceil(filteredEmployees.length / ITEMS_PER_PAGE);
 
@@ -216,7 +217,7 @@ const OpendepartmentTable: React.FC = () => {
             <Button name="Add new Employee" icon={<CiCirclePlus />} onClick={() => setIsModalOpen(true)} />
           </div>
           <div  className='overflow-x-auto'>
-          <Table headers={headers} values={Tvalues} tableConfig={{ rowBorder: true, selectable: true }} className="w-full"/>
+          <Table headers={headers} values={Tvalues} tableConfig={{ rowBorder: true, selectable: true }}/>
           </div>
           {totalPages > 1 && (
             <div className="mt-16 flex justify-between items-center">
@@ -258,11 +259,10 @@ const OpendepartmentTable: React.FC = () => {
 
       {isModalOpen && (
         
-          <Modal>
-            <Addemployee
-              setIsModalOpen={setIsModalOpen}
-            />
-          </Modal>
+        <Modal onClose={() => setIsModalOpen(false)}>
+        <Addemployee setIsModalOpen={setIsModalOpen} />
+      </Modal>
+      
         
       )}
     </div>

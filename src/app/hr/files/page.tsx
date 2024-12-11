@@ -142,27 +142,27 @@ const Page = () => {
         </div>
 
         {isModalOpen && (
-          <Modal>
+          <Modal onClose={() => setIsModalOpen(false)}>
             <Addfolder setIsModalOpen={setIsModalOpen} />
           </Modal>
         )}
          {isModalOpen1 && (
-          <Modal>
+          <Modal onClose={() => setIsModalOpen(false)}>
             <Uploadfiles setIsModalOpen1={setIsModalOpen1} />
           </Modal>
         )}
          {isModalOpen2 && (
-          <Modal>
+          <Modal onClose={() => setIsModalOpen(false)}>
             <Editfolder setIsModalOpen2={setIsModalOpen2} />
           </Modal>
         )}
           {isModalOpen3 && (
-          <Modal>
+          <Modal onClose={() => setIsModalOpen(false)}>
             <Editdocument setIsModalOpen3={setIsModalOpen3} />
           </Modal>
         )}
           {isModalOpen4 && (
-          <Modal>
+          <Modal onClose={() => setIsModalOpen(false)}>
             <Deletedocument setIsModalOpen4={setIsModalOpen4} />
           </Modal>
         )}

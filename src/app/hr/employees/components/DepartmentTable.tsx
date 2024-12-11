@@ -8,13 +8,20 @@ import Link from 'next/link';
 import CreateDepartment from '../../Departement/components/createdepartment';
 import axiosInstance from '@/lib/axios';
 
+interface Department {
+  id: string;
+  name: string;
+  employeeCount: number;
+  head: string;
+  openPositions: any[]; 
+}
 const DepartmentTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [departments, setDepartments] = useState([]);
-  const [filteredDepartments, setFilteredDepartments] = useState([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [filteredDepartments, setFilteredDepartments] = useState<Department[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -38,15 +45,17 @@ const DepartmentTable = () => {
           }));
 
           setDepartments(processedDepartments);
-          setFilteredDepartments(processedDepartments); // Initialize filtered list
+          setFilteredDepartments(processedDepartments);
         } else {
           throw new Error('Departments data not found.');
         }
 
       } catch (err) {
-        setError(err.message || 'Failed to fetch departments');
-      } finally {
-        setLoading(false);
+        if (err instanceof Error) {
+          setError(err.message || 'Failed to fetch departments');
+        } else {
+          setError('An unknown error occurred');
+        }
       }
     };
 

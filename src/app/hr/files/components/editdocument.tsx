@@ -1,6 +1,6 @@
 import { FaTimes } from "react-icons/fa";
 
-const Editdocument: React.FC<EditdocumentProps> = ({ setIsModalOpen3 }) => {
+const Editdocument = ({ setIsModalOpen3 }) => {
     return (
       <div className="w-[700px] p-8 bg-white rounded shadow-lg relative">
         <button

@@ -1,6 +1,6 @@
 import { FaTimes } from "react-icons/fa";
 
-const Deletedocument: React.FC<DeletedocumentProps> = ({ setIsModalOpen4 }) => {
+const Deletedocument = ({ setIsModalOpen4 }) => {
     return (
       <div className="w-[700px] p-8 bg-white rounded shadow-lg relative">
         <button

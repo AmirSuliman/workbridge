@@ -1,6 +1,6 @@
 import { FaTimes } from "react-icons/fa";
 
-const Uploadfiles:React.FC<UplodfilesProps> = ({ setIsModalOpen1 }) => {
+const Uploadfiles = ({ setIsModalOpen1 }) => {
     return (
       <div className="w-[700px] p-8 bg-white rounded shadow-lg relative">
         <button

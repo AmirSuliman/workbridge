@@ -1,6 +1,6 @@
 import { FaTimes } from "react-icons/fa";
 
-const Editfolder: React.FC<EditFolderProps> = ({ setIsModalOpen2 }) => {
+const Editfolder = ({ setIsModalOpen2 }) => {
     return (
       <div className="w-[700px] p-8 bg-white rounded shadow-lg relative">
         <button

@@ -1,6 +1,6 @@
 import { FaTimes } from 'react-icons/fa';
 
-const Addfolder: React.FC<AddFolderProps> = ({ setIsModalOpen }) => {
+const Addfolder = ({ setIsModalOpen }) => {
   return (
     <div className="w-[700px] p-8 bg-white rounded shadow-lg relative">
       <button
