@@ -1,5 +1,10 @@
 import { FaCheck } from "react-icons/fa";
-const ConfirmLeave = () => {
+
+interface ConfirmProps {
+  employee: Employee | null;
+  onClose: () => void;
+}
+const ConfirmLeave: React.FC<ConfirmProps> = () => {
     return (
       <div className="w-[600px] bg-white p-6 rounded-lg ">
         <h1 className="font-semibold text-[22px]">Leave Request</h1>

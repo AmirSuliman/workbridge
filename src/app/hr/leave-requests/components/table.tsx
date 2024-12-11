@@ -9,13 +9,29 @@ import Deny from './deny';
 
 const ITEMS_PER_PAGE = 7;
 
-const Table = ({ filter, sort }) => {
+interface Employee {
+  id: number;
+  avatar: string;
+  name: string;
+  vacationType: 'Vacation' | 'Sick Leave';
+  duration: number;
+  leaveDay: string;
+  returningDay: string;
+  allowance: 'Approved' | 'Pending' | 'Denied';
+}
+
+interface TableProps {
+  filter: string;
+  sort: 'duration' | 'leaveEarliest' | 'default';
+}
+
+const Table: React.FC<TableProps> = ({ filter, sort }) => {
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isDenyModalOpen, setIsDenyModalOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const employeeData = [
+  const employeeData: Employee[] = [
     { id: 1, avatar: '/user.png', name: 'John Doe', vacationType: 'Vacation', duration: 5, leaveDay: '2024-07-01', returningDay: '2024-07-06', allowance: 'Approved' },
     { id: 2, avatar: '/user.png', name: 'Jane Smith', vacationType: 'Sick Leave', duration: 2, leaveDay: '2024-06-15', returningDay: '2024-06-17', allowance: 'Pending' },
     { id: 3, avatar: '/user.png', name: 'Michael Brown', vacationType: 'Vacation', duration: 3, leaveDay: '2024-08-10', returningDay: '2024-08-13', allowance: 'Approved' },
@@ -38,16 +54,13 @@ const Table = ({ filter, sort }) => {
     switch (sort) {
       case 'duration':
         return employees.sort((a, b) => a.duration - b.duration);
-     
-        case 'leaveEarliest':
-          return employees.sort((a, b) => {
-            const dateA = new Date(a.leaveDay).getTime();
-            const dateB = new Date(b.leaveDay).getTime();
-            
-            if (isNaN(dateA) || isNaN(dateB)) return 0; 
-            return dateA - dateB;
-          });
-        
+      case 'leaveEarliest':
+        return employees.sort((a, b) => {
+          const dateA = new Date(a.leaveDay).getTime();
+          const dateB = new Date(b.leaveDay).getTime();
+          if (isNaN(dateA) || isNaN(dateB)) return 0;
+          return dateA - dateB;
+        });
       default:
         return employees;
     }
@@ -56,18 +69,18 @@ const Table = ({ filter, sort }) => {
   const totalPages = Math.ceil(sortedEmployees.length / ITEMS_PER_PAGE);
   const paginatedEmployees = sortedEmployees.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page: number) => {
     if (page > 0 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
 
-  const handleConfirmRequest = (employee) => {
+  const handleConfirmRequest = (employee: Employee) => {
     setSelectedEmployee(employee);
     setIsConfirmModalOpen(true);
   };
 
-  const handleDenyRequest = (employee) => {
+  const handleDenyRequest = (employee: Employee) => {
     setSelectedEmployee(employee);
     setIsDenyModalOpen(true);
   };
