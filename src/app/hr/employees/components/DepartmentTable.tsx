@@ -7,14 +7,16 @@ import { BiChevronRight } from 'react-icons/bi';
 import Link from 'next/link';
 import CreateDepartment from '../../Departement/components/createdepartment';
 import axiosInstance from '@/lib/axios';
+import Modal from '@/components/modal/Modal';
 
 interface Department {
   id: string;
   name: string;
   employeeCount: number;
   head: string;
-  openPositions: any[]; 
+  openPositions: any[];
 }
+
 const DepartmentTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [departments, setDepartments] = useState<Department[]>([]);
@@ -49,20 +51,20 @@ const DepartmentTable = () => {
         } else {
           throw new Error('Departments data not found.');
         }
-
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message || 'Failed to fetch departments');
         } else {
           setError('An unknown error occurred');
         }
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchDepartments();
   }, []);
 
-  // Filter departments when the search query changes
   useEffect(() => {
     const filtered = departments.filter((dept) =>
       dept.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -100,10 +102,7 @@ const DepartmentTable = () => {
             </div>
             <div>
               <label htmlFor="sort" className="mr-2 text-gray-400 text-[12px]">Sort</label>
-              <select
-                id="sort"
-                className="border rounded px-2 py-1 text-[12px]"
-              >
+              <select id="sort" className="border rounded px-2 py-1 text-[12px]">
                 <option value="">Select</option>
                 <option value="nameAZ">A-Z</option>
                 <option value="nameZA">Z-A</option>
@@ -112,11 +111,12 @@ const DepartmentTable = () => {
               </select>
             </div>
           </div>
+
           {/* Add Button */}
           <button
             className="flex flex-row text-[12px] items-center gap-2 bg-[#0F172A] p-3 px-4 text-white rounded-lg"
             onClick={() => setIsModalOpen(true)}
-          >
+            >
             Add new Department
             <CiCirclePlus className="text-white" size={18} />
           </button>
@@ -167,8 +167,12 @@ const DepartmentTable = () => {
         </div>
       </div>
 
-      {/* Modal */}
-      <CreateDepartment isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      
+      {isModalOpen && (
+        <Modal onClose={() => setIsModalOpen(false)}>
+          <CreateDepartment isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+        </Modal>
+      )}
     </div>
   );
 };

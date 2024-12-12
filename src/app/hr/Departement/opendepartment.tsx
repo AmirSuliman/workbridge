@@ -9,13 +9,14 @@ import Table from '@/components/UserInformation/Table';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import Button from '@/components/Button';
 import { CiCirclePlus } from 'react-icons/ci';
-import { FaArrowRight, FaDownload } from 'react-icons/fa';
+import { FaArrowRight, FaDownload, FaEdit } from 'react-icons/fa';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import axiosInstance from '@/lib/axios';
 import { useParams } from 'next/navigation';
 import Addemployee from './components/addemployee';
 import Modal from '@/components/modal/Modal';
 import axios from 'axios';
+import EditDepartment from './components/editdepartment';
 
 interface Employee {
   id: string;
@@ -43,6 +44,7 @@ const ITEMS_PER_PAGE = 7;
 const OpendepartmentTable: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [EmployeeName, setEmployeeName] = useState('');
   const [departmentData, setDepartmentData] = useState<DepartmentData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -183,9 +185,11 @@ const OpendepartmentTable: React.FC = () => {
           icon={<EmployeesIcon classNames="w-6" />}
           text={departmentData?.name || 'Department Name'}
         />
-        <button className="flex items-center gap-2 p-2 px-4 bg-white rounded-lg font-medium text-[12px] border">
-          See Employee Charter
-          <FaArrowRight size={14} style={{ transform: 'rotate(310deg)', color: '#0F172A' }} />
+        <button 
+        onClick={() => setIsModalOpen1(true)}
+        className="flex items-center gap-2 p-2 px-4 bg-black text-white rounded-lg font-medium text-[12px] border">
+          Edit Department
+          <FaEdit size={14}  />
         </button>
       </div>
 
@@ -261,6 +265,14 @@ const OpendepartmentTable: React.FC = () => {
         
         <Modal onClose={() => setIsModalOpen(false)}>
         <Addemployee setIsModalOpen={setIsModalOpen} />
+      </Modal>
+      
+        
+      )}
+      {isModalOpen1 && (
+        
+        <Modal onClose={() => setIsModalOpen1(false)}>
+          <EditDepartment setIsModalOpen1={setIsModalOpen1} />
       </Modal>
       
         

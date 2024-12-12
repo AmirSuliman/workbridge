@@ -4,6 +4,8 @@ import { useState } from 'react';
 import axiosInstance from '@/lib/axios';
 import * as yup from 'yup';
 import axios from 'axios';
+
+
 const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
   const [departmentName, setDepartmentName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -49,13 +51,11 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
   if (!isModalOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg p-6 w-[90%] sm:w-[600px] shadow-lg h-[70vh]">
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-1000">
+      <div className="bg-white rounded-lg p-6 w-[90%] sm:w-[600px] shadow-lg ">
         <div className="flex flex-row items-center justify-between">
           <h2 className="text-[22px] font-semibold">Create Department</h2>
-          <button onClick={() => setIsModalOpen(false)}>
-            <IoMdClose size={24} />
-          </button>
+          
         </div>
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="mb-4 mt-10">
@@ -68,8 +68,25 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
               placeholder="Type department name"
             />
             {errorMessage && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
+
           </div>
-          <div className="flex justify-center items-center flex-row w-full gap-6 p-6 mt-52">
+          <div className="mb-4">
+            <label className="block text-gray-400 mb-2 text-[14px]">Department Head*</label>
+            <select
+              className="border w-full px-3 py-3 rounded-[5px] text-sm text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              defaultValue=""
+            >
+              <option value="" disabled hidden>
+                Select department head
+              </option>
+              <option value="john_doe">John Doe</option>
+              <option value="jane_smith">Jane Smith</option>
+              <option value="alex_johnson">Alex Johnson</option>
+              <option value="linda_williams">Linda Williams</option>
+            </select>
+          </div>
+          
+          <div className="flex justify-center items-center flex-row w-full gap-6 p-6 mt-32">
             <button
               type="button"
               onClick={handleAddDepartment}
@@ -88,7 +105,7 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
           </div>
         </form>
       </div>
-    </div>
+      </div>
   );
 };
 

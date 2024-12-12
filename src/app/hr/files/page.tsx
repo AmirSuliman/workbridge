@@ -87,7 +87,7 @@ const Page = () => {
           </div>
         </div>
 
-        <div className='flex flex-col bg-white border rounded rounded-[10px] p-5 w-full sm:w-[70%] h-[90vh]'>
+        <div className='flex flex-col bg-white border rounded rounded-[10px] p-5 w-full  sm:w-[70%] h-[90vh]'>
           <div className='flex flex-row items-center justify-between'>
             <div className='flex flex-row items-center gap-2'>
               <FaFolder size={20} />
@@ -112,8 +112,8 @@ const Page = () => {
               </button>
             </div>
           </div>
-
-          <table className='mt-8 w-full mb-2'>
+         <div className='mt-8 w-full mb-2 overflow-x-auto'>
+          <table className='w-full '>
             <thead className='text-gray-400 text-[14px] font-medium'>
               <tr className='border-b'>
                 <th className='p-4 text-left'>Document Name</th>
@@ -139,6 +139,7 @@ const Page = () => {
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
 
         {isModalOpen && (
