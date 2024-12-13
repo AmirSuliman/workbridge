@@ -7,22 +7,25 @@ import { BiChevronRight } from 'react-icons/bi';
 import Link from 'next/link';
 import CreateDepartment from '../../Departement/components/createdepartment';
 import axiosInstance from '@/lib/axios';
-type Department = {
+import Modal from '@/components/modal/Modal';
+
+interface Department {
   id: string;
   name: string;
   employeeCount: number;
   head: string;
-  openPositions: any[]; // Replace `any` with the actual type if known
-};
+  openPositions: any[];
+}
+
 const DepartmentTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [departments, setDepartments] = useState<Department[]>([]); // Explicitly define the type
+  const [departments, setDepartments] = useState<Department[]>([]);
   const [filteredDepartments, setFilteredDepartments] = useState<Department[]>(
     []
   );
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null); // Specify the type
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -46,15 +49,15 @@ const DepartmentTable = () => {
           }));
 
           setDepartments(processedDepartments);
-          setFilteredDepartments(processedDepartments); // Initialize filtered list
+          setFilteredDepartments(processedDepartments);
         } else {
           throw new Error('Departments data not found.');
         }
       } catch (err) {
         if (err instanceof Error) {
-          setError(err.message);
+          setError(err.message || 'Failed to fetch departments');
         } else {
-          setError('An unexpected error occurred');
+          setError('An unknown error occurred');
         }
       } finally {
         setLoading(false);
@@ -64,7 +67,6 @@ const DepartmentTable = () => {
     fetchDepartments();
   }, []);
 
-  // Filter departments when the search query changes
   useEffect(() => {
     const filtered = departments.filter((dept) =>
       dept.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -120,6 +122,7 @@ const DepartmentTable = () => {
               </select>
             </div>
           </div>
+
           {/* Add Button */}
           <button
             className="flex flex-row text-[12px] items-center gap-2 bg-[#0F172A] p-3 px-4 text-white rounded-lg"
@@ -177,11 +180,14 @@ const DepartmentTable = () => {
         </div>
       </div>
 
-      {/* Modal */}
-      <CreateDepartment
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-      />
+      {isModalOpen && (
+        <Modal onClose={() => setIsModalOpen(false)}>
+          <CreateDepartment
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+          />
+        </Modal>
+      )}
     </div>
   );
 };
