@@ -12,25 +12,36 @@ import SickCard from './sickCard';
 import Modal from '@/components/modal/Modal';
 import Image from 'next/image';
 import axiosInstance from '@/lib/axios';
-import axios from 'axios';
+
+interface TimeOffItem {
+    id: string;
+    leaveDay: string;
+    returningDay: string;
+    type: string;
+    status: string;
+}
+
 const TimeOffSection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedTimeOff, setSelectedTimeOff] = useState(null);
-    const [timeOffData, setTimeOffData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null); 
     const [leaveDate, setLeaveDate] = useState('');
     const [returningDate, setReturningDate] = useState('');
     const [duration, setDuration] = useState(0);
-
-    // Fetch time-off data using axiosInstance
+    const [timeOffData, setTimeOffData] = useState<TimeOffItem[]>([]);
+    const [selectedTimeOff, setSelectedTimeOff] = useState<TimeOffItem | null>(null);
+    const [totalDays, setTotalDays] = useState<number>(20);
     useEffect(() => {
         const fetchTimeOffData = async () => {
             try {
                 const response = await axiosInstance.get('/timeoffs/my');
                 setTimeOffData(response.data.data.items);
             } catch (err) {
-                setError(err.message);
+                if (err instanceof Error) {
+                    setError(err.message);
+                } else {
+                    setError("An unknown error occurred.");
+                }
             } finally {
                 setLoading(false);
             }
@@ -97,7 +108,6 @@ const TimeOffSection = () => {
 
     // Map API data to the format expected by InfoGrid
     const values = timeOffData.map((item, index) => [
-        
         <LabelWithIcon
             key={index}
             icon={
@@ -109,8 +119,8 @@ const TimeOffSection = () => {
             }
             title={item.type}
             iconStyles={item.type === 'Vacation' ? 'bg-[#00B87D]' : 'bg-[#F53649]'}
-            
         />,
+
         new Date(item.leaveDay).toLocaleDateString(),
         new Date(item.returningDay).toLocaleDateString(),
         <span key={`status-${index}`} className={item.status === 'Confirmed' ? 'text-[#25A244] font-[500]' : 'text-[#F53649]'}>
@@ -121,17 +131,18 @@ const TimeOffSection = () => {
         "",
         <FaEdit
             key={`edit-${index}`}
-            className='text-dark-navy w-5 cursor-pointer '
+            className='text-dark-navy w-5 cursor-pointer'
             onClick={() => handleEditClick(item)}
         />
     ]);
 
+
     return (
         <div className='p-1 rounded-md h-full'>
             <div className="flex flex-col md:flex-row gap-6">
-                <VacationsCard />
-                <SickCard />
-            </div>
+                <VacationsCard totalDays={totalDays}/>
+                <SickCard totalDays={totalDays} />
+                </div>
 
             <div className='bg-white mt-5 border border-gray-border rounded-[10px] p-3 md:p-5 w-full '>
                 <FormHeading classNames='mb-[2rem]' icon={<UmbrellaIcon classNames='w-4 text-dark-navy' />} text='Upcoming Time Off' />
