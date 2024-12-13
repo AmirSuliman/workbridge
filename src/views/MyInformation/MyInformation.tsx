@@ -15,12 +15,17 @@ import {
   fetchEmployeeData,
 } from '@/store/slices/employeeInfoSlice';
 import { AppDispatch, RootState } from '@/store/store';
+import { AxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+
+interface ErrorResponse {
+  message: string;
+}
 
 const MyInformation = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -76,9 +81,17 @@ const MyInformation = () => {
       toast.success('Employee information updated successfully!');
     } catch (err) {
       console.error('Error updating employee data:', err);
-      toast.error(
-        err?.response?.data?.message || 'Failed to update employee data.'
-      );
+
+      // Check if it's an AxiosError
+      if ((err as AxiosError<ErrorResponse>).response) {
+        const axiosError = err as AxiosError<ErrorResponse>;
+        toast.error(
+          axiosError.response?.data?.message ||
+            'Failed to update employee data.'
+        );
+      } else {
+        toast.error('Failed to update employee data.');
+      }
     }
   };
 
