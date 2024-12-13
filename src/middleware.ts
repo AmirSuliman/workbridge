@@ -1,18 +1,3 @@
-// import withAuth from 'next-auth/middleware';
-
-// export default withAuth({
-//     pages: {
-//         signIn: '/sign-in',
-//         // signOut: '/signout',
-
-//     },
-// });
-
-// export const config = {
-//     // restricted routes
-//     matcher: ['/', '/user/home', '/hr/home'],
-// };
-
 import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';

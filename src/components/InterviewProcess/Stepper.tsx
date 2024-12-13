@@ -8,15 +8,20 @@ import StepLine from './StepLine';
 import { IoDocumentTextOutline } from 'react-icons/io5';
 import { FaRegHandshake } from 'react-icons/fa';
 
-const Stepper = () => {
+const Stepper = ({ jobApplication }) => {
+  // const stage = jobApplication.jobApplication.data.items[0].stage;
+  // const stage = '';
   return (
     <>
       <div className="flex items-center">
         <IconWithBg
-          className="size-14"
+          className="size-18 bg-black text-white"
           icon={<PiListChecksLight size={24} />}
         />
-        <StepLine />
+        <StepLine
+          // className={`${stage === 'Second' ? 'bg-black' : 'bg-background'}`}
+          className={'bg-background'}
+        />
         <IconWithBg
           className="size-14"
           icon={<PiListNumbersFill size={24} />}

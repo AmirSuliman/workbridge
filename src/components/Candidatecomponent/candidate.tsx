@@ -8,45 +8,43 @@ import {
   FaUsers,
 } from 'react-icons/fa';
 import UserImgPlaceholder from '../LeaveRequests/UserImgPlaceholder';
-const Candidatecomponent = ({ data }) => {
+const Candidatecomponent = ({ data, jobTitle }) => {
   return (
     <>
       <div className="flex flex-row items-center gap-3 text-[18px] font-medium">
         <FaUsers /> Candidate
       </div>
       <div className="flex flex-col sm:flex-row items-start gap-8 mt-8">
-        {data.data.profilePictureUrl ? (
+        {data?.data?.profilePictureUrl ? (
           <img
             width={300}
             height={150}
-            src={data.data.profilePictureUrl || IMAGES.placeholderAvatar}
+            src={data.data?.profilePictureUrl || IMAGES.placeholderAvatar}
             alt="avatar"
             className="rounded-full size-20"
           />
         ) : (
           <UserImgPlaceholder
-            name={`${data.data.firstName} ${data.data.lastName}`}
+            name={`${data?.data?.firstName} ${data?.data?.lastName}`}
             className="size-20 !text-3xl"
           />
         )}
         <div className="flex flex-col ">
           <h1 className="text-[#0F172A] text-[24px] font-normal">
-            {`${data.data.firstName} ${data.data.lastName}`}
+            {`${data?.data?.firstName} ${data?.data?.lastName}`}
           </h1>
-          <p className="text-gray-400 text-[16px]">
-            Applying for Software Engineer
-          </p>
+          <p className="text-gray-400 text-[16px]">Applying for {jobTitle}</p>
 
           <div className="flex flex-col  sm:flex-row items-start sm:items-center gap-2 sm:gap-20 mt-6">
             <div className="flex flex-row gap-2 items-center text-[12px] text-gray-400">
               <FaMobileAlt />
               Phone Number
-              <span className="text-black">{data.data.phone || 'N/A'}</span>
+              <span className="text-black">{data?.data?.phone || 'N/A'}</span>
             </div>
             <div className="flex flex-row gap-2 items-center text-[12px] text-gray-400">
               <FaMapMarkerAlt />
               Address
-              <span className="text-black">{data.data.address || 'N/A'}</span>
+              <span className="text-black">{data?.data?.address || 'N/A'}</span>
             </div>
           </div>
 
@@ -54,19 +52,19 @@ const Candidatecomponent = ({ data }) => {
             <div className="flex flex-row gap-2 items-center text-[12px] text-gray-400">
               <FaEnvelope />
               Email Address
-              <span className="text-black">{data.data.email || 'N/A'}</span>
+              <span className="text-black">{data?.data?.email || 'N/A'}</span>
             </div>
             <div className="flex flex-row gap-2 items-center text-[12px] text-gray-400">
               <FaGlobe />
               Website
-              <span className="text-black">{data.data.website || 'N/A'}</span>
+              <span className="text-black">{data?.data?.website || 'N/A'}</span>
             </div>
           </div>
         </div>
       </div>
       <div className="flex flex-row gap-2 items-center p-2">
         <a
-          href={data.data.linkedin}
+          href={data?.data?.linkedin}
           target="_blank"
           rel="noopener noreferrer"
           className="p-2 rounded-full bg-black text-white  items-center"

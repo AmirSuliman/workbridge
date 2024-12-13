@@ -12,7 +12,6 @@ export const getEmployeeInfo = async (
       },
       params: { associations: true },
     });
-    console.log('get employee res:', response);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

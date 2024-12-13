@@ -3,25 +3,19 @@ import InputField from '@/components/common/InputField';
 import EyeIcon from '@/components/icons/eye-icon';
 import GoogleLogo from '@/components/icons/google-logo';
 import WorkBridgeLogo from '@/components/icons/work-bridge-logo';
+import axiosInstance from '@/lib/axios';
+import { setUser } from '@/store/slices/myInfoSlice';
 import { authSchema } from '@/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signIn, useSession } from 'next-auth/react';
-import { Lato } from 'next/font/google';
+import { getSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { setUser } from '@/store/slices/myInfoSlice';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
-import { z } from 'zod';
 import { useDispatch } from 'react-redux';
-import axiosInstance from '@/lib/axios';
-
-const lato = Lato({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-});
+import { z } from 'zod';
 
 type AuthFormInputs = z.infer<typeof authSchema>;
 
@@ -29,7 +23,6 @@ const Auth = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const { data: session } = useSession();
 
   const {
     register,
@@ -45,42 +38,55 @@ const Auth = () => {
   const onSubmit = async (data: AuthFormInputs) => {
     setLoading(true);
 
-    // Authenticate the user
-    const res = await signIn('credentials', {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-    });
+    try {
+      // Attempt to sign in
+      const res = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
 
-    if (res && res.ok && session?.user?.accessToken) {
-      const accessToken = session.user.accessToken; // Assuming the token is returned here
-
-      try {
-        // Fetch user data using accessToken
-        const response = await axiosInstance.get('/user/my', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-
-        // Store user data in Redux
-        dispatch(setUser(response.data.data));
-
-        toast.success('Login Successful!');
-        router.push('/hr/home');
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        toast.error('Failed to load user data!');
-      } finally {
+      // If sign-in fails
+      if (!res?.ok) {
         setLoading(false);
+        toast.error('Invalid Email or Password!');
+        return;
       }
-    } else {
+
+      // Attempt to get session after sign-in
+      const session = await getSession();
+
+      // Check if session exists and has an access token
+      if (session?.user?.accessToken) {
+        try {
+          // Fetch user data using accessToken
+          const response = await axiosInstance.get('/user/my', {
+            headers: { Authorization: `Bearer ${session.user.accessToken}` },
+          });
+
+          // Store user data in Redux
+          dispatch(setUser(response.data.data));
+
+          toast.success('Login Successful!');
+          router.push('/hr/home');
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          toast.error('Failed to load user data!');
+        }
+      } else {
+        toast.error('Authentication failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('An unexpected error occurred.');
+    } finally {
       setLoading(false);
-      toast.error('Invalid Email or Password!');
     }
   };
 
   return (
     <div
-      className={`${lato.className} flex flex-col items-center justify-center my-auto h-[100%]  bg-gray-100`}
+      className={` flex flex-col items-center justify-center my-auto h-[100%]  bg-gray-100`}
     >
       <div className="min-w-[90%] sm:min-w-[24rem]">
         <div className="flex flex-col items-center bg-white h-full shadow-custom-deep pt-[2rem] px-[1rem]">

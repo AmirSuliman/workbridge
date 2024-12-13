@@ -24,8 +24,7 @@ export const JobCandidates = () => {
   }, [dispatch, jobId]);
 
   const sortedItems = useMemo(() => {
-    if (!data?.items) return []; // Ensure items are valid
-    console.log('Sorting with option:', sortOption); // Debug sorting logic
+    if (!data?.items) return [];
     return [...data.items].sort((a, b) => {
       switch (sortOption) {
         case 'createdAt':
@@ -105,7 +104,9 @@ export const JobCandidates = () => {
               </td>
               <td className="px-6 py-4">
                 <span
-                  onClick={() => router.push(`candidate/${item.candidate.id}`)}
+                  onClick={() =>
+                    router.push(`candidate/${item.candidate.id}?job=${jobId}`)
+                  }
                   className="border border-gray-300 rounded-lg p-2 flex items-center justify-center hover:bg-black hover:text-white cursor-pointer"
                 >
                   <BiChevronRight className="text-lg" />

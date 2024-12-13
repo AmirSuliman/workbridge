@@ -1,7 +1,7 @@
 'use client';
 
 import { IMAGES } from '@/constants/images';
-import { RootState } from '@/store/store';
+import { EmployeeData } from '@/types/employee';
 import Image from 'next/image';
 import { CiMobile3 } from 'react-icons/ci';
 import { FaEdit, FaPhoneAlt, FaRegCalendar } from 'react-icons/fa';
@@ -9,7 +9,6 @@ import { HiOutlineHashtag } from 'react-icons/hi';
 import { HiMiniBriefcase } from 'react-icons/hi2';
 import { IoLocationSharp } from 'react-icons/io5';
 import { MdEmail } from 'react-icons/md';
-import { useSelector } from 'react-redux';
 import Button from '../Button';
 import FacebookIcon from '../icons/fb-icon';
 import InstagramIcon from '../icons/instagram-icon';
@@ -19,12 +18,12 @@ import ProfileInfoItem from './ProfileInfoItem';
 const ProfileCard = ({
   setEditEmployee,
   editEmployee,
+  employeeData,
 }: {
   setEditEmployee: (value: boolean) => void;
   editEmployee: boolean;
+  employeeData: EmployeeData;
 }) => {
-  const employeeData = useSelector((state: RootState) => state.employee.data);
-
   const hireDate = employeeData?.hireDate
     ? employeeData.hireDate.split('T')[0]
     : 'N/A';

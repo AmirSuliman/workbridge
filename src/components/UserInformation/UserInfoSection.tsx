@@ -1,66 +1,10 @@
 'use client';
-import { getEmployeeInfo } from '@/services/getEmployeeInfo';
-import {
-  setEmployeeData,
-  setEmployeeError,
-} from '@/store/slices/employeeInfoSlice';
-import { RootState } from '@/store/store';
-import { useSession } from 'next-auth/react';
-import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { HiMiniGlobeAmericas, HiMiniHomeModern } from 'react-icons/hi2';
-import { useDispatch, useSelector } from 'react-redux';
 import BasicInfoIcon from '../icons/basic-info-icon';
 import FormHeading from './FormHeading';
 
 const UserInfoSection = ({ errors, register, editEmployee }) => {
-  const { empId } = useParams();
-  const { data: session } = useSession();
-  const dispatch = useDispatch();
-  const employeeData = useSelector((state: RootState) => state.employee.data);
-  const error = useSelector((state: RootState) => state.employee.error);
-
-  useEffect(() => {
-    const fetchEmployeeInfo = async () => {
-      if (!session?.user.accessToken || !session?.user.userId) {
-        dispatch(setEmployeeError('Invalid session or employee ID'));
-        return;
-      }
-      try {
-        const { data } = await getEmployeeInfo(
-          session.user.accessToken,
-          empId || session.user.userId
-        );
-        dispatch(setEmployeeData(data));
-        console.log('employee data: ', data);
-      } catch (err: any) {
-        console.error('Error fetching employee data:', err);
-        dispatch(
-          setEmployeeError(
-            err.message || 'An error occurred while fetching employee data.'
-          )
-        );
-      }
-    };
-
-    fetchEmployeeInfo();
-  }, [
-    dispatch,
-    empId,
-    session?.user.accessToken,
-    session?.user.id,
-    session?.user.userId,
-  ]);
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (!employeeData) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <main className="p-4 rounded-md border-[1px] border-gray-border bg-white h-full">
       {/* Basic Information */}
@@ -282,7 +226,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
             <input
               type="text"
               className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('phoneNumber', { required: true })}
+              {...register('workPhone', { required: true })}
               readOnly={!editEmployee}
             />
             {errors.workPhone && (

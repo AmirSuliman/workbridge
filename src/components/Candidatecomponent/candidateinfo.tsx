@@ -1,4 +1,5 @@
 const CandidateInfo = ({ data }) => {
+  console.log('candidateInfo: ', data);
   return (
     <>
       <div className="mt-8 space-y-8">

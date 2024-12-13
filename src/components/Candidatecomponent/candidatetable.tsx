@@ -12,9 +12,6 @@ const CandidateTable = () => {
     (state: RootState) => state.jobApplications
   );
 
-  console.log('candidate data: ', data);
-
-  // State for filters
   const [searchQuery, setSearchQuery] = useState('');
   const [sort, setSort] = useState('');
   const [filter, setFilter] = useState('');
@@ -23,7 +20,6 @@ const CandidateTable = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    console.log('Set to page: ', page);
   };
 
   // Fetch job applications on load or filter change
@@ -64,10 +60,10 @@ const CandidateTable = () => {
             onChange={(e) => setSort(e.target.value)}
           >
             <option value="">Select</option>
-            <option value="Date Applied">Date Applied</option>
-            <option value="Status">Status</option>
-            <option value="Highets rating">Highets rating</option>
-            <option value="Lowets rating">Lowets rating</option>
+            <option value="createdAt">Date Applied</option>
+            <option value="stage">Status</option>
+            <option value="rating">Highets rating</option>
+            <option value="rating">Lowets rating</option>
           </select>
         </div>
 
@@ -82,9 +78,9 @@ const CandidateTable = () => {
             onChange={(e) => setFilter(e.target.value)}
           >
             <option value="">Select</option>
-            <option value="active">Active</option>
-            <option value="pending">Pending</option>
-            <option value="closed">Closed</option>
+            <option value="Published">Active</option>
+            <option value="Draft">Pending</option>
+            <option value="Draft">Closed</option>
           </select>
         </div>
       </div>

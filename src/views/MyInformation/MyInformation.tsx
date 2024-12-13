@@ -11,10 +11,10 @@ import TimeOffSection from '@/components/UserInformation/TimeOffSection';
 import UserInfoSection from '@/components/UserInformation/UserInfoSection';
 import axiosInstance from '@/lib/axios';
 import {
-  setEmployeeData,
-  setEmployeeError,
+  clearEmployeeData,
+  fetchEmployeeData,
 } from '@/store/slices/employeeInfoSlice';
-import { RootState } from '@/store/store';
+import { AppDispatch, RootState } from '@/store/store';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -23,12 +23,15 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 const MyInformation = () => {
-  const { data: session } = useSession();
-  const employeeData = useSelector((state: RootState) => state.employee.data);
-  const dispatch = useDispatch();
-  const [editEmployee, setEditEmployee] = useState<boolean>(false);
-
+  const dispatch = useDispatch<AppDispatch>();
   const { empId } = useParams();
+  const { data: session } = useSession();
+  const [editEmployee, setEditEmployee] = useState<boolean>(false);
+  const {
+    data: employeeData,
+    error,
+    loading,
+  } = useSelector((state: RootState) => state.employee);
 
   const {
     register,
@@ -38,36 +41,46 @@ const MyInformation = () => {
   } = useForm({
     defaultValues: employeeData || undefined,
   });
+
+  useEffect(() => {
+    // Fetch employee data if session and empId are valid
+    if (session?.user.accessToken && (empId || session.user.userId)) {
+      dispatch(
+        fetchEmployeeData({
+          accessToken: session.user.accessToken,
+          userId: empId || session.user.userId,
+        })
+      );
+    } else {
+      console.error('Invalid session or user ID');
+    }
+
+    return () => {
+      dispatch(clearEmployeeData());
+    };
+  }, [dispatch, empId, session?.user.accessToken, session?.user.userId]);
+
   useEffect(() => {
     if (employeeData) {
-      reset(employeeData); // Sync form state with `employeeData`
+      reset(employeeData);
+      console.log(employeeData);
     }
-  }, [employeeData]);
+  }, [employeeData, reset]);
 
   const onSubmit = async (data: any) => {
-    console.log('put employee: ', data);
     try {
-      const { data: updatedData } = await axiosInstance.put(
+      await axiosInstance.put(
         `/employee/${empId || session?.user.userId}`,
-        { ...employeeData, data }
+        data
       );
-      dispatch(setEmployeeData(updatedData));
       toast.success('Employee information updated successfully!');
     } catch (err) {
       console.error('Error updating employee data:', err);
       toast.error(
         err?.response?.data?.message || 'Failed to update employee data.'
       );
-
-      dispatch(setEmployeeError('Failed to update employee information.'));
     }
   };
-
-  //  if (employeeData) {
-  //    Object.keys(employeeData).forEach((key) => {
-  //      setValue(key, employeeData[key]);
-  //    });
-  //  }
 
   const UserInfoSectionMemo = useMemo(
     () => (
@@ -79,11 +92,24 @@ const MyInformation = () => {
     ),
     [editEmployee, errors, register]
   );
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!employeeData) {
+    return <div>No data available.</div>;
+  }
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={`p-4 h-full`}>
       <ProfileCard
         setEditEmployee={setEditEmployee}
         editEmployee={editEmployee}
+        employeeData={employeeData}
       />
       <TabsContainer containerClasses="my-1 pb-2 md:pb-4">
         <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
@@ -139,6 +165,7 @@ const MyInformation = () => {
               register={register}
               errors={errors}
               editEmployee={editEmployee}
+              employeeData={employeeData}
             />
           </TabPanel>
           <TabPanel index={2}>

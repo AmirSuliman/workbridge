@@ -4,11 +4,14 @@ import Candidatecomponent from '@/components/Candidatecomponent/candidate';
 import CandidateInfo from '@/components/Candidatecomponent/candidateinfo';
 import Jobapplied from '@/components/Candidatecomponent/jobapplied';
 import ScreenLoader from '@/components/common/ScreenLoader';
+import axiosInstance from '@/lib/axios';
 import { fetchCandidateData } from '@/store/slices/candidateSlice';
 import { AppDispatch, RootState } from '@/store/store';
+import { JobListing } from '@/types/job';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
+import Link from 'next/link';
+import { useParams, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { FaArrowRight } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -18,6 +21,27 @@ const Candidate = () => {
   const { data, loading, error } = useSelector(
     (state: RootState) => state.candidate
   );
+
+  const searchParams = useSearchParams();
+  const jobId = searchParams?.get('job');
+  const [singleJobData, setSingleJobData] = useState<JobListing | undefined>();
+
+  useEffect(() => {
+    const fetchSingleJob = async () => {
+      try {
+        const { data } = await axiosInstance.get(`openPosition/${jobId}`, {
+          params: {
+            associations: true,
+          },
+        });
+        setSingleJobData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchSingleJob();
+  }, [jobId]);
+
   useEffect(() => {
     if (candidateId) {
       dispatch(fetchCandidateData(candidateId));
@@ -35,20 +59,26 @@ const Candidate = () => {
             alt="img"
             className="w-5"
           />
-          Software Engineer
+          {singleJobData?.data.tittle || ''}
         </div>
-        <a href="/hr/hiring/interview-process">
-          <button className="flex flex-row items-center gap-4 p-3 bg-[#0F172A] text-white text-[12px] rounded-lg">
-            Proceed to First Round Interview <FaArrowRight />{' '}
-          </button>
-        </a>
+
+        <Link
+          href={`/hr/hiring/interview-process?candidate=${candidateId}&job=${jobId}`}
+          // href={`/hr/hiring/interview-process/${candidateId}`}
+          className="flex flex-row items-center gap-4 p-3 bg-[#0F172A] text-white text-[12px] rounded-lg"
+        >
+          Proceed to First Round Interview <FaArrowRight />{' '}
+        </Link>
       </div>
       <div className="p-6 bg-white border rounded-lg mt-8">
         {loading && <ScreenLoader />}
         {error && <p className="text-red-500">Error: {error}</p>}
         {data && (
           <>
-            <Candidatecomponent data={data} />
+            <Candidatecomponent
+              data={data}
+              jobTitle={singleJobData?.data.tittle || ''}
+            />
             <div className="w-full h-[1.5px] bg-gray-300 mt-8" />
             <CandidateInfo data={data} />
           </>

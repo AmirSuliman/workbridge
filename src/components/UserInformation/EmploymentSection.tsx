@@ -1,17 +1,19 @@
 'use client';
 
 import { Label } from '@/app/hr/employees/components/Helpers';
-import { RootState } from '@/store/store';
 import { HiMiniBriefcase } from 'react-icons/hi2';
-import { useSelector } from 'react-redux';
 import DepratmentDropdown from '../DropDowns/DepratmentsDropdown';
 import EmployeesDropdown from '../DropDowns/EmployeesDropdown';
 import FormField from './FormField';
 import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 
-const EmploymentSection = ({ errors, register, editEmployee }) => {
-  const employeeData = useSelector((state: RootState) => state.employee.data);
+const EmploymentSection = ({
+  errors,
+  register,
+  editEmployee,
+  employeeData,
+}) => {
   const hireDate = employeeData?.hireDate
     ? employeeData.hireDate.split('T')[0]
     : 'N/A';
@@ -50,6 +52,7 @@ const EmploymentSection = ({ errors, register, editEmployee }) => {
               className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('hireDate', { required: true })}
               readOnly={!editEmployee}
+              defaultValue={hireDate.split('T')[0]}
             />
             {errors.hireDate && (
               <p className="text-red-500">hireDate is required</p>
@@ -88,45 +91,30 @@ const EmploymentSection = ({ errors, register, editEmployee }) => {
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             Employment Type
-            {editEmployee ? (
-              <>
-                <select
-                  className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
-                  {...register('employmentType', {
-                    required: 'Employment Type is required',
-                  })}
-                >
-                  <option value="Fulltime">Select Type</option>
-                  <option value="Fulltime">Full-Time</option>
-                  <option value="Part Time">Part-Time</option>
-                  <option value="Freelance">Freelance</option>
-                </select>
-                {errors.employmentType && (
-                  <span className="text-red-500">
-                    {errors.employmentType.message}
-                  </span>
-                )}
-              </>
-            ) : (
-              <input
-                type="text"
-                className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-                {...register('employmentType', { required: true })}
-                readOnly={!editEmployee}
-              />
-            )}
+            <select
+              className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
+              {...register('employmentType', {
+                required: 'Employment Type is required',
+              })}
+              defaultValue={employeeData?.employmentType || ''}
+            >
+              <option value="">Select Type</option>
+              <option value="Fulltime">Full-Time</option>
+              <option value="Part Time">Part-Time</option>
+              <option value="Freelance">Freelance</option>
+            </select>
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             Note
             <input
               type="text"
               className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              // {...register('effectiveDate', { required: true })}
+              {...register('note', { required: true })}
               readOnly={!editEmployee}
             />
-            {/* {errors.effectiveDate && (
-              <p className="text-red-500">effectiveDate is required</p>
-            )} */}
+            {errors.note && (
+              <p className="text-red-500">{errors.note.message}</p>
+            )}
           </label>
         </div>
       </div>
