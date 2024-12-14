@@ -17,6 +17,7 @@ export const rootReducer = combineReducers({
   users: usersReducer,
   myInfo: myInfoReducer,
   employee: employeeReducer,
+
   candidates: candidatesReducer,
   candidate: candidateReducer,
   employees: allEmployeesReducer,
