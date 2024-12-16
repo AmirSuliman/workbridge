@@ -2,7 +2,9 @@
 import Candidatecomponent from '@/components/Candidatecomponent/candidate';
 import CandidateInfo from '@/components/Candidatecomponent/candidateinfo';
 import Jobapplied from '@/components/Candidatecomponent/jobapplied';
+import { HiringTabs } from '@/components/HiringTabs';
 import InterviewLayout from '@/components/InterviewProcess/InterviewLayout';
+import Summary from '@/components/InterviewProcess/Summary';
 import axiosInstance from '@/lib/axios';
 import { fetchCandidateData } from '@/store/slices/candidateSlice';
 import { fetchJobApplications } from '@/store/slices/jobApplicationsSlice';
@@ -76,48 +78,17 @@ const InterviewProcess = () => {
         />
       </div>
       {/* Tab Navigation */}
-      <nav className="relative flex items-center gap-8 border-b border-gray-300">
-        <button
-          onClick={() => {
-            setActiveTab('Interview Summary');
-          }}
-          className={`py-2 px-4 ${
-            activeTab === 'Interview Summary'
-              ? 'text-black font-semibold border-b-2 border-black'
-              : 'text-gray-600'
-          }`}
-        >
-          Interview Summary
-        </button>
-        <button
-          onClick={() => {
-            setActiveTab('jobOpenings');
-          }}
-          className={`py-2 px-4 ${
-            activeTab === 'jobOpenings'
-              ? 'text-black font-semibold border-b-2 border-black'
-              : 'text-gray-600'
-          }`}
-        >
-          Interview Process
-        </button>
-        <button
-          onClick={() => setActiveTab('candidates')}
-          className={`py-2 px-4 ${
-            activeTab === 'candidates'
-              ? 'text-black font-semibold border-b-2 border-black'
-              : 'text-gray-600'
-          }`}
-        >
-          Candidate Information
-        </button>
-      </nav>
+      <HiringTabs
+        jobApplication={jobApplication}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
 
       {/* Conditional Rendering based on Active Tab */}
       {activeTab === 'jobOpenings' && (
         <InterviewLayout jobApplication={jobApplication} />
       )}
-      {/* {activeTab === 'Interview Summary' && <Summary />} */}
+      {activeTab === 'Interview Summary' && <Summary />}
       {activeTab === 'candidates' && (
         <div className="pt-6">
           <div className="p-6 bg-white rounded-lg border">

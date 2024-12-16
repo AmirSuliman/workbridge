@@ -89,7 +89,7 @@ export const JobCandidates = () => {
                 {item.stage}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {item.rating || 'no rating yet'}
+                {item.rating != null ? `${item.rating}/10` : 'no rating yet'}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {item.createdAt.split('T')[0]}

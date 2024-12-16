@@ -19,7 +19,7 @@ const Candidatecomponent = ({ data, jobTitle }) => {
           <img
             width={300}
             height={150}
-            src={data.data?.profilePictureUrl || IMAGES.placeholderAvatar}
+            src={data?.data?.profilePictureUrl || IMAGES.placeholderAvatar}
             alt="avatar"
             className="rounded-full size-20"
           />

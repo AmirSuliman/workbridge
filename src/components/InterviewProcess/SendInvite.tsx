@@ -3,13 +3,12 @@ import {
   scheduleInterview,
 } from '@/store/slices/interviewInviteSlice';
 import { AppDispatch, RootState } from '@/store/store';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { PiListChecksLight } from 'react-icons/pi';
+import toast from 'react-hot-toast';
+import { BiLoaderCircle } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '../Button';
-import { BiLoaderCircle } from 'react-icons/bi';
-import toast from 'react-hot-toast';
 
 interface JobApplication {
   jobApplication: {
@@ -17,9 +16,10 @@ interface JobApplication {
       items: { id: number }[];
     };
   };
+  heading: React.ReactNode;
 }
 
-const SendInvite: React.FC<JobApplication> = ({ jobApplication }) => {
+const SendInvite: React.FC<JobApplication> = ({ jobApplication, heading }) => {
   const jobApplicationId = jobApplication?.data?.items[0]?.id;
   const dispatch = useDispatch<AppDispatch>();
   const { loading, error, success } = useSelector(
@@ -64,11 +64,7 @@ const SendInvite: React.FC<JobApplication> = ({ jobApplication }) => {
       onSubmit={handleSubmit(onSubmit)}
       className="grid grid-cols-2 md:grid-cols-3 gap-4"
     >
-      <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
-        <PiListChecksLight size={24} />
-        First Round
-      </h2>
-
+      {heading}
       <label className="font-medium text-sm flex flex-col">
         <span className="opacity-35">Send Interview Invite</span>
         <select
@@ -87,7 +83,15 @@ const SendInvite: React.FC<JobApplication> = ({ jobApplication }) => {
         <span className="opacity-35">Date</span>
         <input
           type="date"
-          {...register('date', { required: 'Date is required' })}
+          {...register('date', {
+            required: 'Date is required',
+            validate: (value) => {
+              const selectedDate = new Date(value);
+              const today = new Date();
+              today.setHours(0, 0, 0, 0); // Normalize to start of day
+              return selectedDate >= today || 'Date cannot be in the past.';
+            },
+          })}
           className="outline-none opacity-50 rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
         />
         {errors.date?.message && (
@@ -99,7 +103,9 @@ const SendInvite: React.FC<JobApplication> = ({ jobApplication }) => {
         <span className="opacity-35">Time</span>
         <input
           type="time"
-          {...register('time', { required: 'Time is required' })}
+          {...register('time', {
+            required: 'Time is required',
+          })}
           className="outline-none opacity-50 rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
         />
         {errors.time?.message && (
@@ -107,7 +113,7 @@ const SendInvite: React.FC<JobApplication> = ({ jobApplication }) => {
         )}
       </label>
       <Button
-        name={loading ? 'Loading...' : 'Send Interview Invite'}
+        name={loading ? '' : 'Send Interview Invite'}
         icon={
           loading && (
             <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
