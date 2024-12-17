@@ -7,10 +7,10 @@ type SortOption = 'default' | 'duration' | 'leaveEarliest' | 'returnEarliest';
 
 const Page = () => {
   const [filter, setFilter] = useState('All');
-  const [sort, setSort] = useState<SortOption>('default'); 
+  const [sort, setSort] = useState<SortOption>('default');
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilter(e.target.value);
+    setFilter(e.target.value); 
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -24,11 +24,9 @@ const Page = () => {
           <FaRegCalendarAlt size={20} />
           <h1 className="text-[22px] font-semibold">Leave Requests</h1>
         </div>
-        <div className="flex flex-row items-center gap-6">
+        <div className="flex flex-col sm:flex-row items-center gap-6">
           <div className="flex flex-row items-center gap-1">
-            <label htmlFor="sort" className="mr-2 text-gray-400 text-[12px]">
-              Sort
-            </label>
+            <label htmlFor="sort" className="mr-2 text-gray-400 text-[12px]">Sort</label>
             <select
               id="sort"
               className="border rounded px-2 py-1 text-[12px]"
@@ -42,9 +40,7 @@ const Page = () => {
             </select>
           </div>
           <div className="flex flex-row items-center gap-1">
-            <label htmlFor="filter" className="mr-2 text-gray-400 text-[12px]">
-              Filter
-            </label>
+            <label htmlFor="filter" className="mr-2 text-gray-400 text-[12px]">Filter</label>
             <select
               id="filter"
               className="border rounded px-2 py-1 text-[12px]"
@@ -53,15 +49,16 @@ const Page = () => {
             >
               <option value="All">All</option>
               <option value="Vacation">Vacation</option>
-              <option value="Sick Leave">Sick Leave</option>
+              <option value="Sick">Sick Leave</option>
             </select>
           </div>
         </div>
       </div>
 
-      <Table filter={filter} sort={sort} />
+      <Table filter={filter} sort={sort} /> 
     </div>
   );
 };
+
 
 export default Page;

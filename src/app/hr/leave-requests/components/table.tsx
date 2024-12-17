@@ -1,25 +1,25 @@
-'use client';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
+import axiosInstance from '@/lib/axios';
 import Image from 'next/image';
 import { FaCheck, FaTimes } from 'react-icons/fa';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import Modal from '@/components/modal/Modal';
 import ConfirmLeave from './confirmleave';
 import Deny from './deny';
-
 const ITEMS_PER_PAGE = 7;
 
 export interface Employee {
   id: number;
+  employeeId: number;
   avatar: string;
   name: string;
-  vacationType: 'Vacation' | 'Sick Leave';
+  vacationType: 'Vacation' | 'Sick';
   duration: number;
+  type: string;
   leaveDay: string;
   returningDay: string;
-  allowance: 'Approved' | 'Pending' | 'Denied';
+  status: 'Confirmed' | 'Pending' | 'Denied';
 }
-
 
 type TableProps = {
   filter: string;
@@ -27,48 +27,56 @@ type TableProps = {
 };
 
 const Table: React.FC<TableProps> = ({ filter, sort }) => {
+  const [employeeData, setEmployeeData] = useState<Employee[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isDenyModalOpen, setIsDenyModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const employeeData: Employee[] = [
-    { id: 1, avatar: '/user.png', name: 'John Doe', vacationType: 'Vacation', duration: 5, leaveDay: '2024-07-01', returningDay: '2024-07-06', allowance: 'Approved' },
-    { id: 2, avatar: '/user.png', name: 'Jane Smith', vacationType: 'Sick Leave', duration: 2, leaveDay: '2024-06-15', returningDay: '2024-06-17', allowance: 'Pending' },
-    { id: 3, avatar: '/user.png', name: 'Michael Brown', vacationType: 'Vacation', duration: 3, leaveDay: '2024-08-10', returningDay: '2024-08-13', allowance: 'Approved' },
-    { id: 4, avatar: '/user.png', name: 'Emily Clark', vacationType: 'Sick Leave', duration: 1, leaveDay: '2024-06-20', returningDay: '2024-06-21', allowance: 'Approved' },
-    { id: 5, avatar: '/user.png', name: 'Anna Doe', vacationType: 'Sick Leave', duration: 1, leaveDay: '2024-06-20', returningDay: '2024-06-21', allowance: 'Approved' },
-    { id: 6, avatar: '/user.png', name: 'John Doe', vacationType: 'Vacation', duration: 5, leaveDay: '2024-07-01', returningDay: '2024-07-06', allowance: 'Approved' },
-    { id: 7, avatar: '/user.png', name: 'Jane Smith', vacationType: 'Sick Leave', duration: 2, leaveDay: '2024-06-15', returningDay: '2024-06-17', allowance: 'Pending' },
-    { id: 8, avatar: '/user.png', name: 'Michael Brown', vacationType: 'Vacation', duration: 3, leaveDay: '2024-08-10', returningDay: '2024-08-13', allowance: 'Approved' },
-    { id: 9, avatar: '/user.png', name: 'Emily Clark', vacationType: 'Sick Leave', duration: 1, leaveDay: '2024-06-20', returningDay: '2024-06-21', allowance: 'Approved' },
-    { id: 10, avatar: '/user.png', name: 'Anna Doe', vacationType: 'Sick Leave', duration: 1, leaveDay: '2024-06-20', returningDay: '2024-06-21', allowance: 'Approved' },
-  ];
-
-  const filteredEmployees = useMemo(() => {
-    if (filter === 'All') return employeeData;
-    return employeeData.filter((employee) => employee.vacationType === filter);
-  }, [filter, employeeData]);
-
-  const sortedEmployees = useMemo(() => {
-    const employees = [...filteredEmployees];
-    switch (sort) {
-      case 'duration':
-        return employees.sort((a, b) => a.duration - b.duration);
-      case 'leaveEarliest':
-        return employees.sort((a, b) => {
-          const dateA = new Date(a.leaveDay).getTime();
-          const dateB = new Date(b.leaveDay).getTime();
-          if (isNaN(dateA) || isNaN(dateB)) return 0;
-          return dateA - dateB;
-        });
-      default:
-        return employees;
-    }
-  }, [filteredEmployees, sort]);
-
-  const totalPages = Math.ceil(sortedEmployees.length / ITEMS_PER_PAGE);
-  const paginatedEmployees = sortedEmployees.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      setError(null);
+  
+      try {
+        const params = {
+          page: currentPage,
+          size: ITEMS_PER_PAGE,
+          sort,
+        };
+  
+        const response = await axiosInstance.get('/timeoffs', { params });
+        const fetchedData = response.data.data.items || [];
+  
+        console.log("Fetched Data:", fetchedData);
+  
+        const filteredData = filter !== 'All'
+          ? fetchedData.filter(employee => employee.type.toLowerCase() === filter.toLowerCase())
+          : fetchedData;
+  
+        console.log("Filtered Data:", filteredData);
+  
+        setEmployeeData(filteredData);
+        setTotalPages(response.data.data.totalPages || 1);
+      } catch (err) {
+        setError('Failed to fetch employee data.');
+        setEmployeeData([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchData();
+  }, [filter, currentPage, sort]);
+  
+  
+  
+  useEffect(() => {
+    setCurrentPage(1); 
+  }, [filter]);
 
   const handlePageChange = (page: number) => {
     if (page > 0 && page <= totalPages) {
@@ -97,56 +105,83 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
   };
 
   return (
-    <div className="p-4 mt-8">
-      <table className="w-full">
-        <thead>
-          <tr>
-            <th className="font-medium text-gray-400 text-[14px] p-3">Employee Name</th>
-            <th className="font-medium text-gray-400 text-[14px] p-3">Vacation Type</th>
-            <th className="font-medium text-gray-400 text-[14px] p-3">Duration</th>
-            <th className="font-medium text-gray-400 text-[14px] p-3">Leave Day</th>
-            <th className="font-medium text-gray-400 text-[14px] p-3">Returning Day</th>
-            <th className="font-medium text-gray-400 text-[14px] p-3"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedEmployees.map((employee) => (
-            <tr key={employee.id} className="text-center text-[14px] hover:bg-gray-50 border-b">
-              <td className="p-4 flex items-center gap-3 justify-start">
-                <Image src={employee.avatar} alt={employee.name} width={30} height={30} className="rounded-full" />
-                <p className="text-left">{employee.name}</p>
-              </td>
-              <td className="p-4 items-center justify-center gap-2">
-                {employee.vacationType === 'Vacation' && (
-                  <Image src="/vaction.png" alt="Vacation" width={20} height={20} className="rounded-full inline-block" />
-                )}
-                {employee.vacationType === 'Sick Leave' && (
-                  <Image src="/sickleave.png" alt="Sick Leave" width={20} height={20} className="rounded-full inline-block" />
-                )}
-                <span className="ml-2 inline-block">{employee.vacationType}</span>
-              </td>
+    <div className="p-4 mt-8 overflow-x-auto">
+      {isLoading && <p>Loading...</p>}
+      {error && <p className="text-red-500">{error}</p>}
 
-              <td className="p-4">{employee.duration} days</td>
-              <td className="p-4">{employee.leaveDay}</td>
-              <td className="p-4">{employee.returningDay}</td>
-              <td className="p-4 flex justify-center items-center gap-2">
-                <button
-                  className="p-2 text-white bg-[#25A244] rounded text-[10px] flex items-center gap-2"
-                  onClick={() => handleConfirmRequest(employee)}
-                >
-                  Confirm Request <FaCheck />
-                </button>
-                <button
-                  className="p-2 text-white bg-[#F53649] rounded text-[10px] flex items-center gap-2"
-                  onClick={() => handleDenyRequest(employee)}
-                >
-                  Deny <FaTimes />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {!isLoading && !error && (
+        <>
+          {employeeData.length === 0 ? (
+            <p>No data available for the selected filter.</p>
+          ) : (
+            <table className="w-full">
+              <thead>
+                <tr>
+                  <th className="font-medium text-gray-400 text-[14px] p-3">Employee Name</th>
+                  <th className="font-medium text-gray-400 text-[14px] p-3">Vacation Type</th>
+                  <th className="font-medium text-gray-400 text-[14px] p-3">Duration</th>
+                  <th className="font-medium text-gray-400 text-[14px] p-3">Leave Day</th>
+                  <th className="font-medium text-gray-400 text-[14px] p-3">Returning Day</th>
+                  <th className="font-medium text-gray-400 text-[14px] p-3"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {employeeData.map((employee) => (
+                  <tr key={employee.id} className="text-center text-[14px] hover:bg-gray-50 border-b">
+                    <td className="p-4 flex items-center gap-3 justify-start">
+                      <Image src="/user.png" alt='img' width={30} height={30} className="rounded-full" />
+                      <p className="text-left">{employee.employeeId}</p>
+                    </td>
+                    <td className="p-4">
+                      <span className="inline-block align-middle">
+                        <Image
+                          src={employee.type === 'Vacation' ? '/vaction.png' : '/sickleave.png'}
+                          alt="vacation or sick leave"
+                          width={25}
+                          height={25}
+                          className="rounded-full"
+                        />
+                      </span>
+                      <span className="inline-block align-middle ml-3">{employee.type}</span>
+                    </td>
+                    <td className="p-4">{employee.duration} days</td>
+                    <td className="p-4">{new Date(employee.leaveDay).toLocaleDateString()}</td>
+                    <td className="p-4">{new Date(employee.returningDay).toLocaleDateString()}</td>
+                    <td className="p-4 flex justify-center items-center gap-2">
+                        {employee.status === 'Pending' ? (
+                          <>
+                            <button
+                              className="p-2 text-white bg-[#25A244] rounded text-[10px] flex items-center gap-2"
+                              onClick={() => handleConfirmRequest(employee)}
+                            >
+                              Confirm Request <FaCheck />
+                            </button>
+                            <button
+                              className="p-2 text-white bg-[#F53649] rounded text-[10px] flex items-center gap-2"
+                              onClick={() => handleDenyRequest(employee)}
+                            >
+                              Deny <FaTimes />
+                            </button>
+                          </>
+                        ) : (
+                          <span
+                            className={`font-semibold ${
+                              employee.status === 'Confirmed' ? 'text-green-600 border rounded p-2 px-4 border-green-600' : 'text-red-600 border rounded p-2 px-7 border-red-600'
+                            }`}
+                          >
+                            {employee.status}
+                          </span>
+                        )}
+                      </td>
+                      
+
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </>
+      )}
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
@@ -185,16 +220,23 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
       {/* Confirm Modal */}
       {isConfirmModalOpen && (
         <Modal onClose={handleCloseConfirmModal}>
-          <ConfirmLeave employee={selectedEmployee} onClose={handleCloseConfirmModal} />
+          {selectedEmployee && (
+            <ConfirmLeave
+              timeOffRequestId={selectedEmployee.id}
+              onClose={handleCloseConfirmModal}
+            />
+          )}       
+         </Modal>
+      )}
+
+      {isDenyModalOpen && selectedEmployee && (
+        <Modal onClose={handleCloseDenyModal}>
+          <Deny 
+            timeOffRequestId={selectedEmployee.id}
+            onClose={handleCloseDenyModal} />
         </Modal>
       )}
 
-      {/* Deny Modal */}
-      {isDenyModalOpen && (
-        <Modal onClose={handleCloseDenyModal}>
-          <Deny employee={selectedEmployee} onClose={handleCloseDenyModal} />
-        </Modal>
-      )}
     </div>
   );
 };
