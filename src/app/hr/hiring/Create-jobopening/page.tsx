@@ -14,6 +14,7 @@ import { JobFormFields, JobPreviewData } from '@/types/job';
 import { Department, EmployeeData, question } from '@/types/employee';
 import { getAllEmployees } from '@/services/getAllEmployees';
 import JobPreview from './JobPreview';
+import { ApplicationRequirements } from '@/components/JobsOpening/ApplicationRequirements';
 
 const Createjobopening = () => {
   const router = useRouter();
@@ -348,7 +349,7 @@ const Createjobopening = () => {
               <label className="flex flex-col mb-4 sm:w-1/3 w-full">
                 <span className="text-[14px] text-gray-400">Department*</span>
                 <select
-                  className="p-3 border rounded-lg w-full text-gray-400"
+                  className="p-3 border rounded-lg w-full text-gray-400 bg-white"
                   {...register('departmentId', {
                     required: 'Department is required',
                   })}
@@ -378,7 +379,7 @@ const Createjobopening = () => {
                   Employment Type*
                 </span>
                 <select
-                  className="p-3 border rounded-lg w-full text-gray-400"
+                  className="p-3 border rounded-lg w-full text-gray-400 bg-white"
                   {...register('employmentType', {
                     required: 'Employment type is required',
                   })}
@@ -404,7 +405,7 @@ const Createjobopening = () => {
               <label className="flex flex-col mb-4 sm:w-1/3 w-full">
                 <span className="text-[14px] text-gray-400">Hiring Lead*</span>
                 <select
-                  className="p-3 border rounded-lg w-full text-gray-400"
+                  className="p-3 border rounded-lg w-full text-gray-400 bg-white"
                   {...register('hiringLeadId', {
                     required: 'Hiring lead required',
                   })}
@@ -434,7 +435,7 @@ const Createjobopening = () => {
                   Reporting Manager*
                 </span>
                 <select
-                  className="p-3 border rounded-lg w-full text-gray-400"
+                  className="p-3 border rounded-lg w-full text-gray-400 bg-white"
                   {...register('reportingToEmployeeId', {
                     required: 'Reporting manager is required',
                   })}
@@ -635,67 +636,12 @@ const Createjobopening = () => {
               />
               Application Requirements
             </div>
-            <div className="flex flex-wrap gap-5">
-              {/* First Item */}
-              <div className="border rounded-lg w-[200px] flex flex-col">
-                <div className="p-4 items-center flex font-medium">
-                  <input
-                    type="checkbox"
-                    value="Resume"
-                    className="form-checkbox h-5 w-5 text-blue-600 cursor-pointer mr-3"
-                    {...register('Resume')}
-                  />
-                  Resume
-                </div>
-                <div className="w-full h-[1px] bg-gray-300" />
-                <div className="flex flex-row gap-5 p-3 items-center">
-                  <button
-                    type="button"
-                    onClick={() => handleToggle('Resume')}
-                    className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-                      toggleStates.Resume ? 'bg-gray-800' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 bg-white rounded-full transform transition-transform ${
-                        toggleStates.Resume ? 'translate-x-4' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
-                  <span className="text-gray-700 text-sm">Required</span>
-                </div>
-              </div>
 
-              {/* Second Item */}
-              <div className="border rounded-lg w-[200px] flex flex-col">
-                <div className="p-4 items-center flex font-medium">
-                  <input
-                    type="checkbox"
-                    value="Address"
-                    className="form-checkbox h-5 w-5 text-blue-600 cursor-pointer mr-3"
-                    {...register('Address')}
-                  />
-                  Address
-                </div>
-                <div className="w-full h-[1px] bg-gray-300" />
-                <div className="flex flex-row gap-5 p-3 items-center">
-                  <button
-                    type="button"
-                    onClick={() => handleToggle('Address')}
-                    className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-                      toggleStates.Address ? 'bg-gray-800' : 'bg-gray-300'
-                    }`}
-                  >
-                    <div
-                      className={`w-4 h-4 bg-white rounded-full transform transition-transform ${
-                        toggleStates.Address ? 'translate-x-4' : 'translate-x-0'
-                      }`}
-                    />
-                  </button>
-                  <span className="text-gray-700 text-sm">Required</span>
-                </div>
-              </div>
-            </div>
+            <ApplicationRequirements
+              toggleStates={toggleStates}
+              handleToggle={handleToggle}
+              register={register}
+            />
           </div>
 
           <div className="w-full h-[0.7px] bg-gray-200 " />

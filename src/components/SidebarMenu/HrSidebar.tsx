@@ -19,10 +19,10 @@ const HrSidebar = () => {
     <>
       {/* Hamburger button */}
       <button
-        className="lg:hidden p-4 fixed top-0 left-0 z-20"
+        className="lg:hidden p-4 fixed top-0 left-0 z-20 bg-white rounded shadow-md text-4xl"
         onClick={toggleSidebar}
       >
-        <FiMenu size={24} />
+        {!isOpen ? <FiMenu size={24} /> : 'x'}
       </button>
 
       <nav
