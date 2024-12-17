@@ -10,7 +10,7 @@ import { FaRegHandshake } from 'react-icons/fa';
 
 const Stepper = ({ jobApplication }) => {
   const stage = jobApplication?.data?.items?.[0]?.stage || 'Applied';
-  // stage === 'Technical
+
   return (
     <>
       <div className="flex items-center">
@@ -20,26 +20,49 @@ const Stepper = ({ jobApplication }) => {
         />
         <StepLine
           className={`${
-            stage === 'Technical' ? 'bg-black border-black' : 'bg-background'
+            stage === 'Technical' ||
+            stage === 'Second' ||
+            stage === 'Negotiation'
+              ? 'bg-black border-black'
+              : 'bg-background'
           }`}
-          // className={'bg-background'}
         />
         <IconWithBg
           className={`size-[40px] ${
-            stage === 'Technical'
+            stage === 'Technical' ||
+            stage === 'Second' ||
+            stage === 'Negotiation'
               ? 'bg-black text-white'
               : 'bg-background text-balance'
           }`}
           icon={<PiListNumbersFill size={24} />}
         />
-        <StepLine />
+        <StepLine
+          className={`${
+            stage === 'Second' || stage === 'Negotiation'
+              ? 'bg-black border-black'
+              : 'bg-background'
+          }`}
+        />
         <IconWithBg
-          className="size-[40px]"
+          className={`size-[40px] ${
+            stage === 'Second' || stage === 'Negotiation'
+              ? 'bg-black text-white'
+              : 'bg-background text-balance'
+          }`}
           icon={<PiListChecksFill size={24} />}
         />
-        <StepLine />
+        <StepLine
+          className={`${
+            stage === 'Negotiation' ? 'bg-black border-black' : 'bg-background'
+          }`}
+        />
         <IconWithBg
-          className="size-[40px]"
+          className={`size-[40px] ${
+            stage === 'Negotiation'
+              ? 'bg-black text-white'
+              : 'bg-background text-balance'
+          }`}
           icon={<IoDocumentTextOutline size={24} />}
         />
         <StepLine />
@@ -53,33 +76,33 @@ const Stepper = ({ jobApplication }) => {
           icon={<FaRegHandshake size={24} />}
         />
       </div>
-      <div className="flex items-center justify-between [&_p]:text-base [&_p]:opacity-50">
+      <div className="flex items-center justify-between [&_p]:text-center [&_p]:text-base [&_p]:opacity-50">
+        <p className={`font-semibold !opacity-100`}>First Round</p>
         <p
           className={`hover:font-semibold hover:opacity-100 ${
-            stage === 'First' || stage === 'Technical'
+            stage === 'Technical' ||
+            stage === 'Second' ||
+            stage === 'Negotiation'
               ? 'font-semibold !opacity-100'
               : ''
-          }`}
-        >
-          First Round
-        </p>
-        <p
-          className={`hover:font-semibold hover:opacity-100 ${
-            stage === 'Technical' ? 'font-semibold !opacity-100' : ''
           }`}
         >
           Technical Interview
         </p>
         <p
           className={`hover:font-semibold hover:opacity-100 ${
-            stage === '' ? '' : ''
+            stage === 'Second' || stage === 'Negotiation'
+              ? 'font-semibold !opacity-100'
+              : ''
           }`}
         >
           Second Round
         </p>
         <p
           className={`hover:font-semibold hover:opacity-100 ${
-            stage === '' ? '' : ''
+            stage === 'Second' || stage === 'Negotiation'
+              ? 'font-semibold !opacity-100'
+              : ''
           }`}
         >
           Offer and Negotiation

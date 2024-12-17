@@ -5,7 +5,7 @@ import Button from '../Button';
 import GenerateOffer from './GenerateOffer';
 import { useState } from 'react';
 
-const OfferAndNegotiation = () => {
+const OfferAndNegotiation = ({ jobApplication }) => {
   const [showOffer, setShowOffer] = useState(false);
   const handlePopup = (event: React.MouseEvent) => {
     event.preventDefault();

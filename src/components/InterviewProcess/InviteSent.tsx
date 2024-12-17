@@ -11,9 +11,18 @@ interface ErrorResponse {
   message: string;
 }
 
-const InviteSent = ({ jobApplication }) => {
+const InviteSent = ({ jobApplication, heading, buttonText }) => {
   const jobData = jobApplication.data.items[0];
-  console.log(jobData.id);
+  console.log(jobData);
+
+  const date = new Date(jobData.meetingDate);
+
+  const formattedTime = new Intl.DateTimeFormat('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+    timeZone: 'America/New_York',
+  }).format(date); // Example: "4:33 AM" in EST
 
   const [loading, setLoading] = useState(false);
   const {
@@ -53,10 +62,7 @@ const InviteSent = ({ jobApplication }) => {
       onSubmit={handleSubmit(onSubmit)}
       className="grid grid-cols-2 md:grid-cols-3 gap-4"
     >
-      <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
-        <PiListChecksLight size={24} />
-        First Round
-      </h2>
+      {heading}
       <label className="font-medium text-sm flex flex-col">
         <span className="opacity-35">Send Interview Invite</span>
         <input
@@ -73,7 +79,7 @@ const InviteSent = ({ jobApplication }) => {
           type="text"
           name="date"
           readOnly
-          value="24.01.2023"
+          value={jobData.meetingDate.split('T')[0]}
           className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
         />
       </label>
@@ -83,7 +89,7 @@ const InviteSent = ({ jobApplication }) => {
           type="text"
           name="time"
           readOnly
-          value="13:45"
+          value={formattedTime}
           className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
         />
       </label>
@@ -93,6 +99,7 @@ const InviteSent = ({ jobApplication }) => {
         <input
           min={0}
           max={10}
+          placeholder="Add interview rating"
           type="number"
           {...register('ratingScore', {
             required: 'Rating is required.',
@@ -134,7 +141,7 @@ const InviteSent = ({ jobApplication }) => {
       <div className="hidden lg:block"></div>
       <div className="hidden lg:block"></div>
       <Button
-        name={loading ? '' : 'Continue to Technical Interview'}
+        name={loading ? '' : buttonText}
         icon={
           loading && (
             <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
