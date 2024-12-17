@@ -4,15 +4,15 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
 
 interface ConfirmProps {
-  timeOffRequestId: number; 
+  timeOffRequestId: number;
   onClose: () => void;
 }
 
 const ConfirmLeave: React.FC<ConfirmProps> = ({ timeOffRequestId, onClose }) => {
-  const [timeOffRequest, setTimeOffRequest] = useState<any | null>(null); 
+  const [timeOffRequest, setTimeOffRequest] = useState<any | null>(null);
   const [note, setNote] = useState<string>(''); 
   const [error, setError] = useState<string | null>(null);
- 
+
   useEffect(() => {
     if (timeOffRequestId) {
       const fetchTimeOffRequest = async () => {
@@ -38,7 +38,7 @@ const ConfirmLeave: React.FC<ConfirmProps> = ({ timeOffRequestId, onClose }) => 
           status: 'Confirmed',
           note,
         });
-        onClose();
+        onClose(); // Close the modal after confirming the request
       } catch (error) {
         console.error('Error confirming leave request:', error);
         setError('Failed to confirm leave request. Please try again later.');
@@ -63,9 +63,9 @@ const ConfirmLeave: React.FC<ConfirmProps> = ({ timeOffRequestId, onClose }) => 
       {/* Time-Off Request Details */}
       <div className="flex flex-row items-center gap-8 mt-8">
         <label className="w-full">
-          <span className="mb-2 text-gray-400 text-[12px]">Employee ID</span>
+          <span className="mb-2 text-gray-400 text-[12px]">Employee Name</span>
           <div className="w-full p-3 text-[14px] rounded border border-gray-300 text-gray-600">
-            {timeOffRequest ? timeOffRequest.employeeId : 'Loading...'}
+            {timeOffRequest ? `${timeOffRequest.employee.firstName} ${timeOffRequest.employee.middleName || ''} ${timeOffRequest.employee.lastName || ''}` : 'Loading...'}
           </div>
         </label>
 

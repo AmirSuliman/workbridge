@@ -19,7 +19,13 @@ export interface Employee {
   leaveDay: string;
   returningDay: string;
   status: 'Confirmed' | 'Pending' | 'Denied';
+  employee: {
+    firstName: string;
+    middleName?: string | null;
+    lastName: string;
+  };
 }
+
 
 type TableProps = {
   filter: string;
@@ -130,8 +136,10 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
                   <tr key={employee.id} className="text-center text-[14px] hover:bg-gray-50 border-b">
                     <td className="p-4 flex items-center gap-3 justify-start">
                       <Image src="/user.png" alt='img' width={30} height={30} className="rounded-full" />
-                      <p className="text-left">{employee.employeeId}</p>
-                    </td>
+                      <p className="text-left">
+                          {employee ? `${employee.employee.firstName} ${employee.employee.middleName || ''} ${employee.employee.lastName || ''}` : ''}
+                        </p>
+                      </td>
                     <td className="p-4">
                       <span className="inline-block align-middle">
                         <Image

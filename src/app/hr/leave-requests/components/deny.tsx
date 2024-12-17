@@ -67,7 +67,7 @@ const Deny: React.FC<DenyProps> = ({ timeOffRequestId, onClose }) => {
         <label className="w-full">
           <span className="mb-2 text-gray-400 text-[12px]">Employee ID</span>
           <div className="w-full p-3 text-[14px] rounded border border-gray-300 text-gray-600">
-            {timeOffRequest ? timeOffRequest.employeeId : "Loading..."}
+            {timeOffRequest ? `${timeOffRequest.employee.firstName} ${timeOffRequest.employee.middleName || ''} ${timeOffRequest.employee.lastName || ''}` : 'Loading...'}
           </div>
         </label>
 
