@@ -15,7 +15,7 @@ const IconWithBg = ({
         background: `${bgColor}`,
       }}
       className={cn(
-        'bg-black text-white rounded-full size-8 flex items-center justify-center shrink-0 grow-0',
+        'bg-black text-white rounded-full size-10 flex items-center justify-center shrink-0 grow-0',
         className
       )}
     >

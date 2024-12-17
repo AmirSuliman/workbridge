@@ -38,7 +38,7 @@ const ConfirmLeave: React.FC<ConfirmProps> = ({ timeOffRequestId, onClose }) => 
           status: 'Confirmed',
           note,
         });
-        onClose(); // Close the modal after confirming the request
+        onClose(); 
       } catch (error) {
         console.error('Error confirming leave request:', error);
         setError('Failed to confirm leave request. Please try again later.');
