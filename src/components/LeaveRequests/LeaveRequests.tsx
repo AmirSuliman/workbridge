@@ -12,7 +12,7 @@ const LeaveRequests = () => {
           <IoCalendarOutline />
           Leave Requests
         </h1>
-        <Link href="/HR/Home/All-Announcements">
+        <Link href="/hr/leave-requests">
           <Button
             name="See All"
             icon={<PiArrowUpRightThin size={18} />}
@@ -23,26 +23,9 @@ const LeaveRequests = () => {
       </header>
       <div className="overflow-x-auto">
         <table className="w-full divide-y-[1px] divide-[#E8E8E8] space-y-4">
-          <UserLeaveInfo
-            emplyeeName="Harold Burdeoux"
-            leaveDay="13 Nov."
-            retruningDay="25 Nov."
-          />
-          <UserLeaveInfo
-            emplyeeName="Harold Burdeoux"
-            leaveDay="13 Nov."
-            retruningDay="25 Nov."
-          />
-          <UserLeaveInfo
-            emplyeeName="Harold Burdeoux"
-            leaveDay="13 Nov."
-            retruningDay="25 Nov."
-          />
-          <UserLeaveInfo
-            emplyeeName="Harold Burdeoux"
-            leaveDay="13 Nov."
-            retruningDay="25 Nov."
-          />
+          <UserLeaveInfo/>
+         
+          
         </table>
       </div>
     </section>
