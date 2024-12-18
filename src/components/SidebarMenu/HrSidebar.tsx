@@ -8,7 +8,7 @@ import { IoCalendarOutline } from 'react-icons/io5';
 import { IoIosFolderOpen } from 'react-icons/io';
 import { useState } from 'react';
 import { FiMenu } from 'react-icons/fi';
-
+import { FiArrowUpRight } from 'react-icons/fi';
 const HrSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -50,7 +50,7 @@ const HrSidebar = () => {
         <SidebarNavItem
           name="Hiring"
           icon={<PiHandshakeFill size={22} />}
-          href="/hr/Hiring"
+          href="/hr/hiring"
         />
         <SidebarNavItem
           name="Leave Requests"
@@ -66,6 +66,11 @@ const HrSidebar = () => {
           name="Admins"
           icon={<FaUsers size={22} />}
           href="/hr/admins"
+        />
+        <SidebarNavItem
+         name='Reports'
+         icon={<FiArrowUpRight size={22} />}
+         href='/hr/Reports'
         />
       </nav>
     </>
