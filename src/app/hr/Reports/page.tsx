@@ -7,7 +7,7 @@ import Yearlyreport from './components/yearlyreport';
 import Evaluationlist from './components/evaluationlist';
 
 const Reports = () => {
-  const [activeTab, setActiveTab] = useState('reports'); // Manage the active tab state
+  const [activeTab, setActiveTab] = useState('reports');
 
   return (
     <div className=" w-full">
