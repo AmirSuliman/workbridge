@@ -58,15 +58,17 @@ const Auth = () => {
 
       // Check if session exists and has an access token
       if (session?.user?.accessToken) {
+        console.log('session: ', session);
+
         try {
           // Fetch user data using accessToken
           const response = await axiosInstance.get('/user/my', {
             headers: { Authorization: `Bearer ${session.user.accessToken}` },
           });
 
+          console.log('response: ', response);
           // Store user data in Redux
           dispatch(setUser(response.data.data));
-          console.log('user/my: ', response);
           toast.success('Login Successful!');
           router.push('/hr/home');
         } catch (error) {

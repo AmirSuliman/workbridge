@@ -29,6 +29,7 @@ interface ErrorResponse {
 }
 
 const MyInformation = () => {
+  const [myInfoLoading, setMyInfoLoading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.myInfo);
   console.log('myInfo: ', user);
@@ -62,8 +63,11 @@ const MyInformation = () => {
         } catch (error) {
           console.error('Error fetching user data:', error);
           toast.error('Failed to load user data!');
+        } finally {
+          setMyInfoLoading(false);
         }
       } else {
+        setMyInfoLoading(false);
         toast.error('Authentication failed. Please try again.');
       }
     };
@@ -72,7 +76,11 @@ const MyInformation = () => {
 
   useEffect(() => {
     // Fetch employee data if session and empId are valid
-    if (session?.user.accessToken && (empId || session?.user.userId)) {
+    if (
+      !myInfoLoading &&
+      session?.user.accessToken &&
+      (empId || session?.user.userId)
+    ) {
       dispatch(
         fetchEmployeeData({
           accessToken: session.user.accessToken,
@@ -80,13 +88,20 @@ const MyInformation = () => {
         })
       );
     } else {
-      console.error('Invalid session or user ID');
+      console.log('Invalid session or user ID');
     }
 
     return () => {
       dispatch(clearEmployeeData());
     };
-  }, [dispatch, empId, session?.user.accessToken, session?.user.userId, myId]);
+  }, [
+    dispatch,
+    empId,
+    session?.user.accessToken,
+    session?.user.userId,
+    myId,
+    myInfoLoading,
+  ]);
 
   useEffect(() => {
     if (employeeData) {

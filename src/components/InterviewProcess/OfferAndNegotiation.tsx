@@ -90,7 +90,7 @@ const OfferAndNegotiation = ({ jobApplication }) => {
       )}
 
       <Button
-        type="submit"
+        type="button"
         disabled={stage === 'Negotiation'}
         name={`Continue to Offer Approval`}
         className={`w-full max-w-xl mx-auto col-span-full mt-12 ${
