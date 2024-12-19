@@ -14,6 +14,7 @@ import {
   clearEmployeeData,
   fetchEmployeeData,
 } from '@/store/slices/employeeInfoSlice';
+import { setUser } from '@/store/slices/myInfoSlice';
 import { AppDispatch, RootState } from '@/store/store';
 import { AxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
@@ -29,7 +30,10 @@ interface ErrorResponse {
 
 const MyInformation = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { empId } = useParams();
+  const user = useSelector((state: RootState) => state.myInfo);
+  console.log('myInfo: ', user);
+  const myId = user?.user?.employeeId; // This id is used to view the current logged in user's info
+  const { empId } = useParams(); // This id is used to view any employee's info
   const { data: session } = useSession();
   const [editEmployee, setEditEmployee] = useState<boolean>(false);
   const {
@@ -48,12 +52,31 @@ const MyInformation = () => {
   });
 
   useEffect(() => {
+    const fetchMyId = async () => {
+      if (session?.user?.accessToken) {
+        try {
+          const response = await axiosInstance.get('/user/my', {
+            headers: { Authorization: `Bearer ${session.user.accessToken}` },
+          });
+          dispatch(setUser(response.data.data));
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          toast.error('Failed to load user data!');
+        }
+      } else {
+        toast.error('Authentication failed. Please try again.');
+      }
+    };
+    fetchMyId();
+  }, [dispatch, session?.user?.accessToken]);
+
+  useEffect(() => {
     // Fetch employee data if session and empId are valid
-    if (session?.user.accessToken && (empId || session.user.userId)) {
+    if (session?.user.accessToken && (empId || session?.user.userId)) {
       dispatch(
         fetchEmployeeData({
           accessToken: session.user.accessToken,
-          userId: empId || session.user.userId,
+          userId: Number(empId) || Number(myId),
         })
       );
     } else {
@@ -63,7 +86,7 @@ const MyInformation = () => {
     return () => {
       dispatch(clearEmployeeData());
     };
-  }, [dispatch, empId, session?.user.accessToken, session?.user.userId]);
+  }, [dispatch, empId, session?.user.accessToken, session?.user.userId, myId]);
 
   useEffect(() => {
     if (employeeData) {

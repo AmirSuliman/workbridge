@@ -9,6 +9,7 @@ import candidateReducer from './slices/candidateSlice';
 import jobsReducer from './slices/getOpenPositionSlice';
 import allEmployeesReducer from './slices/allEmployeesSlice';
 import jobApplicationsReducer from './slices/jobApplicationsSlice';
+import jobApplicationReducer from './slices/jobApplicationSlice';
 import interviewReducer from './slices/interviewInviteSlice';
 
 export const rootReducer = combineReducers({
@@ -22,5 +23,6 @@ export const rootReducer = combineReducers({
   employees: allEmployeesReducer,
   jobs: jobsReducer,
   jobApplications: jobApplicationsReducer,
+  jobApplication: jobApplicationReducer,
   interview: interviewReducer,
 });

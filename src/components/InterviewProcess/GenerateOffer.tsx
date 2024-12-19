@@ -3,9 +3,16 @@ import Button from '../Button';
 
 const GenerateOffer = ({
   setShowOffer,
+  jobApplication,
 }: {
   setShowOffer: (value: boolean) => void;
+  jobApplication: {
+    data: {
+      items: { job: any }[];
+    };
+  };
 }) => {
+  const jobData = jobApplication?.data?.items[0].job;
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 bg-[#000000]/50 flex items-center justify-center z-50">
       <div className="max-w-4xl my-4 lg:my-8 p-4 bg-white rounded-lg">
@@ -17,11 +24,13 @@ const GenerateOffer = ({
         </header>
         <main className="overflow-y-auto my-8">
           <h6 className="font-medium text-xs opacity-50">Job Title</h6>
-          <h1 className="font-medium text-xl">Software Engineer </h1>
+          <h1 className="font-medium text-xl">{jobData.tittle}</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 my-6">
             <div>
               <h6 className="font-medium text-xs opacity-50">Department</h6>
-              <h4 className="font-medium text-base">IT Department</h4>
+              <h4 className="font-medium text-base">
+                {jobData.department?.name}
+              </h4>
             </div>
             <div>
               <h6 className="font-medium text-xs opacity-50">

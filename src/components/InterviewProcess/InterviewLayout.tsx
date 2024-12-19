@@ -89,9 +89,10 @@ const InterviewLayout = ({ jobApplication }) => {
             buttonText="Continue to Offer and Negotiation"
           />
         )}
-        {stage === 'Negotiation' && (
-          <OfferAndNegotiation jobApplication={jobApplication} />
-        )}
+        {stage === 'Negotiation' ||
+          (stage === 'Offer' && (
+            <OfferAndNegotiation jobApplication={jobApplication} />
+          ))}
         {/* {stage === 'Negotiation' && (isFuture || isToday) && (
           <InviteSent
             jobApplication={jobApplication}

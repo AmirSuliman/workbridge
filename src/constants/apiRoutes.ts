@@ -15,4 +15,5 @@ export const API_ROUTES = {
   GET_EMPLOYEES: 'employees',
   GET_CANDIDATES: `candidates`,
   GET_jOB_APPLICATIONS: 'jobApplications',
+  POST_OFFER: 'offer',
 };

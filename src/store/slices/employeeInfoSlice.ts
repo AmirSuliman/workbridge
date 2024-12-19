@@ -18,7 +18,10 @@ const initialState: EmployeeState = {
 export const fetchEmployeeData = createAsyncThunk(
   'employee/fetchEmployeeData',
   async (
-    { accessToken, userId }: { accessToken: string; userId: string | string[] },
+    {
+      accessToken,
+      userId,
+    }: { accessToken: string; userId: number | undefined },
     { rejectWithValue }
   ) => {
     try {

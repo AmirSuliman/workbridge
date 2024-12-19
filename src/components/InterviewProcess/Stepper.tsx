@@ -22,7 +22,8 @@ const Stepper = ({ jobApplication }) => {
           className={`${
             stage === 'Technical' ||
             stage === 'Second' ||
-            stage === 'Negotiation'
+            stage === 'Negotiation' ||
+            stage === 'Offer'
               ? 'bg-black border-black'
               : 'bg-background'
           }`}
@@ -31,7 +32,8 @@ const Stepper = ({ jobApplication }) => {
           className={`size-[40px] ${
             stage === 'Technical' ||
             stage === 'Second' ||
-            stage === 'Negotiation'
+            stage === 'Negotiation' ||
+            stage === 'Offer'
               ? 'bg-black text-white'
               : 'bg-background text-balance'
           }`}
@@ -39,14 +41,14 @@ const Stepper = ({ jobApplication }) => {
         />
         <StepLine
           className={`${
-            stage === 'Second' || stage === 'Negotiation'
+            stage === 'Second' || stage === 'Negotiation' || stage === 'Offer'
               ? 'bg-black border-black'
               : 'bg-background'
           }`}
         />
         <IconWithBg
           className={`size-[40px] ${
-            stage === 'Second' || stage === 'Negotiation'
+            stage === 'Second' || stage === 'Negotiation' || stage === 'Offer'
               ? 'bg-black text-white'
               : 'bg-background text-balance'
           }`}
@@ -54,12 +56,14 @@ const Stepper = ({ jobApplication }) => {
         />
         <StepLine
           className={`${
-            stage === 'Negotiation' ? 'bg-black border-black' : 'bg-background'
+            stage === 'Negotiation' || stage === 'Offer'
+              ? 'bg-black border-black'
+              : 'bg-background'
           }`}
         />
         <IconWithBg
           className={`size-[40px] ${
-            stage === 'Negotiation'
+            stage === 'Negotiation' || stage === 'Offer'
               ? 'bg-black text-white'
               : 'bg-background text-balance'
           }`}
@@ -82,7 +86,8 @@ const Stepper = ({ jobApplication }) => {
           className={`hover:font-semibold hover:opacity-100 ${
             stage === 'Technical' ||
             stage === 'Second' ||
-            stage === 'Negotiation'
+            stage === 'Negotiation' ||
+            stage === 'Offer'
               ? 'font-semibold !opacity-100'
               : ''
           }`}
@@ -91,7 +96,7 @@ const Stepper = ({ jobApplication }) => {
         </p>
         <p
           className={`hover:font-semibold hover:opacity-100 ${
-            stage === 'Second' || stage === 'Negotiation'
+            stage === 'Second' || stage === 'Negotiation' || stage === 'Offer'
               ? 'font-semibold !opacity-100'
               : ''
           }`}
@@ -100,7 +105,7 @@ const Stepper = ({ jobApplication }) => {
         </p>
         <p
           className={`hover:font-semibold hover:opacity-100 ${
-            stage === 'Second' || stage === 'Negotiation'
+            stage === 'Second' || stage === 'Negotiation' || stage === 'Offer'
               ? 'font-semibold !opacity-100'
               : ''
           }`}

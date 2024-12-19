@@ -1,11 +1,10 @@
 import axiosInstance from '@/lib/axios';
+import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { PiListChecksLight } from 'react-icons/pi';
-import Button from '../Button';
-import { BiLoaderCircle } from 'react-icons/bi';
 import toast from 'react-hot-toast';
-import { AxiosError } from 'axios';
+import { BiLoaderCircle } from 'react-icons/bi';
+import Button from '../Button';
 
 interface ErrorResponse {
   message: string;
@@ -79,7 +78,7 @@ const InviteSent = ({ jobApplication, heading, buttonText }) => {
           type="text"
           name="date"
           readOnly
-          value={jobData.meetingDate.split('T')[0]}
+          value={jobData?.meetingDate?.split('T')[0]}
           className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
         />
       </label>
