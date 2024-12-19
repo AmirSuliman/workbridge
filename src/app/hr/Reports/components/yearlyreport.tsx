@@ -1,4 +1,4 @@
-import { BiCalendar } from "react-icons/bi";
+import { BiCalendar, BiTrendingUp } from "react-icons/bi";
 import { BiArrowFromRight } from "react-icons/bi";
 import StackedBarChart from './charts/weeklychart'
 import { FaDownload } from "react-icons/fa";
@@ -7,7 +7,7 @@ const Yearlyreport =()=>{
     return(
         <div className="p-6 bg-white border rounded-[10px]">
           <div className="flex flex-row items-center justify-between w-full">
-            <div className="flex flex-row items-center gap-2"><BiArrowFromRight/>Yearly report </div>
+            <div className="flex flex-row items-center gap-2"><BiTrendingUp/>Yearly report </div>
             <div className="flex flex-row items-center gap-4">
                <div className="text-[12px] text-gray-400 flex flex-row items-center gap-2">Year 
                  <select className="border rounded p-2">

@@ -1,4 +1,4 @@
-import { BiArrowFromRight } from "react-icons/bi";
+import { BiTrendingUp } from "react-icons/bi";
 import { FaDownload } from "react-icons/fa";
 import Image from "next/image";
 const Demographics=()=>{
@@ -6,7 +6,7 @@ const Demographics=()=>{
     return(
         <div className="p-6 bg-white border rounded-[10px]">
            <div className="flex flex-row items-center justify-between w-full">
-                   <div className="flex flex-row items-center gap-2"><BiArrowFromRight/>Demographics </div>
+                   <div className="flex flex-row items-center gap-2"><BiTrendingUp/>Demographics </div>
                    <div className="flex flex-row items-center gap-4">
                        <button className="p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2"><FaDownload/> Download</button>
                    </div>
