@@ -123,9 +123,14 @@ const TimeOffSection = () => {
 
         new Date(item.leaveDay).toLocaleDateString(),
         new Date(item.returningDay).toLocaleDateString(),
-        <span key={`status-${index}`} className={item.status === 'Confirmed' ? 'text-[#25A244] font-[500]' : 'text-[#F53649]'}>
-            {item.status}
-        </span>,
+        <span
+        key={`status-${index}`}
+        className={item.status === 'Pending' ? 'text-black' : item.status === 'Confirmed' ? 'text-[#25A244] font-[500]' : 'text-[#F53649]'}
+      >
+        {item.status === 'Pending' ? 'Waiting for Approval' : item.status}
+      </span>
+      ,
+      
         "",
         "",
         "",
