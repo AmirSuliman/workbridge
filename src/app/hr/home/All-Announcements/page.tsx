@@ -4,9 +4,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Button from '../../../../components/Button';
 import SingleAnnouncement from '../../../../components/SingleAnnouncement/SingleAnnouncement';
-import { GiFlowerEmblem } from 'react-icons/gi';
 import { HiSpeakerphone } from 'react-icons/hi';
-import { IoCalendarOutline } from 'react-icons/io5';
 import { PiPlusCircleBold } from 'react-icons/pi';
 import axiosInstance from '@/lib/axios';
 import { useEffect, useState } from 'react';
@@ -36,34 +34,29 @@ const fetchAnnouncements = async (
         size,
       },
     });
-    console.log(`Fetched ${status} announcements:`, response.data); // Log the response
+    console.log(`Fetched ${status} announcements:`, response.data); 
     return {
-      announcements: response.data.data.items || [], // Extract 'items' from 'data'
-      total: response.data.data.total || 0, // Ensure total count is provided
+      announcements: response.data.data.items || [], 
+      total: response.data.data.total || 0,
     };
   } catch (error: any) {
     console.error(
       'Error fetching announcements:',
       error.response?.data || error.message || error
     );
-    return { announcements: [], total: 0 }; // Return empty data and total
+    return { announcements: [], total: 0 }; 
   }
 };
 
 const Page = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [publishedAnnouncements, setPublishedAnnouncements] = useState<
-    Announcement[]
-  >([]);
-  const [draftAnnouncements, setDraftAnnouncements] = useState<Announcement[]>(
-    []
-  );
+  const [publishedAnnouncements, setPublishedAnnouncements] = useState<Announcement[]>([]);
+  const [draftAnnouncements, setDraftAnnouncements] = useState<Announcement[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPublishedAnnouncements, setTotalPublishedAnnouncements] =
-    useState(0);
+  const [totalPublishedAnnouncements, setTotalPublishedAnnouncements] = useState(0);
   const [, setTotalDraftAnnouncements] = useState(0);
-  const pageSize = 20; // Set page size for pagination
+  const pageSize = 20; 
 
   useEffect(() => {
     if (status === 'authenticated' && session?.user?.accessToken) {
@@ -88,10 +81,10 @@ const Page = () => {
       };
       fetchData();
     }
-  }, [status, session?.user?.accessToken, currentPage]); // Re-run when session changes or page changes
+  }, [status, session?.user?.accessToken, currentPage]);
 
   const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage); // Update current page when pagination button is clicked
+    setCurrentPage(newPage);
   };
 
   if (status === 'loading') {
@@ -121,42 +114,32 @@ const Page = () => {
           </Link>
         </header>
         <h6 className="my-2 opacity-35 font-medium text-sm px-4">This Week</h6>
-        {/* Ensure publishedAnnouncements is an array before mapping */}
         {Array.isArray(publishedAnnouncements) &&
           publishedAnnouncements.map((announcement) => (
             <SingleAnnouncement
               key={announcement.id}
-              bgColor="#00B87D"
-              icon={<GiFlowerEmblem />}
-              description={announcement.title || 'No title'}
               onClick={() => router.push(`announcement/${announcement.id}`)}
             />
           ))}
       </section>
 
-      {/* Drafts */}
       <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
         <h6 className="my-2 opacity-35 font-medium text-sm px-4">Drafts</h6>
-        {/* Ensure draftAnnouncements is an array before mapping */}
         {Array.isArray(draftAnnouncements) &&
           draftAnnouncements.map((announcement) => (
             <SingleAnnouncement
               key={announcement.id}
-              bgColor=""
-              icon={<IoCalendarOutline />}
-              description={announcement.title || 'No title'}
               onClick={() => router.push(`announcement/${announcement.id}`)}
             />
           ))}
       </section>
 
-      {/* Pagination Component */}
       <Pagination
         styles={{ container: 'mt-5 gap-x-2 !justify-end' }}
         totalItems={totalPublishedAnnouncements}
         pageSize={pageSize}
         currentPage={currentPage}
-        maxPagesToShow={4} // Show up to 5 pages at once
+        maxPagesToShow={4} 
         setCurrentPage={handlePageChange}
       />
     </main>

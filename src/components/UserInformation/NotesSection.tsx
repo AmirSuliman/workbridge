@@ -5,12 +5,13 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { MdStickyNote2 } from 'react-icons/md';
 import axiosInstance from '@/lib/axios';
 import Modal from '../modal/Modal';
-
+import axios from 'axios';
 interface Note {
   id: number;
   title: string;
   note: string;
   createdAt: string;
+  employeeId: number;
 }
 
 interface TruncatedTextProps {
@@ -44,6 +45,7 @@ const NotesSection = () => {
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [updatedNote, setUpdatedNote] = useState({ title: '', note: '' });
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -62,7 +64,68 @@ const NotesSection = () => {
 
   const handleEditClick = (note: Note) => {
     setSelectedNote(note);
+    setUpdatedNote({ title: note.title, note: note.note });
     setShowModal(true);
+  };
+
+  const handleDeleteClick = async (id: number) => {
+    try {
+      
+
+      await axiosInstance.delete(`/note/${id}`); 
+
+      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        console.error('AxiosError details:', err.response?.data, err.response?.status);
+      } else {
+        console.error('Error while deleting note:', err);
+      }
+      setError(err instanceof Error ? err.message : 'An error occurred while deleting the note');
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setUpdatedNote((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSaveNote = async () => {
+    if (!selectedNote) {
+      console.error('No selected note to save.');
+      return;
+    }
+
+    try {
+      const payload = {
+        ...updatedNote,
+        employeeId: selectedNote.employeeId,
+      };
+
+      console.log('Selected note:', selectedNote);
+      console.log('Payload being sent:', payload);
+
+      const response = await axiosInstance.put(`/note/${selectedNote.id}`, payload);
+      console.log('Update response:', response.data);
+
+      // Update the state with the updated note
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === selectedNote.id ? { ...note, ...payload } : note
+        )
+      );
+
+      // Close the modal
+      setShowModal(false);
+      setSelectedNote(null);
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        console.error('AxiosError details:', err.response?.data, err.response?.status);
+      } else {
+        console.error('Error while saving note:', err);
+      }
+      setError(err instanceof Error ? err.message : 'An error occurred while saving the note');
+    }
   };
 
   const handleCloseModal = () => {
@@ -110,7 +173,10 @@ const NotesSection = () => {
                       <button className="text-black" onClick={() => handleEditClick(note)}>
                         <FaEdit />
                       </button>
-                      <button className="text-black">
+                      <button
+                        className="text-black"
+                        onClick={() => handleDeleteClick(note.id)}
+                      >
                         <FaTrash />
                       </button>
                     </div>
@@ -124,39 +190,42 @@ const NotesSection = () => {
 
       {showModal && selectedNote && (
         <Modal onClose={handleCloseModal}>
-          <div className='p-8 w-full sm:w-[600px] '>
-          <h2 className="text-2xl font-semibold mb-4">Edit Note</h2>
-          <div className="mb-4 mt-8">
-            <label className="block mb-2 text-gray-400 text-[14px]">Title:</label>
-            <input
-              type="text"
-              defaultValue={selectedNote.title}
-              className="w-full p-3 text-[14px] border border-gray-300 rounded focus:outline-none"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2 text-gray-400 text-[14px]">Note:</label>
-            <textarea
-              defaultValue={selectedNote.note}
-              className="w-full p-2 text-[14px] border border-gray-300 rounded resize-none focus:outline-none"
-              rows={4}
-            />
-          </div>
-          <div className='flex flex-row items-center gap-4 w-full px-8 mt-24'>
-          <button
-            className="bg-black w-full text-white px-4 py-3 rounded "
-            onClick={handleCloseModal}
-          >
-            Save
-          </button>
-          <button
-            className="border  w-full text-black px-4 py-3 rounded "
-            onClick={handleCloseModal}
-          >
-            Cancel
-          </button>
-          </div>
-         
+          <div className="p-8 w-full sm:w-[600px]">
+            <h2 className="text-2xl font-semibold mb-4">Edit Note</h2>
+            <div className="mb-4 mt-8">
+              <label className="block mb-2 text-gray-400 text-[14px]">Title:</label>
+              <input
+                type="text"
+                name="title"
+                value={updatedNote.title}
+                onChange={handleInputChange}
+                className="w-full p-3 text-[14px] border border-gray-300 rounded focus:outline-none"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-2 text-gray-400 text-[14px]">Note:</label>
+              <textarea
+                name="note"
+                value={updatedNote.note}
+                onChange={handleInputChange}
+                className="w-full p-2 text-[14px] border border-gray-300 rounded resize-none focus:outline-none"
+                rows={4}
+              />
+            </div>
+            <div className="flex flex-row items-center gap-4 w-full px-8 mt-24">
+              <button
+                className="bg-black w-full text-white px-4 py-3 rounded"
+                onClick={handleSaveNote}
+              >
+                Save
+              </button>
+              <button
+                className="border w-full text-black px-4 py-3 rounded"
+                onClick={handleCloseModal}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </Modal>
       )}

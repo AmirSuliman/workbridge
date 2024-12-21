@@ -32,6 +32,7 @@ const SingleAnnouncement = ({ onClick }: { onClick: () => void }) => {
             icon: <IoCalendarOutline />,
             createdAt: item.createdAt || new Date().toISOString(),
             title: item.title,
+            bgColor: '#00B87D', // Added default bgColor
           }));
 
           const sortedData = formattedData
@@ -72,12 +73,12 @@ const SingleAnnouncement = ({ onClick }: { onClick: () => void }) => {
           >
             <IconWithBg  icon={announcement.icon} />
             <div className='flex flex-col gap-1'>
-            <p className="text-sm">{announcement.title}</p>
-            <p className="opacity-50 font-medium text-[12px]">
-              {announcement.createdAt
-                ? new Date(announcement.createdAt).toLocaleDateString()
-                : 'Date not available'}
-            </p>
+              <p className="text-sm">{announcement.title}</p>
+              <p className="opacity-50 font-medium text-[12px]">
+                {announcement.createdAt
+                  ? new Date(announcement.createdAt).toLocaleDateString()
+                  : 'Date not available'}
+              </p>
             </div>
           </article>
         ))
