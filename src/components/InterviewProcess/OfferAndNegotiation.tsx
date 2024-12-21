@@ -74,7 +74,7 @@ const OfferAndNegotiation = ({ jobApplication }) => {
       </label>
       <div className="w-fit h-fit mt-auto mb-0" onClick={handlePopup}>
         <Button
-          type="submit"
+          type="button"
           disabled={stage === 'Offer'}
           name={`${stage === 'Offer' ? 'Offer Sent!' : 'Generate Offer'}`}
           className={`${

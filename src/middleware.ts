@@ -37,7 +37,7 @@ export default withAuth(
       if (userRole === 'Admin') {
         return NextResponse.redirect(new URL(Routes.HR_HOME, request.url));
       }
-      if (userRole === 'User') {
+      if (userRole === 'User' || userRole === 'ViewOnly') {
         return NextResponse.redirect(new URL(Routes.USER_HOME, request.url));
       }
     }

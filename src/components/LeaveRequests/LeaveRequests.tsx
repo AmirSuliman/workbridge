@@ -23,9 +23,7 @@ const LeaveRequests = () => {
       </header>
       <div className="overflow-x-auto">
         <table className="w-full divide-y-[1px] divide-[#E8E8E8] space-y-4">
-          <UserLeaveInfo/>
-         
-          
+          <UserLeaveInfo />
         </table>
       </div>
     </section>

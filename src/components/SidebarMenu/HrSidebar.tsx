@@ -26,7 +26,7 @@ const HrSidebar = () => {
       </button>
 
       <nav
-        className={`flex flex-col gap-2 w-[300px] bg-white fixed top-0 bottom-0 left-0 border-r-[1px] border-[#E8E8E8] z-10 transition-transform duration-300 ${
+        className={`flex flex-col gap-2 w-[270px] bg-white fixed top-0 bottom-0 left-0 border-r-[1px] border-[#E8E8E8] z-10 transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >

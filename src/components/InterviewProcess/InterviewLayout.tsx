@@ -3,6 +3,7 @@ import InviteSent from './InviteSent';
 import SendInvite from './SendInvite';
 import Stepper from './Stepper';
 import OfferAndNegotiation from './OfferAndNegotiation';
+import OfferApproval from './OfferApproval';
 
 const InterviewLayout = ({ jobApplication }) => {
   const jobData = jobApplication?.data?.items[0] || {};
@@ -93,22 +94,14 @@ const InterviewLayout = ({ jobApplication }) => {
           (stage === 'Offer' && (
             <OfferAndNegotiation jobApplication={jobApplication} />
           ))}
-        {/* {stage === 'Negotiation' && (isFuture || isToday) && (
-          <InviteSent
-            jobApplication={jobApplication}
-            heading={
-              <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
-                <PiListChecksLight size={24} />
-                Offer and Negotiation
-              </h2>
-            }
-            buttonText="Continue to Offer and Negotiation"
-          />
-        )} */}
+
         {/* <TechnicalInterviewInviteSent/> */}
         {/* <SecondRoundSendInvite /> */}
         {/* <SecondRoundInviteSent /> */}
         {/* <OfferApproval /> */}
+        {stage === 'Onboarding' && (
+          <OfferApproval jobApplication={jobApplication} />
+        )}
         {/* <Onboarding /> */}
       </section>
     </>

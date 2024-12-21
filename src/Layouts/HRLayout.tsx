@@ -4,7 +4,7 @@ import HrSidebar from '../components/SidebarMenu/HrSidebar';
 
 const HRLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <main className="ml-0 lg:!ml-[300px]">
+    <main className="ml-0 lg:!ml-[270px]">
       {/* hr sidebar is fixed positioned so the above classes will have no effect on it */}
       <HrSidebar />
       <HrHeader />

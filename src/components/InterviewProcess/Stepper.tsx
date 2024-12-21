@@ -23,7 +23,8 @@ const Stepper = ({ jobApplication }) => {
             stage === 'Technical' ||
             stage === 'Second' ||
             stage === 'Negotiation' ||
-            stage === 'Offer'
+            stage === 'Offer' ||
+            stage === 'Onboarding'
               ? 'bg-black border-black'
               : 'bg-background'
           }`}
@@ -33,7 +34,8 @@ const Stepper = ({ jobApplication }) => {
             stage === 'Technical' ||
             stage === 'Second' ||
             stage === 'Negotiation' ||
-            stage === 'Offer'
+            stage === 'Offer' ||
+            stage === 'Onboarding'
               ? 'bg-black text-white'
               : 'bg-background text-balance'
           }`}
@@ -41,14 +43,20 @@ const Stepper = ({ jobApplication }) => {
         />
         <StepLine
           className={`${
-            stage === 'Second' || stage === 'Negotiation' || stage === 'Offer'
+            stage === 'Second' ||
+            stage === 'Negotiation' ||
+            stage === 'Offer' ||
+            stage === 'Onboarding'
               ? 'bg-black border-black'
               : 'bg-background'
           }`}
         />
         <IconWithBg
           className={`size-[40px] ${
-            stage === 'Second' || stage === 'Negotiation' || stage === 'Offer'
+            stage === 'Second' ||
+            stage === 'Negotiation' ||
+            stage === 'Offer' ||
+            stage === 'Onboarding'
               ? 'bg-black text-white'
               : 'bg-background text-balance'
           }`}
@@ -56,22 +64,34 @@ const Stepper = ({ jobApplication }) => {
         />
         <StepLine
           className={`${
-            stage === 'Negotiation' || stage === 'Offer'
+            stage === 'Negotiation' ||
+            stage === 'Offer' ||
+            stage === 'Onboarding'
               ? 'bg-black border-black'
               : 'bg-background'
           }`}
         />
         <IconWithBg
           className={`size-[40px] ${
-            stage === 'Negotiation' || stage === 'Offer'
+            stage === 'Negotiation' ||
+            stage === 'Offer' ||
+            stage === 'Onboarding'
               ? 'bg-black text-white'
               : 'bg-background text-balance'
           }`}
           icon={<IoDocumentTextOutline size={24} />}
         />
-        <StepLine />
+        <StepLine
+          className={`${
+            stage === 'Onboarding' ? 'bg-black border-black' : 'bg-background'
+          }`}
+        />
         <IconWithBg
-          className="size-[40px]"
+          className={`size-[40px] ${
+            stage === 'Onboarding'
+              ? 'bg-black text-white'
+              : 'bg-background text-balance'
+          }`}
           icon={<IoDocumentTextOutline size={24} />}
         />
         <StepLine />
@@ -87,7 +107,8 @@ const Stepper = ({ jobApplication }) => {
             stage === 'Technical' ||
             stage === 'Second' ||
             stage === 'Negotiation' ||
-            stage === 'Offer'
+            stage === 'Offer' ||
+            stage === 'Onboarding'
               ? 'font-semibold !opacity-100'
               : ''
           }`}
@@ -96,7 +117,10 @@ const Stepper = ({ jobApplication }) => {
         </p>
         <p
           className={`hover:font-semibold hover:opacity-100 ${
-            stage === 'Second' || stage === 'Negotiation' || stage === 'Offer'
+            stage === 'Second' ||
+            stage === 'Negotiation' ||
+            stage === 'Offer' ||
+            stage === 'Onboarding'
               ? 'font-semibold !opacity-100'
               : ''
           }`}
@@ -105,7 +129,10 @@ const Stepper = ({ jobApplication }) => {
         </p>
         <p
           className={`hover:font-semibold hover:opacity-100 ${
-            stage === 'Second' || stage === 'Negotiation' || stage === 'Offer'
+            stage === 'Second' ||
+            stage === 'Negotiation' ||
+            stage === 'Offer' ||
+            stage === 'Onboarding'
               ? 'font-semibold !opacity-100'
               : ''
           }`}
@@ -114,7 +141,7 @@ const Stepper = ({ jobApplication }) => {
         </p>
         <p
           className={`hover:font-semibold hover:opacity-100 ${
-            stage === '' ? '' : ''
+            stage === 'Onboarding' ? 'font-semibold !opacity-100' : ''
           }`}
         >
           Offer Approval

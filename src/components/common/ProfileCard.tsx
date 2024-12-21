@@ -182,7 +182,7 @@ const ProfileCard = ({
             <ProfileInfoItem
               icon={IoLocationSharp}
               text={
-                `${employeeData?.location.country}, ${employeeData?.location.state}` ||
+                `${employeeData?.location?.country}, ${employeeData?.location?.state}` ||
                 'N/A'
               }
               title="Location"

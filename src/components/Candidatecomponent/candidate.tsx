@@ -34,7 +34,6 @@ const Candidatecomponent = ({ data, jobTitle }) => {
             {`${data?.data?.firstName} ${data?.data?.lastName}`}
           </h1>
           <p className="text-gray-400 text-[16px]">Applying for {jobTitle}</p>
-
           <div className="flex flex-col  sm:flex-row items-start sm:items-center gap-2 sm:gap-20 mt-6">
             <div className="flex flex-row gap-2 items-center text-[12px] text-gray-400">
               <FaMobileAlt />
