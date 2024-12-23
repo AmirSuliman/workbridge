@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 const OfferApproval = ({ jobApplication }) => {
   console.log(jobApplication);
+
   return (
     <section className="overflow-x-auto">
       <h2 className="flex font-medium text-lg items-center gap-4 ">
