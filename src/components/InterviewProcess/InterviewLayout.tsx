@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { useEffect, useState } from 'react';
 import axiosInstance from '@/lib/axios';
 import { PiListChecksLight } from 'react-icons/pi';
@@ -16,11 +16,14 @@ interface ApiResponse {
     };
   };
 }
+
 const InterviewLayout = ({ jobApplication }) => {
   const jobData = jobApplication?.data?.items[0] || {};
   const stage = jobData?.stage || 'Applied';
   const jobApplicationId = jobApplication?.data?.items?.[0]?.id;
-  console.log(jobApplicationId, 'id');
+  console.log('Current Stage:', stage);
+  console.log(jobApplicationId, 'Job Application ID');
+  
   const meetingDate = new Date(jobData?.meetingDate);
   const currentDate = new Date();
   const isToday = meetingDate.toDateString() === currentDate.toDateString();
@@ -28,36 +31,31 @@ const InterviewLayout = ({ jobApplication }) => {
   const [apiData, setApiData] = useState<ApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-useEffect(() => {
-  const fetchJobApplicationData = async () => {
-    if (!jobApplicationId) return;
+  useEffect(() => {
+    const fetchJobApplicationData = async () => {
+      if (!jobApplicationId) return;
 
-    try {
-      const response = await axiosInstance.get(`/jobApplication/${jobApplicationId}`, {
-        params: {
-          associations: true,
-        },
-      });
-      setApiData(response.data);
-      console.log('API Response:', response.data);
-    } catch (err) {
-      console.error('Error fetching job application data:', err);
-      setError('Failed to fetch job application data.');
-    }
-  };
+      try {
+        const response = await axiosInstance.get(`/jobApplication/${jobApplicationId}`, {
+          params: {
+            associations: true,
+          },
+        });
+        setApiData(response.data);
+        console.log('API Response:', response.data);
+      } catch (err) {
+        console.error('Error fetching job application data:', err);
+        setError('Failed to fetch job application data.');
+      }
+    };
 
-  fetchJobApplicationData();
-}, [jobApplicationId]);
+    fetchJobApplicationData();
+  }, [jobApplicationId]);
 
   const offer = apiData?.data?.offer;
-  console.log('Offer:', offer);
-
   const token = offer?.token;
   const offerId = offer?.id;
-  console.log(token, 'token to be used');
-  console.log(offerId, 'offerId to be used');
 
-  
   return (
     <>
       <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4 space-y-2 my-4">
@@ -65,6 +63,7 @@ useEffect(() => {
         <br />
         <hr />
         <br />
+
         {stage === 'Applied' && (
           <SendInvite
             heading={
@@ -76,6 +75,7 @@ useEffect(() => {
             jobApplication={jobApplication}
           />
         )}
+        
         {stage === 'First' && (
           <InviteSent
             jobApplication={jobApplication}
@@ -88,6 +88,7 @@ useEffect(() => {
             buttonText="Continue to Technical Interview"
           />
         )}
+
         {stage === 'Technical' && !(isToday || isFuture) && (
           <SendInvite
             heading={
@@ -99,6 +100,7 @@ useEffect(() => {
             jobApplication={jobApplication}
           />
         )}
+
         {stage === 'Technical' && (isFuture || isToday) && (
           <InviteSent
             jobApplication={jobApplication}
@@ -111,6 +113,7 @@ useEffect(() => {
             buttonText="Continue to Second Round"
           />
         )}
+
         {stage === 'Second' && !(isToday || isFuture) && (
           <SendInvite
             heading={
@@ -122,6 +125,7 @@ useEffect(() => {
             jobApplication={jobApplication}
           />
         )}
+
         {stage === 'Second' && (isFuture || isToday) && (
           <InviteSent
             jobApplication={jobApplication}
@@ -134,26 +138,21 @@ useEffect(() => {
             buttonText="Continue to Offer and Negotiation"
           />
         )}
-        {stage === 'Negotiation' ||
-          (stage === 'Offer' && (
-            <OfferAndNegotiation jobApplication={jobApplication} />
-          ))}
 
-        {/* <TechnicalInterviewInviteSent/> */}
-        {/* <SecondRoundSendInvite /> */}
-        {/* <SecondRoundInviteSent /> */}
-        {/* <OfferApproval /> */}
+        {(stage === 'Negotiation' || stage === 'Offer') && (
+          <OfferAndNegotiation jobApplication={jobApplication} />
+        )}
+
         {(stage === 'Onboarding' || stage === 'Rejected' || stage === 'Offer') && (
-  <OfferApproval
-    jobApplication={jobApplication}
-    offerId={offerId}
-    token={token}
-  />
-)}
-
-        {/* <Onboarding /> */}
+          <OfferApproval
+            jobApplication={jobApplication}
+            offerId={offerId}
+            token={token}
+          />
+        )}
       </section>
     </>
   );
 };
+
 export default InterviewLayout;
