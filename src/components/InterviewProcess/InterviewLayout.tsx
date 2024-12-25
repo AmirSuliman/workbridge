@@ -1,3 +1,6 @@
+'use client'
+import { useEffect, useState } from 'react';
+import axiosInstance from '@/lib/axios';
 import { PiListChecksLight } from 'react-icons/pi';
 import InviteSent from './InviteSent';
 import SendInvite from './SendInvite';
@@ -5,15 +8,56 @@ import Stepper from './Stepper';
 import OfferAndNegotiation from './OfferAndNegotiation';
 import OfferApproval from './OfferApproval';
 
+interface ApiResponse {
+  data: {
+    offer?: {
+      id: number;
+      token: string;
+    };
+  };
+}
 const InterviewLayout = ({ jobApplication }) => {
   const jobData = jobApplication?.data?.items[0] || {};
   const stage = jobData?.stage || 'Applied';
-
+  const jobApplicationId = jobApplication?.data?.items?.[0]?.id;
+  console.log(jobApplicationId, 'id');
   const meetingDate = new Date(jobData?.meetingDate);
   const currentDate = new Date();
   const isToday = meetingDate.toDateString() === currentDate.toDateString();
   const isFuture = meetingDate > currentDate;
+  const [apiData, setApiData] = useState<ApiResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
+useEffect(() => {
+  const fetchJobApplicationData = async () => {
+    if (!jobApplicationId) return;
+
+    try {
+      const response = await axiosInstance.get(`/jobApplication/${jobApplicationId}`, {
+        params: {
+          associations: true,
+        },
+      });
+      setApiData(response.data);
+      console.log('API Response:', response.data);
+    } catch (err) {
+      console.error('Error fetching job application data:', err);
+      setError('Failed to fetch job application data.');
+    }
+  };
+
+  fetchJobApplicationData();
+}, [jobApplicationId]);
+
+  const offer = apiData?.data?.offer;
+  console.log('Offer:', offer);
+
+  const token = offer?.token;
+  const offerId = offer?.id;
+  console.log(token, 'token to be used');
+  console.log(offerId, 'offerId to be used');
+
+  
   return (
     <>
       <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4 space-y-2 my-4">
@@ -99,9 +143,14 @@ const InterviewLayout = ({ jobApplication }) => {
         {/* <SecondRoundSendInvite /> */}
         {/* <SecondRoundInviteSent /> */}
         {/* <OfferApproval /> */}
-        {stage === 'Onboarding' && (
-          <OfferApproval jobApplication={jobApplication} />
-        )}
+        {(stage === 'Onboarding' || stage === 'Rejected' || stage === 'Offer') && (
+  <OfferApproval
+    jobApplication={jobApplication}
+    offerId={offerId}
+    token={token}
+  />
+)}
+
         {/* <Onboarding /> */}
       </section>
     </>
