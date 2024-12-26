@@ -8,7 +8,8 @@ import { IoCalendarOutline } from 'react-icons/io5';
 import { IoIosFolderOpen } from 'react-icons/io';
 import { useState } from 'react';
 import { FiMenu, FiTrendingUp } from 'react-icons/fi';
-import { FiArrowUpRight } from 'react-icons/fi';
+import { FaBullhorn } from 'react-icons/fa';
+
 const HrSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -58,11 +59,17 @@ const HrSidebar = () => {
           icon={<IoCalendarOutline size={22} />}
           href="/hr/leave-requests"
         />
+         <SidebarNavItem
+          name="Announcements & Policies"
+          icon={<FaBullhorn  size={22} />}
+          href="/hr/home/All-Announcements"
+        />
         <SidebarNavItem
           name="Files"
           icon={<IoIosFolderOpen size={22} />}
           href="/hr/files"
         />
+       
         <SidebarNavItem
           name="Admins"
           icon={<FaUsers size={22} />}

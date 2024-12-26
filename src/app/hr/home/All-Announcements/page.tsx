@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Button from '../../../../components/Button';
@@ -7,9 +8,9 @@ import SingleAnnouncement from '../../../../components/SingleAnnouncement/Single
 import { HiSpeakerphone } from 'react-icons/hi';
 import { PiPlusCircleBold } from 'react-icons/pi';
 import axiosInstance from '@/lib/axios';
-import { useEffect, useState } from 'react';
 import { Pagination } from '@/components/common/Pagination';
 import { useRouter } from 'next/navigation';
+import Policies from '../../Policies/components/policies';
 
 type Announcement = {
   id: string;
@@ -34,9 +35,9 @@ const fetchAnnouncements = async (
         size,
       },
     });
-    console.log(`Fetched ${status} announcements:`, response.data); 
+    console.log(`Fetched ${status} announcements:`, response.data);
     return {
-      announcements: response.data.data.items || [], 
+      announcements: response.data.data.items || [],
       total: response.data.data.total || 0,
     };
   } catch (error: any) {
@@ -44,19 +45,20 @@ const fetchAnnouncements = async (
       'Error fetching announcements:',
       error.response?.data || error.message || error
     );
-    return { announcements: [], total: 0 }; 
+    return { announcements: [], total: 0 };
   }
 };
 
 const Page = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const [currentTab, setCurrentTab] = useState('Announcements'); // Handle active tab
   const [publishedAnnouncements, setPublishedAnnouncements] = useState<Announcement[]>([]);
   const [draftAnnouncements, setDraftAnnouncements] = useState<Announcement[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPublishedAnnouncements, setTotalPublishedAnnouncements] = useState(0);
   const [, setTotalDraftAnnouncements] = useState(0);
-  const pageSize = 20; 
+  const pageSize = 20;
 
   useEffect(() => {
     if (status === 'authenticated' && session?.user?.accessToken) {
@@ -97,51 +99,78 @@ const Page = () => {
 
   return (
     <main className="space-y-8">
-      {/* All Announcements */}
-      <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
-        <header className="px-4 flex items-center gap-4 justify-between">
-          <h1 className="flex items-center gap-4 font-semibold text-xl mb-4">
-            <HiSpeakerphone />
-            Announcements
-          </h1>
-          <Link href="create-announcments">
-            <Button
-              name="Create Announcement"
-              icon={<PiPlusCircleBold size={18} />}
-              bg="black"
-              textColor="white"
-            />
-          </Link>
-        </header>
-        <h6 className="my-2 opacity-35 font-medium text-sm px-4">This Week</h6>
-        {Array.isArray(publishedAnnouncements) &&
-          publishedAnnouncements.map((announcement) => (
-            <SingleAnnouncement
-              key={announcement.id}
-              onClick={() => router.push(`announcement/${announcement.id}`)}
-            />
-          ))}
-      </section>
+      {/* Tabs */}
+      <div className="flex gap-4 border-b">
+        <button
+          className={`px-4 py-2 ${currentTab === 'Announcements' ? 'border-b-2 border-black font-semibold' : 'opacity-50'}`}
+          onClick={() => setCurrentTab('Announcements')}
+        >
+          Announcements
+        </button>
+        <button
+          className={`px-4 py-2 ${currentTab === 'Policies' ? 'border-b-2 border-black font-semibold' : 'opacity-50'}`}
+          onClick={() => setCurrentTab('Policies')}
+        >
+          Policies
+        </button>
+      </div>
 
-      <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
-        <h6 className="my-2 opacity-35 font-medium text-sm px-4">Drafts</h6>
-        {Array.isArray(draftAnnouncements) &&
-          draftAnnouncements.map((announcement) => (
-            <SingleAnnouncement
-              key={announcement.id}
-              onClick={() => router.push(`announcement/${announcement.id}`)}
-            />
-          ))}
-      </section>
+      {/* Tab Content */}
+      {currentTab === 'Announcements' && (
+        <>
+          {/* Announcements Section */}
+          <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
+            <header className="px-4 flex items-center gap-4 justify-between">
+              <h1 className="flex items-center gap-4 font-semibold text-xl mb-4">
+                <HiSpeakerphone />
+                Announcements
+              </h1>
+              <Link href="create-announcments">
+                <Button
+                  name="Create Announcement"
+                  icon={<PiPlusCircleBold size={18} />}
+                  bg="black"
+                  textColor="white"
+                />
+              </Link>
+            </header>
+            <h6 className="my-2 opacity-35 font-medium text-sm px-4">This Week</h6>
+            {Array.isArray(publishedAnnouncements) &&
+              publishedAnnouncements.map((announcement) => (
+                <SingleAnnouncement
+                  key={announcement.id}
+                  onClick={() => router.push(`announcement/${announcement.id}`)}
+                />
+              ))}
+          </section>
 
-      <Pagination
-        styles={{ container: 'mt-5 gap-x-2 !justify-end' }}
-        totalItems={totalPublishedAnnouncements}
-        pageSize={pageSize}
-        currentPage={currentPage}
-        maxPagesToShow={4} 
-        setCurrentPage={handlePageChange}
-      />
+          <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
+            <h6 className="my-2 opacity-35 font-medium text-sm px-4">Drafts</h6>
+            {Array.isArray(draftAnnouncements) &&
+              draftAnnouncements.map((announcement) => (
+                <SingleAnnouncement
+                  key={announcement.id}
+                  onClick={() => router.push(`announcement/${announcement.id}`)}
+                />
+              ))}
+          </section>
+
+          <Pagination
+            styles={{ container: 'mt-5 gap-x-2 !justify-end' }}
+            totalItems={totalPublishedAnnouncements}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            maxPagesToShow={4}
+            setCurrentPage={handlePageChange}
+          />
+        </>
+      )}
+
+      {currentTab === 'Policies' && (
+        <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 px-4 space-y-4">
+          <Policies/>
+         </section>
+      )}
     </main>
   );
 };
