@@ -11,7 +11,10 @@ const Previewpolicy =()=>{
     return(
         <>
          <div className="flex flex-row items-center justify-between w-full">
-                <h1 className="text-[22px] font-semibold">Preview policy</h1>
+                <h1 className="text-[22px] font-semibold flex flex-row items-center gap-3">
+                    <Image src="/previewpolicyicon.png" alt="img" width={20} height={20}/>
+                    Preview policy
+                    </h1>
                 <div className="flex flex-row items-center gap-2">
                    <button 
                     onClick={openModal}

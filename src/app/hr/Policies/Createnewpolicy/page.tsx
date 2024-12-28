@@ -2,6 +2,8 @@
 import { FaBox } from "react-icons/fa";
 import CustomTextEditor from "@/components/CustomEditor/CustomTextEditor";
 import { useState } from "react";
+import Image from "next/image";
+
 const Addnewpolicies =()=>{
   const [body, setBody] = useState('');
 
@@ -19,7 +21,10 @@ const Addnewpolicies =()=>{
           </div>
 
            <div className="bg-white rounded-[10px] border p-6 w-full mt-8">
-            <h1 className="flex flex-row items-center gap-2 text-[18px] font-medium"><FaBox/>  New Policy</h1>
+            <h1 className="flex flex-row items-center gap-2 text-[18px] font-medium">
+              <Image src="/iconpolicy.png" alt="img" width={20} height={20}/>  
+            New Policy
+            </h1>
             
             <form className="w-full mt-8">
                <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-8">

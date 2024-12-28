@@ -1,14 +1,14 @@
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { FaBox, FaDownload } from 'react-icons/fa';
 import { MdAddCircle } from 'react-icons/md';
-
+import Image from 'next/image';
 const Policies = () => {
   return (
     <div className="w-full p-4">
       {/* Header */}
       <div className="flex flex-row items-center justify-between w-full mb-4">
         <div className="flex flex-row items-center gap-3">
-          <FaBox size={24} />
+          <Image src="/iconpolicy.png" alt='icon' width={20} height={20} />
           <h1 className="text-[18px] font-medium">All Policies</h1>
         </div>
         <button

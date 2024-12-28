@@ -8,153 +8,74 @@ import StepLine from './StepLine';
 import { IoDocumentTextOutline } from 'react-icons/io5';
 import { FaRegHandshake } from 'react-icons/fa';
 
-const Stepper = ({ jobApplication }) => {
-  const stage = jobApplication?.data?.items?.[0]?.stage || 'Applied';
+const Stepper = ({ jobApplication, currentStage, onTabChange }) => {
+  const handleNavigation = (targetStage) => {
+    if (onTabChange) {
+      onTabChange(targetStage);
+    }
+  };
 
   return (
     <>
       <div className="flex items-center">
         <IconWithBg
-          className="size-[40px] bg-black text-white"
+          className={`size-[40px] ${currentStage === 'Applied' ? 'bg-black text-white' : ''}`}
           icon={<PiListChecksLight size={24} />}
+          onClick={() => handleNavigation('Applied')}
         />
-        <StepLine
-          className={`${
-            stage === 'Technical' ||
-            stage === 'Second' ||
-            stage === 'Negotiation' ||
-            stage === 'Offer' ||
-            stage === 'Onboarding'
-              ? 'bg-black border-black'
-              : 'bg-background'
-          }`}
-        />
+        <StepLine className={`${['Technical', 'Second', 'Negotiation', 'Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'bg-black' : ''}`} />
         <IconWithBg
-          className={`size-[40px] ${
-            stage === 'Technical' ||
-            stage === 'Second' ||
-            stage === 'Negotiation' ||
-            stage === 'Offer' ||
-            stage === 'Onboarding'
-              ? 'bg-black text-white'
-              : 'bg-background text-balance'
-          }`}
+          className={`size-[40px] ${['Technical', 'Second', 'Negotiation', 'Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'bg-black text-white' : ''}`}
           icon={<PiListNumbersFill size={24} />}
+          onClick={() => handleNavigation('Technical')}
         />
-        <StepLine
-          className={`${
-            stage === 'Second' ||
-            stage === 'Negotiation' ||
-            stage === 'Offer' ||
-            stage === 'Onboarding'
-              ? 'bg-black border-black'
-              : 'bg-background'
-          }`}
-        />
+        <StepLine className={`${['Second', 'Negotiation', 'Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'bg-black' : ''}`} />
         <IconWithBg
-          className={`size-[40px] ${
-            stage === 'Second' ||
-            stage === 'Negotiation' ||
-            stage === 'Offer' ||
-            stage === 'Onboarding'
-              ? 'bg-black text-white'
-              : 'bg-background text-balance'
-          }`}
+          className={`size-[40px] ${['Second', 'Negotiation', 'Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'bg-black text-white' : ''}`}
           icon={<PiListChecksFill size={24} />}
+          onClick={() => handleNavigation('Second')}
         />
-        <StepLine
-          className={`${
-            stage === 'Negotiation' ||
-            stage === 'Offer' ||
-            stage === 'Onboarding'
-              ? 'bg-black border-black'
-              : 'bg-background'
-          }`}
-        />
+        <StepLine className={`${['Negotiation', 'Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'bg-black' : ''}`} />
         <IconWithBg
-          className={`size-[40px] ${
-            stage === 'Negotiation' ||
-            stage === 'Offer' ||
-            stage === 'Onboarding'
-              ? 'bg-black text-white'
-              : 'bg-background text-balance'
-          }`}
+          className={`size-[40px] ${['Negotiation', 'Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'bg-black text-white' : ''}`}
           icon={<IoDocumentTextOutline size={24} />}
+          onClick={() => handleNavigation('Negotiation')}
         />
-        <StepLine
-          className={`${
-            stage === 'Onboarding' ? 'bg-black border-black' : 'bg-background'
-          }`}
-        />
+        <StepLine className={`${['Onboarding', 'Rejected', 'Offer'].includes(currentStage) ? 'bg-black' : ''}`} />
         <IconWithBg
-          className={`size-[40px] ${
-            stage === 'Onboarding'
-              ? 'bg-black text-white'
-              : 'bg-background text-balance'
-          }`}
+          className={`size-[40px] ${['Onboarding', 'Rejected', 'Offer'].includes(currentStage) ? 'bg-black text-white' : ''}`}
           icon={<IoDocumentTextOutline size={24} />}
+          onClick={() => handleNavigation('Offer')}
         />
         <StepLine />
         <IconWithBg
           className="size-[40px]"
           icon={<FaRegHandshake size={24} />}
+          onClick={() => handleNavigation('Onboarding')}
         />
       </div>
-      <div className="flex items-center justify-between [&_p]:text-center [&_p]:text-base [&_p]:opacity-50">
-        <p className={`font-semibold !opacity-100`}>First Round</p>
-        <p
-          className={`hover:font-semibold hover:opacity-100 ${
-            stage === 'Technical' ||
-            stage === 'Second' ||
-            stage === 'Negotiation' ||
-            stage === 'Offer' ||
-            stage === 'Onboarding'
-              ? 'font-semibold !opacity-100'
-              : ''
-          }`}
-        >
+      <div className="flex items-center justify-between">
+        <p className={`cursor-pointer ${currentStage === 'Applied' ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Applied')}>
+          First Round
+        </p>
+        <p className={`cursor-pointer ${['Technical'].includes(currentStage) ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Technical')}>
           Technical Interview
         </p>
-        <p
-          className={`hover:font-semibold hover:opacity-100 ${
-            stage === 'Second' ||
-            stage === 'Negotiation' ||
-            stage === 'Offer' ||
-            stage === 'Onboarding'
-              ? 'font-semibold !opacity-100'
-              : ''
-          }`}
-        >
+        <p className={`cursor-pointer ${['Second'].includes(currentStage) ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Second')}>
           Second Round
         </p>
-        <p
-          className={`hover:font-semibold hover:opacity-100 ${
-            stage === 'Second' ||
-            stage === 'Negotiation' ||
-            stage === 'Offer' ||
-            stage === 'Onboarding'
-              ? 'font-semibold !opacity-100'
-              : ''
-          }`}
-        >
+        <p className={`cursor-pointer ${['Negotiation'].includes(currentStage) ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Negotiation')}>
           Offer and Negotiation
         </p>
-        <p
-          className={`hover:font-semibold hover:opacity-100 ${
-            stage === 'Onboarding' ? 'font-semibold !opacity-100' : ''
-          }`}
-        >
+        <p className={`cursor-pointer ${['Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Offer')}>
           Offer Approval
         </p>
-        <p
-          className={`hover:font-semibold hover:opacity-100 ${
-            stage === '' ? '' : ''
-          }`}
-        >
+        <p className="cursor-pointer" onClick={() => handleNavigation('Onboarding')}>
           Onboarding
         </p>
       </div>
     </>
   );
 };
+
 export default Stepper;

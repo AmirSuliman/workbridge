@@ -19,17 +19,17 @@ interface ApiResponse {
 
 const InterviewLayout = ({ jobApplication }) => {
   const jobData = jobApplication?.data?.items[0] || {};
-  const stage = jobData?.stage || 'Applied';
-  const jobApplicationId = jobApplication?.data?.items?.[0]?.id;
-  console.log('Current Stage:', stage);
-  console.log(jobApplicationId, 'Job Application ID');
-  
+  const initialStage = jobData?.stage || 'Applied';
+  const jobApplicationId = jobData?.id;
+
   const meetingDate = new Date(jobData?.meetingDate);
   const currentDate = new Date();
   const isToday = meetingDate.toDateString() === currentDate.toDateString();
   const isFuture = meetingDate > currentDate;
+
   const [apiData, setApiData] = useState<ApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [currentStage, setCurrentStage] = useState(initialStage);
 
   useEffect(() => {
     const fetchJobApplicationData = async () => {
@@ -37,12 +37,9 @@ const InterviewLayout = ({ jobApplication }) => {
 
       try {
         const response = await axiosInstance.get(`/jobApplication/${jobApplicationId}`, {
-          params: {
-            associations: true,
-          },
+          params: { associations: true },
         });
         setApiData(response.data);
-        console.log('API Response:', response.data);
       } catch (err) {
         console.error('Error fetching job application data:', err);
         setError('Failed to fetch job application data.');
@@ -56,15 +53,25 @@ const InterviewLayout = ({ jobApplication }) => {
   const token = offer?.token;
   const offerId = offer?.id;
 
+  useEffect(() => {
+    if (jobData?.stage) {
+      setCurrentStage(jobData.stage);
+    }
+  }, [jobData]);
+
   return (
     <>
       <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4 space-y-2 my-4">
-        <Stepper jobApplication={jobApplication} />
+        <Stepper
+          jobApplication={jobApplication}
+          currentStage={currentStage}
+          onTabChange={setCurrentStage}
+        />
         <br />
         <hr />
         <br />
 
-        {stage === 'Applied' && (
+        {currentStage === 'Applied' && (
           <SendInvite
             heading={
               <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
@@ -75,8 +82,8 @@ const InterviewLayout = ({ jobApplication }) => {
             jobApplication={jobApplication}
           />
         )}
-        
-        {stage === 'First' && (
+
+        {currentStage === 'First' && (
           <InviteSent
             jobApplication={jobApplication}
             heading={
@@ -89,7 +96,7 @@ const InterviewLayout = ({ jobApplication }) => {
           />
         )}
 
-        {stage === 'Technical' && !(isToday || isFuture) && (
+        {currentStage === 'Technical' && !(isToday || isFuture) && (
           <SendInvite
             heading={
               <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
@@ -101,7 +108,7 @@ const InterviewLayout = ({ jobApplication }) => {
           />
         )}
 
-        {stage === 'Technical' && (isFuture || isToday) && (
+        {currentStage === 'Technical' && (isFuture || isToday) && (
           <InviteSent
             jobApplication={jobApplication}
             heading={
@@ -114,7 +121,7 @@ const InterviewLayout = ({ jobApplication }) => {
           />
         )}
 
-        {stage === 'Second' && !(isToday || isFuture) && (
+        {currentStage === 'Second' && !(isToday || isFuture) && (
           <SendInvite
             heading={
               <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
@@ -126,7 +133,7 @@ const InterviewLayout = ({ jobApplication }) => {
           />
         )}
 
-        {stage === 'Second' && (isFuture || isToday) && (
+        {currentStage === 'Second' && (isFuture || isToday) && (
           <InviteSent
             jobApplication={jobApplication}
             heading={
@@ -139,11 +146,11 @@ const InterviewLayout = ({ jobApplication }) => {
           />
         )}
 
-        {(stage === 'Negotiation' || stage === 'Offer') && (
+        {['Negotiation'].includes(currentStage) && (
           <OfferAndNegotiation jobApplication={jobApplication} />
         )}
 
-        {(stage === 'Onboarding' || stage === 'Rejected' || stage === 'Offer') && (
+        {['Onboarding', 'Rejected', 'Offer'].includes(currentStage) && (
           <OfferApproval
             jobApplication={jobApplication}
             offerId={offerId}

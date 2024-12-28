@@ -1,5 +1,4 @@
-import { FaEdit } from "react-icons/fa";
-import { FaDeleteLeft } from "react-icons/fa6";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import Workfromhome from "../components/wfhpolicy";
 import Image from "next/image";
 const Openedpolicy =()=>{
@@ -11,7 +10,7 @@ const Openedpolicy =()=>{
                 <div className="flex flex-row items-center gap-2">
                    <button 
                      className="bg-black text-[14px] text-white p-2 rounded px-4 flex flex-row items-center gap-3">Edit Policy <FaEdit/></button>
-                   <button className="p-2 bg-white rounded flex flex-row items-center gap-3 border text-[14px]">Delete Policy <FaDeleteLeft/></button>
+                   <button className="p-2 bg-white rounded flex flex-row items-center gap-3 border text-[14px]">Delete Policy <FaTrash/></button>
                 </div>
                 </div>
 
