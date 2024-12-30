@@ -1,3 +1,6 @@
+'use client';
+import { useEffect, useState } from 'react';
+import axiosInstance from '@/lib/axios';
 import { PiListChecksLight } from 'react-icons/pi';
 import InviteSent from './InviteSent';
 import SendInvite from './SendInvite';
@@ -5,23 +8,70 @@ import Stepper from './Stepper';
 import OfferAndNegotiation from './OfferAndNegotiation';
 import OfferApproval from './OfferApproval';
 
+interface ApiResponse {
+  data: {
+    offer?: {
+      id: number;
+      token: string;
+    };
+  };
+}
+
 const InterviewLayout = ({ jobApplication }) => {
   const jobData = jobApplication?.data?.items[0] || {};
-  const stage = jobData?.stage || 'Applied';
+  const initialStage = jobData?.stage || 'Applied';
+  const jobApplicationId = jobData?.id;
 
   const meetingDate = new Date(jobData?.meetingDate);
   const currentDate = new Date();
   const isToday = meetingDate.toDateString() === currentDate.toDateString();
   const isFuture = meetingDate > currentDate;
 
+  const [apiData, setApiData] = useState<ApiResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [currentStage, setCurrentStage] = useState(initialStage);
+
+  useEffect(() => {
+    const fetchJobApplicationData = async () => {
+      if (!jobApplicationId) return;
+
+      try {
+        const response = await axiosInstance.get(`/jobApplication/${jobApplicationId}`, {
+          params: { associations: true },
+        });
+        setApiData(response.data);
+      } catch (err) {
+        console.error('Error fetching job application data:', err);
+        setError('Failed to fetch job application data.');
+      }
+    };
+
+    fetchJobApplicationData();
+  }, [jobApplicationId]);
+
+  const offer = apiData?.data?.offer;
+  const token = offer?.token;
+  const offerId = offer?.id;
+
+  useEffect(() => {
+    if (jobData?.stage) {
+      setCurrentStage(jobData.stage);
+    }
+  }, [jobData]);
+
   return (
     <>
       <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4 space-y-2 my-4">
-        <Stepper jobApplication={jobApplication} />
+        <Stepper
+          jobApplication={jobApplication}
+          currentStage={currentStage}
+          onTabChange={setCurrentStage}
+        />
         <br />
         <hr />
         <br />
-        {stage === 'Applied' && (
+
+        {currentStage === 'Applied' && (
           <SendInvite
             heading={
               <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
@@ -32,7 +82,8 @@ const InterviewLayout = ({ jobApplication }) => {
             jobApplication={jobApplication}
           />
         )}
-        {stage === 'First' && (
+
+        {currentStage === 'First' && (
           <InviteSent
             jobApplication={jobApplication}
             heading={
@@ -44,7 +95,8 @@ const InterviewLayout = ({ jobApplication }) => {
             buttonText="Continue to Technical Interview"
           />
         )}
-        {stage === 'Technical' && !(isToday || isFuture) && (
+
+        {currentStage === 'Technical' && !(isToday || isFuture) && (
           <SendInvite
             heading={
               <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
@@ -55,7 +107,8 @@ const InterviewLayout = ({ jobApplication }) => {
             jobApplication={jobApplication}
           />
         )}
-        {stage === 'Technical' && (isFuture || isToday) && (
+
+        {currentStage === 'Technical' && (isFuture || isToday) && (
           <InviteSent
             jobApplication={jobApplication}
             heading={
@@ -67,7 +120,8 @@ const InterviewLayout = ({ jobApplication }) => {
             buttonText="Continue to Second Round"
           />
         )}
-        {stage === 'Second' && !(isToday || isFuture) && (
+
+        {currentStage === 'Second' && !(isToday || isFuture) && (
           <SendInvite
             heading={
               <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
@@ -78,7 +132,8 @@ const InterviewLayout = ({ jobApplication }) => {
             jobApplication={jobApplication}
           />
         )}
-        {stage === 'Second' && (isFuture || isToday) && (
+
+        {currentStage === 'Second' && (isFuture || isToday) && (
           <InviteSent
             jobApplication={jobApplication}
             heading={
@@ -90,21 +145,21 @@ const InterviewLayout = ({ jobApplication }) => {
             buttonText="Continue to Offer and Negotiation"
           />
         )}
-        {stage === 'Negotiation' ||
-          (stage === 'Offer' && (
-            <OfferAndNegotiation jobApplication={jobApplication} />
-          ))}
 
-        {/* <TechnicalInterviewInviteSent/> */}
-        {/* <SecondRoundSendInvite /> */}
-        {/* <SecondRoundInviteSent /> */}
-        {/* <OfferApproval /> */}
-        {stage === 'Onboarding' && (
-          <OfferApproval jobApplication={jobApplication} />
+        {['Negotiation'].includes(currentStage) && (
+          <OfferAndNegotiation jobApplication={jobApplication} />
         )}
-        {/* <Onboarding /> */}
+
+        {['Onboarding', 'Rejected', 'Offer'].includes(currentStage) && (
+          <OfferApproval
+            jobApplication={jobApplication}
+            offerId={offerId}
+            token={token}
+          />
+        )}
       </section>
     </>
   );
 };
+
 export default InterviewLayout;

@@ -8,6 +8,7 @@ const IconWithBg = ({
   bgColor?: string;
   icon?: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 }) => {
   return (
     <div
