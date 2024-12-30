@@ -62,7 +62,7 @@ const HrSidebar = () => {
         <SidebarNavItem
           name="Announcements & Policies"
           icon={<FaBullhorn size={22} />}
-          href="/hr/All-Announcements"
+          href="/hr/announcements-&-policies/announcements"
         />
         <SidebarNavItem
           name="Files"
