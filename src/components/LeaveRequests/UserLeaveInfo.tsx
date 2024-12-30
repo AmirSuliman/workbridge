@@ -15,7 +15,7 @@ interface LeaveData {
   employeeId: number;
   leaveDay: string;
   returningDay: string;
-  leaveType: string;
+  type: string;
   duration: number;
   status: string;
   employee: {
@@ -43,8 +43,9 @@ const UserLeaveInfo = () => {
 
         if (allLeaves.length > 0) {
           // Sort the leaves by leave day (most recent first)
-          const sortedLeaves = allLeaves.sort((a: LeaveData, b: LeaveData) => 
-            new Date(b.leaveDay).getTime() - new Date(a.leaveDay).getTime()
+          const sortedLeaves = allLeaves.sort(
+            (a: LeaveData, b: LeaveData) =>
+              new Date(b.leaveDay).getTime() - new Date(a.leaveDay).getTime()
           );
 
           // Only take the latest 4 leave requests
@@ -92,82 +93,102 @@ const UserLeaveInfo = () => {
   }
 
   return (
-    <div>
+    <>
       {leaveData.length > 0 ? (
-        <table className="w-full divide-y-[1px] divide-[#E8E8E8]">
-          <tbody>
+        <section className="w-full divide-y-[1px] divide-[#E8E8E8] overflow-x-auto">
+          <div>
             {leaveData.map((leave) => (
-              <tr key={leave.id} className="border-b w-full">
-                <div className='flex flex-col w-full'>
-                  <div className='flex flex-row w-full'>
-                    <td className="p-4 w-full">
-                      <div className="flex items-center gap-4">
-                        <UserImgPlaceholder name={`Employee #${leave.employeeId}`} />
-                        <p className="text-left">
-                          {leave ? `${leave.employee.firstName} ${leave.employee.middleName || ''} ${leave.employee.lastName || ''}` : ''}
-                        </p>
-                      </div>
-                    </td>
-                    <div className='flex w-full items-center justify-end'>
-                      <td className="p-4 flex justify-center items-center gap-2">
-                        {leave.status === 'Pending' ? (
-                          <>
-                            <button
-                              className="p-2 text-white bg-[#25A244] rounded text-[10px] flex items-center gap-2"
-                              onClick={() => handleConfirmRequest(leave)}
-                            >
-                              Confirm Request <FaCheck />
-                            </button>
-                            <button
-                              className="p-2 text-white bg-[#F53649] rounded text-[10px] flex items-center gap-2"
-                              onClick={() => handleDenyRequest(leave)}
-                            >
-                              Deny <FaTimes />
-                            </button>
-                          </>
-                        ) : (
-                          <span
-                            className={`font-semibold ${
-                              leave.status === 'Confirmed' ? 'text-green-600 border rounded p-2 px-4 border-green-600' : 'text-red-600 border rounded p-2 px-7 border-red-600'
-                            }`}
-                          >
-                            {leave.status}
-                          </span>
-                        )}
-                      </td>
-                    </div>
+              <div key={leave.id} className="border-b w-full">
+                <div className="flex justify-between items-center gap-4">
+                  <div className="p-4 flex gap-4 items-center">
+                    <UserImgPlaceholder
+                      name={`${leave.employee.firstName} ${
+                        leave.employee.lastName || ''
+                      }`}
+                    />
+                    <p className="text-left">
+                      {leave
+                        ? `${leave.employee.firstName} ${
+                            leave.employee.middleName || ''
+                          } ${leave.employee.lastName || ''}`
+                        : ''}
+                    </p>
                   </div>
-                  <div className='flex flex-row items-center gap-4'>
-                    <td className="p-4">
-                      <div className="flex gap-1 items-center">
-                        <PiUmbrellaBold className="opacity-50" size={14} />
-                        {leave.leaveType}
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <div className="flex gap-1 items-center">
-                        <MdCalendarToday className="opacity-50" size={14} />
-                        {`${leave.duration} days`}
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <div className="flex gap-1 items-center">
-                        <LuLogOut className="opacity-50" size={14} />
-                        {new Date(leave.leaveDay).toLocaleDateString()}
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <div className="flex gap-1 items-center">
-                        <LuLogIn className="opacity-50" size={14} />
-                        {new Date(leave.returningDay).toLocaleDateString()}
-                      </div>
-                    </td>
+                  <div className="p-4 flex justify-center items-center gap-2">
+                    {leave.status === 'Pending' ? (
+                      <>
+                        <button
+                          className="p-2 text-white bg-[#25A244] rounded text-[10px] flex items-center gap-2"
+                          onClick={() => handleConfirmRequest(leave)}
+                        >
+                          Confirm Request <FaCheck />
+                        </button>
+                        <button
+                          className="p-2 text-white bg-[#F53649] rounded text-[10px] flex items-center gap-2"
+                          onClick={() => handleDenyRequest(leave)}
+                        >
+                          Deny <FaTimes />
+                        </button>
+                      </>
+                    ) : (
+                      <span
+                        className={`text-[10px] ${
+                          leave.status === 'Confirmed'
+                            ? 'text-green-600 border rounded p-1 px-2 border-green-600'
+                            : 'text-red-600 border rounded p-1 px-2 border-red-600'
+                        }`}
+                      >
+                        {leave.status}
+                      </span>
+                    )}
                   </div>
                 </div>
-              </tr>
+                <div className="flex justify-start gap-4 items-center">
+                  <div className="p-4">
+                    <p className="opacity-50 font-medium text-[8px]">
+                      Leave Type
+                    </p>
+                    <div className="flex items-center gap-2 justify-start">
+                      <PiUmbrellaBold className="opacity-50" size={14} />
+                      <p className="text-xs">{leave.type}</p>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <p className="opacity-50 font-medium text-[8px]">
+                      Duration
+                    </p>
+                    <div className="flex items-center gap-2 justify-start">
+                      <MdCalendarToday className="opacity-50" size={14} />
+                      <p className="text-xs">{`${leave.duration} days`}</p>
+                    </div>
+                  </div>
+                  <div className="p-4 ">
+                    <p className="opacity-50 font-medium text-[8px]">
+                      Leave Day
+                    </p>
+                    <div className="flex items-center gap-2 justify-start">
+                      <LuLogOut className="opacity-50" size={14} />
+                      <p className="text-xs">
+                        {new Date(leave.leaveDay).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <p className="opacity-50 font-medium text-[8px]">
+                      Returning Day
+                    </p>
+                    <div className="flex items-center gap-2 justify-start">
+                      <LuLogIn className="opacity-50" size={14} />
+                      <p className="text-xs">
+                        {new Date(leave.returningDay).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </section>
       ) : (
         <div className="p-4 text-center">No leave records available.</div>
       )}
@@ -189,7 +210,7 @@ const UserLeaveInfo = () => {
           />
         </Modal>
       )}
-    </div>
+    </>
   );
 };
 

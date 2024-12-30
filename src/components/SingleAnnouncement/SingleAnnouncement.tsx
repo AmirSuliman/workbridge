@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
 import IconWithBg from './IconWithBg';
 import { IoCalendarOutline } from 'react-icons/io5';
+import { useRouter } from 'next/navigation';
+import { BiLoaderCircle } from 'react-icons/bi';
 
 interface Announcement {
   id: number;
@@ -12,7 +14,9 @@ interface Announcement {
   title: string;
 }
 
-const SingleAnnouncement = ({ onClick }: { onClick: () => void }) => {
+const SingleAnnouncement = () => {
+  const router = useRouter();
+
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +40,11 @@ const SingleAnnouncement = ({ onClick }: { onClick: () => void }) => {
           }));
 
           const sortedData = formattedData
-            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+            .sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+            )
             .slice(0, 8);
 
           setAnnouncements(sortedData);
@@ -55,7 +63,11 @@ const SingleAnnouncement = ({ onClick }: { onClick: () => void }) => {
   }, []);
 
   if (loading) {
-    return <div>Loading announcements...</div>;
+    return (
+      <div className="flex justify-center items-center p-4">
+        <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+      </div>
+    );
   }
 
   if (error) {
@@ -68,11 +80,15 @@ const SingleAnnouncement = ({ onClick }: { onClick: () => void }) => {
         announcements.map((announcement) => (
           <article
             key={announcement.id}
-            onClick={onClick}
-            className="flex items-center flex-wrap md:flex-nowrap gap-3 py-3 px-4 cursor-pointer"
+            onClick={() =>
+              router.push(
+                `/hr/announcements-&-policies/announcements/${announcement.id}`
+              )
+            }
+            className="flex items-center flex-wrap md:flex-nowrap gap-3 py-3 px-4 cursor-pointer hover:bg-background"
           >
-            <IconWithBg  icon={announcement.icon} />
-            <div className='flex flex-col gap-1'>
+            <IconWithBg icon={announcement.icon} />
+            <div className="flex flex-col gap-1">
               <p className="text-sm">{announcement.title}</p>
               <p className="opacity-50 font-medium text-[12px]">
                 {announcement.createdAt

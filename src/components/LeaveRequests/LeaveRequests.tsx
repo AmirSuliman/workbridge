@@ -15,17 +15,15 @@ const LeaveRequests = () => {
         <Link href="/hr/leave-requests">
           <Button
             name="See All"
-            icon={<PiArrowUpRightThin size={18} />}
+            icon={<PiArrowUpRightThin size={14} />}
             bg="transparent"
             textColor="black"
+            className="!text-[10px]"
           />
         </Link>
       </header>
-      <div className="overflow-x-auto">
-        <table className="w-full divide-y-[1px] divide-[#E8E8E8] space-y-4">
-          <UserLeaveInfo />
-        </table>
-      </div>
+
+      <UserLeaveInfo />
     </section>
   );
 };

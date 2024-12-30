@@ -19,7 +19,7 @@ interface OfferData {
 }
 const OfferApproval = ({ jobApplication, offerId, token }) => {
   const [offerData, setOfferData] = useState<OfferData | null>(null);
-  const [error, setError] = useState<string | null>(null); 
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchOffer = async () => {
@@ -51,7 +51,10 @@ const OfferApproval = ({ jobApplication, offerId, token }) => {
       } catch (err) {
         if (err instanceof AxiosError) {
           console.error('Axios Error:', err.response || err.message);
-          setError(err.response?.data?.message || 'Failed to fetch offer data. Please try again later.');
+          setError(
+            err.response?.data?.message ||
+              'Failed to fetch offer data. Please try again later.'
+          );
         } else {
           console.error('Unexpected Error:', err);
           setError('An unexpected error occurred. Please try again.');
@@ -78,9 +81,14 @@ const OfferApproval = ({ jobApplication, offerId, token }) => {
       }
     } catch (err) {
       if (err instanceof AxiosError) {
-        setError(err.response?.data?.message || 'Failed to update offer status. Please try again later.');
+        setError(
+          err.response?.data?.message ||
+            'Failed to update offer status. Please try again later.'
+        );
       } else {
-        setError('An unexpected error occurred while updating the offer status.');
+        setError(
+          'An unexpected error occurred while updating the offer status.'
+        );
       }
     }
   };
@@ -89,10 +97,12 @@ const OfferApproval = ({ jobApplication, offerId, token }) => {
     return <div>Loading...</div>;
   }
 
-  const sender = `${offerData.offerBy?.firstName || 'N/A'} ${offerData.offerBy?.lastName || ''}`;
+  const sender = `${offerData.offerBy?.firstName || 'N/A'} ${
+    offerData.offerBy?.lastName || ''
+  }`;
   const dateSent = new Date(offerData.createdAt).toLocaleDateString();
   const timeSent = new Date(offerData.createdAt).toLocaleTimeString();
-  const offerStatus = offerData.status; 
+  const offerStatus = offerData.status;
 
   const renderActions = () => {
     if (offerStatus === 'accepted') {

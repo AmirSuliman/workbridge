@@ -27,7 +27,7 @@ const HrSidebar = () => {
       </button>
 
       <nav
-        className={`flex flex-col gap-2 w-[270px] bg-white fixed top-0 bottom-0 left-0 border-r-[1px] border-[#E8E8E8] z-10 transition-transform duration-300 ${
+        className={`flex flex-col gap-2 w-[270px] bg-white fixed top-0 bottom-0 left-0 1700px:left-auto border-r-[1px] border-[#E8E8E8] z-10 transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
@@ -59,26 +59,26 @@ const HrSidebar = () => {
           icon={<IoCalendarOutline size={22} />}
           href="/hr/leave-requests"
         />
-         <SidebarNavItem
+        <SidebarNavItem
           name="Announcements & Policies"
-          icon={<FaBullhorn  size={22} />}
-          href="/hr/home/All-Announcements"
+          icon={<FaBullhorn size={22} />}
+          href="/hr/announcements-&-policies/announcements"
         />
         <SidebarNavItem
           name="Files"
           icon={<IoIosFolderOpen size={22} />}
           href="/hr/files"
         />
-       
+
         <SidebarNavItem
           name="Admins"
           icon={<FaUsers size={22} />}
           href="/hr/admins"
         />
         <SidebarNavItem
-         name='Reports'
-         icon={<FiTrendingUp size={22} />}
-         href='/hr/Reports'
+          name="Reports"
+          icon={<FiTrendingUp size={22} />}
+          href="/hr/Reports"
         />
       </nav>
     </>

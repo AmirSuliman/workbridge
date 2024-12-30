@@ -85,7 +85,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
 
   return (
     <>
-      <div className="flex items-center justify-between border border-gray-border rounded-[10px] bg-white p-3 md:p-6 md:gap-[3.3rem] max-w-[38rem] flex-1">
+      <div className="flex items-center justify-between border border-gray-border rounded-[10px] bg-white p-3 md:p-6 md:gap-[3.3rem] w-full">
         <div className="flex flex-col justify-between gap-[2rem] h-full">
           <div>
             <div className="flex gap-2 items-center mb-2">
@@ -128,6 +128,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                 <input
                   type="date"
                   className="p-3 border rounded w-full"
+                  min={new Date().toISOString().split('T')[0]}
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
@@ -139,6 +140,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                 <input
                   type="date"
                   className="p-3 border rounded w-full"
+                  min={startDate}
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
