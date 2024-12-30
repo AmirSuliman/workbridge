@@ -23,7 +23,7 @@ const page = () => {
             <HiSpeakerphone />
             Announcements
           </h1>
-          <Link href="/hr/home/All-Announcements">
+          <Link href="/hr/announcements-&-policies/announcements">
             <Button
               name="See All"
               icon={<PiArrowUpRightThin size={18} />}
@@ -32,10 +32,11 @@ const page = () => {
             />
           </Link>
         </header>
-        <SingleAnnouncement 
-            onClick={() => {
-              console.log("Hello World");
-            }}         />  
+        <SingleAnnouncement
+          onClick={() => {
+            console.log('Hello World');
+          }}
+        />
       </section>
       <Celebrations />
       <LeaveRequests />

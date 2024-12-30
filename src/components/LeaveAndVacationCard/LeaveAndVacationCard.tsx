@@ -25,7 +25,7 @@ const LeaveAndVacationCard = ({
     router.push('/hr/my-information?tab=2'); // Pass tab index via query param
   };
   return (
-    <div className="border-[0.5px] border-[#E8E8E8] bg-[#F5F6FA] p-4 rounded space-y-2">
+    <div className="border-[0.5px] border-[#E8E8E8] bg-[#F5F6FA] p-4 rounded space-y-2 w-full">
       <div className="flex items-center gap-2">
         <IconWithBg bgColor={bgColor} icon={icon} />
         <h3 className="text-sm">{title}</h3>
