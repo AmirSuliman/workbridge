@@ -1,4 +1,4 @@
-import { BiArrowFromRight, BiCalendar, BiTrendingUp } from "react-icons/bi";
+import { BiCalendar, BiTrendingUp } from "react-icons/bi";
 import { FaDownload } from "react-icons/fa";
 import StackedBarChart from "./charts/weeklychart";
 

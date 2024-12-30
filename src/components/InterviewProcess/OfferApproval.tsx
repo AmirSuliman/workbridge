@@ -107,7 +107,7 @@ const OfferApproval = ({ jobApplication, offerId, token }) => {
 
     if (offerStatus === 'rejected') {
       return (
-        <td colSpan={2} className="p-1 lg:p-3 text-red-600 font-medium">
+        <td colSpan={2} className="p-1 lg:p-3 text-red-600 font-medium ml-8">
           <span className="border border-red-600 p-3 px-4 rounded text-[12px]">
             Offer Rejected
           </span>
@@ -147,37 +147,46 @@ const OfferApproval = ({ jobApplication, offerId, token }) => {
         <PiListChecksLight size={24} />
         Offer Approval
       </h2>
-      <table className="w-full">
-        <thead>
-          <tr className="w-full border-b">
-            <th className="p-1 lg:p-3 opacity-35 font-medium text-sm">Offer sent by</th>
-            <th className="p-1 lg:p-3 opacity-35 font-medium text-sm">Date sent</th>
-            <th className="p-1 lg:p-3 opacity-35 font-medium text-sm">Time sent</th>
-            <th className="p-1 lg:p-3 opacity-35 font-medium text-sm">Offer</th>
-            <th className="p-1 lg:p-3 opacity-35 font-medium text-sm"></th>
-            <th className="p-1 lg:p-3 opacity-35 font-medium text-sm"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="w-full">
-            <td className="p-1 lg:p-3 font-medium text-sm">{sender}</td>
-            <td className="p-1 lg:p-3 font-medium text-sm">{dateSent}</td>
-            <td className="p-1 lg:p-3 font-medium text-sm">{timeSent}</td>
-            <td className="p-1 lg:p-3">
-              <Link href="/HR/Home/All-Announcements">
-                <Button
-                  className="text-[10px]"
-                  name="See offer"
-                  icon={<PiArrowUpRightThin size={18} />}
-                  bg="transparent"
-                  textColor="black"
-                />
-              </Link>
-            </td>
-            {renderActions()}
-          </tr>
-        </tbody>
-      </table>
+      <table className="w-full mt-4">
+  <thead>
+    <tr className="w-full border-b">
+      <th className="table-header wide-column opacity-35 font-medium text-sm">
+        Offer sent by
+      </th>
+      <th className="table-header narrow-column opacity-35 font-medium text-sm">
+        Date sent
+      </th>
+      <th className="table-header narrow-column opacity-35 font-medium text-sm">
+        Time sent
+      </th>
+      <th className="table-header narrow-column opacity-35 font-medium text-sm">
+        Offer
+      </th>
+      <th className="table-header narrow-column opacity-35 font-medium text-sm"></th>
+      <th className="table-header narrow-column opacity-35 font-medium text-sm"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr className="w-full">
+      <td className="table-cell wide-column font-medium text-sm">{sender}</td>
+      <td className="table-cell narrow-column font-medium text-sm">{dateSent}</td>
+      <td className="table-cell narrow-column font-medium text-sm">{timeSent}</td>
+      <td className="table-cell narrow-column">
+        <Link href="/HR/Home/All-Announcements">
+          <Button
+            className="text-[10px]"
+            name="See offer"
+            icon={<PiArrowUpRightThin size={18} />}
+            bg="transparent"
+            textColor="black"
+          />
+        </Link>
+      </td>
+      {renderActions()}
+    </tr>
+  </tbody>
+</table>
+
     </section>
   );
 };
