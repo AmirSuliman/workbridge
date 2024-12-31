@@ -52,7 +52,7 @@ const UserProfileInfo: React.FC<
             <FaUser />
             Profile
           </Link>
-          <Logout />
+          <Logout /> 
         </nav>
       )}
     </button>
