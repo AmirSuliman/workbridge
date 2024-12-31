@@ -250,6 +250,7 @@ const TimeOffSection = () => {
 
             <div className="flex flex-row p-8 px-4 w-full gap-4 mt-24">
               <button
+              type='button'
                 onClick={handleUpdateTimeOff}
                 className="px-4 py-3 bg-dark-navy text-white rounded w-full"
               >
@@ -257,6 +258,7 @@ const TimeOffSection = () => {
               </button>
               <button
                 onClick={closeModal}
+                type='button'
                 className="px-4 py-3 border rounded w-full"
               >
                 Close

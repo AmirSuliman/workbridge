@@ -12,7 +12,6 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
-
 const inter = Inter({
   variable: '--font-inter',
   preload: false,
@@ -25,6 +24,9 @@ const ForgotPassword = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
 
+  const handleNavigation = () => {
+    router.push('/');
+  };
   const [step, setStep] = useState<'email' | 'confirmation'>(
     token ? 'confirmation' : 'email'
   );
@@ -173,9 +175,11 @@ const ForgotPassword = () => {
                 )}
               </button>
             </form>
-            <p className="text-blue-base  font-semibold text-xs text-center my-2 w-full hover:cursor-pointer">
+            <button 
+            onClick={handleNavigation}
+            className="text-blue-base  font-semibold text-xs text-center my-2 w-full hover:cursor-pointer">
               Back to workBridge
-            </p>
+            </button>
           </div>
         </div>
       </div>
