@@ -1,6 +1,43 @@
+import { getAllEmployees } from '@/services/getAllEmployees';
+import { AllEmployeeData } from '@/types/employee';
+import { useEffect, useState } from 'react';
+import ScreenLoader from '../common/ScreenLoader';
 import NewEmployeeInfo from './NewEmployeeInfo';
 
 const NewEmployees = () => {
+  const [employees, setEmployeesState] = useState<
+    AllEmployeeData | undefined
+  >();
+
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        setLoading(true);
+        const { data } = await getAllEmployees(1, 100000);
+        setEmployeesState(data);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
+    };
+    fetchEmployees();
+  }, []);
+
+  const getNewEmployees = () => {
+    if (!employees?.items) return [];
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+    return employees.items.filter((employee) => {
+      const hireDate = new Date(employee.hireDate);
+      return hireDate > oneMonthAgo;
+    });
+  };
+
+  const newEmployees = getNewEmployees();
+
   return (
     <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4 space-y-4">
       <h1 className="flex items-center gap-4 font-semibold text-xl mb-4">
@@ -30,29 +67,29 @@ const NewEmployees = () => {
         </svg>
         New Employees
       </h1>
-      <main className="divide-y-[1px] divide-[#E8E8E8] space-y-4">
-        <NewEmployeeInfo
-          name="Jaiden Padilla"
-          title="Senior Software Engineer in Product Development"
-          location="Florida, USA"
-          startDate="Wednesday, December 25"
-        />
-        <NewEmployeeInfo
-          name="Jaiden Padilla"
-          img="https://i.pravatar.cc/150?img=14"
-          title="Senior Software Engineer in Product Development"
-          location="Florida, USA"
-          startDate="Wednesday, December 25"
-        />
-
-        <NewEmployeeInfo
-          name="Jaiden Padilla"
-          title="Senior Software Engineer in Product Development"
-          img="https://i.pravatar.cc/150?img=12"
-          location="Florida, USA"
-          startDate="Wednesday, December 25"
-        />
-      </main>
+      {loading ? (
+        <ScreenLoader />
+      ) : (
+        <main className="divide-y-[1px] divide-[#E8E8E8] space-y-4">
+          {newEmployees.length === 0 ? (
+            <p>No new employees in the past month</p>
+          ) : (
+            newEmployees.map((employee) => (
+              <NewEmployeeInfo
+                key={employee.id}
+                name={`${employee.firstName} ${employee.lastName}`}
+                title={employee.tittle}
+                img={
+                  employee.profilePictureUrl ? employee.profilePictureUrl : ''
+                }
+                location={`${employee?.location?.state}, ${employee?.location?.country}`}
+                startDate={new Date(employee.hireDate).toDateString()}
+                id={employee.id}
+              />
+            ))
+          )}
+        </main>
+      )}
     </section>
   );
 };

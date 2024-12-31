@@ -37,7 +37,7 @@ export default withAuth(
       if (userRole === 'Admin') {
         return NextResponse.redirect(new URL(Routes.HR_HOME, request.url));
       }
-      if (userRole === 'User' || userRole === 'ViewOnly') {
+      if (userRole === 'ViewOnly') {
         return NextResponse.redirect(new URL(Routes.USER_HOME, request.url));
       }
     }
@@ -50,7 +50,7 @@ export default withAuth(
     }
 
     console.log('before HR path');
-    if (token && pathname.startsWith('/hr') && userRole === 'User') {
+    if (token && pathname.startsWith('/hr') && userRole === 'ViewOnly') {
       console.log('inside  HR path');
       return NextResponse.redirect(new URL(Routes.USER_HOME, request.url));
     }
