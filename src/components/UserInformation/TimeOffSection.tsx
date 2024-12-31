@@ -108,7 +108,6 @@ const TimeOffSection = () => {
     }
   };
 
-  // Map API data to the format expected by InfoGrid
   const values = timeOffData.map((item, index) => [
     <LabelWithIcon
       key={index}
@@ -122,7 +121,6 @@ const TimeOffSection = () => {
       title={item.type}
       iconStyles={item.type === 'Vacation' ? 'bg-[#00B87D]' : 'bg-[#F53649]'}
     />,
-
     new Date(item.leaveDay).toLocaleDateString(),
     new Date(item.returningDay).toLocaleDateString(),
     <span
@@ -137,15 +135,20 @@ const TimeOffSection = () => {
     >
       {item.status === 'Pending' ? 'Waiting for Approval' : item.status}
     </span>,
-    '',
-    '',
-    '',
-    <FaEdit
-      key={`edit-${index}`}
-      className="text-dark-navy w-5 cursor-pointer"
-      onClick={() => handleEditClick(item)}
-    />,
+    item.status !== 'Confirmed' ? (
+      <FaEdit
+        key={`edit-${index}`}
+        className="text-dark-navy w-5 cursor-pointer justify-end flex ml-52"
+        onClick={() => handleEditClick(item)}
+        title="Edit time-off request"
+      />
+    ) : (
+      <span className="text-gray-400" title="Cannot edit confirmed requests">
+        
+      </span>
+    )
   ]);
+  
 
   return (
     <div className="p-1 rounded-md h-full">
