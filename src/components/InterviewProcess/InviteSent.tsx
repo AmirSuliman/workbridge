@@ -95,31 +95,35 @@ const InviteSent = ({ jobApplication, heading, buttonText }) => {
 
       <label className="font-medium text-sm flex flex-col">
         <span className="opacity-35">Interview Rating</span>
-        <input
-          min={0}
-          max={10}
-          placeholder="Add interview rating"
-          type="number"
+        <select
           {...register('ratingScore', {
             required: 'Rating is required.',
-            valueAsNumber: true, // Ensures the value is treated as a number
-            min: {
-              value: 1,
-              message: 'Rating must be at least 1.',
-            },
-            max: {
-              value: 10,
-              message: 'Rating cannot exceed 10.',
-            },
+            validate: (value) =>
+              (value >= 1 && value <= 10) || 'Rating must be between 1 and 10.',
           })}
           className="opacity-50 outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
-        />
+        >
+          <option value="" disabled>
+            Select a rating
+          </option>
+          <option value="1">1 - Poor</option>
+          <option value="2">2 - Below Average</option>
+          <option value="3">3 - Average</option>
+          <option value="4">4 - Fair</option>
+          <option value="5">5 - Good</option>
+          <option value="6">6 - Satisfactory</option>
+          <option value="7">7 - Very Good</option>
+          <option value="8">8 - Great</option>
+          <option value="9">9 - Excellent</option>
+          <option value="10">10 - Outstanding</option>
+        </select>
         {errors.ratingScore?.message && (
           <p className="text-red-500 text-sm">
             {String(errors.ratingScore.message)}
           </p>
         )}
       </label>
+
       {/* this div is for UI purposes */}
       <div className="hidden lg:block"></div>
       <div className="hidden lg:block"></div>

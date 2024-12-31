@@ -32,7 +32,7 @@ const page = () => {
             />
           </Link>
         </header>
-        <SingleAnnouncement/>
+        <SingleAnnouncement />
       </section>
       <Celebrations />
       <LeaveRequests />
