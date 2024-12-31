@@ -1,5 +1,5 @@
 import { FaEdit, FaTrash } from "react-icons/fa";
-import Workfromhome from "../components/wfhpolicy";
+import Workfromhome from "../../announcements-&-policies/policies/components/wfhpolicy";
 import Image from "next/image";
 const Openedpolicy =()=>{
 

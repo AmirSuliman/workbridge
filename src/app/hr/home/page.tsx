@@ -32,11 +32,7 @@ const page = () => {
             />
           </Link>
         </header>
-        <SingleAnnouncement
-          onClick={() => {
-            console.log('Hello World');
-          }}
-        />
+        <SingleAnnouncement/>
       </section>
       <Celebrations />
       <LeaveRequests />

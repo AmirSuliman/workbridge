@@ -1,5 +1,5 @@
 'use client'
-import Workfromhome from "../components/wfhpolicy";
+import Workfromhome from "../../announcements-&-policies/policies/components/wfhpolicy";
 import Image from "next/image";
 import Modal from "@/components/modal/Modal";
 import { useState } from "react";
