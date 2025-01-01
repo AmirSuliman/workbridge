@@ -1,22 +1,11 @@
 import { RxCross2 } from 'react-icons/rx';
 import Button from '../Button';
-import { use, useEffect } from 'react';
+import { useEffect } from 'react';
 import { getJobApplicationById } from '@/services/getJobApplicationById';
 
-const GenerateOffer = ({
-  setShowOffer,
-  jobApplication,
-}: {
-  setShowOffer: (value: boolean) => void;
-  jobApplication: {
-    data: {
-      items: { job: any; id: number }[];
-    };
-  };
-}) => {
-  const jobData = jobApplication?.data?.items[0].job;
-  const jobApplicationId = jobApplication?.data?.items[0].id;
-  console.log('jobData', jobData);
+const GenerateOffer = ({ setShowOffer, jobApplication }) => {
+  const jobData = jobApplication?.data?.items[0]?.job;
+  const jobApplicationId = jobApplication?.data?.items[0]?.id;
 
   useEffect(() => {
     const getJobApplication = async () => {
@@ -24,7 +13,7 @@ const GenerateOffer = ({
         const response = await getJobApplicationById(jobApplicationId);
         console.log('response', response?.data);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
     getJobApplication();
@@ -45,35 +34,34 @@ const GenerateOffer = ({
         </header>
         <main className="overflow-y-auto my-8">
           <h6 className="font-medium text-xs opacity-50">Job Title</h6>
-          <h1 className="font-medium text-xl">{jobData.tittle}</h1>
+          <h1 className="font-medium text-xl">{jobData?.tittle || 'N/A'}</h1>
           <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 my-6">
             <div>
               <h6 className="font-medium text-xs opacity-50">Department</h6>
               <h4 className="font-medium text-base">
-                {jobData.department?.name}
+                {jobData?.department?.name || 'N/A'}
               </h4>
             </div>
             <div>
               <h6 className="font-medium text-xs opacity-50">
                 Employment Type
               </h6>
-              <h4 className="font-medium text-base">IT Department</h4>
+              <h4 className="font-medium text-base">Full-Time</h4>
             </div>
             <div>
               <h6 className="font-medium text-xs opacity-50">Min. Exp.</h6>
-              <h4 className="font-medium text-base">IT Department</h4>
+              <h4 className="font-medium text-base">3+ Years</h4>
             </div>
           </div>
           <h6 className="font-medium text-xs opacity-50">Description</h6>
           <p className="font-medium text-base">
-            {jobData?.description || 'No description'}
+            {jobData?.description || 'No description provided'}
           </p>
           <h6 className="font-medium text-xs opacity-50 mt-4">Compensation</h6>
           <h4 className="font-medium text-base">$150,000 - $200,000</h4>
         </main>
         <footer className="">
           <hr />
-          <br />
           <Button
             type="submit"
             name="Send Offer"
@@ -84,4 +72,5 @@ const GenerateOffer = ({
     </div>
   );
 };
+
 export default GenerateOffer;

@@ -9,11 +9,13 @@ import Button from '../Button';
 import GenerateOffer from './GenerateOffer';
 
 const OfferAndNegotiation = ({ jobApplication }) => {
-  console.log(jobApplication);
   const stage = jobApplication?.data?.items?.[0]?.stage || 'Applied';
   const jobApplicationId = jobApplication?.data?.items?.[0]?.id;
   const [showOffer, setShowOffer] = useState(false);
-  const handlePopup = (event: React.MouseEvent) => {
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const handlePopup = (event) => {
     event.preventDefault();
     setShowOffer(!showOffer);
   };
@@ -23,16 +25,28 @@ const OfferAndNegotiation = ({ jobApplication }) => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   const onSubmit = async (data) => {
+    setErrorMessage('');
+    setSuccessMessage('');
     try {
       await axiosInstance.post(API_ROUTES.POST_OFFER, {
         ...data,
         jobApplicationId,
       });
+  
+      setSuccessMessage('Offer sent successfully!');
+  
+      setShowOffer(false);
+  
+      window.location.reload();
     } catch (error) {
-      console.log(error);
+      setErrorMessage(
+        error.response?.data?.message || 'An error occurred while submitting the offer.'
+      );
     }
   };
+  
 
   return (
     <form
@@ -43,6 +57,12 @@ const OfferAndNegotiation = ({ jobApplication }) => {
         <PiListChecksLight size={24} />
         Offer and Negotiation
       </h2>
+      {errorMessage && (
+        <p className="col-span-full text-red-500 text-sm">{errorMessage}</p>
+      )}
+      {successMessage && (
+        <p className="col-span-full text-green-500 text-sm">{successMessage}</p>
+      )}
       <label className="font-medium text-sm flex flex-col">
         <span className="opacity-35">Start Date</span>
         <input
@@ -61,7 +81,7 @@ const OfferAndNegotiation = ({ jobApplication }) => {
         <input
           type="text"
           {...register('compensation', {
-            required: 'compensation is required',
+            required: 'Compensation is required',
           })}
           placeholder="$98,000"
           className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
@@ -94,10 +114,11 @@ const OfferAndNegotiation = ({ jobApplication }) => {
         disabled={stage === 'Negotiation'}
         name={`Continue to Offer Approval`}
         className={`w-full max-w-xl mx-auto col-span-full mt-12 ${
-          stage === 'Negotiation' && 'opacity-50'
+          stage =='Negotiation' && 'opacity-50'
         }`}
       />
     </form>
   );
 };
+
 export default OfferAndNegotiation;
