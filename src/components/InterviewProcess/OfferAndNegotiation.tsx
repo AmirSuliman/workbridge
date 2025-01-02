@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { PiListChecksLight } from 'react-icons/pi';
 import Button from '../Button';
 import GenerateOffer from './GenerateOffer';
+import axios, { AxiosError } from 'axios';
 
 const OfferAndNegotiation = ({ jobApplication }) => {
   const stage = jobApplication?.data?.items?.[0]?.stage || 'Applied';
@@ -34,16 +35,19 @@ const OfferAndNegotiation = ({ jobApplication }) => {
         ...data,
         jobApplicationId,
       });
-  
+    
       setSuccessMessage('Offer sent successfully!');
-  
       setShowOffer(false);
-  
       window.location.reload();
     } catch (error) {
-      setErrorMessage(
-        error.response?.data?.message || 'An error occurred while submitting the offer.'
-      );
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(
+          error.response?.data?.message ||
+            'An error occurred while submitting the offer.'
+        );
+      } else {
+        setErrorMessage('An unexpected error occurred.');
+      }
     }
   };
   

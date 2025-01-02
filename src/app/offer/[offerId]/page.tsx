@@ -97,46 +97,46 @@ const Page = () => {
           <h6 className="font-medium text-xs opacity-50 mt-4">Compensation</h6>
           <h4 className="font-medium text-base">{jobData?.compensation}</h4>
         </main>
-        {jobData?.status ? (
-          <p
-            className={`${
-              jobData?.status === 'rejected' ? 'text-red-500' : 'text-green-500'
-            }`}
-          >
-            This offer is already {jobData?.status}
-          </p>
-        ) : (
-          <footer className="flex items-center gap-4 justify-center pt-4 border-t-[1px] border-[#E0E0E0]">
-            <br />
-            <Button
-              onClick={() => handleAcceptOffer('accepted')}
-              name={loading && status === 'accepted' ? '' : 'Accept Offer'}
-              icon={
-                loading && status === 'accepted' ? (
-                  <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
-                ) : (
-                  <FaCheck />
-                )
-              }
-              bg="#00B87D"
-              className="w-full max-w-sm mx-auto bg-[#00B87D] text-white font-medium"
-            />
+       {jobData?.status === 'rejected' && (
+  <p className="text-red-500">This offer is already rejected.</p>
+)}
 
-            <Button
-              onClick={() => handleAcceptOffer('rejected')}
-              name={loading && status === 'rejected' ? '' : 'Reject Offer'}
-              icon={
-                loading && status === 'rejected' ? (
-                  <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
-                ) : (
-                  <IoClose size={22} />
-                )
-              }
-              bg="#F53649"
-              className="w-full max-w-sm mx-auto bg-[#F53649] text-white font-medium"
-            />
-          </footer>
-        )}
+{jobData?.status === 'accepted' && (
+  <p className="text-green-500">This offer is already accepted.</p>
+)}
+
+{jobData?.status === 'negotiation' && (
+  <footer className="flex items-center gap-4 justify-center pt-4 border-t-[1px] border-[#E0E0E0]">
+    <Button
+      onClick={() => handleAcceptOffer('accepted')}
+      name={loading && status === 'accepted' ? '' : 'Accept Offer'}
+      icon={
+        loading && status === 'accepted' ? (
+          <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+        ) : (
+          <FaCheck />
+        )
+      }
+      bg="#00B87D"
+      className="w-full max-w-sm mx-auto bg-[#00B87D] text-white font-medium"
+    />
+
+    <Button
+      onClick={() => handleAcceptOffer('rejected')}
+      name={loading && status === 'rejected' ? '' : 'Reject Offer'}
+      icon={
+        loading && status === 'rejected' ? (
+          <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+        ) : (
+          <IoClose size={22} />
+        )
+      }
+      bg="#F53649"
+      className="w-full max-w-sm mx-auto bg-[#F53649] text-white font-medium"
+    />
+  </footer>
+)}
+
       </div>
     </div>
   );
