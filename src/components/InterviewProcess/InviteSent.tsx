@@ -41,6 +41,9 @@ const InviteSent = ({ jobApplication, heading, buttonText }) => {
       });
       setLoading(false);
       toast.success('Rating added successfuly!');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.log(error);
       setLoading(false);

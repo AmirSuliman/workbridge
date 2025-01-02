@@ -1,9 +1,9 @@
+import React, { useEffect } from 'react';
 import {
   resetInterviewState,
   scheduleInterview,
 } from '@/store/slices/interviewInviteSlice';
 import { AppDispatch, RootState } from '@/store/store';
-import React, { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
@@ -48,6 +48,10 @@ const SendInvite: React.FC<JobApplication> = ({ jobApplication, heading }) => {
       toast.success('Invite sent successfully!');
       dispatch(resetInterviewState());
       reset();
+
+      setTimeout(() => {
+        window.location.reload(); 
+      }, 1000); 
     }
 
     if (error) {
@@ -88,7 +92,7 @@ const SendInvite: React.FC<JobApplication> = ({ jobApplication, heading }) => {
             validate: (value) => {
               const selectedDate = new Date(value);
               const today = new Date();
-              today.setHours(0, 0, 0, 0); // Normalize to start of day
+              today.setHours(0, 0, 0, 0); 
               return selectedDate >= today || 'Date cannot be in the past.';
             },
           })}
