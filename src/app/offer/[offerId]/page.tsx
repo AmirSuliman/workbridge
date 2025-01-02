@@ -26,6 +26,7 @@ const Page = () => {
   const [jobData, setJobData] = useState<OfferData>();
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchOffer = async () => {
@@ -34,7 +35,6 @@ const Page = () => {
           params: { token },
         });
         setJobData(response?.data.data);
-        // console.log('jobdata', jobData);
         console.log('response', response?.data);
       } catch (error) {
         console.log(error);
@@ -43,18 +43,31 @@ const Page = () => {
     fetchOffer();
   }, [offerId, token]);
 
-  const handleAcceptOffer = async (status) => {
+  const updateOfferStatus = async (status: string) => {
+    if (!offerId || !token) return;
+
     try {
       setLoading(true);
       setStatus(status);
-      await axiosInstance.post(`offer/accept/${offerId}`, {
+
+      const response = await axiosInstance.put(`/offer/accept/${offerId}`, {
         token,
-        status: status,
+        status,
       });
-      toast.success(`Offer ${status} successfully!`);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
+
+      if (response?.status === 200) {
+        setJobData((prevData) =>
+          prevData ? { ...prevData, status } : { status } as OfferData
+        );
+        toast.success(`Offer ${status} successfully!`);
+      } else {
+        setError('Failed to update offer status. Please try again.');
+        toast.error('Failed to update offer status.');
+      }
+    } catch (err) {
+      setError('An unexpected error occurred while updating the offer status.');
+      toast.error('An unexpected error occurred. Please try again.');
+    } finally {
       setLoading(false);
     }
   };
@@ -97,48 +110,48 @@ const Page = () => {
           <h6 className="font-medium text-xs opacity-50 mt-4">Compensation</h6>
           <h4 className="font-medium text-base">{jobData?.compensation}</h4>
         </main>
-       {jobData?.status === 'rejected' && (
-  <p className="text-red-500">This offer is already rejected.</p>
-)}
+        {jobData?.status === 'rejected' && (
+          <p className="text-red-500">This offer is already rejected.</p>
+        )}
 
-{jobData?.status === 'accepted' && (
-  <p className="text-green-500">This offer is already accepted.</p>
-)}
+        {jobData?.status === 'accepted' && (
+          <p className="text-green-500">This offer is already accepted.</p>
+        )}
 
-{jobData?.status === 'negotiation' && (
-  <footer className="flex items-center gap-4 justify-center pt-4 border-t-[1px] border-[#E0E0E0]">
-    <Button
-      onClick={() => handleAcceptOffer('accepted')}
-      name={loading && status === 'accepted' ? '' : 'Accept Offer'}
-      icon={
-        loading && status === 'accepted' ? (
-          <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
-        ) : (
-          <FaCheck />
-        )
-      }
-      bg="#00B87D"
-      className="w-full max-w-sm mx-auto bg-[#00B87D] text-white font-medium"
-    />
+        {jobData?.status === 'negotiation' && (
+          <footer className="flex items-center gap-4 justify-center pt-4 border-t-[1px] border-[#E0E0E0]">
+            <Button
+              onClick={() => updateOfferStatus('accepted')}
+              name={loading && status === 'accepted' ? '' : 'Accept Offer'}
+              icon={
+                loading && status === 'accepted' ? (
+                  <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+                ) : (
+                  <FaCheck />
+                )
+              }
+              bg="#00B87D"
+              className="w-full max-w-sm mx-auto bg-[#00B87D] text-white font-medium"
+            />
 
-    <Button
-      onClick={() => handleAcceptOffer('rejected')}
-      name={loading && status === 'rejected' ? '' : 'Reject Offer'}
-      icon={
-        loading && status === 'rejected' ? (
-          <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
-        ) : (
-          <IoClose size={22} />
-        )
-      }
-      bg="#F53649"
-      className="w-full max-w-sm mx-auto bg-[#F53649] text-white font-medium"
-    />
-  </footer>
-)}
-
+            <Button
+              onClick={() => updateOfferStatus('rejected')}
+              name={loading && status === 'rejected' ? '' : 'Reject Offer'}
+              icon={
+                loading && status === 'rejected' ? (
+                  <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+                ) : (
+                  <IoClose size={22} />
+                )
+              }
+              bg="#F53649"
+              className="w-full max-w-sm mx-auto bg-[#F53649] text-white font-medium"
+            />
+          </footer>
+        )}
       </div>
     </div>
   );
 };
+
 export default Page;
