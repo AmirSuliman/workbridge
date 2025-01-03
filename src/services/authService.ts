@@ -30,6 +30,7 @@ export const loginUser = async ({
 export const getUserRoles = async () => {
   try {
     const response = await axiosInstance.get(API_ROUTES.USER_ROLES);
+    console.log(response, 'res of roles');
     return response.data.data;
   } catch (error: any) {
     toast.error(error?.response?.data?.message ?? 'Network Error');
