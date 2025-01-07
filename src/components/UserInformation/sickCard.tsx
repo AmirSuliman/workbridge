@@ -1,8 +1,9 @@
 'use client';
-import React, { useState, useEffect } from 'react';
 import Modal from '@/components/modal/Modal';
-import Image from 'next/image';
 import axiosInstance from '@/lib/axios';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 interface SickCardProps {
   onButtonClick?: () => void;
@@ -13,6 +14,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
   const [vacationDaysUsed, setVacationDaysUsed] = useState(0);
 
@@ -52,18 +54,21 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
       returningDay: formatDate(endDate),
       duration: duration,
       type: 'Sick',
+      note: note,
     };
 
     try {
       setLoading(true);
-      console.log('Sending request to:', '/timeoff');
       console.log('Payload:', payload);
 
       const response = await axiosInstance.post('/timeoff', payload);
       if (response.status === 200) {
+        toast.success('Request timeoff made successfuly!');
         setIsModalOpen(false);
         setStartDate('');
         setEndDate('');
+        setEndDate('');
+        setNote('');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -122,7 +127,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
               <h2 className="text-2xl font-semibold">Request Sick Leave</h2>
             </div>
 
-            <div className="flex flex-row items-center gap-4 w-full mt-8">
+            <div className="grid grid-cols-2 gap-4 w-full mt-8">
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">Leaving Date</span>
                 <input
@@ -144,6 +149,17 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
+              </label>
+              <label className="flex flex-col w-full col-span-full">
+                <span className="text-gray-400 text-[12px]">Note</span>
+                <textarea
+                  placeholder="Add a message (optional)"
+                  name="note"
+                  rows={5}
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  className="p-3 border rounded w-full"
+                ></textarea>
               </label>
             </div>
 
