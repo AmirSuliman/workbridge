@@ -1,4 +1,5 @@
 'use client';
+
 import Button from '@/components/Button';
 import { Pagination } from '@/components/common/Pagination';
 import ProfileAvatarItem from '@/components/common/ProfileAvatarItem';
@@ -7,23 +8,25 @@ import SearchInput from '@/components/common/SearchBar';
 import { IMAGES } from '@/constants/images';
 import { getAllEmployees } from '@/services/getAllEmployees';
 import { addEmployees } from '@/store/slices/allEmployeesSlice';
-import { AppDispatch } from '@/store/store';
 import { AllEmployeeData } from '@/types/employee';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { CiCirclePlus } from 'react-icons/ci';
 import { FaChevronRight } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 export const AllEmployees = () => {
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
-  const [employees, setEmployeesState] = useState<
-    AllEmployeeData | undefined
-  >();
-  const [filteredEmployees, setFilteredEmployees] = useState<
-    AllEmployeeData['items'] | undefined
-  >([]);
+  const dispatch = useDispatch();
+
+  const state = useSelector((state: RootState) => state.myInfo);
+
+  console.log(state, 'Redux State');
+  const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
+  console.log(userRole, 'role');
+  
+  const [employees, setEmployeesState] = useState<AllEmployeeData | undefined>();
+  const [filteredEmployees, setFilteredEmployees] = useState<AllEmployeeData['items'] | undefined>([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('');
@@ -40,6 +43,7 @@ export const AllEmployees = () => {
         const { data } = await getAllEmployees(currentPage, pageSize);
         console.log('Employees: ', data);
         dispatch(addEmployees(data.items));
+
         // Extract unique job titles and departments
         const jobTitles: string[] = Array.from(
           new Set(data.items.map((employee) => employee.tittle))
@@ -66,13 +70,12 @@ export const AllEmployees = () => {
     setCurrentPage(page);
     console.log('Set to page: ', page);
   };
-  // Filter and Sort Logic
+
   useEffect(() => {
     if (!employees) return;
 
     let updatedList = [...employees.items];
 
-    // Apply search filter
     if (searchTerm) {
       updatedList = updatedList.filter((employee) =>
         `${employee.firstName} ${employee.lastName}`
@@ -81,7 +84,6 @@ export const AllEmployees = () => {
       );
     }
 
-    // Apply additional filters
     if (filterOption) {
       updatedList = updatedList.filter(
         (employee) =>
@@ -90,7 +92,6 @@ export const AllEmployees = () => {
       );
     }
 
-    // Apply sorting
     if (sortOption === 'By Id') {
       updatedList.sort((a, b) => a.id - b.id);
     } else if (sortOption === 'Hire date') {
@@ -156,11 +157,13 @@ export const AllEmployees = () => {
             </optgroup>
           </select>
         </div>
-        <Button
-          name="Add new Employee"
-          icon={<CiCirclePlus />}
-          onClick={() => router.push('/hr/employees/create-employee')}
-        />
+        {userRole !== 'ViewOnly' && (
+          <Button
+            name="Add new Employee"
+            icon={<CiCirclePlus />}
+            onClick={() => router.push('/hr/employees/create-employee')}
+          />
+        )}
       </div>
       <div className="mt-12 overflow-x-auto">
         <table className="w-full text-left border-collapse">

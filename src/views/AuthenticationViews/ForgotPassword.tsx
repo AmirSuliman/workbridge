@@ -175,11 +175,14 @@ const ForgotPassword = () => {
                 )}
               </button>
             </form>
-            <button 
-            onClick={handleNavigation}
-            className="text-blue-base  font-semibold text-xs text-center my-2 w-full hover:cursor-pointer">
-              Back to workBridge
-            </button>
+            {step !== 'confirmation' && (
+               <button 
+                 onClick={handleNavigation}
+                 className="text-blue-base font-semibold text-xs text-center my-2 w-full hover:cursor-pointer">
+                 Back to WorkBridge
+               </button>
+             )}
+             
           </div>
         </div>
       </div>

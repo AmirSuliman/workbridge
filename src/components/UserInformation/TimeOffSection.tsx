@@ -12,13 +12,18 @@ import SickCard from './sickCard';
 import Modal from '@/components/modal/Modal';
 import Image from 'next/image';
 import axiosInstance from '@/lib/axios';
-
+interface Employee {
+  firstName: string;
+  lastName: string;
+}
 interface TimeOffItem {
   id: string;
   leaveDay: string;
   returningDay: string;
   type: string;
   status: string;
+  employee: Employee,
+ 
 }
 
 const TimeOffSection = () => {
@@ -192,12 +197,12 @@ const TimeOffSection = () => {
           <p className="text-red-500">{error}</p>
         ) : (
           <InfoGrid
-            headers={['Type', 'Date From', 'Date To', 'Status']}
+            headers={['Type', 'Date From', 'Date To', 'Approved By']}
             values={timeOffData.map((item, index) => [
               item.type,
               new Date(item.leaveDay).toLocaleDateString(),
               new Date(item.returningDay).toLocaleDateString(),
-              item.status || 'N/A',
+              `${item.employee.firstName || 'N/A'} ${item.employee.lastName || 'N/A'}`.trim(),
             ])}
           />
         )}

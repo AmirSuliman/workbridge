@@ -127,109 +127,108 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
           ) : (
             <table className="w-full">
               <thead>
-                <tr>
-                  <th className="font-medium text-gray-400 text-[14px] p-3">
-                    Employee Name
-                  </th>
-                  <th className="font-medium text-gray-400 text-[14px] p-3">
-                    Vacation Type
-                  </th>
-                  <th className="font-medium text-gray-400 text-[14px] p-3">
-                    Duration
-                  </th>
-                  <th className="font-medium text-gray-400 text-[14px] p-3">
-                    Leave Day
-                  </th>
-                  <th className="font-medium text-gray-400 text-[14px] p-3">
-                    Returning Day
-                  </th>
-                  <th className="font-medium text-gray-400 text-[14px] p-3"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {employeeData.map((employee) => (
-                  <tr
-                    key={employee.id}
-                    className="text-center text-[14px] hover:bg-gray-50 border-b"
-                  >
-                    <td className="p-4 flex items-center gap-3 justify-start whitespace-nowrap">
-                      {employee.employee.profilePictureUrl ? (
-                        <img
-                          src={employee.employee.profilePictureUrl}
-                          alt="user"
-                          className="w-10 h-10 rounded-full"
-                        />
-                      ) : (
-                        <UserImgPlaceholder
-                          name={`${employee.employee.firstName} ${employee.employee.lastName}`}
-                        />
-                      )}
-                      <p className="text-left">
-                        {employee
-                          ? `${employee.employee.firstName} ${
-                              employee.employee.middleName || ''
-                            } ${employee.employee.lastName || ''}`
-                          : ''}
-                      </p>
-                    </td>
-                    <td className="p-4 whitespace-nowrap">
-                      <span className="inline-block align-middle">
-                        <Image
-                          src={
-                            employee.type === 'Vacation'
-                              ? '/vaction.png'
-                              : '/sickleave.png'
-                          }
-                          alt="vacation or sick leave"
-                          width={25}
-                          height={25}
-                          className="rounded-full"
-                        />
-                      </span>
-                      <span className="inline-block align-middle ml-3">
-                        {employee.type}
-                      </span>
-                    </td>
-                    <td className="p-4 whitespace-nowrap">
-                      {employee.duration} days
-                    </td>
-                    <td className="p-4">
-                      {new Date(employee.leaveDay).toLocaleDateString()}
-                    </td>
-                    <td className="p-4">
-                      {new Date(employee.returningDay).toLocaleDateString()}
-                    </td>
-                    <td className="p-4 flex justify-center items-center whitespace-nowrap gap-2">
-                      {employee.status === 'Pending' ? (
-                        <>
-                          <button
-                            className="p-2 text-white bg-[#25A244] rounded text-[10px] flex items-center gap-2"
-                            onClick={() => handleConfirmRequest(employee)}
-                          >
-                            Confirm Request <FaCheck />
-                          </button>
-                          <button
-                            className="p-2 text-white bg-[#F53649] rounded text-[10px] flex items-center gap-2"
-                            onClick={() => handleDenyRequest(employee)}
-                          >
-                            Deny <FaTimes />
-                          </button>
-                        </>
-                      ) : (
-                        <span
-                          className={`font-semibold ${
-                            employee.status === 'Confirmed'
-                              ? 'text-green-600 border rounded p-2 px-4 border-green-600'
-                              : 'text-red-600 border rounded p-2 px-7 border-red-600'
-                          }`}
-                        >
-                          {employee.status}
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+  <tr>
+    <th className="font-medium text-gray-400 text-[14px] p-3 text-left">
+      Employee Name
+    </th>
+    <th className="font-medium text-gray-400 text-[14px] p-3 text-left">
+      Vacation Type
+    </th>
+    <th className="font-medium text-gray-400 text-[14px] p-3 text-center">
+      Duration
+    </th>
+    <th className="font-medium text-gray-400 text-[14px] p-3 text-center">
+      Leave Day
+    </th>
+    <th className="font-medium text-gray-400 text-[14px] p-3 text-center">
+      Returning Day
+    </th>
+    <th className="font-medium text-gray-400 text-[14px] p-3 text-center"></th>
+  </tr>
+</thead>
+<tbody>
+  {employeeData.map((employee) => (
+    <tr
+      key={employee.id}
+      className="text-center text-[14px] hover:bg-gray-50 border-b"
+    >
+      <td className="p-4 flex items-center gap-3 justify-start whitespace-nowrap">
+        {employee.employee.profilePictureUrl ? (
+          <img
+            src={employee.employee.profilePictureUrl}
+            alt="user"
+            className="w-10 h-10 rounded-full"
+          />
+        ) : (
+          <UserImgPlaceholder
+            name={`${employee.employee.firstName} ${employee.employee.lastName}`}
+          />
+        )}
+        <p className="text-left">
+          {employee
+            ? `${employee.employee.firstName} ${
+                employee.employee.middleName || ''
+              } ${employee.employee.lastName || ''}`
+            : ''}
+        </p>
+      </td>
+      <td className="p-4 whitespace-nowrap text-left">
+        <span className="flex items-center gap-3">
+          <Image
+            src={
+              employee.type === 'Vacation'
+                ? '/vaction.png'
+                : '/sickleave.png'
+            }
+            alt="vacation or sick leave"
+            width={25}
+            height={25}
+            className="rounded-full"
+          />
+          <span>{employee.type}</span>
+        </span>
+      </td>
+      <td className="p-4 whitespace-nowrap text-center">
+        {employee.duration} days
+      </td>
+      <td className="p-4 text-center">
+        {new Date(employee.leaveDay).toLocaleDateString()}
+      </td>
+      <td className="p-4 text-center">
+        {new Date(employee.returningDay).toLocaleDateString()}
+      </td>
+      <td className="p-4 flex justify-center items-center whitespace-nowrap gap-2">
+        {employee.status === 'Pending' ? (
+          <>
+            <button
+              className="p-2 text-white bg-[#25A244] rounded text-[10px] flex items-center gap-2"
+              onClick={() => handleConfirmRequest(employee)}
+            >
+              Confirm Request <FaCheck />
+            </button>
+            <button
+              className="p-2 text-white bg-[#F53649] rounded text-[10px] flex items-center gap-2"
+              onClick={() => handleDenyRequest(employee)}
+            >
+              Deny <FaTimes />
+            </button>
+          </>
+        ) : (
+          <span
+            className={`font-semibold ${
+              employee.status === 'Confirmed'
+                ? 'text-green-600 border rounded p-2 px-4 border-green-600'
+                : 'text-red-600 border rounded p-2 px-7 border-red-600'
+            }`}
+          >
+            {employee.status}
+          </span>
+        )}
+      </td>
+    </tr>
+  ))}
+</tbody>
+
             </table>
           )}
         </>

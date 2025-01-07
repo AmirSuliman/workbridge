@@ -15,7 +15,7 @@ import { PiArrowUpRightThin } from 'react-icons/pi';
 
 const page = () => {
   return (
-    <main className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <main className="grid grid-cols-1 lg:grid-cols-2 gap-4 ">
       <WhosOut />
       <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
         <header className="px-4 flex items-center gap-4 justify-between">

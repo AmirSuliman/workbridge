@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { HiHome, HiUsers } from 'react-icons/hi';
 import SidebarNavItem from './SidebarNavItem';
 import { FaUserCircle, FaUsers, FaBullhorn } from 'react-icons/fa';
@@ -8,43 +8,25 @@ import { PiHandshakeFill } from 'react-icons/pi';
 import { IoCalendarOutline } from 'react-icons/io5';
 import { IoIosFolderOpen } from 'react-icons/io';
 import { FiMenu, FiTrendingUp } from 'react-icons/fi';
-import { getUserRoles } from '@/services/authService';
-import toast from 'react-hot-toast';
-
-interface Role {
-  id: number;
-  name: string;
-  Permissions: any[]; // Define more precise types as needed
-}
+import {  useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const HrSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [roles, setRoles] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const userRoles: Role[] = await getUserRoles();
-        const roleNames = userRoles.map((role) => role.name);
-        setRoles(roleNames);
-        console.log(roleNames, 'Fetched Roles');
-      } catch (error) {
-        toast.error('Failed to fetch roles');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchRoles();
-  }, []);
 
-  const isSuperAdmin = roles.includes('SuperAdmin');
-  const isAdmin = roles.includes('Admin');
-  const isViewOnly = roles.includes('ViewOnly');
+  const state = useSelector((state: RootState) => state.myInfo);
+
+  console.log(state, 'Redux State');
+  const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
+  console.log(userRole, 'role');
+  const isSuperAdmin = userRole === 'SuperAdmin' || roles.includes('SuperAdmin');
+
 
   return (
     <>
@@ -64,7 +46,6 @@ const HrSidebar = () => {
         <h1 className="text-center px-8 wull text-2xl py-8">
           <b>work</b>Bridge
         </h1>
-        {!isLoading && (
           <>
             <SidebarNavItem
               name="Home"
@@ -82,44 +63,39 @@ const HrSidebar = () => {
               href="/hr/employees"
             />
             <SidebarNavItem
+              name="Hiring"
+              icon={<PiHandshakeFill size={22} />}
+              href="/hr/hiring"
+            />
+            <SidebarNavItem
+              name="Leave Requests"
+              icon={<IoCalendarOutline size={22} />}
+              href="/hr/leave-requests"
+            />
+            <SidebarNavItem
+              name="Announcements & Policies"
+              icon={<FaBullhorn size={22} />}
+              href="/hr/announcements-&-policies/announcements"
+            />
+            <SidebarNavItem
               name="Files"
               icon={<IoIosFolderOpen size={22} />}
               href="/hr/files"
             />
-            {/* Show additional items for Admin and SuperAdmin */}
-            {!isViewOnly && (
-              <>
-                <SidebarNavItem
-                  name="Hiring"
-                  icon={<PiHandshakeFill size={22} />}
-                  href="/hr/hiring"
-                />
-                <SidebarNavItem
-                  name="Leave Requests"
-                  icon={<IoCalendarOutline size={22} />}
-                  href="/hr/leave-requests"
-                />
-                <SidebarNavItem
-                  name="Announcements & Policies"
-                  icon={<FaBullhorn size={22} />}
-                  href="/hr/announcements-&-policies/announcements"
-                />
-                {isSuperAdmin && (
-                  <SidebarNavItem
-                    name="Admins"
-                    icon={<FaUsers size={22} />}
-                    href="/hr/admins"
-                  />
-                )}
-                <SidebarNavItem
-                  name="Reports"
-                  icon={<FiTrendingUp size={22} />}
-                  href="/hr/Reports"
-                />
-              </>
+            {/* Conditionally render Admins */}
+            {isSuperAdmin && (
+              <SidebarNavItem
+                name="Admins"
+                icon={<FaUsers size={22} />}
+                href="/hr/admins"
+              />
             )}
+            <SidebarNavItem
+              name="Reports"
+              icon={<FiTrendingUp size={22} />}
+              href="/hr/Reports"
+            />
           </>
-        )}
       </nav>
     </>
   );

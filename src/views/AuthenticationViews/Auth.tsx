@@ -63,9 +63,10 @@ const Auth = () => {
           const response = await axiosInstance.get('/user/my', {
             headers: { Authorization: `Bearer ${session.user.accessToken}` },
           });
-
           // Store user data in Redux
           dispatch(setUser(response.data.data));
+          console.log('User  data:', response.data.data);
+
           toast.success('Login Successful!');
           router.push('/hr/home');
         } catch (error) {
