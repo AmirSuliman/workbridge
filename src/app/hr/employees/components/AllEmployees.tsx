@@ -18,15 +18,14 @@ import { RootState } from '@/store/store';
 export const AllEmployees = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-
-  const state = useSelector((state: RootState) => state.myInfo);
-
-  console.log(state, 'Redux State');
   const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
-  console.log(userRole, 'role');
-  
-  const [employees, setEmployeesState] = useState<AllEmployeeData | undefined>();
-  const [filteredEmployees, setFilteredEmployees] = useState<AllEmployeeData['items'] | undefined>([]);
+
+  const [employees, setEmployeesState] = useState<
+    AllEmployeeData | undefined
+  >();
+  const [filteredEmployees, setFilteredEmployees] = useState<
+    AllEmployeeData['items'] | undefined
+  >([]);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('');
@@ -41,7 +40,6 @@ export const AllEmployees = () => {
       try {
         setLoading(true);
         const { data } = await getAllEmployees(currentPage, pageSize);
-        console.log('Employees: ', data);
         dispatch(addEmployees(data.items));
 
         // Extract unique job titles and departments
@@ -56,7 +54,6 @@ export const AllEmployees = () => {
         setFilteredEmployees(data.items);
         setUniqueJobTitles(jobTitles);
         setUniqueDepartments(departments);
-
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -68,7 +65,6 @@ export const AllEmployees = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    console.log('Set to page: ', page);
   };
 
   useEffect(() => {
@@ -258,7 +254,7 @@ export const AllEmployees = () => {
           totalItems={employees?.totalItems || 0}
           pageSize={pageSize}
           currentPage={currentPage}
-          maxPagesToShow={5} // Adjust if needed
+          maxPagesToShow={3} // Adjust if needed
           setCurrentPage={handlePageChange}
         />
       </div>

@@ -32,7 +32,6 @@ const MyInformation = () => {
   const [myInfoLoading, setMyInfoLoading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.myInfo);
-  console.log('myInfo: ', user);
   const myId = user?.user?.employeeId; // This id is used to view the current logged in user's info
   const { empId } = useParams(); // This id is used to view any employee's info
   const { data: session } = useSession();
@@ -111,10 +110,46 @@ const MyInformation = () => {
   }, [employeeData, reset]);
 
   const onSubmit = async (data: any) => {
+    const payLoad = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      departmentId: data.department.id,
+      email: data.email,
+      middleName: data.middleName,
+      salary: data.salary,
+      tittle: data.tittle,
+      gender: data.gender,
+      marritialStatus: data.marritialStatus,
+      paymentSchedule: data.paymentSchedule,
+      payType: data.payType,
+      effectiveDate: data.effectiveDate,
+      overtime: data.overtime,
+      note: data.note,
+      profilePictureUrl: data.profilePictureUrl,
+      linkedin: data.linkedin,
+      instagram: data.instagram,
+      website: data.website,
+      facebook: data.facebook,
+      hireDate: data.hireDate,
+      birthday: data.birthday,
+      phoneNumber: data.phoneNumber,
+      workPhone: data.workPhone,
+      reportingManagerId: data.reportingManagerId,
+      employmentType: data.employmentType,
+      location: {
+        street1: data.location.street1,
+        street2: data.location.street2,
+        zipCode: data.location.zipCode,
+        city: data.location.city,
+        country: data.location.country,
+        state: data.location.state,
+      },
+    };
+    console.log('payLoad', payLoad);
     try {
       await axiosInstance.put(
         `/employee/${empId || session?.user.userId}`,
-        data
+        payLoad
       );
       toast.success('Employee information updated successfully!');
     } catch (err) {
