@@ -1,12 +1,8 @@
-import Employees from '@/app/hr/employees/components/Employees';
 import React from 'react';
+import Employees from './components/Employees';
 
 const page = () => {
-  return (
-    <div className='p-4'>
-     <Employees/>
-    </div>
-  )
+  return <Employees />;
 };
 
 export default page;
