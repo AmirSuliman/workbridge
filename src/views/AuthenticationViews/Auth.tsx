@@ -4,6 +4,7 @@ import EyeIcon from '@/components/icons/eye-icon';
 import GoogleLogo from '@/components/icons/google-logo';
 import WorkBridgeLogo from '@/components/icons/work-bridge-logo';
 import axiosInstance from '@/lib/axios';
+import { fetchUserData } from '@/services/myInfo';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { authSchema } from '@/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -59,19 +60,22 @@ const Auth = () => {
       // Check if session exists and has an access token
       if (session?.user?.accessToken) {
         try {
-          // Fetch user data using accessToken
-          const response = await axiosInstance.get('/user/my', {
-            headers: { Authorization: `Bearer ${session.user.accessToken}` },
-          });
-          // Store user data in Redux
-          dispatch(setUser(response.data.data));
-          console.log('User  data:', response.data.data);
+          // Fetch user data using the service function
+          const userData = await fetchUserData(session.user.accessToken);
+
+          // Dispatch user data to Redux
+          dispatch(setUser(userData));
+          console.log('User data:', userData);
 
           toast.success('Login Successful!');
           router.push('/hr/home');
         } catch (error) {
           console.error('Error fetching user data:', error);
-          toast.error('Failed to load user data!');
+          if (error instanceof Error) {
+            toast.error(error.message || 'Failed to load user data!');
+          } else {
+            toast.error('Failed to load user data!');
+          }
         }
       } else {
         toast.error('Authentication failed. Please try again.');

@@ -11,6 +11,7 @@ import allEmployeesReducer from './slices/allEmployeesSlice';
 import jobApplicationsReducer from './slices/jobApplicationsSlice';
 import jobApplicationReducer from './slices/jobApplicationSlice';
 import interviewReducer from './slices/interviewInviteSlice';
+import folderReducer from './slices/folderSlice';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
@@ -25,4 +26,5 @@ export const rootReducer = combineReducers({
   jobApplications: jobApplicationsReducer,
   jobApplication: jobApplicationReducer,
   interview: interviewReducer,
+  folder: folderReducer,
 });
