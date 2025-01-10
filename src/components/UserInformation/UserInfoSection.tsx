@@ -23,7 +23,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.firstName && (
-              <p className="text-red-500">First Name is required</p>
+              <p className="text-red-500 text-xs">First Name is required</p>
             )}
           </div>
           <div className="flex flex-col">
@@ -44,7 +44,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.lastName && (
-              <p className="text-red-500">Last Name is required</p>
+              <p className="text-red-500 text-xs">Last Name is required</p>
             )}
           </div>
           <div className="flex flex-col">
@@ -56,17 +56,17 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.birthday && (
-              <p className="text-red-500">Birthday is required</p>
+              <p className="text-red-500 text-xs">Birthday is required</p>
             )}
           </div>
           <div className="flex flex-col">
             <h6 className="text-[#abaeb4] text-xs mb-1">Gender</h6>
             {editEmployee ? (
               <select
-                className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
+                className="p-3 rounded-md bg-transparent border w-full text-sm "
                 {...register('gender', { required: 'Gender is required' })}
               >
-                <option value="">Select Gender</option>
+                <option value="" className='font-bold'>Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Prefer not to say">Prefer not to say</option>
@@ -80,14 +80,14 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               />
             )}
             {errors.gender && (
-              <p className="text-red-500">gender is required</p>
+              <p className="text-red-500 text-xs">gender is required</p>
             )}
           </div>
           <div className="flex flex-col">
             <h6 className="text-[#abaeb4] text-xs mb-1">Marital Status</h6>
             {editEmployee ? (
               <select
-                className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
+                className="p-3 rounded-md bg-transparent border w-full text-sm "
                 {...register('marritialStatus', {
                   required: 'Marital status is required',
                 })}
@@ -107,7 +107,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               />
             )}
             {errors.marritialStatus && (
-              <p className="text-red-500">Marritial Status is required</p>
+              <p className="text-red-500 text-xs">Marritial Status is required</p>
             )}
           </div>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
@@ -140,7 +140,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.location?.street1 && (
-              <p className="text-red-500">street1 is required</p>
+              <p className="text-red-500 text-xs">street1 is required</p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
@@ -152,7 +152,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.location?.street2 && (
-              <p className="text-red-500">{errors.location?.street2.message}</p>
+              <p className="text-red-500 text-xs">{errors.location?.street2.message}</p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
@@ -164,7 +164,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.location?.zipCode && (
-              <p className="text-red-500">zipCode is required</p>
+              <p className="text-red-500 text-xs">zipCode is required</p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
@@ -176,7 +176,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.location?.city && (
-              <p className="text-red-500">city is required</p>
+              <p className="text-red-500 text-xs">city is required</p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
@@ -188,7 +188,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.location?.country && (
-              <p className="text-red-500">country is required</p>
+              <p className="text-red-500 text-xs">country is required</p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
@@ -200,7 +200,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.location?.state && (
-              <p className="text-red-500">state is required</p>
+              <p className="text-red-500 text-xs">state is required</p>
             )}
           </label>
         </div>
@@ -218,7 +218,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.phoneNumber && (
-              <p className="text-red-500">phone is required</p>
+              <p className="text-red-500 text-xs">phone is required</p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
@@ -230,7 +230,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.workPhone && (
-              <p className="text-red-500">workPhone is required</p>
+              <p className="text-red-500 text-xs">workPhone is required</p>
             )}
           </label>
         </div>
@@ -251,7 +251,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.linkedin && (
-              <p className="text-red-500">{errors.linkedin.message}</p>
+              <p className="text-red-500 text-xs">{errors.linkedin.message}</p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
@@ -263,7 +263,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.facebook && (
-              <p className="text-red-500">{errors.facebook.message}</p>
+              <p className="text-red-500 text-xs">{errors.facebook.message}</p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
@@ -275,7 +275,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.instagram && (
-              <p className="text-red-500">{errors.instagram.message}</p>
+              <p className="text-red-500 text-xs">{errors.instagram.message}</p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
@@ -287,7 +287,7 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.website && (
-              <p className="text-red-500">{errors.website.message}</p>
+              <p className="text-red-500 text-xs">{errors.website.message}</p>
             )}
           </label>
         </div>

@@ -18,6 +18,7 @@ const BasicInfo = () => {
   const {
     register,
     setValue,
+    trigger,
     formState: { errors },
   } = useFormContext<EmployeeData>();
 
@@ -30,6 +31,12 @@ const BasicInfo = () => {
       setValue('profilePictureUrl', blobUrl); // Set the blob URL to the form value
     }
   };
+  const handleNext = async () => {
+    const isValid = await trigger(); 
+    if (isValid) {
+      setActiveTab(activeTab + 1); 
+    } 
+  };
 
   return (
     <div>
@@ -38,23 +45,24 @@ const BasicInfo = () => {
         <div className="border-b p-4 pb-12">
           <Heading icon={<AiFillContacts />} text="Basic Information" />
           <Label text="Profile Picture" />
-          <article className="w-[30%] p-10 rounded-md border border-dashed hover:bg-slate-200 cursor-pointer">
-            <label
-              htmlFor="profilePicture"
-              className="flex items-center justify-center gap-x-2 cursor-pointer"
-            >
-              <span>Upload a profile picture</span>
-              <MdOutlineFileUpload />
-            </label>
-            <input
-              id="profilePicture"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </article>
-          {previewUrl && (
+          {!previewUrl ? ( // Render upload input if no preview is available
+            <article className="w-[30%] p-10 rounded-md border border-dashed hover:bg-slate-200 cursor-pointer">
+              <label
+                htmlFor="profilePicture"
+                className="flex items-center justify-center gap-x-2 cursor-pointer"
+              >
+                <span>Upload a profile picture</span>
+                <MdOutlineFileUpload />
+              </label>
+              <input
+                id="profilePicture"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+            </article>
+          ) : (
             <div className="mt-4">
               <Image
                 width={300}
@@ -276,7 +284,7 @@ const BasicInfo = () => {
           type="button"
           name="Next"
           className="px-16"
-          onClick={() => setActiveTab(activeTab + 1)}
+          onClick={handleNext}
         />
       </article>
     </div>
