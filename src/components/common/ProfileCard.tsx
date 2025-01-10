@@ -14,6 +14,8 @@ import FacebookIcon from '../icons/fb-icon';
 import InstagramIcon from '../icons/instagram-icon';
 import LinkedinIcon from '../icons/linkedin-icon';
 import ProfileInfoItem from './ProfileInfoItem';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
 
 const ProfileCard = ({
   setEditEmployee,
@@ -28,6 +30,12 @@ const ProfileCard = ({
     ? employeeData.hireDate.split('T')[0]
     : 'N/A';
 
+
+    const state = useSelector((state: RootState) => state.myInfo);
+
+    console.log(state, 'Redux State');
+    const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
+    console.log(userRole, 'role');
   const calculateDuration = (startDate: string | undefined): string => {
     if (!startDate) return 'N/A';
 
@@ -116,6 +124,7 @@ const ProfileCard = ({
               </p>
             </div>
             <div className="flex items-center gap-4">
+            {userRole !== 'ViewOnly' && (
               <Button
                 type={editEmployee ? 'submit' : 'button'}
                 onClick={() => {
@@ -124,7 +133,7 @@ const ProfileCard = ({
                 className={'!bg-dark-navy !text-white !text-xs'}
                 icon={!editEmployee && <FaEdit />}
                 name={editEmployee ? 'Save Changes' : 'Edit Profile'}
-              />
+              />)}
               {editEmployee && (
                 <button
                   onClick={() => {
