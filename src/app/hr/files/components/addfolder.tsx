@@ -9,7 +9,7 @@ import { FaTimes } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 
 const Addfolder = ({ setIsModalOpen }) => {
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState<number | undefined>(undefined); 
   const [folderName, setFolderName] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dispatch = useDispatch<AppDispatch>();
@@ -22,7 +22,6 @@ const Addfolder = ({ setIsModalOpen }) => {
       const session = await getSession();
       if (session?.user?.accessToken) {
         try {
-          // Fetch user data using the service function
           const userData = await fetchUserData(session.user.accessToken);
           setUserId(userData.id);
           dispatch(setUser(userData));
@@ -80,7 +79,6 @@ const Addfolder = ({ setIsModalOpen }) => {
         {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
       </label>
       {loading && <p className="text-blue-500">Creating folder...</p>}
-      {/* {error && <p className="text-red-500">{error}</p>} */}
       {success && (
         <p className="text-green-500">Folder created successfully!</p>
       )}
