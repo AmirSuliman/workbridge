@@ -148,7 +148,7 @@ const MyInformation = () => {
         state: data.location.state,
       },
     };
-    console.log('payLoad', payLoad);
+    console.log('put emp payLoad: ', payLoad);
     try {
       await axiosInstance.put(
         `/employee/${empId || session?.user.userId}`,

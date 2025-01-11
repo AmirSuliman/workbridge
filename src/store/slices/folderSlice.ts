@@ -5,7 +5,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 export const createFolder = createAsyncThunk(
   'folder/createFolder',
   async (
-    { folderName, userId }: { folderName: string; userId: number | undefined },
+    { folderName, userId }: { folderName: string; userId: number | null },
     { rejectWithValue }
   ) => {
     try {
@@ -16,7 +16,10 @@ export const createFolder = createAsyncThunk(
       console.log(response);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      if (error instanceof Error) {
+        return rejectWithValue((error as any)?.response?.data);
+      }
+      return rejectWithValue(error);
     }
   }
 );
@@ -25,7 +28,7 @@ const folderSlice = createSlice({
   name: 'folder',
   initialState: {
     loading: false,
-    error: null,
+    error: null as unknown,
     success: false,
   },
   reducers: {
