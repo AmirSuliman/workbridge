@@ -12,6 +12,7 @@ const Modal = ({ children, onClose }: ModalProps) => {
       <div className="bg-white rounded-lg shadow-lg max-h-[90vh] overflow-y-auto">
         <div className="relative w-full">
           <button
+            type="button"
             onClick={onClose}
             className=" absolute top-0 right-0 mr-3 mt-3"
           >
