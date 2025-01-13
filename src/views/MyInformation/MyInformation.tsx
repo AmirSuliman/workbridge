@@ -148,7 +148,6 @@ const MyInformation = () => {
         state: data.location.state,
       },
     };
-    console.log('put emp payLoad: ', payLoad);
     try {
       await axiosInstance.put(
         `/employee/${empId || session?.user.userId}`,
@@ -261,7 +260,7 @@ const MyInformation = () => {
             <TimeOffSection />
           </TabPanel>
           <TabPanel index={3}>
-            <DocumentSection />
+            <DocumentSection employeeData={employeeData} />
           </TabPanel>
           <TabPanel index={4}>
             <EmergencySection />

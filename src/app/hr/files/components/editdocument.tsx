@@ -1,6 +1,37 @@
+'use client'
 import { FaTimes } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import axiosInstance from "@/lib/axios";
 
+interface Folder {
+  id: string;
+  name: string;
+  files: File[];
+}
 const Editdocument = ({ setIsModalOpen3 }) => {
+   const [folders, setFolders] = useState<Folder[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+      const fetchFolders = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+          const response = await axiosInstance.get('/folders');
+          console.log(response.data, 'folder data');
+          setFolders(response.data.data.items); 
+        } catch (err) {
+          setError('Failed to load folders.');
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      fetchFolders();
+    }, []);
+    
     return (
       <div className="w-full sm:w-[600px] p-8 bg-white rounded shadow-lg relative">
         <button
@@ -12,13 +43,15 @@ const Editdocument = ({ setIsModalOpen3 }) => {
         <h2 className="font-semibold text-xl mb-4">Edit document</h2>
 
         <div className="flex flx-row items-center w-full gap-6 mt-8">
-        <label className="flex flex-col w-full ">
+        <label className="flex flex-col w-full text-gray-400">
            <span className="mb-1 text-gray-400 text-[14px]">Folder</span>
            <select id="folderSelect" className="w-full border p-3 rounded" >
              <option value="">Select a Folder</option>
-             <option value="tab1">Folder 1</option>
-             <option value="tab2">Folder 2</option>
-             <option value="tab3">Folder 3</option>
+             {folders.map((folder) => (
+              <option key={folder.id} value={folder.id}>
+                {folder.name}
+              </option>
+            ))}
            </select>
          </label>
          <label className="flex flex-col w-full ">

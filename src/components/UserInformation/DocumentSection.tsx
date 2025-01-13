@@ -1,37 +1,81 @@
 import { FaTrash } from 'react-icons/fa';
 import { GoPlusCircle } from 'react-icons/go';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FileIcon from '../icons/file-icon';
 import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import UploadDocumentModal from './UploadDocumentModal';
 
-const DocumentSection = () => {
-  const [openModal, setOpenModal] = useState(false);
-  const SelectableCell = (text: string) => {
-    return (
-      <div className="text-dark-navy text-md items-center justify-start flex gap-2">
-        <input
-          type="checkbox"
-          className="h-3 w-3 cursor-pointer text-[#878b94]"
-        />{' '}
-        {text}
-      </div>
-    );
+const SelectableCell = (text: string) => {
+  return (
+    <div className="text-dark-navy text-md items-center justify-start flex gap-2">
+      <input
+        type="checkbox"
+        className="h-3 w-3 cursor-pointer text-[#878b94]"
+      />{' '}
+      {text}
+    </div>
+  );
+};
+
+const getFileExtension = (mimeType) => {
+  const mimeToExtensionMap = {
+    pdf: '.pdf',
+    msword: '.doc',
+    'vnd.openxmlformats-officedocument.wordprocessingml.document': '.docx',
   };
-  const values = [
-    [
-      SelectableCell('ABasdh22mvasd23a.pdf'),
-      '31.05.2024',
-      '14Mb',
-      'PDF',
+  return mimeToExtensionMap[mimeType] || '';
+};
+
+const DocumentSection = ({ employeeData }) => {
+  console.log(employeeData);
+  const [openModal, setOpenModal] = useState(false);
+  const [sortOption, setSortOption] = useState('size'); // Default sorting by size
+  const [sortedDocuments, setSortedDocuments] = useState<any[]>([]);
+
+  // Handle sorting based on the selected option
+  useEffect(() => {
+    if (!employeeData || !employeeData.documents) {
+      setSortedDocuments([]); // Fallback to an empty array if data is unavailable
+      return;
+    }
+
+    const sorted = [...employeeData.documents];
+
+    if (sortOption === 'size') {
+      sorted.sort((a, b) => a.size - b.size); // Sorting by file size
+    } else if (sortOption === 'date') {
+      sorted.sort(
+        (a, b) =>
+          new Date(a.EmployeeDocument.createdAt).getTime() -
+          new Date(b.EmployeeDocument.createdAt).getTime()
+      ); // Sorting by creation date
+    }
+
+    setSortedDocuments(sorted);
+  }, [sortOption, employeeData.documents, employeeData]);
+
+  const values = sortedDocuments?.map((document) => {
+    const sizeInBytes = document.size ?? 0;
+    const sizeInKB = sizeInBytes / 1024;
+    const formattedSize =
+      sizeInKB >= 1024
+        ? `${(sizeInKB / 1024).toFixed(2)} MB`
+        : `${sizeInKB.toFixed(2)} KB`;
+
+    return [
+      SelectableCell(document.fileName),
+      document?.EmployeeDocument.createdAt.split('T')[0],
+      formattedSize,
+      document.fileType ? getFileExtension(document.fileType) : '',
+      ,
       '',
       '',
       '',
       <FaTrash key={1} className="text-dark-navy w-5" />,
-    ],
-  ];
+    ];
+  });
   return (
     <div className="p-2 md:p-5 rounded-md  h-full bg-white border-gray-border ">
       <div className="flex flex-col md:flex-row gap-2 md:gap-0 md:items-center md:justify-between mb-5">
@@ -40,12 +84,17 @@ const DocumentSection = () => {
           text="Documents"
         />
         <div className="flex items-center gap-4">
-          <div className="flex gap-2 items-center text-dark-navy ms-2 ">
+          <label className="flex gap-2 items-center text-dark-navy ms-2 ">
             <span className="text-xs ">Sort</span>{' '}
-            <p className="p-1 w-[8rem] text-xs border border-gray-border rounded-[5px]">
-              Size
-            </p>
-          </div>
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              className="outline-none text-xs"
+            >
+              <option value="size">Size</option>
+              <option value="date">Date</option>
+            </select>
+          </label>
           <button
             onClick={() => {
               setOpenModal(true);
@@ -64,6 +113,7 @@ const DocumentSection = () => {
       />
       {openModal && (
         <UploadDocumentModal
+          employeeData={employeeData}
           onClose={() => {
             setOpenModal(false);
           }}

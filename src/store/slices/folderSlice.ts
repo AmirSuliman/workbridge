@@ -1,11 +1,11 @@
-// store/folderSlice.js
 import axiosInstance from '@/lib/axios';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { AxiosError } from 'axios';
 
 export const createFolder = createAsyncThunk(
   'folder/createFolder',
   async (
-    { folderName, userId }: { folderName: string; userId: number | null },
+    { folderName, userId }: { folderName: string; userId: number | undefined },
     { rejectWithValue }
   ) => {
     try {
@@ -16,10 +16,10 @@ export const createFolder = createAsyncThunk(
       console.log(response);
       return response.data;
     } catch (error) {
-      if (error instanceof Error) {
-        return rejectWithValue((error as any)?.response?.data);
+      if (error instanceof AxiosError && error.response) {
+        return rejectWithValue(error.response.data);
       }
-      return rejectWithValue(error);
+      return rejectWithValue('An unknown error occurred.');
     }
   }
 );
@@ -28,7 +28,7 @@ const folderSlice = createSlice({
   name: 'folder',
   initialState: {
     loading: false,
-    error: null as unknown,
+    error: null as string | null,
     success: false,
   },
   reducers: {
@@ -50,7 +50,7 @@ const folderSlice = createSlice({
       })
       .addCase(createFolder.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload as string | null;
       });
   },
 });

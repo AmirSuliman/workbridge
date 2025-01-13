@@ -3,7 +3,6 @@ import InputField from '@/components/common/InputField';
 import EyeIcon from '@/components/icons/eye-icon';
 import GoogleLogo from '@/components/icons/google-logo';
 import WorkBridgeLogo from '@/components/icons/work-bridge-logo';
-import axiosInstance from '@/lib/axios';
 import { fetchUserData } from '@/services/myInfo';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { authSchema } from '@/validations/auth';

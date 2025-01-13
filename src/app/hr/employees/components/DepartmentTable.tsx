@@ -15,6 +15,10 @@ interface Department {
   employeeCount: number;
   head: string;
   openPositions: any[];
+  department_head_data: {
+    firstName: string;
+    lastName: string;
+  };
 }
 
 const DepartmentTable = () => {
@@ -46,6 +50,8 @@ const DepartmentTable = () => {
             employeeCount: dept.employees?.length || 0,
             head: dept.openPositions?.[0]?.hiringLeadId || 'N/A',
             openPositions: dept.openPositions || [],
+            department_head_data: dept.department_head_data || { firstName: '', lastName: 'N/A' },
+
           }));
 
           setDepartments(processedDepartments);
@@ -75,7 +81,7 @@ const DepartmentTable = () => {
   }, [searchQuery, departments]);
 
   return (
-    <div className="mt-4 p-2">
+    <div className="mt-4 p-2 z-10">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
         <div className="flex flex-row items-center gap-2">
@@ -157,7 +163,13 @@ const DepartmentTable = () => {
                       <td className="px-4 py-3 flex items-center gap-2">
                         <EmployeesIcon /> {dept.employeeCount}
                       </td>
-                      <td className="px-4 py-3">{dept.head || 'N/A'}</td>
+                      <td className="px-4 py-3">          
+                      {dept.department_head_data ? (
+                           `${dept.department_head_data.firstName} ${dept.department_head_data.lastName}`
+                         ) : (
+                           'N/A'
+                         )}                     
+                       </td>
                       <td className="px-4 py-3">
                         <Link href={`/hr/Departement/${dept.id}`}>
                           <div className="p-1 border rounded-lg w-[30px] flex justify-center items-center">
