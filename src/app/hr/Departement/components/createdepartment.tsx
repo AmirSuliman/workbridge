@@ -3,10 +3,11 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
 import * as yup from 'yup';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 interface Employee {
   id: string;
-  name:string;
+  name: string;
   firstName: string;
   lastName: string;
   employeeId: number;
@@ -24,7 +25,7 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
   const [loadingEmployees, setLoadingEmployees] = useState(false);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
-  const [selectedEmployeeName, setSelectedEmployeeName] = useState('');
+  const [, setSelectedEmployeeName] = useState('');
 
   const departmentSchema = yup.object().shape({
     name: yup.string().required('Department name is required'),
@@ -86,15 +87,21 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
       setIsModalOpen(false);
     } catch (error) {
       if (error instanceof yup.ValidationError) {
-        const errorDetails: ErrorDetails = error.inner.reduce((acc: ErrorDetails, curr) => {
-          acc[curr.path as string] = curr.message;
-          return acc;
-        }, {});
+        const errorDetails: ErrorDetails = error.inner.reduce(
+          (acc: ErrorDetails, curr) => {
+            acc[curr.path as string] = curr.message;
+            return acc;
+          },
+          {}
+        );
         if (errorDetails.name) setErrorMessage(errorDetails.name);
         if (errorDetails.headId) setEmployeeError(errorDetails.headId);
-      } else if (axios.isAxiosError(error)) {
+      } else if (axios.isAxiosError(error) && error.response) {
         console.error('Server error:', error.response?.data || error.message);
-        setErrorMessage('An error occurred while creating the department. Please try again.');
+        setErrorMessage(
+          error.response.data.message ||
+            'An error occurred while creating the department. Please try again.'
+        );
       } else {
         console.error('Unexpected error:', error);
         setErrorMessage('An unexpected error occurred.');
@@ -114,7 +121,9 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
         </div>
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="mb-4 mt-10">
-            <label className="block text-gray-400 mb-2 text-[14px]">Department Name*</label>
+            <label className="block text-gray-400 mb-2 text-[14px]">
+              Department Name*
+            </label>
             <input
               type="text"
               value={departmentName}
@@ -122,36 +131,45 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
               className="border w-full px-3 py-3 rounded-[5px] text-sm text-gray-800 focus:outline-none"
               placeholder="Type department name"
             />
-            {errorMessage && <p className="text-red-500 text-sm mt-1">{errorMessage}</p>}
+            {errorMessage && (
+              <p className="text-red-500 text-sm mt-1">{errorMessage}</p>
+            )}
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-400 mb-2 text-[14px]">Department Head*</label>
+            <label className="block text-gray-400 mb-2 text-[14px]">
+              Department Head*
+            </label>
             <select
               className="border w-full px-3 py-3 rounded-[5px] text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={selectedEmployeeId}
               onChange={(e) => {
                 const employeeId = e.target.value;
-                const employeeName = employees.find((emp) => emp.id === employeeId)?.name || '';
+                const employeeName =
+                  employees.find((emp) => emp.id === employeeId)?.name || '';
                 setSelectedEmployeeId(employeeId);
                 setSelectedEmployeeName(employeeName);
               }}
               disabled={loadingEmployees}
             >
               <option value="" disabled hidden>
-                {loadingEmployees ? 'Loading employees...' : 'Select department head'}
+                {loadingEmployees
+                  ? 'Loading employees...'
+                  : 'Select department head'}
               </option>
-              {employees.length > 0 ? (
-                employees.map((employee) => (
-                  <option key={employee.id} value={employee.id}>
-                    {`${employee.firstName} ${employee.lastName}`}
-                  </option>
-                ))
-              ) : (
-                !loadingEmployees && <option disabled>No employees found</option>
-              )}
+              {employees.length > 0
+                ? employees.map((employee) => (
+                    <option key={employee.id} value={employee.id}>
+                      {`${employee.firstName} ${employee.lastName}`}
+                    </option>
+                  ))
+                : !loadingEmployees && (
+                    <option disabled>No employees found</option>
+                  )}
             </select>
-            {employeeError && <p className="text-red-500 text-sm mt-1">{employeeError}</p>}
+            {employeeError && (
+              <p className="text-red-500 text-sm mt-1">{employeeError}</p>
+            )}
           </div>
 
           <div className="flex justify-center items-center flex-row w-full gap-6 p-6 mt-32">
