@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { useState, useEffect } from 'react';
 import { FaFolder, FaPlusCircle, FaUpload, FaEdit, FaTrash } from 'react-icons/fa';
 import Modal from '@/components/modal/Modal';
@@ -24,7 +24,6 @@ interface File {
   fileType: string; 
 }
 
-
 const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
@@ -37,6 +36,8 @@ const Page = () => {
   const [activeFolder, setActiveFolder] = useState<Folder | null>(null);
   const [fileIdToDelete, setFileIdToDelete] = useState<string | null>(null);
   const [sortCriteria, setSortCriteria] = useState('Select');
+  const [allFiles, setAllFiles] = useState<File[]>([]);
+  const [isAllFilesActive, setIsAllFilesActive] = useState(false);
 
   useEffect(() => {
     const fetchFolders = async () => {
@@ -68,9 +69,9 @@ const Page = () => {
   };
 
   const handleSortFiles = (criteria: string) => {
-    if (!activeFolder) return;
+    if (!activeFolder && !isAllFilesActive) return;
 
-    const sortedFiles = [...activeFolder.files];
+    const sortedFiles = isAllFilesActive ? [...allFiles] : [...activeFolder!.files];
 
     if (criteria === 'Name') {
       sortedFiles.sort((a, b) => a.fileName.localeCompare(b.fileName));
@@ -80,7 +81,31 @@ const Page = () => {
       sortedFiles.sort((a, b) => a.size - b.size);
     }
 
-    setActiveFolder({ ...activeFolder, files: sortedFiles });
+    if (isAllFilesActive) {
+      setAllFiles(sortedFiles);
+    } else {
+      setActiveFolder({ ...activeFolder!, files: sortedFiles });
+    }
+  };
+
+  const fetchAllFiles = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axiosInstance.get('/files');
+      setAllFiles(response.data.data.items); 
+    } catch (err) {
+      setError('Failed to load files.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAllFilesClick = async () => {
+    setActiveFolder(null);
+    setIsAllFilesActive(true);
+    await fetchAllFiles();
   };
 
   const handleAddfolder = () => {
@@ -100,12 +125,13 @@ const Page = () => {
   };
 
   const handleDeletedocument = (fileId: string) => {
-    setFileIdToDelete(fileId); 
+    setFileIdToDelete(fileId);
     setIsModalOpen4(true);
   };
 
   const handleFolderClick = (folder: Folder) => {
     setActiveFolder(folder);
+    setIsAllFilesActive(false);
   };
 
   return (
@@ -134,11 +160,20 @@ const Page = () => {
       <div className="flex flex-col sm:flex-row items-start gap-6 w-full mt-8">
         <div className="flex flex-col bg-white border rounded-[10px] w-full sm:w-[30%] h-[90vh]">
           <h1 className="mt-6 px-8 font-medium text-[18px] text-[#0F172A] mb-4">Folders</h1>
-
+          <div
+            onClick={handleAllFilesClick}
+            className={`flex flex-row items-center justify-between mb-3 p-3 cursor-pointer ${
+              isAllFilesActive ? 'bg-black text-white' : 'hover:bg-black hover:text-white'
+            }`}
+          >
+            <div className="flex flex-row items-center gap-2 px-4 font-medium">
+              <FaFolder size={20} />
+              <p>All Files</p>
+            </div>
+            <p className="px-4 text-gray-400 text-[16px]">{allFiles.length} Files</p>
+          </div>
           {loading && <p className="text-center text-gray-500">Loading folders...</p>}
-
           {error && <p className="text-center text-red-500">{error}</p>}
-
           {!loading && !error && folders.length > 0 ? (
             folders.map((folder) => (
               <div
@@ -152,35 +187,31 @@ const Page = () => {
                   <FaFolder size={20} />
                   <p>{folder.name}</p>
                 </div>
-                <p className="px-4 text-gray-400 text-[16px]">
-                  {folder.files.length} Files
-                </p>
+                <p className="px-4 text-gray-400 text-[16px]">{folder.files.length} Files</p>
               </div>
             ))
           ) : (
             !loading && <p className="text-center text-gray-500">No folders found.</p>
           )}
-          <div className="h-[1px] w-full bg-gray-300 mb-2" />
         </div>
 
         <div className="flex flex-col bg-white border rounded-[10px] p-5 w-full sm:w-[70%] h-[90vh]">
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-2">
               <FaFolder size={20} />
-              <h1 className="font-medium text-[18px]">{activeFolder ? activeFolder.name : 'Select a Folder'}</h1>
+              <h1 className="font-medium text-[18px]">
+                {isAllFilesActive ? 'All Files' : activeFolder ? activeFolder.name : 'Select a Folder'}
+              </h1>
             </div>
             <div className="flex flex-row items-center gap-3 text-xs">
               <label>
                 <span>Sort</span>
                 <select
-                  className='p-1 border rounded ml-2 text-[12px]'
+                  className="p-1 border rounded ml-2 text-[12px]"
                   value={sortCriteria}
-                  onChange={(e) => {
-                    const criteria = e.target.value;
-                    handleSortFiles(criteria);
-                  }}
+                  onChange={(e) => handleSortFiles(e.target.value)}
                 >
-                  <option >Select</option>
+                  <option>Select</option>
                   <option>Name</option>
                   <option>Date uploaded</option>
                   <option>Size</option>
@@ -189,6 +220,7 @@ const Page = () => {
               <button
                 onClick={handleEditfolder}
                 className="flex flex-row items-center p-2 gap-2 px-4 bg-black text-white border rounded text-[12px]"
+                disabled={!activeFolder}
               >
                 Edit Folder <FaEdit />
               </button>
@@ -206,34 +238,57 @@ const Page = () => {
                   <th className="p-4 text-center">Actions</th>
                 </tr>
               </thead>
-              {activeFolder ? (
-                activeFolder.files.length > 0 ? (
-                  <tbody>
-                    {activeFolder.files.map((file, index) => (
-                      <tr key={index} className="p-3 border-b text-[14px] font-normal hover:bg-gray-50">
-                        <td className="p-4 flex items-center gap-2">
-                          <input type="checkbox" />
-                          <span>{file.fileName}</span>
-                        </td>
-                        <td className="p-4">24.02.2024</td>
-                        <td className="p-4">{file.size}</td>
-                        <td className="p-4">PDF</td>
-                        <td className="flex flex-row gap-3 justify-center items-center">
-                          <FaEdit onClick={handleEditdocument} className="cursor-pointer" />
-                          <FaTrash
-                            onClick={() => handleDeletedocument(file.id)} 
-                            className="cursor-pointer"
-                          />
-                        </td>
+              <tbody>
+                {isAllFilesActive
+                  ? allFiles.length > 0
+                    ? allFiles.map((file, index) => (
+                        <tr key={index} className="p-3 border-b text-[14px] font-normal hover:bg-gray-50">
+                          <td className="p-4 flex items-center gap-2">
+                            <input type="checkbox" />
+                            <span>{file.fileName}</span>
+                          </td>
+                          <td className="p-4">{file.dateUploaded}</td>
+                          <td className="p-4">{file.size}</td>
+                          <td className="p-4">{file.fileType}</td>
+                          <td className="flex flex-row gap-3 justify-center items-center">
+                            <FaEdit onClick={handleEditdocument} className="cursor-pointer" />
+                            <FaTrash onClick={() => handleDeletedocument(file.id)} className="cursor-pointer" />
+                          </td>
+                        </tr>
+                      ))
+                    : (
+                      <tr>
+                        <td colSpan={5} className="text-center text-gray-500">No files found.</td>
                       </tr>
-                    ))}
-                  </tbody>
-                ) : (
-                  <p className="text-center text-gray-500">This folder is empty. Use the upload button to add files or move files from other folders.</p>
-                )
-              ) : (
-                <p className="text-center text-gray-500">Select a folder to view its files.</p>
-              )}
+                    )
+                  : activeFolder
+                  ? activeFolder.files.length > 0
+                    ? activeFolder.files.map((file, index) => (
+                        <tr key={index} className="p-3 border-b text-[14px] font-normal hover:bg-gray-50">
+                          <td className="p-4 flex items-center gap-2">
+                            <input type="checkbox" />
+                            <span>{file.fileName}</span>
+                          </td>
+                          <td className="p-4">{file.dateUploaded}</td>
+                          <td className="p-4">{file.size}</td>
+                          <td className="p-4">{file.fileType}</td>
+                          <td className="flex flex-row gap-3 justify-center items-center">
+                            <FaEdit onClick={handleEditdocument} className="cursor-pointer" />
+                            <FaTrash onClick={() => handleDeletedocument(file.id)} className="cursor-pointer" />
+                          </td>
+                        </tr>
+                      ))
+                    : (
+                      <tr>
+                        <td colSpan={5} className="text-center text-gray-500">This folder is empty. Use the upload button to add files or move files from other folders.</td>
+                      </tr>
+                    )
+                  : (
+                    <tr>
+                      <td colSpan={5} className="text-center text-gray-500">Select a folder to view its files.</td>
+                    </tr>
+                  )}
+              </tbody>
             </table>
           </div>
         </div>
@@ -243,7 +298,7 @@ const Page = () => {
       {isModalOpen1 && <Modal onClose={() => setIsModalOpen1(false)}><Uploadfiles setIsModalOpen1={setIsModalOpen1} /></Modal>}
       {isModalOpen2 && activeFolder && <Modal onClose={() => setIsModalOpen2(false)}><Editfolder createdBy={activeFolder.createdBy} folderId={activeFolder.id} currentName={activeFolder.name} setIsModalOpen2={setIsModalOpen2} setFolders={setFolders} /></Modal>}
       {isModalOpen3 && <Modal onClose={() => setIsModalOpen3(false)}><Editdocument setIsModalOpen3={setIsModalOpen3} /></Modal>}
-      {isModalOpen4 && <Modal onClose={() => setIsModalOpen4(false)}><Deletedocument setIsModalOpen4={setIsModalOpen4} fileId={fileIdToDelete} setFolders={setFolders}  /></Modal>}
+      {isModalOpen4 && <Modal onClose={() => setIsModalOpen4(false)}><Deletedocument setIsModalOpen4={setIsModalOpen4} fileId={fileIdToDelete} setFolders={setFolders} /></Modal>}
     </div>
   );
 };
