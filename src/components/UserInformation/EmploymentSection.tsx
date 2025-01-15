@@ -14,6 +14,7 @@ const EmploymentSection = ({
   editEmployee,
   employeeData,
 }) => {
+  console.log('employeeData', employeeData);
   const hireDate = employeeData?.hireDate
     ? employeeData.hireDate.split('T')[0]
     : 'N/A';
@@ -92,7 +93,7 @@ const EmploymentSection = ({
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             Employment Type
             <select
-              className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
+              className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
               {...register('employmentType', {
                 required: 'Employment Type is required',
               })}
@@ -228,7 +229,7 @@ const EmploymentSection = ({
             <article>
               <Label text="Pay type*" /> <br />
               <select
-                className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
+                className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
                 {...register('payType', {
                   required: 'Paytype is required',
                 })}
@@ -244,7 +245,7 @@ const EmploymentSection = ({
             <article>
               <Label text="Schedule*" /> <br />
               <select
-                className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
+                className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
                 {...register('paymentSchedule', {
                   required: 'Schedule is required',
                 })}
@@ -260,31 +261,9 @@ const EmploymentSection = ({
                 </span>
               )}
             </article>
-            {/* <article>
-              <Label text="Effective Date*" /> <br />
-              <input
-                type="date"
-                className="p-2 rounded-md bg-transparent border w-full"
-                {...register('effectiveDate', {
-                  required: 'Effective Date is required',
-                })}
-              />
-              {errors.effectiveDate && (
-                <span className="text-red-500">
-                  {errors.effectiveDate.message}
-                </span>
-              )}
-            </article> */}
           </div>
         )}
       </div>
-      {/* {editEmployee && (
-        <Button
-          name="Save Changes"
-          type="submit"
-          className="bg-black text-white block mx-auto"
-        />
-      )} */}
     </main>
   );
 };

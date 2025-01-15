@@ -20,7 +20,7 @@ const EmployeesDropdown = ({ register, errors }) => {
   return (
     <>
       <select
-        className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
+        className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
         {...register('reportingManagerId', {
           required: 'Reporting Manager is required',
         })}

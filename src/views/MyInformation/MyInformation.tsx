@@ -19,7 +19,7 @@ import { AppDispatch, RootState } from '@/store/store';
 import { AxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -109,6 +109,46 @@ const MyInformation = () => {
     }
   }, [employeeData, reset]);
 
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  // profile picture
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files) {
+        const file = event.target.files[0];
+        setSelectedFile(file);
+        const blobUrl = URL.createObjectURL(file);
+        setPreviewUrl(blobUrl);
+      }
+    },
+    []
+  );
+
+  // Handle profile picture upload
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      toast.error('Please select a profile picture.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+      const response = await axiosInstance.post('/file/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('profilePic response: ', response.data);
+      console.log('profilePic response url: ', response.data.data.url);
+      setPreviewUrl(response.data.data.url);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const onSubmit = async (data: any) => {
     // PUT employee/id needs the following payload.
     // The data parameter ☝ contains extra fields that backend does not expect.
@@ -128,7 +168,7 @@ const MyInformation = () => {
       effectiveDate: data.effectiveDate,
       overtime: data.overtime,
       note: data.note,
-      profilePictureUrl: data.profilePictureUrl,
+      profilePictureUrl: previewUrl,
       linkedin: data.linkedin,
       instagram: data.instagram,
       website: data.website,
@@ -149,6 +189,10 @@ const MyInformation = () => {
       },
     };
     try {
+      // handle profile picture to get url from the upload picture
+      // then send that url to the backend as a profilePictureUrl
+      handleUpload();
+
       await axiosInstance.put(
         `/employee/${empId || session?.user.userId}`,
         payLoad
@@ -176,9 +220,11 @@ const MyInformation = () => {
         editEmployee={editEmployee}
         register={register}
         errors={errors}
+        handleFileChange={handleFileChange}
+        previewUrl={previewUrl}
       />
     ),
-    [editEmployee, errors, register]
+    [editEmployee, errors, register, previewUrl, handleFileChange]
   );
 
   if (loading) {

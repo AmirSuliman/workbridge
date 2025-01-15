@@ -18,27 +18,70 @@ import axios from 'axios';
 const CreateEmployee = () => {
   const [loader, setLoader] = useState(false);
   const router = useRouter();
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  // profile picture
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const file = event.target.files[0];
+      setSelectedFile(file);
+      const blobUrl = URL.createObjectURL(file);
+      setPreviewUrl(blobUrl);
+    }
+  };
+
+  // Handle profile picture upload
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      toast.error('Please select a profile picture.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+      const response = await axiosInstance.post('/file/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('profilePic response: ', response.data);
+      console.log('profilePic response url: ', response.data.data.url);
+      setPreviewUrl(response.data.data.url);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const formMethods = useForm<EmployeeData>();
   const { handleSubmit, reset } = formMethods;
   const onSubmit = async (data) => {
     try {
       setLoader(true);
-      const response = await axiosInstance.post('/employee', data);
+      // handle profile picture to get url from the upload picture
+      // then send that url to the backend as a profilePictureUrl
+      handleUpload();
+
+      const response = await axiosInstance.post('/employee', {
+        ...data,
+        profilePictureUrl: previewUrl,
+      });
+      console.log('previewUrl after create employee: ', previewUrl);
       toast.success('Employee created successfully!');
-      console.log(response);
+      console.log('post employee: ', response);
       setLoader(false);
     } catch (error) {
       setLoader(false);
-      setLoader(false);
+      setPreviewUrl(null);
 
-      // Type assertion to ensure error is typed correctly
       if (axios.isAxiosError(error) && error.response) {
         toast.error(error.response.data.message);
       } else {
         toast.error('An unexpected error occurred.');
       }
-
-      console.error(error); // Always log for debugging
+      console.error(error);
     } finally {
       setLoader(false);
       reset();
@@ -91,7 +134,10 @@ const CreateEmployee = () => {
           <FormProvider {...formMethods}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <TabPanel index={0}>
-                <BasicInfo />
+                <BasicInfo
+                  previewUrl={previewUrl}
+                  handleFileChange={handleFileChange}
+                />
               </TabPanel>
               <TabPanel index={1}>
                 <Employment loader={loader} />

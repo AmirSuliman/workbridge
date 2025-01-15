@@ -1,11 +1,12 @@
 import { FaTrash } from 'react-icons/fa';
 import { GoPlusCircle } from 'react-icons/go';
-
 import { useEffect, useState } from 'react';
+
 import FileIcon from '../icons/file-icon';
 import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import UploadDocumentModal from './UploadDocumentModal';
+import DeleteDocumentModal from './DeleteDocumentModal';
 
 const SelectableCell = (text: string) => {
   return (
@@ -30,11 +31,12 @@ const getFileExtension = (mimeType) => {
 
 const DocumentSection = ({ employeeData }) => {
   console.log(employeeData);
+  const [documentId, setDocumentId] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [sortOption, setSortOption] = useState('size'); // Default sorting by size
   const [sortedDocuments, setSortedDocuments] = useState<any[]>([]);
 
-  // Handle sorting based on the selected option
   useEffect(() => {
     if (!employeeData || !employeeData.documents) {
       setSortedDocuments([]); // Fallback to an empty array if data is unavailable
@@ -44,13 +46,13 @@ const DocumentSection = ({ employeeData }) => {
     const sorted = [...employeeData.documents];
 
     if (sortOption === 'size') {
-      sorted.sort((a, b) => a.size - b.size); // Sorting by file size
+      sorted.sort((a, b) => a.size - b.size);
     } else if (sortOption === 'date') {
       sorted.sort(
         (a, b) =>
           new Date(a.EmployeeDocument.createdAt).getTime() -
           new Date(b.EmployeeDocument.createdAt).getTime()
-      ); // Sorting by creation date
+      );
     }
 
     setSortedDocuments(sorted);
@@ -73,7 +75,14 @@ const DocumentSection = ({ employeeData }) => {
       '',
       '',
       '',
-      <FaTrash key={1} className="text-dark-navy w-5" />,
+      <FaTrash
+        onClick={() => {
+          setDocumentId(document.id);
+          setOpenDeleteModal(true);
+        }}
+        key={1}
+        className="text-dark-navy w-5"
+      />,
     ];
   });
   return (
@@ -117,6 +126,15 @@ const DocumentSection = ({ employeeData }) => {
           onClose={() => {
             setOpenModal(false);
           }}
+        />
+      )}
+      {openDeleteModal && (
+        <DeleteDocumentModal
+          onClose={() => {
+            setOpenDeleteModal(false);
+          }}
+          employeeId={employeeData.id}
+          documentId={documentId}
         />
       )}
     </div>

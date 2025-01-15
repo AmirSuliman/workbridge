@@ -48,7 +48,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
             <article>
               <Label text="Employment Type*" /> <br />
               <select
-                className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
+                className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
                 {...register('employmentType', {
                   required: 'Employment Type is required',
                 })}
@@ -88,7 +88,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
             <article>
               <Label text="Pay type*" /> <br />
               <select
-                className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
+                className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
                 {...register('payType', {
                   required: 'Paytype is required',
                 })}
@@ -104,7 +104,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
             <article>
               <Label text="Schedule*" /> <br />
               <select
-                className="p-3 rounded-md bg-transparent border w-full text-sm text-[#abaeb4]"
+                className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
                 {...register('paymentSchedule', {
                   required: 'Schedule is required',
                 })}

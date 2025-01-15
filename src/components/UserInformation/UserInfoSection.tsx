@@ -1,18 +1,32 @@
 'use client';
+import ProfilePicture from '@/app/hr/employees/components/ProfilePicture';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { HiMiniGlobeAmericas, HiMiniHomeModern } from 'react-icons/hi2';
 import BasicInfoIcon from '../icons/basic-info-icon';
 import FormHeading from './FormHeading';
 
-const UserInfoSection = ({ errors, register, editEmployee }) => {
+const UserInfoSection = ({
+  errors,
+  register,
+  previewUrl,
+  editEmployee,
+  handleFileChange,
+}) => {
   return (
     <main className="p-4 rounded-md border-[1px] border-gray-border bg-white h-full">
       {/* Basic Information */}
       <div className="my-5">
         <FormHeading
-          icon={<BasicInfoIcon classNames="w-4" />}
           text="Basic Information"
+          icon={<BasicInfoIcon classNames="w-4" />}
         />
+        {editEmployee && (
+          <ProfilePicture
+            errors={errors}
+            previewUrl={previewUrl}
+            handleFileChange={handleFileChange}
+          />
+        )}
         <div className="grid sm:grid-cols-3 gap-4 my-5">
           <div className="flex flex-col">
             <h6 className="text-[#abaeb4] text-xs mb-1">First Name</h6>
@@ -66,7 +80,9 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
                 className="p-3 rounded-md bg-transparent border w-full text-sm "
                 {...register('gender', { required: 'Gender is required' })}
               >
-                <option value="" className='font-bold'>Select Gender</option>
+                <option value="" className="font-bold">
+                  Select Gender
+                </option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Prefer not to say">Prefer not to say</option>
@@ -107,7 +123,9 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               />
             )}
             {errors.marritialStatus && (
-              <p className="text-red-500 text-xs">Marritial Status is required</p>
+              <p className="text-red-500 text-xs">
+                Marritial Status is required
+              </p>
             )}
           </div>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
@@ -152,7 +170,9 @@ const UserInfoSection = ({ errors, register, editEmployee }) => {
               readOnly={!editEmployee}
             />
             {errors.location?.street2 && (
-              <p className="text-red-500 text-xs">{errors.location?.street2.message}</p>
+              <p className="text-red-500 text-xs">
+                {errors.location?.street2.message}
+              </p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
