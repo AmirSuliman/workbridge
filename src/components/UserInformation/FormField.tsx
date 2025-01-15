@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React from 'react';
 
 interface FormFieldProps {
@@ -21,7 +21,7 @@ const FormField: React.FC<FormFieldProps> = ({
       <h6 className="text-[#abaeb4] text-xs mb-1">{label}</h6>
       <input
         type="text"
-        className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md ${className}`}
+        className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md ${className}`}
         value={value}
         onChange={onChange}
         placeholder={placeholder}

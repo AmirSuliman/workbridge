@@ -64,13 +64,13 @@ const UserInfoSection = ({
           <div className="flex flex-col">
             <h6 className="text-[#abaeb4] text-xs mb-1">Birthday</h6>
             <input
-              type={editEmployee ? 'date' : 'text'}
+              type="date"
               className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('birthday', { required: true })}
               readOnly={!editEmployee}
             />
             {errors.birthday && (
-              <p className="text-red-500 text-xs">Birthday is required</p>
+              <p className="text-red-500 text-xs">{errors.birthday.message}</p>
             )}
           </div>
           <div className="flex flex-col">
@@ -85,7 +85,6 @@ const UserInfoSection = ({
                 </option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
-                <option value="Prefer not to say">Prefer not to say</option>
               </select>
             ) : (
               <input
@@ -112,7 +111,7 @@ const UserInfoSection = ({
                 <option value="Single">Single</option>
                 <option value="Married">Married</option>
                 <option value="Enganged">Enganged</option>
-                <option value="Divorced">Divorced</option>
+                <option value="Prefer not say">Prefer not to say</option>
               </select>
             ) : (
               <input

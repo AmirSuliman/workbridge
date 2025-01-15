@@ -33,7 +33,7 @@ const DepratmentDropdown = ({ register, errors }) => {
         ))}
       </select>
       {errors.departmentId && (
-        <span className="text-red-500">{errors.departmentId.message}</span>
+        <p className="text-red-500 text-xs">{errors.departmentId.message}</p>
       )}
     </>
   );

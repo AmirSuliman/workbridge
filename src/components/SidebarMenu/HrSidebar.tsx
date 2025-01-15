@@ -1,6 +1,6 @@
 'use client';
 
-import {  useState } from 'react';
+import { useState } from 'react';
 import { HiHome, HiUsers } from 'react-icons/hi';
 import SidebarNavItem from './SidebarNavItem';
 import { FaUserCircle, FaUsers, FaBullhorn } from 'react-icons/fa';
@@ -8,25 +8,22 @@ import { PiHandshakeFill } from 'react-icons/pi';
 import { IoCalendarOutline } from 'react-icons/io5';
 import { IoIosFolderOpen } from 'react-icons/io';
 import { FiMenu, FiTrendingUp } from 'react-icons/fi';
-import {  useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 
 const HrSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [roles, setRoles] = useState<string[]>([]);
+  const [roles] = useState<string[]>([]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  useSelector((state: RootState) => state.myInfo);
 
-  const state = useSelector((state: RootState) => state.myInfo);
-
-  console.log(state, 'Redux State');
   const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
-  console.log(userRole, 'role');
-  const isSuperAdmin = userRole === 'SuperAdmin' || roles.includes('SuperAdmin');
-
+  const isSuperAdmin =
+    userRole === 'SuperAdmin' || roles.includes('SuperAdmin');
 
   return (
     <>
@@ -46,56 +43,56 @@ const HrSidebar = () => {
         <h1 className="text-center px-8 wull text-2xl py-8">
           <b>work</b>Bridge
         </h1>
-          <>
+        <>
+          <SidebarNavItem
+            name="Home"
+            icon={<HiHome size={22} />}
+            href="/hr/home"
+          />
+          <SidebarNavItem
+            name="My Information"
+            icon={<FaUserCircle size={22} />}
+            href="/hr/my-information"
+          />
+          <SidebarNavItem
+            name="Employees"
+            icon={<HiUsers size={22} />}
+            href="/hr/employees"
+          />
+          <SidebarNavItem
+            name="Hiring"
+            icon={<PiHandshakeFill size={22} />}
+            href="/hr/hiring"
+          />
+          <SidebarNavItem
+            name="Leave Requests"
+            icon={<IoCalendarOutline size={22} />}
+            href="/hr/leave-requests"
+          />
+          <SidebarNavItem
+            name="Announcements & Policies"
+            icon={<FaBullhorn size={22} />}
+            href="/hr/announcements-&-policies/announcements"
+          />
+          <SidebarNavItem
+            name="Files"
+            icon={<IoIosFolderOpen size={22} />}
+            href="/hr/files"
+          />
+          {/* Conditionally render Admins */}
+          {isSuperAdmin && (
             <SidebarNavItem
-              name="Home"
-              icon={<HiHome size={22} />}
-              href="/hr/home"
+              name="Admins"
+              icon={<FaUsers size={22} />}
+              href="/hr/admins"
             />
-            <SidebarNavItem
-              name="My Information"
-              icon={<FaUserCircle size={22} />}
-              href="/hr/my-information"
-            />
-            <SidebarNavItem
-              name="Employees"
-              icon={<HiUsers size={22} />}
-              href="/hr/employees"
-            />
-            <SidebarNavItem
-              name="Hiring"
-              icon={<PiHandshakeFill size={22} />}
-              href="/hr/hiring"
-            />
-            <SidebarNavItem
-              name="Leave Requests"
-              icon={<IoCalendarOutline size={22} />}
-              href="/hr/leave-requests"
-            />
-            <SidebarNavItem
-              name="Announcements & Policies"
-              icon={<FaBullhorn size={22} />}
-              href="/hr/announcements-&-policies/announcements"
-            />
-            <SidebarNavItem
-              name="Files"
-              icon={<IoIosFolderOpen size={22} />}
-              href="/hr/files"
-            />
-            {/* Conditionally render Admins */}
-            {isSuperAdmin && (
-              <SidebarNavItem
-                name="Admins"
-                icon={<FaUsers size={22} />}
-                href="/hr/admins"
-              />
-            )}
-            <SidebarNavItem
-              name="Reports"
-              icon={<FiTrendingUp size={22} />}
-              href="/hr/Reports"
-            />
-          </>
+          )}
+          <SidebarNavItem
+            name="Reports"
+            icon={<FiTrendingUp size={22} />}
+            href="/hr/Reports"
+          />
+        </>
       </nav>
     </>
   );

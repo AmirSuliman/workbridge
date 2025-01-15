@@ -1,41 +1,41 @@
 'use client';
 
 import { IMAGES } from '@/constants/images';
+import { RootState } from '@/store/store';
 import { EmployeeData } from '@/types/employee';
-import Image from 'next/image';
 import { CiMobile3 } from 'react-icons/ci';
 import { FaEdit, FaPhoneAlt, FaRegCalendar } from 'react-icons/fa';
 import { HiOutlineHashtag } from 'react-icons/hi';
 import { HiMiniBriefcase } from 'react-icons/hi2';
 import { IoLocationSharp } from 'react-icons/io5';
 import { MdEmail } from 'react-icons/md';
+import { useSelector } from 'react-redux';
+
+import { BiLoaderCircle } from 'react-icons/bi';
 import Button from '../Button';
 import FacebookIcon from '../icons/fb-icon';
 import InstagramIcon from '../icons/instagram-icon';
 import LinkedinIcon from '../icons/linkedin-icon';
 import ProfileInfoItem from './ProfileInfoItem';
-import { RootState } from '@/store/store';
-import { useSelector } from 'react-redux';
 
 const ProfileCard = ({
   setEditEmployee,
   editEmployee,
   employeeData,
+  loading,
 }: {
   setEditEmployee: (value: boolean) => void;
   editEmployee: boolean;
   employeeData: EmployeeData;
+  loading?: boolean;
 }) => {
   const hireDate = employeeData?.hireDate
     ? employeeData.hireDate.split('T')[0]
     : 'N/A';
 
+  useSelector((state: RootState) => state.myInfo);
 
-    const state = useSelector((state: RootState) => state.myInfo);
-
-    console.log(state, 'Redux State');
-    const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
-    console.log(userRole, 'role');
+  const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
   const calculateDuration = (startDate: string | undefined): string => {
     if (!startDate) return 'N/A';
 
@@ -75,7 +75,7 @@ const ProfileCard = ({
     >
       <div className="flex gap-4">
         <div className="flex flex-col items-center">
-          <Image
+          <img
             className="rounded-full max-w-[6rem] object-contain"
             src={employeeData?.profilePictureUrl || IMAGES.placeholderAvatar}
             height={1000}
@@ -124,18 +124,29 @@ const ProfileCard = ({
               </p>
             </div>
             <div className="flex items-center gap-4">
-            {userRole !== 'ViewOnly' && (
-              <Button
-                type={editEmployee ? 'submit' : 'button'}
-                onClick={() => {
-                  setEditEmployee(true);
-                }}
-                className={'!bg-dark-navy !text-white !text-xs'}
-                icon={!editEmployee && <FaEdit />}
-                name={editEmployee ? 'Save Changes' : 'Edit Profile'}
-              />)}
+              {userRole !== 'ViewOnly' &&
+                (loading ? (
+                  <Button
+                    className={'!bg-dark-navy !text-white !text-xs'}
+                    icon={
+                      <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+                    }
+                    name=""
+                  />
+                ) : (
+                  <Button
+                    type={editEmployee ? 'submit' : 'button'}
+                    onClick={() => {
+                      setEditEmployee(true);
+                    }}
+                    className={'!bg-dark-navy !text-white !text-xs'}
+                    icon={!editEmployee && <FaEdit />}
+                    name={editEmployee ? 'Save Changes' : 'Edit Profile'}
+                  />
+                ))}
               {editEmployee && (
                 <button
+                  type="button"
                   onClick={() => {
                     setEditEmployee(false);
                   }}

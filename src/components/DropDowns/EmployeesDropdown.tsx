@@ -33,7 +33,7 @@ const EmployeesDropdown = ({ register, errors }) => {
         ))}
       </select>
       {errors.reportingManagerId && (
-        <span className="text-red-500">
+        <span className="text-red-500 text-xs">
           {errors.reportingManagerId.message}
         </span>
       )}

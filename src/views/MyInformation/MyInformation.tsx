@@ -10,12 +10,14 @@ import NotesSection from '@/components/UserInformation/NotesSection';
 import TimeOffSection from '@/components/UserInformation/TimeOffSection';
 import UserInfoSection from '@/components/UserInformation/UserInfoSection';
 import axiosInstance from '@/lib/axios';
+import { dateFieldSchema } from '@/schemas/dateSchema';
 import {
   clearEmployeeData,
   fetchEmployeeData,
 } from '@/store/slices/employeeInfoSlice';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { AppDispatch, RootState } from '@/store/store';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
@@ -30,6 +32,7 @@ interface ErrorResponse {
 
 const MyInformation = () => {
   const [myInfoLoading, setMyInfoLoading] = useState(true);
+  const [editLoading, setEditLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.myInfo);
   const myId = user?.user?.employeeId; // This id is used to view the current logged in user's info
@@ -48,6 +51,8 @@ const MyInformation = () => {
     reset,
     formState: { errors },
   } = useForm({
+    resolver: zodResolver(dateFieldSchema),
+    mode: 'onChange',
     defaultValues: employeeData || undefined,
   });
 
@@ -105,7 +110,6 @@ const MyInformation = () => {
   useEffect(() => {
     if (employeeData) {
       reset(employeeData);
-      console.log(employeeData);
     }
   }, [employeeData, reset]);
 
@@ -117,6 +121,12 @@ const MyInformation = () => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files) {
         const file = event.target.files[0];
+        const fileType = file.type;
+
+        if (!['image/png', 'image/jpeg'].includes(fileType)) {
+          console.log('selected file type: ', fileType);
+          return toast.error('Only jpeg, jpg and png files are allowed!');
+        }
         setSelectedFile(file);
         const blobUrl = URL.createObjectURL(file);
         setPreviewUrl(blobUrl);
@@ -131,21 +141,21 @@ const MyInformation = () => {
       toast.error('Please select a profile picture.');
       return;
     }
-
     const formData = new FormData();
     formData.append('file', selectedFile);
-
     try {
       const response = await axiosInstance.post('/file/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('profilePic response: ', response.data);
-      console.log('profilePic response url: ', response.data.data.url);
-      setPreviewUrl(response.data.data.url);
+      const uploadedUrl = response.data.data.url;
+      console.log('Uploaded URL:', uploadedUrl);
+      setPreviewUrl(uploadedUrl);
+      return { uploadedUrl, error: null };
     } catch (err) {
       console.error(err);
+      return { error: err };
     }
   };
 
@@ -168,7 +178,6 @@ const MyInformation = () => {
       effectiveDate: data.effectiveDate,
       overtime: data.overtime,
       note: data.note,
-      profilePictureUrl: previewUrl,
       linkedin: data.linkedin,
       instagram: data.instagram,
       website: data.website,
@@ -189,17 +198,31 @@ const MyInformation = () => {
       },
     };
     try {
+      setEditLoading(true);
       // handle profile picture to get url from the upload picture
       // then send that url to the backend as a profilePictureUrl
-      handleUpload();
+      let uploadResponse: { uploadedUrl?: string; error?: unknown } | null =
+        null;
+      if (selectedFile) {
+        uploadResponse = (await handleUpload()) || { error: null };
+      }
 
-      await axiosInstance.put(
+      // Add profilePictureUrl to payload
+      const finalPayload = {
+        ...payLoad,
+        profilePictureUrl: uploadResponse?.uploadedUrl,
+      };
+      console.log('Playload: ', payLoad);
+      const response = await axiosInstance.put(
         `/employee/${empId || session?.user.userId}`,
-        payLoad
+        finalPayload
       );
+      console.log('response: ', response.data);
       toast.success('Employee information updated successfully!');
+      setEditLoading(false);
     } catch (err) {
       console.error('Error updating employee data:', err);
+      setEditLoading(false);
 
       // Check if it's an AxiosError
       if ((err as AxiosError<ErrorResponse>).response) {
@@ -244,6 +267,7 @@ const MyInformation = () => {
         setEditEmployee={setEditEmployee}
         editEmployee={editEmployee}
         employeeData={employeeData}
+        loading={editLoading}
       />
       <TabsContainer containerClasses="my-1 pb-2 md:pb-4">
         <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
@@ -261,35 +285,39 @@ const MyInformation = () => {
           >
             Employment
           </Tab>
-          <Tab
-            index={2}
-            tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-            activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-          >
-            Time Off{' '}
-          </Tab>
-          <Tab
-            index={3}
-            tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-            activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-          >
-            Documents
-          </Tab>
-          <Tab
-            index={4}
-            tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-            activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-          >
-            Emergency
-          </Tab>
-          {!empId && (
-            <Tab
-              index={5}
-              tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-              activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-            >
-              Notes
-            </Tab>
+          {!editEmployee && (
+            <>
+              <Tab
+                index={2}
+                tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
+                activeTabStyle="font-semibold border-b-2 !border-dark-navy"
+              >
+                Time Off{' '}
+              </Tab>
+              <Tab
+                index={3}
+                tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
+                activeTabStyle="font-semibold border-b-2 !border-dark-navy"
+              >
+                Documents
+              </Tab>
+              <Tab
+                index={4}
+                tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
+                activeTabStyle="font-semibold border-b-2 !border-dark-navy"
+              >
+                Emergency
+              </Tab>
+              {!empId && (
+                <Tab
+                  index={5}
+                  tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
+                  activeTabStyle="font-semibold border-b-2 !border-dark-navy"
+                >
+                  Notes
+                </Tab>
+              )}
+            </>
           )}
         </div>
         <div>

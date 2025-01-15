@@ -1,10 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
+import axiosInstance from '@/lib/axios';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { MdOutlineSick } from 'react-icons/md';
 import { PiUmbrellaLight } from 'react-icons/pi';
 import LeaveAndVacationCard from '../LeaveAndVacationCard/LeaveAndVacationCard';
-import { MdOutlineSick } from 'react-icons/md';
-import axios from 'axios';
-import axiosInstance from '@/lib/axios';
 
 interface Timeoff {
   id: string;
@@ -15,8 +15,8 @@ interface Timeoff {
 
 const WhosOut = () => {
   const [timeoffs, setTimeoffs] = useState<Timeoff[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setLoading] = useState(true);
+  const [, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTimeoffs = async () => {
@@ -24,27 +24,25 @@ const WhosOut = () => {
         setLoading(true);
 
         const response = await axiosInstance.get('/timeoffs');
-        console.log(response.data, 'API Response');
 
         const fetchedTimeoffs = Array.isArray(response.data?.data?.items)
           ? response.data.data.items
           : [];
-
-        console.log(fetchedTimeoffs, 'Fetched Timeoffs');
 
         const formattedTimeoffs = fetchedTimeoffs.map((item) => {
           const employee = item.employee;
           return {
             id: item.id || 'Unknown ID',
             employeeName: employee
-              ? `${employee.firstName || 'Unknown'} ${employee.lastName || ''}`.trim()
+              ? `${employee.firstName || 'Unknown'} ${
+                  employee.lastName || ''
+                }`.trim()
               : 'Unknown',
             startDate: item.leaveDay || null,
             endDate: item.returningDay || null,
           };
         });
 
-        console.log(formattedTimeoffs, 'Formatted Timeoffs');
         setTimeoffs(formattedTimeoffs);
       } catch (err) {
         if (axios.isAxiosError(err)) {
@@ -81,7 +79,9 @@ const WhosOut = () => {
 
   const upcomingWeekTimeoffs = timeoffs.filter((timeoff) => {
     const startDate = formatDate(timeoff.startDate);
-    return startDate && startDate >= startOfNextWeek && startDate <= endOfNextWeek;
+    return (
+      startDate && startDate >= startOfNextWeek && startDate <= endOfNextWeek
+    );
   });
 
   return (
@@ -113,20 +113,33 @@ const WhosOut = () => {
         <table className="w-full">
           <thead>
             <tr>
-              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">Employee</th>
-              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">Leaving</th>
-              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">Returning</th>
+              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">
+                Employee
+              </th>
+              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">
+                Leaving
+              </th>
+              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">
+                Returning
+              </th>
             </tr>
           </thead>
           <tbody>
             {todayTimeoffs.map((timeoff) => (
-              <tr key={timeoff.id} className="border-b-[1px] border-[#E8E8E8] text-sm">
+              <tr
+                key={timeoff.id}
+                className="border-b-[1px] border-[#E8E8E8] text-sm"
+              >
                 <td className="p-4">{timeoff.employeeName}</td>
                 <td className="p-4">
-                  {timeoff.startDate ? new Date(timeoff.startDate).toLocaleDateString() : 'N/A'}
+                  {timeoff.startDate
+                    ? new Date(timeoff.startDate).toLocaleDateString()
+                    : 'N/A'}
                 </td>
                 <td className="p-4">
-                  {timeoff.endDate ? new Date(timeoff.endDate).toLocaleDateString() : 'N/A'}
+                  {timeoff.endDate
+                    ? new Date(timeoff.endDate).toLocaleDateString()
+                    : 'N/A'}
                 </td>
               </tr>
             ))}
@@ -140,20 +153,33 @@ const WhosOut = () => {
         <table className="w-full">
           <thead>
             <tr>
-              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">Employee</th>
-              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">Leaving</th>
-              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">Returning</th>
+              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">
+                Employee
+              </th>
+              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">
+                Leaving
+              </th>
+              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">
+                Returning
+              </th>
             </tr>
           </thead>
           <tbody>
             {upcomingWeekTimeoffs.map((timeoff) => (
-              <tr key={timeoff.id} className="border-b-[1px] border-[#E8E8E8] text-sm">
+              <tr
+                key={timeoff.id}
+                className="border-b-[1px] border-[#E8E8E8] text-sm"
+              >
                 <td className="p-4">{timeoff.employeeName}</td>
                 <td className="p-4">
-                  {timeoff.startDate ? new Date(timeoff.startDate).toLocaleDateString() : 'N/A'}
+                  {timeoff.startDate
+                    ? new Date(timeoff.startDate).toLocaleDateString()
+                    : 'N/A'}
                 </td>
                 <td className="p-4">
-                  {timeoff.endDate ? new Date(timeoff.endDate).toLocaleDateString() : 'N/A'}
+                  {timeoff.endDate
+                    ? new Date(timeoff.endDate).toLocaleDateString()
+                    : 'N/A'}
                 </td>
               </tr>
             ))}

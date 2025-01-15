@@ -64,8 +64,6 @@ const Auth = () => {
 
           // Dispatch user data to Redux
           dispatch(setUser(userData));
-          console.log('User data:', userData);
-
           toast.success('Login Successful!');
           router.push('/hr/home');
         } catch (error) {

@@ -14,6 +14,8 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import axios from 'axios';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { dateFieldSchema } from '@/schemas/dateSchema';
 
 const CreateEmployee = () => {
   const [loader, setLoader] = useState(false);
@@ -25,6 +27,15 @@ const CreateEmployee = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
+      const fileType = file.type;
+      const sizeInKb = file.size / 1024;
+      if (sizeInKb > 1024) {
+        return toast.error('Image size cannot be more than 1Mb.');
+      }
+      if (!['image/png', 'image/jpeg'].includes(fileType)) {
+        console.log('selected file type: ', fileType);
+        return toast.error('Only jpeg, jpg and png files are allowed!');
+      }
       setSelectedFile(file);
       const blobUrl = URL.createObjectURL(file);
       setPreviewUrl(blobUrl);
@@ -37,32 +48,36 @@ const CreateEmployee = () => {
       toast.error('Please select a profile picture.');
       return;
     }
-
     const formData = new FormData();
     formData.append('file', selectedFile);
-
     try {
       const response = await axiosInstance.post('/file/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('profilePic response: ', response.data);
-      console.log('profilePic response url: ', response.data.data.url);
-      setPreviewUrl(response.data.data.url);
+      const uploadedUrl = response.data.data.url;
+      console.log('Uploaded URL:', uploadedUrl);
+      setPreviewUrl(uploadedUrl);
+      return uploadedUrl;
     } catch (err) {
       console.error(err);
     }
   };
 
-  const formMethods = useForm<EmployeeData>();
+  const formMethods = useForm<EmployeeData>({
+    resolver: zodResolver(dateFieldSchema),
+    mode: 'onChange',
+  });
   const { handleSubmit, reset } = formMethods;
   const onSubmit = async (data) => {
     try {
       setLoader(true);
       // handle profile picture to get url from the upload picture
       // then send that url to the backend as a profilePictureUrl
-      handleUpload();
+      if (selectedFile) {
+        await handleUpload();
+      }
 
       const response = await axiosInstance.post('/employee', {
         ...data,
@@ -70,12 +85,12 @@ const CreateEmployee = () => {
       });
       console.log('previewUrl after create employee: ', previewUrl);
       toast.success('Employee created successfully!');
+      reset();
       console.log('post employee: ', response);
       setLoader(false);
     } catch (error) {
       setLoader(false);
       setPreviewUrl(null);
-
       if (axios.isAxiosError(error) && error.response) {
         toast.error(error.response.data.message);
       } else {
@@ -84,9 +99,7 @@ const CreateEmployee = () => {
       console.error(error);
     } finally {
       setLoader(false);
-      reset();
     }
-    reset();
   };
   return (
     <main>

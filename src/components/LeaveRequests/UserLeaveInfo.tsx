@@ -37,8 +37,6 @@ const UserLeaveInfo = () => {
     const fetchLeaveData = async () => {
       try {
         const response = await axiosInstance.get(`/timeoffs`);
-        console.log('API Response:', response.data);
-
         const allLeaves = response.data.data.items;
 
         if (allLeaves.length > 0) {

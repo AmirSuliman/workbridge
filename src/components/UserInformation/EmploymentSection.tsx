@@ -14,7 +14,6 @@ const EmploymentSection = ({
   editEmployee,
   employeeData,
 }) => {
-  console.log('employeeData', employeeData);
   const hireDate = employeeData?.hireDate
     ? employeeData.hireDate.split('T')[0]
     : 'N/A';
@@ -47,16 +46,15 @@ const EmploymentSection = ({
         </div>
         <div className="grid md:grid-cols-3 gap-4">
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
-            Hire Date
+            Hire Date*
             <input
               type={editEmployee ? 'date' : 'text'}
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('hireDate', { required: true })}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              {...register('hireDate', { required: 'hire date is required' })}
               readOnly={!editEmployee}
-              defaultValue={hireDate.split('T')[0]}
             />
             {errors.hireDate && (
-              <p className="text-red-500">hireDate is required</p>
+              <p className="text-red-500">{errors.hireDate.message}</p>
             )}
           </label>
           {!editEmployee && (
@@ -82,12 +80,14 @@ const EmploymentSection = ({
             Effective Date
             <input
               type={editEmployee ? 'date' : 'text'}
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('effectiveDate', { required: true })}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              {...register('effectiveDate', {
+                required: 'effectiveDate is required',
+              })}
               readOnly={!editEmployee}
             />
             {errors.effectiveDate && (
-              <p className="text-red-500">effectiveDate is required</p>
+              <p className="text-red-500">{errors.effectiveDate.message}</p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
@@ -109,12 +109,12 @@ const EmploymentSection = ({
             Note
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('note', { required: true })}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              {...register('note')}
               readOnly={!editEmployee}
             />
             {errors.note && (
-              <p className="text-red-500">{errors.note.message}</p>
+              <p className="text-red-500 text-xs">{errors.note.message}</p>
             )}
           </label>
         </div>
@@ -239,7 +239,9 @@ const EmploymentSection = ({
                 <option value="Contract">Contract</option>
               </select>
               {errors.payType && (
-                <span className="text-red-500">{errors.payType.message}</span>
+                <span className="text-red-500 text-xs">
+                  {errors.payType.message}
+                </span>
               )}
             </article>
             <article>
