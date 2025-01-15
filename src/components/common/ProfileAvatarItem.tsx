@@ -1,5 +1,6 @@
-import { IMAGES } from '@/constants/images';
 import React from 'react';
+import Image from 'next/image';
+import { IMAGES } from '@/constants/images';
 interface ProfileAvatarItemProps {
   src: string;
   title: string;
@@ -14,8 +15,8 @@ const ProfileAvatarItem: React.FC<ProfileAvatarItemProps> = ({
   title,
 }) => {
   return (
-    <div className="flex items-center p-0 gap-2">
-      <img
+    <div className="flex  items-center p-0 gap-2">
+      <Image
         src={src && src !== '' ? src : IMAGES.placeholderAvatar}
         alt={alt}
         width={500}

@@ -11,12 +11,13 @@ import { IoLocationSharp } from 'react-icons/io5';
 import { MdEmail } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 
-import { BiLoaderCircle } from 'react-icons/bi';
+import Image from 'next/image';
 import Button from '../Button';
 import FacebookIcon from '../icons/fb-icon';
 import InstagramIcon from '../icons/instagram-icon';
 import LinkedinIcon from '../icons/linkedin-icon';
 import ProfileInfoItem from './ProfileInfoItem';
+import { BiLoaderCircle } from 'react-icons/bi';
 
 const ProfileCard = ({
   setEditEmployee,
@@ -75,7 +76,7 @@ const ProfileCard = ({
     >
       <div className="flex gap-4">
         <div className="flex flex-col items-center">
-          <img
+          <Image
             className="rounded-full max-w-[6rem] object-contain"
             src={employeeData?.profilePictureUrl || IMAGES.placeholderAvatar}
             height={1000}
