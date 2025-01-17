@@ -3,10 +3,10 @@ import { z } from 'zod';
 export const employeeSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
-  departmentId: z
-    .number()
-    .int()
-    .positive('Department ID must be a positive integer'),
+  // departmentId: z
+  //   .number()
+  //   .int()
+  //   .positive('Department ID must be a positive integer'),
   email: z.string().email('Invalid email address'),
   middleName: z.string().optional(),
   salary: z.number().min(0, 'Salary must be a positive number'),
@@ -57,10 +57,10 @@ export const employeeSchema = z.object({
   workPhone: z
     .string()
     .min(7, 'Work phone number must be at least 7 characters'),
-  reportingManagerId: z
-    .number()
-    .int()
-    .positive('Reporting Manager ID must be a positive integer'),
+  // reportingManagerId: z
+  //   .number()
+  //   .int()
+  //   .positive('Reporting Manager ID must be a positive integer'),
   // employmentType: z
   //   .enum(['Fulltime', 'Parttime', 'Contractor', 'Intern'])
   //   .refine(

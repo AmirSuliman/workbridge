@@ -3,8 +3,11 @@ import Button from '@/components/Button';
 import Tab from '@/components/common/TabsComponent/Tab';
 import TabPanel from '@/components/common/TabsComponent/TabPanel';
 import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
+import DocumentSection from '@/components/UserInformation/DocumentSection';
 import axiosInstance from '@/lib/axios';
 import { employeeSchema } from '@/schemas/employeeSchema';
+import { updateEmployeeData } from '@/store/slices/employeeInfoSlice';
+import { AppDispatch, RootState } from '@/store/store';
 import { EmployeeData } from '@/types/employee';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
@@ -13,25 +16,26 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { TbEdit } from 'react-icons/tb';
+import { useDispatch, useSelector } from 'react-redux';
 import BasicInfo from '../components/form/BasicInfo';
-import Documents from '../components/form/Documents';
 import Employment from '../components/form/Employement';
 
 const CreateEmployee = () => {
   const [loader, setLoader] = useState(false);
-  const router = useRouter();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const { data: employeeData } = useSelector(
+    (state: RootState) => state.employee
+  );
+  console.log('create employeeData: ', employeeData);
   // profile picture
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
       const fileType = file.type;
-      const sizeInKb = file.size / 1024;
-      if (sizeInKb > 1024) {
-        return toast.error('Image size cannot be more than 1Mb.');
-      }
+
       if (!['image/png', 'image/jpeg'].includes(fileType)) {
         console.log('selected file type: ', fileType);
         return toast.error('Only jpeg, jpg and png files are allowed!');
@@ -66,7 +70,7 @@ const CreateEmployee = () => {
   };
 
   const formMethods = useForm<EmployeeData>({
-    resolver: zodResolver(employeeSchema),
+    // resolver: zodResolver(employeeSchema),
     // mode: 'onChange',
   });
   const { handleSubmit, reset } = formMethods;
@@ -83,7 +87,7 @@ const CreateEmployee = () => {
         ...data,
         profilePictureUrl: previewUrl,
       });
-      console.log('previewUrl after create employee: ', previewUrl);
+      dispatch(updateEmployeeData(response.data.data));
       toast.success('Employee created successfully!');
       reset();
       console.log('post employee: ', response);
@@ -134,13 +138,15 @@ const CreateEmployee = () => {
           >
             Employment
           </Tab>
-          <Tab
-            index={2}
-            tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-            activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-          >
-            Documents
-          </Tab>
+          {employeeData && (
+            <Tab
+              index={2}
+              tabStyles="text-xs px-[3%] py-3 text-dark-navy whitespace-nowrap"
+              activeTabStyle="font-semibold border-b-2 !border-dark-navy"
+            >
+              Documents
+            </Tab>
+          )}
         </div>
         <div>
           {/* using form provider for multi-step form */}
@@ -156,7 +162,7 @@ const CreateEmployee = () => {
                 <Employment loader={loader} />
               </TabPanel>
               <TabPanel index={2}>
-                <Documents />
+                <DocumentSection employeeData={employeeData} />
               </TabPanel>
             </form>
           </FormProvider>
