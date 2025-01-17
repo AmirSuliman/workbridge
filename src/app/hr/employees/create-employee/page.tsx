@@ -3,19 +3,19 @@ import Button from '@/components/Button';
 import Tab from '@/components/common/TabsComponent/Tab';
 import TabPanel from '@/components/common/TabsComponent/TabPanel';
 import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
+import axiosInstance from '@/lib/axios';
+import { employeeSchema } from '@/schemas/employeeSchema';
+import { EmployeeData } from '@/types/employee';
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { TbEdit } from 'react-icons/tb';
 import BasicInfo from '../components/form/BasicInfo';
 import Documents from '../components/form/Documents';
 import Employment from '../components/form/Employement';
-import { EmployeeData } from '@/types/employee';
-import axiosInstance from '@/lib/axios';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import axios from 'axios';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { dateFieldSchema } from '@/schemas/dateSchema';
 
 const CreateEmployee = () => {
   const [loader, setLoader] = useState(false);
@@ -66,8 +66,8 @@ const CreateEmployee = () => {
   };
 
   const formMethods = useForm<EmployeeData>({
-    resolver: zodResolver(dateFieldSchema),
-    mode: 'onChange',
+    resolver: zodResolver(employeeSchema),
+    // mode: 'onChange',
   });
   const { handleSubmit, reset } = formMethods;
   const onSubmit = async (data) => {

@@ -19,7 +19,20 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
   } = useFormContext<EmployeeData>();
 
   const handleNext = async () => {
-    const isValid = await trigger();
+    const fieldNamesForTab = [
+      'firstName',
+      'lastName',
+      'email',
+      'birthday',
+      'gender',
+      'marritialStatus',
+      'street1',
+      'street2',
+      'country',
+      'state',
+      'city',
+    ];
+    const isValid = await trigger(fieldNamesForTab as (keyof EmployeeData)[]);
     if (isValid) {
       setActiveTab(activeTab + 1);
     }

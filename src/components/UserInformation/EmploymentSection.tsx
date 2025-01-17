@@ -14,12 +14,13 @@ const EmploymentSection = ({
   editEmployee,
   employeeData,
 }) => {
+  console.log('employeeData: ', employeeData);
   const hireDate = employeeData?.hireDate
     ? employeeData.hireDate.split('T')[0]
     : 'N/A';
 
   const calculateDuration = (startDate: string | undefined): string => {
-    if (!startDate) return 'N/A';
+    if (!startDate) return '';
 
     const start = new Date(startDate);
     const now = new Date();
@@ -36,10 +37,10 @@ const EmploymentSection = ({
     const remainingMonths = months % 12;
     return `${years}y ${remainingMonths}m`;
   };
-  const duration = employeeData?.hireDate ? calculateDuration(hireDate) : 'N/A';
+  const duration = employeeData?.hireDate ? calculateDuration(hireDate) : '';
 
   return (
-    <main className="p-1 md:p-4 rounded-md  h-full">
+    <main className="rounded-md  h-full">
       <div className="p-3 sm:p-6 rounded-[10px] border-gray-border border-[1px] bg-white mb-4">
         <div className="mb-5">
           <FormHeading icon={<HiMiniBriefcase className="w-4" />} text="Job" />
@@ -48,7 +49,7 @@ const EmploymentSection = ({
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             Hire Date*
             <input
-              type={editEmployee ? 'date' : 'text'}
+              type="date"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('hireDate', { required: 'hire date is required' })}
               readOnly={!editEmployee}
@@ -79,7 +80,7 @@ const EmploymentSection = ({
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             Effective Date
             <input
-              type={editEmployee ? 'date' : 'text'}
+              type="date"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('effectiveDate', {
                 required: 'effectiveDate is required',
@@ -97,7 +98,6 @@ const EmploymentSection = ({
               {...register('employmentType', {
                 required: 'Employment Type is required',
               })}
-              defaultValue={employeeData?.employmentType || ''}
             >
               <option value="">Select Type</option>
               <option value="Fulltime">Full-Time</option>
@@ -128,7 +128,7 @@ const EmploymentSection = ({
           />
         </div>
 
-        {!editEmployee ? (
+        <div className={`${editEmployee ? 'hidden' : 'block'}`}>
           <InfoGrid
             cols={6}
             headers={[
@@ -137,47 +137,60 @@ const EmploymentSection = ({
               'Division',
               'Department',
               'Job Title',
-              'Reporting Message',
+              'Reporting Manager',
             ]}
             values={[
               [
-                `${employeeData?.effectiveDate || 'N/A'}`,
-                `${employeeData?.location.country || ''}, ${
-                  employeeData?.location.state || ''
+                `${
+                  employeeData?.effectiveDate
+                    ? employeeData?.effectiveDate.split('T')[0] || 'N/A'
+                    : 'N/A'
                 }`,
-                `${employeeData?.location.country}`,
-                `${employeeData?.department.name || 'N/A'}`,
+                `${employeeData?.location?.country || ''}, ${
+                  employeeData?.location?.state || ''
+                }`,
+                `${employeeData?.location?.country}`,
+                `${employeeData?.department?.name || 'N/A'}`,
                 `${employeeData?.tittle || 'N/A'}`,
-                `${employeeData?.reportingManagerId || 'N/A'}`,
+                `${employeeData?.manager?.firstName} ${employeeData?.manager?.lastName}`,
               ],
             ]}
           />
-        ) : (
-          <div className="grid md:grid-cols-3 gap-4">
-            <article>
-              <Label text="Department*" /> <br />{' '}
-              <DepratmentDropdown register={register} errors={errors} />
-            </article>
-            <article>
-              <Label text="Reporting Manager*" /> <br />
-              <EmployeesDropdown register={register} errors={errors} />
-            </article>
-            <article>
-              <Label text="Job Title*" /> <br />
-              <input
-                type="text"
-                placeholder="Add job title"
-                className="p-2 rounded-md bg-transparent border w-full"
-                {...register('tittle', {
-                  required: 'Job title is required',
-                })}
-              />
-              {errors.tittle && (
-                <span className="text-red-500">{errors.tittle.message}</span>
-              )}
-            </article>
-          </div>
-        )}
+        </div>
+        <div
+          className={`${editEmployee ? 'grid md:grid-cols-3 gap-4' : 'hidden'}`}
+        >
+          <article>
+            <Label text="Department*" /> <br />{' '}
+            <DepratmentDropdown
+              errors={errors}
+              register={register}
+              departmentId={employeeData.id}
+            />
+          </article>
+          <article>
+            <Label text="Reporting Manager*" /> <br />
+            <EmployeesDropdown
+              errors={errors}
+              register={register}
+              reportingManagerId={employeeData.reportingManagerId}
+            />
+          </article>
+          <article>
+            <Label text="Job Title*" /> <br />
+            <input
+              type="text"
+              placeholder="Add job title"
+              className="p-2 rounded-md bg-transparent border w-full"
+              {...register('tittle', {
+                required: 'Job title is required',
+              })}
+            />
+            {errors.tittle && (
+              <span className="text-red-500">{errors.tittle.message}</span>
+            )}
+          </article>
+        </div>
       </div>
       <div className="p-3 sm:p-6 rounded-[10px] border-gray-border border-[1px] bg-white my-5">
         <div className="mb-5">
@@ -198,16 +211,18 @@ const EmploymentSection = ({
               'Overtime',
               'Note',
             ]}
-            values={[
-              [
-                `${employeeData?.effectiveDate || 'N/A'}`,
-                `${employeeData?.salary || 'N/A'}`,
-                `${employeeData?.paymentSchedule || 'N/A'}`,
-                'Salary',
-                'Exempt',
-                '',
-              ],
-            ]}
+            values={
+              employeeData.payments
+                ? employeeData?.payments?.map((payment) => [
+                    payment.effectiveDate.split('T')[0] || 'N/A',
+                    payment.payRate || 'N/A',
+                    payment.paymentSchedule || 'N/A',
+                    payment.payType || 'N/A',
+                    payment.overtime ? 'Liable' : 'Exempt',
+                    payment.note || 'N/A',
+                  ])
+                : ['', '', '', '', '', '']
+            }
           />
         ) : (
           <div className="grid grid-cols-3 gap-4">

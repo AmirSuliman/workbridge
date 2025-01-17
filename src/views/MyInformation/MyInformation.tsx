@@ -10,10 +10,11 @@ import NotesSection from '@/components/UserInformation/NotesSection';
 import TimeOffSection from '@/components/UserInformation/TimeOffSection';
 import UserInfoSection from '@/components/UserInformation/UserInfoSection';
 import axiosInstance from '@/lib/axios';
-import { dateFieldSchema } from '@/schemas/dateSchema';
+import { employeeSchema } from '@/schemas/employeeSchema';
 import {
   clearEmployeeData,
   fetchEmployeeData,
+  updateEmployeeData,
 } from '@/store/slices/employeeInfoSlice';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { AppDispatch, RootState } from '@/store/store';
@@ -45,15 +46,27 @@ const MyInformation = () => {
     loading,
   } = useSelector((state: RootState) => state.employee);
 
+  const formattedData = {
+    ...employeeData,
+    birthday: employeeData?.birthday
+      ? new Date(employeeData.birthday).toISOString().split('T')[0]
+      : '',
+    hireDate: employeeData?.hireDate
+      ? new Date(employeeData.hireDate).toISOString().split('T')[0]
+      : '',
+    effectiveDate: employeeData?.effectiveDate
+      ? new Date(employeeData.effectiveDate).toISOString().split('T')[0]
+      : '',
+  };
   const {
+    reset,
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(dateFieldSchema),
-    mode: 'onChange',
-    defaultValues: employeeData || undefined,
+    resolver: zodResolver(employeeSchema),
+    mode: 'onBlur',
+    defaultValues: formattedData,
   });
 
   useEffect(() => {
@@ -107,12 +120,6 @@ const MyInformation = () => {
     myInfoLoading,
   ]);
 
-  useEffect(() => {
-    if (employeeData) {
-      reset(employeeData);
-    }
-  }, [employeeData, reset]);
-
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -159,44 +166,50 @@ const MyInformation = () => {
     }
   };
 
+  useEffect(() => {
+    if (employeeData) {
+      reset(formattedData);
+    }
+  }, [employeeData, reset]);
+
   const onSubmit = async (data: any) => {
     // PUT employee/id needs the following payload.
     // The data parameter ☝ contains extra fields that backend does not expect.
-
-    const payLoad = {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      departmentId: data.department.id,
-      email: data.email,
-      middleName: data.middleName,
-      salary: data.salary,
-      tittle: data.tittle,
-      gender: data.gender,
-      marritialStatus: data.marritialStatus,
-      paymentSchedule: data.paymentSchedule,
-      payType: data.payType,
-      effectiveDate: data.effectiveDate,
-      overtime: data.overtime,
-      note: data.note,
-      linkedin: data.linkedin,
-      instagram: data.instagram,
-      website: data.website,
-      facebook: data.facebook,
-      hireDate: data.hireDate,
-      birthday: data.birthday,
-      phoneNumber: data.phoneNumber,
-      workPhone: data.workPhone,
-      reportingManagerId: data.reportingManagerId,
-      employmentType: data.employmentType,
-      location: {
-        street1: data.location.street1,
-        street2: data.location.street2,
-        zipCode: data.location.zipCode,
-        city: data.location.city,
-        country: data.location.country,
-        state: data.location.state,
-      },
-    };
+    console.log('from data: ', data);
+    // const payLoad = {
+    //   firstName: data.firstName,
+    //   lastName: data.lastName,
+    //   departmentId: data.departmentId,
+    //   email: data.email,
+    //   middleName: data.middleName,
+    //   salary: data.salary,
+    //   tittle: data.tittle,
+    //   gender: data.gender,
+    //   marritialStatus: data.marritialStatus,
+    //   paymentSchedule: data.paymentSchedule,
+    //   payType: data.payType,
+    //   effectiveDate: data.effectiveDate,
+    //   overtime: data.overtime,
+    //   note: data.note,
+    //   linkedin: data.linkedin,
+    //   instagram: data.instagram,
+    //   website: data.website,
+    //   facebook: data.facebook,
+    //   hireDate: data.hireDate,
+    //   birthday: data.birthday,
+    //   phoneNumber: data.phoneNumber,
+    //   workPhone: data.workPhone,
+    //   reportingManagerId: data.reportingManagerId,
+    //   employmentType: data.employmentType,
+    //   location: {
+    //     street1: data.location.street1,
+    //     street2: data.location.street2,
+    //     zipCode: data.location.zipCode,
+    //     city: data.location.city,
+    //     country: data.location.country,
+    //     state: data.location.state,
+    //   },
+    // };
     try {
       setEditLoading(true);
       // handle profile picture to get url from the upload picture
@@ -209,10 +222,10 @@ const MyInformation = () => {
 
       // Add profilePictureUrl to payload
       const finalPayload = {
-        ...payLoad,
+        ...data,
         profilePictureUrl: uploadResponse?.uploadedUrl,
       };
-      console.log('Playload: ', payLoad);
+      // console.log('Playload: ', payLoad);
       const response = await axiosInstance.put(
         `/employee/${empId || session?.user.userId}`,
         finalPayload
@@ -220,6 +233,7 @@ const MyInformation = () => {
       console.log('response: ', response.data);
       toast.success('Employee information updated successfully!');
       setEditLoading(false);
+      dispatch(updateEmployeeData(response.data.data));
     } catch (err) {
       console.error('Error updating employee data:', err);
       setEditLoading(false);
@@ -245,9 +259,10 @@ const MyInformation = () => {
         errors={errors}
         handleFileChange={handleFileChange}
         previewUrl={previewUrl}
+        employeeData={employeeData}
       />
     ),
-    [editEmployee, errors, register, previewUrl, handleFileChange]
+    [editEmployee, errors, register, previewUrl, employeeData, handleFileChange]
   );
 
   if (loading) {

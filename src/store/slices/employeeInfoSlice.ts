@@ -42,6 +42,9 @@ const employeeSlice = createSlice({
       state.error = null;
       state.loading = false;
     },
+    updateEmployeeData(state, action: PayloadAction<EmployeeData>) {
+      state.data = action.payload; // Update the Redux state with the new data
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -64,5 +67,5 @@ const employeeSlice = createSlice({
   },
 });
 
-export const { clearEmployeeData } = employeeSlice.actions;
+export const { clearEmployeeData, updateEmployeeData } = employeeSlice.actions;
 export default employeeSlice.reducer;

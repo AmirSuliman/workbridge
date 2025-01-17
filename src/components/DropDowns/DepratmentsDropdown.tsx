@@ -2,20 +2,32 @@ import axiosInstance from '@/lib/axios';
 import { Department } from '@/types/employee';
 import { useEffect, useState } from 'react';
 
-const DepratmentDropdown = ({ register, errors }) => {
+const DepartmentDropdown = ({ departmentId, register, errors }) => {
   const [departments, setDepartments] = useState<Department[]>([]);
+  const [defaultDepartmentId, setDefaultDepartmentId] = useState<
+    string | undefined
+  >();
 
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
         const { data } = await axiosInstance.get('/departments');
         setDepartments(data.data.items);
+
+        // Find and set the default department ID
+        const matchedDepartment = data.data.items.find(
+          (department) => department.id === departmentId
+        );
+        if (matchedDepartment) {
+          setDefaultDepartmentId(String(matchedDepartment.id)); // Ensure it's a string
+        }
       } catch (error) {
         console.error('Error fetching Departments: ', error);
       }
     };
+
     fetchDepartments();
-  }, []);
+  }, [departmentId]);
 
   return (
     <>
@@ -24,10 +36,12 @@ const DepratmentDropdown = ({ register, errors }) => {
         {...register('departmentId', {
           required: 'Department is required',
         })}
+        value={defaultDepartmentId || ''}
+        onChange={(e) => setDefaultDepartmentId(e.target.value)} // Sync state with selection
       >
         <option value="">Select Department</option>
         {departments.map((department) => (
-          <option key={department.id} value={Number(department.id)}>
+          <option key={department.id} value={String(department.id)}>
             {department.name}
           </option>
         ))}
@@ -38,4 +52,5 @@ const DepratmentDropdown = ({ register, errors }) => {
     </>
   );
 };
-export default DepratmentDropdown;
+
+export default DepartmentDropdown;

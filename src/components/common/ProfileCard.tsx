@@ -128,21 +128,29 @@ const ProfileCard = ({
               {userRole !== 'ViewOnly' &&
                 (loading ? (
                   <Button
+                    type="button"
                     className={'!bg-dark-navy !text-white !text-xs'}
                     icon={
                       <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
                     }
                     name=""
                   />
-                ) : (
+                ) : !editEmployee ? (
                   <Button
-                    type={editEmployee ? 'submit' : 'button'}
+                    type="button"
                     onClick={() => {
                       setEditEmployee(true);
                     }}
                     className={'!bg-dark-navy !text-white !text-xs'}
-                    icon={!editEmployee && <FaEdit />}
-                    name={editEmployee ? 'Save Changes' : 'Edit Profile'}
+                    icon={<FaEdit />}
+                    name={'Edit Profile'}
+                  />
+                ) : (
+                  <Button
+                    type="submit"
+                    className={'!bg-dark-navy !text-white !text-xs'}
+                    icon=""
+                    name={'Save Changes'}
                   />
                 ))}
               {editEmployee && (

@@ -9,6 +9,7 @@ const UserInfoSection = ({
   errors,
   register,
   previewUrl,
+  employeeData,
   editEmployee,
   handleFileChange,
 }) => {
@@ -32,8 +33,9 @@ const UserInfoSection = ({
             <h6 className="text-[#abaeb4] text-xs mb-1">First Name</h6>
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('firstName', { required: true })}
+              defaultValue={employeeData?.firstName || ''}
               readOnly={!editEmployee}
             />
             {errors.firstName && (
@@ -44,17 +46,19 @@ const UserInfoSection = ({
             <h6 className="text-[#abaeb4] text-xs mb-1">Middle Name</h6>
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('middleName')}
               readOnly={!editEmployee}
+              {...register('middleName')}
+              defaultValue={employeeData?.middleName || ''}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
             />
           </div>
           <div className="flex flex-col">
             <h6 className="text-[#abaeb4] text-xs mb-1">Surname</h6>
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('lastName', { required: true })}
+              defaultValue={employeeData?.lastName || ''}
               readOnly={!editEmployee}
             />
             {errors.lastName && (
@@ -65,8 +69,13 @@ const UserInfoSection = ({
             <h6 className="text-[#abaeb4] text-xs mb-1">Birthday</h6>
             <input
               type="date"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className="p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md"
               {...register('birthday', { required: true })}
+              defaultValue={
+                employeeData?.birthday
+                  ? new Date(employeeData.birthday).toISOString().split('T')[0]
+                  : ''
+              }
               readOnly={!editEmployee}
             />
             {errors.birthday && (
@@ -75,52 +84,38 @@ const UserInfoSection = ({
           </div>
           <div className="flex flex-col">
             <h6 className="text-[#abaeb4] text-xs mb-1">Gender</h6>
-            {editEmployee ? (
-              <select
-                className="p-3 rounded-md bg-transparent border w-full text-sm "
-                {...register('gender', { required: 'Gender is required' })}
-              >
-                <option value="" className="font-bold">
-                  Select Gender
-                </option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            ) : (
-              <input
-                type="text"
-                className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-                {...register('gender', { required: true })}
-                readOnly={!editEmployee}
-              />
-            )}
+            <select
+              className="p-3 rounded-md bg-transparent border w-full text-sm "
+              {...register('gender', { required: 'Gender is required' })}
+              defaultValue={employeeData?.gender || ''}
+            >
+              <option value="" className="font-bold">
+                Select Gender
+              </option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+
             {errors.gender && (
               <p className="text-red-500 text-xs">gender is required</p>
             )}
           </div>
           <div className="flex flex-col">
             <h6 className="text-[#abaeb4] text-xs mb-1">Marital Status</h6>
-            {editEmployee ? (
-              <select
-                className="p-3 rounded-md bg-transparent border w-full text-sm "
-                {...register('marritialStatus', {
-                  required: 'Marital status is required',
-                })}
-              >
-                <option value="">Select Status</option>
-                <option value="Single">Single</option>
-                <option value="Married">Married</option>
-                <option value="Enganged">Enganged</option>
-                <option value="Prefer not say">Prefer not to say</option>
-              </select>
-            ) : (
-              <input
-                type="text"
-                className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-                {...register('marritialStatus', { required: true })}
-                readOnly={!editEmployee}
-              />
-            )}
+            <select
+              className="p-3 rounded-md bg-transparent border w-full text-sm "
+              {...register('marritialStatus', {
+                required: 'Marital status is required',
+              })}
+              defaultValue={employeeData?.marritialStatus || ''}
+            >
+              <option value="">Select Status</option>
+              <option value="Single">Single</option>
+              <option value="Married">Married</option>
+              <option value="Enganged">Enganged</option>
+              <option value="Prefer not say">Prefer not to say</option>
+            </select>
+
             {errors.marritialStatus && (
               <p className="text-red-500 text-xs">
                 Marritial Status is required
@@ -131,8 +126,9 @@ const UserInfoSection = ({
             Email
             <input
               type="email"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('email', { required: true })}
+              defaultValue={employeeData?.email || ''}
               readOnly={!editEmployee}
             />
             {errors.email && (
@@ -152,20 +148,24 @@ const UserInfoSection = ({
             Street 1
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('location.street1', { required: true })}
+              defaultValue={employeeData?.location?.street1 || ''}
               readOnly={!editEmployee}
             />
             {errors.location?.street1 && (
-              <p className="text-red-500 text-xs">street1 is required</p>
+              <p className="text-red-500 text-xs">
+                {errors.location?.street1.message}
+              </p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             Street 2
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('location.street2')}
+              defaultValue={employeeData?.location?.street2 || ''}
               readOnly={!editEmployee}
             />
             {errors.location?.street2 && (
@@ -178,48 +178,60 @@ const UserInfoSection = ({
             Zip
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('location.zipCode', { required: true })}
+              defaultValue={employeeData?.location?.zipCode || ''}
               readOnly={!editEmployee}
             />
             {errors.location?.zipCode && (
-              <p className="text-red-500 text-xs">zipCode is required</p>
+              <p className="text-red-500 text-xs">
+                {errors.location?.zipCode.message}
+              </p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             City
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('location.city', { required: true })}
+              defaultValue={employeeData?.location?.city || ''}
               readOnly={!editEmployee}
             />
             {errors.location?.city && (
-              <p className="text-red-500 text-xs">city is required</p>
+              <p className="text-red-500 text-xs">
+                {errors.location?.city.message}
+              </p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             Country
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('location.country', { required: true })}
+              defaultValue={employeeData?.location?.country || ''}
               readOnly={!editEmployee}
             />
             {errors.location?.country && (
-              <p className="text-red-500 text-xs">country is required</p>
+              <p className="text-red-500 text-xs">
+                {errors.location?.country.message}
+              </p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             State
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('location.state', { required: true })}
+              defaultValue={employeeData?.location?.state || ''}
               readOnly={!editEmployee}
             />
             {errors.location?.state && (
-              <p className="text-red-500 text-xs">state is required</p>
+              <p className="text-red-500 text-xs">
+                {errors.location?.state.message}
+              </p>
             )}
           </label>
         </div>
@@ -232,24 +244,32 @@ const UserInfoSection = ({
             Phone
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('phoneNumber', { required: true })}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              {...register('phoneNumber', {
+                required: 'Phone number is required',
+              })}
+              defaultValue={employeeData?.phoneNumber || ''}
               readOnly={!editEmployee}
             />
             {errors.phoneNumber && (
-              <p className="text-red-500 text-xs">phone is required</p>
+              <p className="text-red-500 text-xs">
+                {errors.phoneNumber.message}
+              </p>
             )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             Work Phone
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('workPhone', { required: true })}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              {...register('workPhone', {
+                required: 'Work phone number is required',
+              })}
+              defaultValue={employeeData?.workPhone || ''}
               readOnly={!editEmployee}
             />
             {errors.workPhone && (
-              <p className="text-red-500 text-xs">workPhone is required</p>
+              <p className="text-red-500 text-xs">{errors.workPhone.message}</p>
             )}
           </label>
         </div>
@@ -265,8 +285,9 @@ const UserInfoSection = ({
             LinkedIn
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('linkedin')}
+              defaultValue={employeeData?.linkedin || ''}
               readOnly={!editEmployee}
             />
             {errors.linkedin && (
@@ -277,8 +298,9 @@ const UserInfoSection = ({
             Facebook
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('facebook')}
+              defaultValue={employeeData?.facebook || ''}
               readOnly={!editEmployee}
             />
             {errors.facebook && (
@@ -289,8 +311,9 @@ const UserInfoSection = ({
             Instagram
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('instagram')}
+              defaultValue={employeeData?.instagram || ''}
               readOnly={!editEmployee}
             />
             {errors.instagram && (
@@ -301,8 +324,9 @@ const UserInfoSection = ({
             Personal Website
             <input
               type="text"
-              className={`p-2 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('website')}
+              defaultValue={employeeData?.website || ''}
               readOnly={!editEmployee}
             />
             {errors.website && (
@@ -311,14 +335,6 @@ const UserInfoSection = ({
           </label>
         </div>
       </div>
-
-      {/* {editEmployee && (
-        <Button
-          name="Save Changes"
-          type="button"
-          className="bg-black text-white block mx-auto"
-        />
-      )} */}
     </main>
   );
 };

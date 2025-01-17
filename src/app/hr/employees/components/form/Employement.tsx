@@ -39,11 +39,19 @@ const Employment = ({ loader }: { loader: boolean }) => {
             </article>
             <article>
               <Label text="Department*" /> <br />{' '}
-              <DepratmentDropdown register={register} errors={errors} />
+              <DepratmentDropdown
+                departmentId={null}
+                register={register}
+                errors={errors}
+              />
             </article>
             <article>
               <Label text="Reporting Manager*" /> <br />
-              <EmployeesDropdown register={register} errors={errors} />
+              <EmployeesDropdown
+                reportingManagerId={null}
+                register={register}
+                errors={errors}
+              />
             </article>
             <article>
               <Label text="Employment Type*" /> <br />
