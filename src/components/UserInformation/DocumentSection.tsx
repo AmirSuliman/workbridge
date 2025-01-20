@@ -56,7 +56,7 @@ const DocumentSection = ({ employeeData }) => {
     }
 
     setSortedDocuments(sorted);
-  }, [sortOption, employeeData.documents, employeeData]);
+  }, [sortOption, employeeData?.documents, employeeData]);
 
   const values = sortedDocuments?.map((document) => {
     const sizeInBytes = document.size ?? 0;

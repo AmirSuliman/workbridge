@@ -12,10 +12,50 @@ const Employment = ({ loader }: { loader: boolean }) => {
   const { activeTab, setActiveTab } = useTabsContext();
 
   const {
+    trigger,
     register,
     formState: { errors },
   } = useFormContext<EmployeeData>();
 
+  // const handleNext = async () => {
+  //   const fieldNamesForTab = [
+  //     'firstName',
+  //     'lastName',
+  //     'departmentId',
+  //     'email',
+  //     'middleName',
+  //     'salary',
+  //     'tittle',
+  //     'gender',
+  //     'marritialStatus',
+  //     'paymentSchedule',
+  //     'payType',
+  //     'effectiveDate',
+  //     'overtime',
+  //     'note',
+  //     'profilePictureUrl',
+  //     'linkedin',
+  //     'instagram',
+  //     'website',
+  //     'facebook',
+  //     'hireDate',
+  //     'birthday',
+  //     'phoneNumber',
+  //     'workPhone',
+  //     'reportingManagerId',
+  //     'employmentType',
+  //     'street1',
+  //     'street2',
+  //     'zipCode',
+  //     'city',
+  //     'country',
+  //     'state',
+  //   ];
+  //   await trigger(fieldNamesForTab as (keyof EmployeeData)[]);
+  //   // if (isValid) {
+  //   //   setActiveTab(activeTab + 1);
+  //   // }
+  // };
   return (
     <>
       <section className="bg-white rounded-lg border">
@@ -61,7 +101,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
                   required: 'Employment Type is required',
                 })}
               >
-                <option value="">Select Eplemyment Type</option>
+                <option value="">Select Employment Type</option>
                 <option value="Fulltime">Full-Time</option>
                 <option value="Part Time">Part-Time</option>
                 <option value="Freelance">Freelance</option>
@@ -143,6 +183,19 @@ const Employment = ({ loader }: { loader: boolean }) => {
                 </span>
               )}
             </article>
+            <article>
+              <Label text="Hire Date*" /> <br />
+              <input
+                type="date"
+                className="p-2 rounded-md bg-transparent border w-full"
+                {...register('hireDate', {
+                  required: 'Effective Date is required',
+                })}
+              />
+              {errors.hireDate && (
+                <span className="text-red-500">{errors.hireDate.message}</span>
+              )}
+            </article>
           </div>
         </div>
       </section>
@@ -156,6 +209,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
           onClick={() => setActiveTab(activeTab - 1)}
         />
         <Button
+          // onClick={handleNext}
           type="submit"
           name={loader ? '' : 'Finish'}
           disabled={loader}

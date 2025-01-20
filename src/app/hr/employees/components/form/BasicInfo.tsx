@@ -7,6 +7,8 @@ import { useFormContext } from 'react-hook-form';
 import { AiFillContacts } from 'react-icons/ai';
 import { Heading, Label } from '../Helpers';
 import ProfilePicture from '../ProfilePicture';
+import FormHeading from '@/components/UserInformation/FormHeading';
+import { FaPhoneAlt } from 'react-icons/fa';
 
 const BasicInfo = ({ previewUrl, handleFileChange }) => {
   const router = useRouter();
@@ -20,22 +22,57 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
 
   const handleNext = async () => {
     const fieldNamesForTab = [
+      // 'firstName',
+      // 'lastName',
+      // 'email',
+      // 'birthday',
+      // 'gender',
+      // 'marritialStatus',
+      // 'street1',
+      // 'street2',
+      // 'zipCode',
+      // 'country',
+      // 'state',
+      // 'city',
+      // 'phoneNumber',
+      // 'workPhone',
+
       'firstName',
       'lastName',
+      'departmentId',
       'email',
-      'birthday',
+      'middleName',
+      'salary',
+      'tittle',
       'gender',
       'marritialStatus',
+      'paymentSchedule',
+      'payType',
+      'effectiveDate',
+      'overtime',
+      'note',
+      'profilePictureUrl',
+      'linkedin',
+      'instagram',
+      'website',
+      'facebook',
+      'hireDate',
+      'birthday',
+      'phoneNumber',
+      'workPhone',
+      'reportingManagerId',
+      'employmentType',
       'street1',
       'street2',
+      'zipCode',
+      'city',
       'country',
       'state',
-      'city',
     ];
-    const isValid = await trigger(fieldNamesForTab as (keyof EmployeeData)[]);
-    if (isValid) {
-      setActiveTab(activeTab + 1);
-    }
+    // const isValid = await trigger(fieldNamesForTab as (keyof EmployeeData)[]);
+    // if (isValid) {
+    setActiveTab(activeTab + 1);
+    // }
   };
 
   return (
@@ -61,7 +98,9 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                 })}
               />
               {errors.firstName && (
-                <span className="text-red-500">{errors.firstName.message}</span>
+                <span className="text-red-500 text-xs">
+                  {errors.firstName.message}
+                </span>
               )}
             </article>
             <article>
@@ -73,7 +112,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                 {...register('middleName')}
               />
               {errors.middleName && (
-                <span className="text-red-500">
+                <span className="text-red-500 text-xs">
                   {errors.middleName.message}
                 </span>
               )}
@@ -89,7 +128,9 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                 })}
               />
               {errors.lastName && (
-                <span className="text-red-500">{errors.lastName.message}</span>
+                <span className="text-red-500 text-xs">
+                  {errors.lastName.message}
+                </span>
               )}
             </article>
             <article>
@@ -103,7 +144,9 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                 })}
               />
               {errors.birthday && (
-                <span className="text-red-500">{errors.birthday.message}</span>
+                <span className="text-red-500 text-xs">
+                  {errors.birthday.message}
+                </span>
               )}
             </article>
             <article>
@@ -117,7 +160,9 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                 <option value="Female">Female</option>
               </select>
               {errors.gender && (
-                <span className="text-red-500">{errors.gender.message}</span>
+                <span className="text-red-500 text-xs">
+                  {errors.gender.message}
+                </span>
               )}
             </article>
             <article>
@@ -135,7 +180,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                 <option value="Prefer not say">Prefer not to say</option>
               </select>
               {errors.marritialStatus && (
-                <span className="text-red-500">
+                <span className="text-red-500 text-xs">
                   {errors.marritialStatus.message}
                 </span>
               )}
@@ -148,41 +193,98 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
           <div className="grid grid-cols-3 gap-4">
             {[
               {
+                type: 'text',
                 name: 'street1',
                 label: 'Street 1*',
                 message: 'Street 1 is required',
               },
               {
+                type: 'text',
                 name: 'street2',
                 label: 'Street 2',
                 message: '',
               },
-              { name: 'zip', label: 'Zip*', message: 'Zip is required' },
-              { name: 'city', label: 'City*', message: 'City is required' },
               {
+                type: 'number',
+                name: 'zipCode',
+                label: 'Zip*',
+                message: 'Zip is required',
+              },
+              {
+                type: 'text',
+                name: 'city',
+                label: 'City*',
+                message: 'City is required',
+              },
+              {
+                type: 'text',
                 name: 'country',
                 label: 'Country*',
                 message: 'Country is required',
               },
-              { name: 'state', label: 'State*', message: 'State is required' },
+              {
+                type: 'text',
+                name: 'state',
+                label: 'State*',
+                message: 'State is required',
+              },
             ].map((field) => (
               <article key={field.name}>
                 <Label text={field.label} /> <br />
                 <input
-                  type="text"
+                  type={field.type}
                   placeholder={`Add ${field.label.toLowerCase().split('*')[0]}`}
                   className="p-2 rounded-md bg-transparent border w-full"
                   {...register(field.name as keyof EmployeeData, {
                     required: field.message,
+                    valueAsNumber: field.type === 'number', // Ensure proper type conversion
                   })}
                 />
                 {errors[field.name] && (
-                  <span className="text-red-500">
+                  <span className="text-red-500 text-xs">
                     {errors[field.name].message}
                   </span>
                 )}
               </article>
             ))}
+          </div>
+        </div>
+
+        <div className="p-4 pb-12 border-b">
+          <FormHeading icon={<FaPhoneAlt className="w-4" />} text="Contact" />
+          <div className="grid sm:grid-cols-3 gap-4 mt-5">
+            <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
+              Phone
+              <input
+                type="number"
+                className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md appearance-none`}
+                {...register('phoneNumber', {
+                  required: 'Phone number is required',
+                  valueAsNumber: true,
+                })}
+              />
+              {errors.phoneNumber && (
+                <p className="text-red-500 text-xs">
+                  {errors.phoneNumber.message}
+                </p>
+              )}
+            </label>
+            <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
+              Work Phone
+              <input
+                type="number"
+                className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md appearance-none`}
+                {...register('workPhone', {
+                  required: 'Work phone number is required',
+                  valueAsNumber: true,
+                })}
+              />
+              {errors.workPhone && (
+                <p className="text-red-500 text-xs">
+                  {errors.workPhone.message}
+                </p>
+              )}
+            </label>
           </div>
         </div>
         {/* Social Links Block */}
@@ -227,7 +329,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                   })}
                 />
                 {errors[field.name] && (
-                  <span className="text-red-500">
+                  <span className="text-red-500 text-xs">
                     {errors[field.name].message}
                   </span>
                 )}

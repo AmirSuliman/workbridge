@@ -70,11 +70,12 @@ const CreateEmployee = () => {
   };
 
   const formMethods = useForm<EmployeeData>({
-    // resolver: zodResolver(employeeSchema),
-    // mode: 'onChange',
+    resolver: zodResolver(employeeSchema),
+    mode: 'onChange',
   });
   const { handleSubmit, reset } = formMethods;
   const onSubmit = async (data) => {
+    console.log('onsubmit data: ', data);
     try {
       setLoader(true);
       // handle profile picture to get url from the upload picture
@@ -105,6 +106,8 @@ const CreateEmployee = () => {
       setLoader(false);
     }
   };
+
+  console.log('form errors: ', formMethods.formState.errors);
   return (
     <main>
       <div className="flex justify-between">
@@ -161,9 +164,11 @@ const CreateEmployee = () => {
               <TabPanel index={1}>
                 <Employment loader={loader} />
               </TabPanel>
-              <TabPanel index={2}>
-                <DocumentSection employeeData={employeeData} />
-              </TabPanel>
+              {employeeData && (
+                <TabPanel index={2}>
+                  <DocumentSection employeeData={employeeData} />
+                </TabPanel>
+              )}
             </form>
           </FormProvider>
         </div>

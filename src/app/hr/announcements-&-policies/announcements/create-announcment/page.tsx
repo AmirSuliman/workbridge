@@ -7,12 +7,9 @@ import { BiLoaderCircle } from 'react-icons/bi';
 import { FaEdit } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
+import { announcementSchema } from '@/schemas/announcementSchema';
 
 // Define Zod schema for validation
-const announcementSchema = z.object({
-  title: z.string().nonempty('Title is required'),
-  body: z.string().nonempty('Content is required'),
-});
 
 const CreateAnnouncement = () => {
   const [loading, setLoading] = useState(false);

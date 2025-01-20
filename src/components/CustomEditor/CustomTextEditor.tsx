@@ -1,11 +1,12 @@
 'use client';
 
-import Link from '@tiptap/extension-link';
-import TextAlign from '@tiptap/extension-text-align';
-import { EditorContent, useEditor } from '@tiptap/react';
-import Underline from '@tiptap/extension-underline';
-import StarterKit from '@tiptap/starter-kit';
 import ToolBar from './ToolBar';
+import Link from '@tiptap/extension-link';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+
+import { EditorContent, useEditor } from '@tiptap/react';
 
 const CustomTextEditor = ({
   setContent,
@@ -15,6 +16,7 @@ const CustomTextEditor = ({
   body: string;
 }) => {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit,
       Underline,
