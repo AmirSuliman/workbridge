@@ -23,7 +23,10 @@ const Tab: React.FC<TabProps> = ({
       className={`outline-none focus:outline-none whitespace-nowrap ${tabStyles} ${
         activeTab === index ? activeTabStyle : ''
       }`}
-      onClick={() => setActiveTab(index)}
+      onClick={(e) => {
+        setActiveTab(index);
+        e.preventDefault();
+      }}
     >
       {children}
     </button>

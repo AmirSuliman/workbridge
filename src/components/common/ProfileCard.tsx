@@ -138,7 +138,8 @@ const ProfileCard = ({
                 ) : !editEmployee ? (
                   <Button
                     type="button"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
                       setEditEmployee(true);
                     }}
                     className={'!bg-dark-navy !text-white !text-xs'}
@@ -156,7 +157,8 @@ const ProfileCard = ({
               {editEmployee && (
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     setEditEmployee(false);
                   }}
                 >

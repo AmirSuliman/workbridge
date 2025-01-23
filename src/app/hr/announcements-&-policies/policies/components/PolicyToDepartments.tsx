@@ -12,6 +12,7 @@ const PolicyToDepartments = ({ onClose, postPolicy }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [departments, setDepartments] = useState<Department[]>([]);
+
   const { control, handleSubmit } = useForm({
     defaultValues: {
       departmentId: '',
@@ -35,12 +36,18 @@ const PolicyToDepartments = ({ onClose, postPolicy }) => {
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-      const policyId = await postPolicy();
-      console.log('Dept modal policyId: ', policyId);
-      const response = await axiosInstance.post(`/policy/send`, {
-        policyId: Number(policyId),
+      await postPolicy();
+
+      console.log(
+        'postedPolicyId in modal: ',
+        sessionStorage.getItem('policy')
+      );
+      const response = await axiosInstance.post(`/policy/send/`, {
+        policyId: sessionStorage.getItem('policy'),
+        employeeIds: [],
         departmentId: data.departmentId,
       });
+
       toast.success('Policy sent successfully!');
       setLoading(false);
       onClose();

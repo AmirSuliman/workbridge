@@ -12,6 +12,7 @@ import jobApplicationsReducer from './slices/jobApplicationsSlice';
 import jobApplicationReducer from './slices/jobApplicationSlice';
 import interviewReducer from './slices/interviewInviteSlice';
 import folderReducer from './slices/folderSlice';
+import policyReducer from './slices/postPolicy';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
@@ -23,6 +24,7 @@ export const rootReducer = combineReducers({
   candidate: candidateReducer,
   employees: allEmployeesReducer,
   jobs: jobsReducer,
+  policy: policyReducer,
   jobApplications: jobApplicationsReducer,
   jobApplication: jobApplicationReducer,
   interview: interviewReducer,

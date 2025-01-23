@@ -14,6 +14,11 @@ import { HiOutlineUpload } from 'react-icons/hi';
 import PreviewPolicy from '../components/PreviewPolicy';
 import axios from 'axios';
 import SendPolicyModal from '../components/SendPolicyModal';
+import { setUser } from '@/store/slices/myInfoSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store';
+import { useSession } from 'next-auth/react';
+import { Policy } from '@/types/policy';
 
 const Addnewpolicies = () => {
   const [loading, setLoading] = useState(false);
@@ -25,7 +30,41 @@ const Addnewpolicies = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
-  const [policyData, setPolicyData] = useState({});
+  const [policyData, setPolicyData] = useState<Policy>({
+    type: '',
+    title: '',
+    status: '',
+    fileId: null,
+    previewUrl: null,
+    description: '',
+    effectiveDate: '',
+  });
+  const { data: session } = useSession();
+
+  const dispatch = useDispatch<AppDispatch>();
+  useSelector((state: RootState) => state.myInfo);
+  const [myId, setMyId] = useState(null);
+
+  useEffect(() => {
+    const fetchMyId = async () => {
+      if (session?.user?.accessToken) {
+        try {
+          const response = await axiosInstance.get('/user/my', {
+            headers: { Authorization: `Bearer ${session.user.accessToken}` },
+          });
+          const userId = response.data.data?.employeeId;
+          setMyId(userId); // Save it locally
+          dispatch(setUser(response.data.data)); // Update Redux as well
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          toast.error('Failed to load user data!');
+        }
+      } else {
+        toast.error('Authentication failed. Please try again.');
+      }
+    };
+    fetchMyId();
+  }, [dispatch, session?.user?.accessToken]);
 
   useEffect(() => {
     const fetchPolicie = async () => {
@@ -112,6 +151,7 @@ const Addnewpolicies = () => {
       const response = await axiosInstance.put(`/policy/${id}`, payload);
       console.log('put policy res: ', response.data);
       toast.success('Draft saved successfully!');
+      router.back();
     } catch (error) {
       console.error('Error saving draft:', error);
       toast.error('An error occurred while saving the draft.');
@@ -121,17 +161,24 @@ const Addnewpolicies = () => {
   };
 
   const handlePublish = async (data) => {
+    let uploadedFileId = null;
     try {
       setLoading(true);
-      const uploadedFileId = await handleUpload();
-
+      if (previewUrl && selectedFile) {
+        uploadedFileId = await handleUpload();
+      }
       const payload = {
         ...data,
-        fileId: uploadedFileId,
         status: 'Published',
+        uploadBy: myId,
+        fileId: uploadedFileId,
       };
       const response = await axiosInstance.put(`/policy/${id}`, payload);
-      console.log('put polic res: ', response.data);
+      console.log('put policy res: ', response.data);
+      if (id) {
+        sessionStorage.setItem('policy', id);
+      }
+
       toast.success('Policy published successfully!');
       reset();
       return response.data.id;
@@ -386,10 +433,11 @@ const Addnewpolicies = () => {
                 <Controller
                   name="description"
                   control={control}
+                  defaultValue={policyData?.description}
                   render={({ field }) => (
                     <CustomTextEditor
                       setContent={(value) => field.onChange(value)}
-                      body={field.value}
+                      body={field.value || policyData?.description}
                     />
                   )}
                 />

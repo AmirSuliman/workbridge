@@ -14,7 +14,7 @@ const EmploymentSection = ({
   editEmployee,
   employeeData,
 }) => {
-  console.log('employeeData: ', employeeData);
+  // console.log('employeeData: ', employeeData);
   const hireDate = employeeData?.hireDate
     ? employeeData.hireDate.split('T')[0]
     : 'N/A';

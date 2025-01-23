@@ -7,14 +7,24 @@ import toast from 'react-hot-toast';
 import { BiChevronRight } from 'react-icons/bi';
 import { FaBox } from 'react-icons/fa';
 import { MdAddCircle } from 'react-icons/md';
+
 const Policies = () => {
   const [policies, setPolicies] = useState<Policy[]>([]);
+  const [filteredPolicies, setFilteredPolicies] = useState<Policy[]>([]);
+  const [activeFilter, setActiveFilter] = useState<'Draft' | 'Published'>(
+    'Published'
+  ); // Default to published
   const router = useRouter();
+
   useEffect(() => {
     const fetchPolicies = async () => {
       try {
-        const response = await getAllPolicies(1, 1000); // Fetch policies
-        setPolicies(response.data.data || []); // Fallback to empty array if no data
+        const response = await getAllPolicies(1, 1000);
+        const allPolicies = response.data.data || [];
+        setPolicies(allPolicies);
+        setFilteredPolicies(
+          allPolicies.filter((policy) => policy.status === 'Published')
+        ); // Initially show published policies
       } catch (error) {
         console.error(error);
         toast.error('Failed to fetch policies.');
@@ -23,7 +33,18 @@ const Policies = () => {
 
     fetchPolicies();
   }, []);
-  console.log('policies->: ', policies);
+
+  const filterPolicies = (status: 'Draft' | 'Published') => {
+    const filtered = policies.filter((policy) => policy.status === status);
+    setFilteredPolicies(filtered); // Update the filtered policies
+  };
+
+  const handleFilterClick = (status: 'Draft' | 'Published') => {
+    setActiveFilter(status); // Set the active filter
+    filterPolicies(status); // Filter the policies by the selected status
+  };
+
+  console.log('Filtered Policies: ', filteredPolicies);
 
   return (
     <div className="w-full p-4">
@@ -33,12 +54,35 @@ const Policies = () => {
           <FaBox size={24} />
           <h1 className="text-[18px] font-medium">All Policies</h1>
         </div>
-        <Link
-          href="/hr/announcements-&-policies/policies/create-policy"
-          className="flex flex-row items-center gap-2 bg-black p-2 rounded text-white text-[12px] hover:bg-gray-800"
-        >
-          Create Policy <MdAddCircle size={22} />
-        </Link>
+        <div className="flex gap-4">
+          {/* Filter buttons */}
+          <button
+            onClick={() => handleFilterClick('Draft')}
+            className={`flex items-center justify-center gap-2 text-sm px-4 py-2 rounded transition duration-300 ${
+              activeFilter === 'Draft'
+                ? 'bg-black text-white'
+                : 'bg-transparent text-black border border-black'
+            }`}
+          >
+            Draft Policies
+          </button>
+          <button
+            onClick={() => handleFilterClick('Published')}
+            className={`flex items-center justify-center gap-2 text-sm px-4 py-2 rounded transition duration-300 ${
+              activeFilter === 'Published'
+                ? 'bg-black text-white'
+                : 'bg-transparent text-black border border-black'
+            }`}
+          >
+            Published Policies
+          </button>
+          <Link
+            href="/hr/announcements-&-policies/policies/create-policy"
+            className="flex flex-row items-center text-sm gap-2 bg-black p-2 rounded text-white text-[12px] hover:bg-gray-800"
+          >
+            Create Policy <MdAddCircle size={22} />
+          </Link>
+        </div>
       </div>
 
       {/* Table */}
@@ -47,7 +91,9 @@ const Policies = () => {
           <thead className="text-[14px] font-normal">
             <tr>
               <th className="border-b text-gray-400 px-4 py-4">Policy Name</th>
-              <th className="border-b text-gray-400 px-4 py-4">Date Issued</th>
+              <th className="border-b text-gray-400 px-4 py-4">
+                Effective Date
+              </th>
               <th className="border-b text-gray-400 px-4 py-4">Policy Type</th>
               <th className="border-b text-gray-400 px-4 py-4">Uploaded By</th>
               <th className="border-b text-gray-400 px-4 py-4">Accepted By</th>
@@ -55,8 +101,8 @@ const Policies = () => {
             </tr>
           </thead>
           <tbody>
-            {policies.length > 0 ? (
-              policies.map((policy) => (
+            {filteredPolicies.length > 0 ? (
+              filteredPolicies.map((policy) => (
                 <tr
                   onClick={() =>
                     router.push(
@@ -79,7 +125,8 @@ const Policies = () => {
                     John Doe {/* Placeholder for 'Uploaded By' */}
                   </td>
                   <td className="border-b border-gray-300 p-4 text-[14px]">
-                    1/6 employees {/* Placeholder for 'Accepted By' */}
+                    {`${policy.employeeAccepted} / ${policy.totalEmployees}`}{' '}
+                    employees
                   </td>
                   <td className="border-b border-gray-300 p-4 text-[14px] cursor-pointer">
                     <span className="hover:bg-black hover:text-white w-[30px] border border-gray-400 rounded-md flex items-center justify-center">

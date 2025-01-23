@@ -3,6 +3,7 @@ import TabPanel from '@/components/common/TabsComponent/TabPanel';
 import Modal from '@/components/modal/Modal';
 import PolicyToDepartments from './PolicyToDepartments';
 import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
+import PolicyToEmployees from './PolicyToEmployees';
 
 const SendPolicyModal = ({ onClose, postPolicy }) => {
   return (
@@ -19,7 +20,7 @@ const SendPolicyModal = ({ onClose, postPolicy }) => {
             </Tab>
             <Tab
               index={1}
-              tabStyles="text-xs  py-3 text-dark-navy  whitespace-nowrap "
+              tabStyles="text-xs  py-3 text-dark-navy whitespace-nowrap "
               activeTabStyle="font-semibold border-b-2 !border-dark-navy"
             >
               Select by Employees
@@ -29,7 +30,7 @@ const SendPolicyModal = ({ onClose, postPolicy }) => {
             <PolicyToDepartments postPolicy={postPolicy} onClose={onClose} />
           </TabPanel>
           <TabPanel index={1}>
-            <PolicyToDepartments postPolicy={postPolicy} onClose={onClose} />
+            <PolicyToEmployees postPolicy={postPolicy} onClose={onClose} />
           </TabPanel>
         </TabsContainer>
       </div>

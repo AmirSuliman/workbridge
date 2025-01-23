@@ -58,6 +58,8 @@ const MyInformation = () => {
       ? new Date(employeeData.effectiveDate).toISOString().split('T')[0]
       : '',
   };
+
+  console.log('formattedData: ', formattedData);
   const {
     reset,
     register,
@@ -65,10 +67,10 @@ const MyInformation = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(employeeSchema),
-    mode: 'onBlur',
+    mode: 'onChange',
     defaultValues: formattedData,
   });
-
+  console.log('form erros: ', errors);
   useEffect(() => {
     const fetchMyId = async () => {
       if (session?.user?.accessToken) {
@@ -176,40 +178,40 @@ const MyInformation = () => {
     // PUT employee/id needs the following payload.
     // The data parameter ☝ contains extra fields that backend does not expect.
     console.log('from data: ', data);
-    // const payLoad = {
-    //   firstName: data.firstName,
-    //   lastName: data.lastName,
-    //   departmentId: data.departmentId,
-    //   email: data.email,
-    //   middleName: data.middleName,
-    //   salary: data.salary,
-    //   tittle: data.tittle,
-    //   gender: data.gender,
-    //   marritialStatus: data.marritialStatus,
-    //   paymentSchedule: data.paymentSchedule,
-    //   payType: data.payType,
-    //   effectiveDate: data.effectiveDate,
-    //   overtime: data.overtime,
-    //   note: data.note,
-    //   linkedin: data.linkedin,
-    //   instagram: data.instagram,
-    //   website: data.website,
-    //   facebook: data.facebook,
-    //   hireDate: data.hireDate,
-    //   birthday: data.birthday,
-    //   phoneNumber: data.phoneNumber,
-    //   workPhone: data.workPhone,
-    //   reportingManagerId: data.reportingManagerId,
-    //   employmentType: data.employmentType,
-    //   location: {
-    //     street1: data.location.street1,
-    //     street2: data.location.street2,
-    //     zipCode: data.location.zipCode,
-    //     city: data.location.city,
-    //     country: data.location.country,
-    //     state: data.location.state,
-    //   },
-    // };
+    const payLoad = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      departmentId: data.department.id,
+      email: data.email,
+      middleName: data.middleName,
+      salary: data.salary,
+      tittle: data.tittle,
+      gender: data.gender,
+      marritialStatus: data.marritialStatus,
+      paymentSchedule: data.paymentSchedule,
+      payType: data.payType,
+      effectiveDate: data.effectiveDate,
+      overtime: data.overtime,
+      note: data.note,
+      linkedin: data.linkedin,
+      instagram: data.instagram,
+      website: data.website,
+      facebook: data.facebook,
+      hireDate: data.hireDate,
+      birthday: data.birthday,
+      phoneNumber: data.phoneNumber,
+      workPhone: data.workPhone,
+      reportingManagerId: data.reportingManagerId,
+      employmentType: data.employmentType,
+      location: {
+        street1: data.street1,
+        street2: data.street2,
+        zipCode: data.zipCode,
+        city: data.city,
+        country: data.country,
+        state: data.state,
+      },
+    };
     try {
       setEditLoading(true);
       // handle profile picture to get url from the upload picture
@@ -222,10 +224,10 @@ const MyInformation = () => {
 
       // Add profilePictureUrl to payload
       const finalPayload = {
-        ...data,
+        ...payLoad,
         profilePictureUrl: uploadResponse?.uploadedUrl,
       };
-      // console.log('Playload: ', payLoad);
+      console.log('finalPayload: ', finalPayload);
       const response = await axiosInstance.put(
         `/employee/${empId || session?.user.userId}`,
         finalPayload

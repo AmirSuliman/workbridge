@@ -34,8 +34,7 @@ const UserInfoSection = ({
             <input
               type="text"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('firstName', { required: true })}
-              defaultValue={employeeData?.firstName || ''}
+              {...register('firstName')}
               readOnly={!editEmployee}
             />
             {errors.firstName && (
@@ -48,7 +47,6 @@ const UserInfoSection = ({
               type="text"
               readOnly={!editEmployee}
               {...register('middleName')}
-              defaultValue={employeeData?.middleName || ''}
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
             />
           </div>
@@ -57,8 +55,7 @@ const UserInfoSection = ({
             <input
               type="text"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('lastName', { required: true })}
-              defaultValue={employeeData?.lastName || ''}
+              {...register('lastName')}
               readOnly={!editEmployee}
             />
             {errors.lastName && (
@@ -70,12 +67,7 @@ const UserInfoSection = ({
             <input
               type="date"
               className="p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md"
-              {...register('birthday', { required: true })}
-              defaultValue={
-                employeeData?.birthday
-                  ? new Date(employeeData.birthday).toISOString().split('T')[0]
-                  : ''
-              }
+              {...register('birthday')}
               readOnly={!editEmployee}
             />
             {errors.birthday && (
@@ -87,7 +79,6 @@ const UserInfoSection = ({
             <select
               className="p-3 rounded-md bg-transparent border w-full text-sm "
               {...register('gender', { required: 'Gender is required' })}
-              defaultValue={employeeData?.gender || ''}
             >
               <option value="" className="font-bold">
                 Select Gender
@@ -107,7 +98,6 @@ const UserInfoSection = ({
               {...register('marritialStatus', {
                 required: 'Marital status is required',
               })}
-              defaultValue={employeeData?.marritialStatus || ''}
             >
               <option value="">Select Status</option>
               <option value="Single">Single</option>
@@ -127,8 +117,7 @@ const UserInfoSection = ({
             <input
               type="email"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('email', { required: true })}
-              defaultValue={employeeData?.email || ''}
+              {...register('email')}
               readOnly={!editEmployee}
             />
             {errors.email && (
@@ -149,8 +138,7 @@ const UserInfoSection = ({
             <input
               type="text"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('location.street1', { required: true })}
-              defaultValue={employeeData?.location?.street1 || ''}
+              {...register('location.street1')}
               readOnly={!editEmployee}
             />
             {errors.location?.street1 && (
@@ -165,7 +153,6 @@ const UserInfoSection = ({
               type="text"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('location.street2')}
-              defaultValue={employeeData?.location?.street2 || ''}
               readOnly={!editEmployee}
             />
             {errors.location?.street2 && (
@@ -177,10 +164,9 @@ const UserInfoSection = ({
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             Zip
             <input
-              type="text"
+              type="number"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('location.zipCode', { required: true })}
-              defaultValue={employeeData?.location?.zipCode || ''}
+              {...register('location.zipCode')}
               readOnly={!editEmployee}
             />
             {errors.location?.zipCode && (
@@ -194,8 +180,7 @@ const UserInfoSection = ({
             <input
               type="text"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('location.city', { required: true })}
-              defaultValue={employeeData?.location?.city || ''}
+              {...register('location.city')}
               readOnly={!editEmployee}
             />
             {errors.location?.city && (
@@ -209,8 +194,7 @@ const UserInfoSection = ({
             <input
               type="text"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('location.country', { required: true })}
-              defaultValue={employeeData?.location?.country || ''}
+              {...register('location.country')}
               readOnly={!editEmployee}
             />
             {errors.location?.country && (
@@ -224,8 +208,7 @@ const UserInfoSection = ({
             <input
               type="text"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('location.state', { required: true })}
-              defaultValue={employeeData?.location?.state || ''}
+              {...register('location.state')}
               readOnly={!editEmployee}
             />
             {errors.location?.state && (
@@ -248,7 +231,6 @@ const UserInfoSection = ({
               {...register('phoneNumber', {
                 required: 'Phone number is required',
               })}
-              defaultValue={employeeData?.phoneNumber || ''}
               readOnly={!editEmployee}
             />
             {errors.phoneNumber && (
@@ -265,7 +247,6 @@ const UserInfoSection = ({
               {...register('workPhone', {
                 required: 'Work phone number is required',
               })}
-              defaultValue={employeeData?.workPhone || ''}
               readOnly={!editEmployee}
             />
             {errors.workPhone && (
@@ -287,7 +268,6 @@ const UserInfoSection = ({
               type="text"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('linkedin')}
-              defaultValue={employeeData?.linkedin || ''}
               readOnly={!editEmployee}
             />
             {errors.linkedin && (
@@ -300,7 +280,6 @@ const UserInfoSection = ({
               type="text"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('facebook')}
-              defaultValue={employeeData?.facebook || ''}
               readOnly={!editEmployee}
             />
             {errors.facebook && (
@@ -313,7 +292,6 @@ const UserInfoSection = ({
               type="text"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('instagram')}
-              defaultValue={employeeData?.instagram || ''}
               readOnly={!editEmployee}
             />
             {errors.instagram && (
@@ -326,7 +304,6 @@ const UserInfoSection = ({
               type="text"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
               {...register('website')}
-              defaultValue={employeeData?.website || ''}
               readOnly={!editEmployee}
             />
             {errors.website && (

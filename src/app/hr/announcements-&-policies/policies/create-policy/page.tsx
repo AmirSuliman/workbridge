@@ -6,15 +6,20 @@ import toast from 'react-hot-toast';
 
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { FaBox } from 'react-icons/fa';
 import { HiOutlineUpload } from 'react-icons/hi';
 import PreviewPolicy from '../components/PreviewPolicy';
 import SendPolicyModal from '../components/SendPolicyModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store';
+import { setUser } from '@/store/slices/myInfoSlice';
+import { useSession } from 'next-auth/react';
+import { publishPolicy } from '@/store/slices/postPolicy';
 
-const Addnewpolicies = () => {
+const CreatePolicy = () => {
   const [loading, setLoading] = useState(false);
   const [isPreview, setIsPreview] = useState(false);
   const [openPolicyModa, setOpenPolicyMoad] = useState(false);
@@ -22,6 +27,31 @@ const Addnewpolicies = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const router = useRouter();
+  const { data: session } = useSession();
+  const dispatch = useDispatch<AppDispatch>();
+  useSelector((state: RootState) => state.myInfo);
+  const [myId, setMyId] = useState(null);
+
+  useEffect(() => {
+    const fetchMyId = async () => {
+      if (session?.user?.accessToken) {
+        try {
+          const response = await axiosInstance.get('/user/my', {
+            headers: { Authorization: `Bearer ${session.user.accessToken}` },
+          });
+          const userId = response.data.data?.employeeId;
+          setMyId(userId); // Save it locally
+          dispatch(setUser(response.data.data)); // Update Redux as well
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          toast.error('Failed to load user data!');
+        }
+      } else {
+        toast.error('Authentication failed. Please try again.');
+      }
+    };
+    fetchMyId();
+  }, [dispatch, session?.user?.accessToken]);
 
   const {
     control,
@@ -36,9 +66,10 @@ const Addnewpolicies = () => {
       type: '',
       title: '',
       status: '',
+      fileId: fileId,
+      uploadBy: myId,
       description: '',
       effectiveDate: '',
-      fileId: fileId,
     },
   });
 
@@ -88,14 +119,19 @@ const Addnewpolicies = () => {
     type,
     body,
     title,
+    fileId,
+    status,
     previewUrl,
     effectiveDate,
+    uploadBy: myId,
   };
   const handleSaveDraft = async (data) => {
+    let uploadedFileId = null;
     try {
       setLoading(true);
-      const uploadedFileId = await handleUpload();
-
+      if (previewUrl && selectedFile) {
+        uploadedFileId = await handleUpload();
+      }
       const payload = {
         ...data,
         fileId: uploadedFileId,
@@ -119,19 +155,23 @@ const Addnewpolicies = () => {
     reset();
     router.back();
   };
-
   const handlePublish = async (data) => {
+    let uploadedFileId = null;
     try {
-      const uploadedFileId = await handleUpload();
+      setLoading(true);
+      if (previewUrl && selectedFile) {
+        uploadedFileId = await handleUpload();
+      }
       const payload = {
         ...data,
-        fileId: uploadedFileId,
         status: 'Published',
+        uploadBy: myId,
+        fileId: uploadedFileId,
       };
-      const response = await axiosInstance.post('/policy/', payload);
-      console.log('post policy res: ', response.data);
-      console.log('post policy id: ', response.data.data.id);
-      return response.data.data.id;
+      // console.log('handle publish payload: ', payload);
+      const postedPolicy = await dispatch(publishPolicy(payload)).unwrap();
+      sessionStorage.setItem('policy', postedPolicy.id.toString());
+      return postedPolicy.id;
     } catch (error) {
       console.error('Error publishing policy:', error);
       if (axios.isAxiosError(error) && error.response) {
@@ -402,4 +442,4 @@ const Addnewpolicies = () => {
   );
 };
 
-export default Addnewpolicies;
+export default CreatePolicy;

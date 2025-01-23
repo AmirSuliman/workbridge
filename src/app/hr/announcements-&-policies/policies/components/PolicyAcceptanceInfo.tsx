@@ -1,19 +1,27 @@
+import { IMAGES } from '@/constants/images';
 import { getPolicyResponse } from '@/services/getPolicyResponse';
+import { EmployeeData } from '@/types/employee';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
+interface PolicyItem {
+  id: number;
+  status: 'Accepted' | 'Not Accepted';
+  employee: EmployeeData;
+}
+
 const PolicyAcceptanceInfo = () => {
   const { policyId } = useParams();
-  const [policyData, setPolicyData] = useState({});
+  const [policyData, setPolicyData] = useState<PolicyItem[]>([]);
 
   useEffect(() => {
     const fetchPolicies = async () => {
       try {
         const response = await getPolicyResponse(policyId);
-        setPolicyData(response.data || {});
-        console.log('policy res: ', response.data.data);
+        console.log('responses res: ', response.data);
+        setPolicyData(response.data.data || []);
       } catch (error) {
         console.error(error);
         toast.error('Failed to fetch policy responses.');
@@ -21,73 +29,51 @@ const PolicyAcceptanceInfo = () => {
     };
 
     fetchPolicies();
-  }, []);
-  console.log('policyData: ', policyData);
+  }, [policyId]);
 
   return (
-    <div className="flex flex-col gap-8 p-6 border rounded-[10px] ">
-      <h1 className="font-semibold text-[16px]">Employee acceptance info</h1>
-      <div className="flex flex-row items-center justify-between w-full ">
-        <div className="flex flex-row items-center gap-2 ">
-          <Image src="/user.png" alt="img" width={30} height={30} />
-          <p className="text-[12px]">Darlene Robertson</p>
-        </div>
-        <button className="p-1 text-[12px] bg-[#D5F6DD] text-[#00B87D] rounded ">
-          Accepted
-        </button>
-      </div>
-      <div className="flex flex-row items-center justify-between w-full ">
-        <div className="flex flex-row items-center gap-2 ">
-          <Image src="/user.png" alt="img" width={30} height={30} />
-          <p className="text-[12px]">Darlene Robertson</p>
-        </div>
-        <button className="p-1 text-[12px] bg-[#D5F6DD] text-[#00B87D] rounded ">
-          Accepted
-        </button>
-      </div>
-      <div className="flex flex-row items-center justify-between w-full ">
-        <div className="flex flex-row items-center gap-2 ">
-          <Image src="/user.png" alt="img" width={30} height={30} />
-          <p className="text-[12px]">Darlene Robertson</p>
-        </div>
-        <button className="p-1 text-[12px] bg-[#D5F6DD] text-[#00B87D] rounded ">
-          Accepted
-        </button>
-      </div>
-      <div className="flex flex-row items-center justify-between w-full ">
-        <div className="flex flex-row items-center gap-2 ">
-          <Image src="/user.png" alt="img" width={30} height={30} />
-          <p className="text-[12px]">Darlene Robertson</p>
-        </div>
-        <button className="p-1 text-[12px] bg-[#D5F6DD] text-[#00B87D] rounded ">
-          Accepted
-        </button>
-      </div>
-      <div className="flex flex-row items-center justify-between w-full ">
-        <div className="flex flex-row items-center gap-2 ">
-          <Image src="/user.png" alt="img" width={30} height={30} />
-          <p className="text-[12px]">Darlene Robertson</p>
-        </div>
-        <div className="flex flex-col gap-2">
-          <button className="p-1 text-[12px] bg-[#FDCED3] text-[#F53649] rounded ">
-            Not Accepted
-          </button>
-          <p className="text-[9px]">Send reminder</p>
-        </div>
-      </div>
-      <div className="flex flex-row items-center justify-between w-full ">
-        <div className="flex flex-row items-center gap-2 ">
-          <Image src="/user.png" alt="img" width={30} height={30} />
-          <p className="text-[12px]">Darlene Robertson</p>
-        </div>
-        <div className="flex flex-col gap-2 items-end-end">
-          <button className="p-1 text-[12px] bg-[#FDCED3] text-[#F53649] rounded ">
-            Not Accepted
-          </button>
-          <p className="text-[9px]">Send reminder</p>
-        </div>
-      </div>
+    <div className="flex flex-col gap-8 p-6 border rounded-[10px]">
+      <h1 className="font-semibold text-[16px]">Employee Acceptance Info</h1>
+      {policyData.length === 0 ? (
+        <p>No data available.</p>
+      ) : (
+        policyData.map((item) => (
+          <div
+            key={item.id}
+            className="flex flex-row items-center justify-between w-full"
+          >
+            <div className="flex flex-row items-center gap-2">
+              <Image
+                src={IMAGES.placeholderAvatar}
+                alt="img"
+                width={30}
+                height={30}
+                className="rounded-full"
+              />
+              <p className="text-[12px]">{item.employee.email}</p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <button
+                type="button"
+                className={`p-1 text-[12px] rounded ${
+                  item.status === 'Accepted'
+                    ? 'bg-[#D5F6DD] text-[#00B87D]'
+                    : 'bg-[#FDCED3] text-[#F53649]'
+                }`}
+              >
+                {item.status}
+              </button>
+              {item.status === 'Not Accepted' && (
+                <button type="button" className="text-[9px]">
+                  Send Reminder
+                </button>
+              )}
+            </div>
+          </div>
+        ))
+      )}
     </div>
   );
 };
+
 export default PolicyAcceptanceInfo;

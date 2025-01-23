@@ -25,8 +25,10 @@ export const employeeSchema = z.object({
     .string()
     .min(7, 'Work phone number must be at least 7 characters'),
   street1: z.string().min(1, 'Street1 is required'),
-  zipCode: z.number().int().positive('Zip code must be a positive integer'),
-  city: z.string().min(1, 'City is required'),
+  zipCode: z.string().refine((value) => !isNaN(Number(value)), {
+    message: 'Zip code must be a number',
+  }),
+  city: z.string().min(1, { message: 'City is required' }),
   country: z.string().min(1, 'Country is required'),
   state: z.string().min(1, 'State is required'),
 

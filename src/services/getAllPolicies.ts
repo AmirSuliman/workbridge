@@ -4,7 +4,7 @@ import axios from 'axios';
 export const getAllPolicies = async (page: number, size: number) => {
   try {
     const response = await axiosInstance.get('policies', {
-      params: { page: page, size: size },
+      params: { page: page, size: size, associations: true },
     });
     return { data: response.data, error: null };
   } catch (error) {

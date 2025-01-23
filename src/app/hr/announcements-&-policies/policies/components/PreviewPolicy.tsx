@@ -2,20 +2,24 @@
 import Image from 'next/image';
 const PreviewPolicy = ({ previewData }) => {
   return (
-    <div className="bg-white p-6 rounded-lg border mt-8">
+    <div className="bg-white mt-8">
       <div className="p-6 border rounded-[10px]">
         <h1 className="text-[32px] font-medium">{previewData.title}</h1>
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mt-4">
-          {/* <div className="flex flex-row items-center gap-1">
-            <Image
-              src="/Group 1000004576.png"
-              alt="img"
-              width={20}
-              height={20}
-            />
-            <p className="text-[13px] ">Posted by:</p>
-            <p className="text-[13px] font-semibold">Juliette Nicols</p>
-          </div> */}
+          {/* this is when we preview a fetched policy from the backend */}
+          {previewData.users && (
+            <div className="flex flex-row items-center gap-1">
+              <Image
+                src={previewData.users.profilePictureUrl}
+                alt="img"
+                width={30}
+                height={30}
+                className="rounded-full"
+              />
+              <p className="text-[13px] ">Posted by:</p>
+              <p className="text-[13px] font-semibold">{`${previewData.users.firstName} ${previewData.users.lastName}`}</p>
+            </div>
+          )}
 
           <div className="flex flex-row items-center gap-1">
             <p className="text-[13px] ">Effective Date:</p>
@@ -41,31 +45,29 @@ const PreviewPolicy = ({ previewData }) => {
         )}
 
         {/* this is when we preview a fetched policy from the backend */}
-        {/* {previewData.previewUrl && (
+        {previewData.file && (
           <Image
-            src={previewData.previewUrl}
+            src={previewData.file.url}
             alt="policy"
             width={1200}
             height={20}
             className="my-6"
           />
-        )} */}
-
-        {/* this is when we preview a policy at create time */}
-        {previewData.body && (
-          <div
-            className="text-black "
-            dangerouslySetInnerHTML={{ __html: previewData.body }}
-          ></div>
         )}
 
-        {/* this is when we preview a fetched policy from the backend */}
-        {previewData.description && (
+        {/* this is when we preview a policy at create time */}
+        {previewData.description ? (
+          <div
+            className="text-black "
+            dangerouslySetInnerHTML={{ __html: previewData.description }}
+          ></div>
+        ) : (
           <div
             className="text-black "
             dangerouslySetInnerHTML={{ __html: previewData.description }}
           ></div>
         )}
+        {/* this is when we preview a fetched policy from the backend */}
       </div>
     </div>
   );

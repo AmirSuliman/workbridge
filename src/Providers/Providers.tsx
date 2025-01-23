@@ -13,7 +13,7 @@ const Providers: React.FC<{ children: React.ReactNode; session: any }> = ({
     <SessionProvider session={session}>
       <Provider store={store}>
         {children}
-        <Toaster position="top-right" reverseOrder={false} gutter={8} />
+        <Toaster position="top-right" reverseOrder={false} gutter={12} />
       </Provider>
     </SessionProvider>
   );

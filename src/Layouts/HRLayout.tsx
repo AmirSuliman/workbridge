@@ -1,6 +1,7 @@
 import React from 'react';
 import HrHeader from '../components/Headers/HrHeader';
 import HrSidebar from '../components/SidebarMenu/HrSidebar';
+import AuthProvider from '@/app/api/auth/[...nextauth]/auth-provider';
 
 const HRLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -9,7 +10,7 @@ const HRLayout = ({ children }: { children: React.ReactNode }) => {
       <HrSidebar /> {/* Sidebar width = 270px */}
       <HrHeader />
       <div className="p-4 2xl:p-8 1700px:w-[calc(1700px-270px)] 1700px:mr-0 1700px:ml-auto">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </div>
     </main>
   );
