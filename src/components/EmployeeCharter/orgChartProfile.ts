@@ -96,7 +96,7 @@ export default function ({
       <div class="${BTN_HOVER_OPEN_POSITIONS}" style="background: transparent; display: ${
     hasOpenPositions ? 'flex' : 'none'
   }; color: #15A356; margin-left: auto; margin-right: 1rem">
-        <img src="/icons/open-positions.svg" style="width: 12px; height: 12px;" alt="open positions">
+        <img src="/user-group.svg" style="width: 12px; height: 12px;" alt="open positions">
         <span style="font-size: 10px; font-style: italic">${
           d.data.openPositions.length > 0 ? d.data.openPositions.length : ''
         }</span>
@@ -111,7 +111,7 @@ export default function ({
   }; align-items: center; margin-left: ${
     !hasOpenPositions && hasTerminatedSubordinates ? 'auto' : 0
   }; margin-right: 1rem">
-          <img src="/icons/terminated-user.svg" style="width: 12px; height: 12px;" alt="terminated user">
+          <img src="/user-group.svg" style="width: 12px; height: 12px;" alt="terminated user">
           <span style="font-size: 10px; font-style: italic">${
             totalTerminated > 0 ? totalTerminated : ''
           }</span>

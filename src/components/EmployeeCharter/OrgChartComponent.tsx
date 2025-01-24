@@ -1,5 +1,3 @@
-import { ArrowPathIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { UserIcon } from '@heroicons/react/24/solid';
 import * as d3 from 'd3';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { HierarchyNode } from 'd3-hierarchy';

@@ -1,6 +1,5 @@
 'use client';
 
-// import { ArrowLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 // import clsx from 'clsx';
 import { OrgChart } from 'd3-org-chart';
 // import Link from 'next/link';
