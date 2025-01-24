@@ -106,6 +106,8 @@ const CreateEmployee = () => {
     }
   };
 
+  console.log('Form errors: ', formMethods.formState.errors);
+
   return (
     <main>
       <div className="flex justify-between">
