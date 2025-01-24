@@ -75,6 +75,47 @@ export const OrgChartComponent: FC<Props> = ({
   const [isTerminating, setIsTerminating] = useState<Record<number, boolean>>(
     {}
   );
+
+  function detectCycle(employee) {
+    const visited = new Set();
+    const stack = new Set();
+
+    const hasCycle = (nodeId, idMap) => {
+      if (stack.has(nodeId)) return true; // Cycle detected
+      if (visited.has(nodeId)) return false;
+
+      visited.add(nodeId);
+      stack.add(nodeId);
+
+      const node = idMap[nodeId];
+      if (node && node.parentId) {
+        if (hasCycle(node.parentId, idMap)) {
+          return true;
+        }
+      }
+
+      stack.delete(nodeId);
+      return false;
+    };
+
+    const idMap = employee.reduce((acc, item) => {
+      acc[item.id] = item;
+      return acc;
+    }, {});
+
+    for (const node of employee) {
+      if (hasCycle(node.id, idMap)) {
+        console.error('Cycle detected at node:', node);
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  const hasCycle = detectCycle(employees);
+  console.log('Cycle detected:', hasCycle);
+
   const handleClickNode = useCallback(
     ({ data }: HierarchyNode<EmployeeData>) => {
       setEmployee(data);
@@ -141,7 +182,13 @@ export const OrgChartComponent: FC<Props> = ({
       processChange();
     }
   }, [processChange, search]);
-
+  if (hasCycle) {
+    return (
+      <div className="border-b-[1px] border-gray-border px-6 py-4">
+        <h1>There is a cycle in the data</h1>
+      </div>
+    );
+  }
   // We need to manipulate DOM
   useLayoutEffect(() => {
     if (employees && d3Container.current) {
@@ -176,6 +223,13 @@ export const OrgChartComponent: FC<Props> = ({
           }
         })
         .nodeContent((data: any) => {
+          if (hasCycle) {
+            return (
+              <div className="border-b-[1px] border-gray-border px-6 py-4">
+                <h1>There is a cycle in the data</h1>
+              </div>
+            );
+          }
           // props.onTerminate(isEmployeeTerminated);
           if (data.data.isOpenPosition) {
             return OrgChartOpenPositionProfile(

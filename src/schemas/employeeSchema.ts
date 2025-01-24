@@ -45,7 +45,9 @@ export const employeeSchema = z.object({
   workPhone: z
     .number({ message: 'Work phone number must be at least 7 digits' })
     .min(7, 'Work phone number must be at least 7 digits'),
-  departmentId: z.string().min(1, 'Department id is required'),
+  departmentId: z
+    .string({ message: 'Department id is required' })
+    .min(1, 'Department id is required'),
   gender: z.string().min(1, 'Gender is required'),
   marritialStatus: z.string().min(1, 'Marital status is required'),
   paymentSchedule: z.string().min(1, 'Payment schedule is required'),
@@ -83,6 +85,10 @@ export const employeeSchema = z.object({
     .nullable()
     .or(z.literal('')),
 
-  reportingManagerId: z.string().min(1, 'Reporting manger is required'),
-  employmentType: z.string().min(1, 'Employment type is required'),
+  reportingManagerId: z
+    .string({ message: 'Reporting manger is required' })
+    .min(1, 'Reporting manger is required'),
+  employmentType: z
+    .string({ message: 'Employment type is required' })
+    .min(1, 'Employment type is required'),
 });

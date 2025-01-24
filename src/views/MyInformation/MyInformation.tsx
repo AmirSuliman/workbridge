@@ -279,6 +279,7 @@ const MyInformation = () => {
   if (!employeeData) {
     return <div>No data available.</div>;
   }
+  console.log('Form errors: ', errors);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={`p-4 h-full`}>
       <ProfileCard
