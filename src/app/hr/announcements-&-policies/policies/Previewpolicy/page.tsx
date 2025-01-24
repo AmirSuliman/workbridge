@@ -22,7 +22,7 @@ const Previewpolicy = () => {
         </div>
       </div>
       <div className="bg-white p-6 rounded-[10px] mt-8 border">
-        <Workfromhome />
+        {/* <Workfromhome /> */}
       </div>
       {isModalOpen && (
         <Modal onClose={closeModal}>

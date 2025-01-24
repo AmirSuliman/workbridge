@@ -22,57 +22,41 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
 
   const handleNext = async () => {
     const fieldNamesForTab = [
-      // 'firstName',
-      // 'lastName',
-      // 'email',
-      // 'birthday',
-      // 'gender',
-      // 'marritialStatus',
-      // 'street1',
-      // 'street2',
-      // 'zipCode',
-      // 'country',
-      // 'state',
-      // 'city',
-      // 'phoneNumber',
-      // 'workPhone',
-
       'firstName',
       'lastName',
-      'departmentId',
       'email',
-      'middleName',
-      'salary',
-      'tittle',
+      'birthday',
       'gender',
       'marritialStatus',
-      'paymentSchedule',
-      'payType',
-      'effectiveDate',
-      'overtime',
-      'note',
+      'location.street1',
+      'location.street2',
+      'location.zipCode',
+      'location.country',
+      'location.state',
+      'location.city',
+      'phoneNumber',
+      'workPhone',
       'profilePictureUrl',
       'linkedin',
       'instagram',
       'website',
       'facebook',
-      'hireDate',
-      'birthday',
-      'phoneNumber',
-      'workPhone',
-      'reportingManagerId',
-      'employmentType',
-      'street1',
-      'street2',
-      'zipCode',
-      'city',
-      'country',
-      'state',
+
+      // 'salary',
+      // 'tittle',
+      // 'paymentSchedule',
+      // 'payType',
+      // 'effectiveDate',
+      // 'overtime',
+      // 'note',
+      // 'hireDate',
+      // 'reportingManagerId',
+      // 'employmentType',
     ];
-    // const isValid = await trigger(fieldNamesForTab as (keyof EmployeeData)[]);
-    // if (isValid) {
-    setActiveTab(activeTab + 1);
-    // }
+    const isValid = await trigger(fieldNamesForTab as (keyof EmployeeData)[]);
+    if (isValid) {
+      setActiveTab(activeTab + 1);
+    }
   };
 
   return (
@@ -153,7 +137,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
               <Label text="Gender*" /> <br />
               <select
                 className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-                {...register('gender', { required: 'Gender is required' })}
+                {...register('gender')}
               >
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
@@ -169,14 +153,12 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
               <Label text="Marital Status*" /> <br />
               <select
                 className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-                {...register('marritialStatus', {
-                  required: 'Marital status is required',
-                })}
+                {...register('marritialStatus')}
               >
                 <option value="">Select Status</option>
                 <option value="Single">Single</option>
                 <option value="Married">Married</option>
-                <option value="Enganged">Enganged</option>
+                <option value="Enganged">Engaged </option>
                 <option value="Prefer not say">Prefer not to say</option>
               </select>
               {errors.marritialStatus && (
@@ -194,39 +176,33 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
             {[
               {
                 type: 'text',
-                name: 'street1',
+                name: 'location.street1',
                 label: 'Street 1*',
-                message: 'Street 1 is required',
               },
               {
                 type: 'text',
-                name: 'street2',
+                name: 'location.street2',
                 label: 'Street 2',
-                message: '',
               },
               {
                 type: 'number',
-                name: 'zipCode',
+                name: 'location.zipCode',
                 label: 'Zip*',
-                message: 'Zip is required',
               },
               {
                 type: 'text',
-                name: 'city',
+                name: 'location.city',
                 label: 'City*',
-                message: 'City is required',
               },
               {
                 type: 'text',
-                name: 'country',
+                name: 'location.country',
                 label: 'Country*',
-                message: 'Country is required',
               },
               {
                 type: 'text',
-                name: 'state',
+                name: 'location.state',
                 label: 'State*',
-                message: 'State is required',
               },
             ].map((field) => (
               <article key={field.name}>
@@ -236,15 +212,15 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                   placeholder={`Add ${field.label.toLowerCase().split('*')[0]}`}
                   className="p-2 rounded-md bg-transparent border w-full"
                   {...register(field.name as keyof EmployeeData, {
-                    required: field.message,
-                    valueAsNumber: field.type === 'number', // Ensure proper type conversion
+                    valueAsNumber: field.name.includes('zipCode'),
                   })}
                 />
-                {errors[field.name] && (
-                  <span className="text-red-500 text-xs">
-                    {errors[field.name].message}
-                  </span>
-                )}
+                {errors.location &&
+                  errors.location[field.name.split('.')[1]] && (
+                    <span className="text-red-500 text-xs">
+                      {errors.location[field.name.split('.')[1]]?.message}
+                    </span>
+                  )}
               </article>
             ))}
           </div>
@@ -259,7 +235,6 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                 type="number"
                 className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md appearance-none`}
                 {...register('phoneNumber', {
-                  required: 'Phone number is required',
                   valueAsNumber: true,
                 })}
               />
@@ -295,27 +270,22 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
               {
                 name: 'linkedin',
                 label: 'LinkedIn',
-                message: '',
               },
               {
                 name: 'facebook',
                 label: 'Facebook',
-                message: '',
               },
               {
                 name: 'instagram',
                 label: 'Instagram',
-                message: '',
               },
               {
                 name: 'website',
                 label: 'Personal Website',
-                message: '',
               },
               {
                 name: 'email',
                 label: 'Email*',
-                message: 'Email is required',
               },
             ].map((field) => (
               <article key={field.name}>
@@ -324,9 +294,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                   type="text"
                   placeholder={`Add ${field.label.toLowerCase().split('*')[0]}`}
                   className="p-2 rounded-md bg-transparent border w-full"
-                  {...register(field.name as keyof EmployeeData, {
-                    required: field.message,
-                  })}
+                  {...register(field.name as keyof EmployeeData)}
                 />
                 {errors[field.name] && (
                   <span className="text-red-500 text-xs">

@@ -1,6 +1,6 @@
 import { DataTypes } from '@/types/data';
-import { EmployeeFormValuesType } from '@/views/Employees';
-import { OpenPositionFormValues } from '@/views/OpenPositions/types';
+// import { EmployeeFormValuesType } from '@/views/Employees';
+// import { OpenPositionFormValues } from '@/views/OpenPositions/types';
 
 import RunAction = DataTypes.RunAction;
 
@@ -411,13 +411,13 @@ export type MiscEndpoints = {
     };
     responses: {};
   };
-  'POST /employee': {
-    body: EmployeeFormValuesType;
-    response: {
-      data: DataTypes.Employee;
-    };
-    responses: {};
-  };
+  // 'POST /employee': {
+  // body: EmployeeFormValuesType;
+  //   response: {
+  //     data: DataTypes.Employee;
+  //   };
+  //   responses: {};
+  // };
   'PUT /employee/{id}': {
     params?: {
       id: number;
@@ -477,23 +477,23 @@ export type MiscEndpoints = {
     response: {};
     responses: {};
   };
-  'POST /openPosition': {
-    body: OpenPositionFormValues;
-    response: {
-      data: DataTypes.OpenPosition;
-    };
-    responses: {};
-  };
-  'PUT /openPosition/{id}': {
-    params: {
-      id: number;
-    };
-    body: Partial<OpenPositionFormValues>;
-    response: {
-      data: DataTypes.OpenPosition;
-    };
-    responses: {};
-  };
+  // 'POST /openPosition': {
+  //   body: OpenPositionFormValues;
+  //   response: {
+  //     data: DataTypes.OpenPosition;
+  //   };
+  //   responses: {};
+  // };
+  // 'PUT /openPosition/{id}': {
+  //   params: {
+  //     id: number;
+  //   };
+  //   body: Partial<OpenPositionFormValues>;
+  //   response: {
+  //     data: DataTypes.OpenPosition;
+  //   };
+  //   responses: {};
+  // };
   'GET /skills{pagination}': {
     params?: {
       pagination: string;

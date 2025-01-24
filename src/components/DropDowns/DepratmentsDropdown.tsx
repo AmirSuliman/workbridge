@@ -33,9 +33,7 @@ const DepartmentDropdown = ({ departmentId, register, errors }) => {
     <>
       <select
         className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-        {...register('department.id', {
-          required: 'Department is required',
-        })}
+        {...register('departmentId')}
         value={defaultDepartmentId || ''}
         onChange={(e) => setDefaultDepartmentId(e.target.value)} // Sync state with selection
       >

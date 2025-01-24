@@ -170,7 +170,9 @@ const CreatePolicy = () => {
       };
       // console.log('handle publish payload: ', payload);
       const postedPolicy = await dispatch(publishPolicy(payload)).unwrap();
-      sessionStorage.setItem('policy', postedPolicy.id.toString());
+      if (postedPolicy.id !== null) {
+        sessionStorage.setItem('policy', postedPolicy.id.toString());
+      }
       return postedPolicy.id;
     } catch (error) {
       console.error('Error publishing policy:', error);

@@ -69,12 +69,12 @@ const Employment = ({ loader }: { loader: boolean }) => {
                 type="text"
                 placeholder="Add job title"
                 className="p-2 rounded-md bg-transparent border w-full"
-                {...register('tittle', {
-                  required: 'Job title is required',
-                })}
+                {...register('tittle')}
               />
               {errors.tittle && (
-                <span className="text-red-500">{errors.tittle.message}</span>
+                <span className="text-red-500 text-xs">
+                  {errors.tittle.message}
+                </span>
               )}
             </article>
             <article>
@@ -97,9 +97,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
               <Label text="Employment Type*" /> <br />
               <select
                 className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-                {...register('employmentType', {
-                  required: 'Employment Type is required',
-                })}
+                {...register('employmentType')}
               >
                 <option value="">Select Employment Type</option>
                 <option value="Fulltime">Full-Time</option>
@@ -107,7 +105,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
                 <option value="Freelance">Freelance</option>
               </select>
               {errors.employmentType && (
-                <span className="text-red-500">
+                <span className="text-red-500 text-xs">
                   {errors.employmentType.message}
                 </span>
               )}
@@ -121,41 +119,38 @@ const Employment = ({ loader }: { loader: boolean }) => {
             <article>
               <Label text="Compensation*" /> <br />
               <input
-                type="text"
+                type="number"
                 placeholder="Add annual compensation amount"
                 className="p-2 rounded-md bg-transparent border w-full"
-                {...register('salary', {
-                  required: 'Compensation is required',
-                  valueAsNumber: true,
-                })}
+                {...register('salary', { valueAsNumber: true })}
               />
               {errors.salary && (
-                <span className="text-red-500">{errors.salary.message}</span>
+                <span className="text-red-500 text-xs">
+                  {errors.salary.message}
+                </span>
               )}
             </article>
             <article>
               <Label text="Pay type*" /> <br />
               <select
                 className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-                {...register('payType', {
-                  required: 'Paytype is required',
-                })}
+                {...register('payType')}
               >
                 <option value="">Select PayType</option>
                 <option value="Salary">Salary</option>
                 <option value="Contract">Contract</option>
               </select>
               {errors.payType && (
-                <span className="text-red-500">{errors.payType.message}</span>
+                <span className="text-red-500 text-xs">
+                  {errors.payType.message}
+                </span>
               )}
             </article>
             <article>
               <Label text="Schedule*" /> <br />
               <select
                 className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-                {...register('paymentSchedule', {
-                  required: 'Schedule is required',
-                })}
+                {...register('paymentSchedule')}
               >
                 <option value="">Select Schedule</option>
                 <option value="Weekly">Weekly</option>
@@ -163,23 +158,8 @@ const Employment = ({ loader }: { loader: boolean }) => {
                 <option value="Once a month">Once a month</option>
               </select>
               {errors.paymentSchedule && (
-                <span className="text-red-500">
+                <span className="text-red-500 text-xs">
                   {errors.paymentSchedule.message}
-                </span>
-              )}
-            </article>
-            <article>
-              <Label text="Effective Date*" /> <br />
-              <input
-                type="date"
-                className="p-2 rounded-md bg-transparent border w-full"
-                {...register('effectiveDate', {
-                  required: 'Effective Date is required',
-                })}
-              />
-              {errors.effectiveDate && (
-                <span className="text-red-500">
-                  {errors.effectiveDate.message}
                 </span>
               )}
             </article>
@@ -188,12 +168,25 @@ const Employment = ({ loader }: { loader: boolean }) => {
               <input
                 type="date"
                 className="p-2 rounded-md bg-transparent border w-full"
-                {...register('hireDate', {
-                  required: 'Effective Date is required',
-                })}
+                {...register('hireDate')}
               />
               {errors.hireDate && (
-                <span className="text-red-500">{errors.hireDate.message}</span>
+                <span className="text-red-500 text-xs">
+                  {errors.hireDate.message}
+                </span>
+              )}
+            </article>
+            <article>
+              <Label text="Effective Date*" /> <br />
+              <input
+                type="date"
+                className="p-2 rounded-md bg-transparent border w-full"
+                {...register('effectiveDate')}
+              />
+              {errors.effectiveDate && (
+                <span className="text-red-500 text-xs">
+                  {errors.effectiveDate.message}
+                </span>
               )}
             </article>
           </div>

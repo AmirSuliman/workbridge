@@ -1,9 +1,6 @@
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { FC } from 'react';
 
-import Modal from '@/components/Modal/index';
-import { Spinner } from '@/components/Spinner';
-
 type Props = {
   isOpen: boolean;
   onClose: () => void;
@@ -20,16 +17,16 @@ export const DeleteModal: FC<Props> = ({
   title,
 }) => {
   return (
-    <Modal
-      showDialog={isOpen}
-      onDismiss={onClose}
-      titleElement={
-        <div className="flex items-center text-230E379 text-lg space-x-4">
-          <ExclamationCircleIcon className="w-6 h-6 font-semibold text-A31515" />
-          <span>Delete {title}</span>
-        </div>
-      }
-      bodyClassName="h-104"
+    <div
+    // showDialog={isOpen}
+    // onDismiss={onClose}
+    // titleElement={
+    //   <div className="flex items-center text-230E379 text-lg space-x-4">
+    //     <ExclamationCircleIcon className="w-6 h-6 font-semibold text-A31515" />
+    //     <span>Delete {title}</span>
+    //   </div>
+    // }
+    // bodyClassName="h-104"
     >
       <div className="h-50 flex flex-col items-center justify-center -mt-8">
         <div className="text-230E379 mt-4">
@@ -53,10 +50,10 @@ export const DeleteModal: FC<Props> = ({
           disabled={isDeleting}
           onClick={onDelete}
         >
-          {isDeleting && <Spinner className="w-5 h-5 mr-2" />}
+          {/* {isDeleting && <Spinner className="w-5 h-5 mr-2" />} */}
           {isDeleting ? 'Deleting...' : 'Delete'}
         </button>
       </div>
-    </Modal>
+    </div>
   );
 };

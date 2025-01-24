@@ -4,12 +4,13 @@ import { FaPhoneAlt } from 'react-icons/fa';
 import { HiMiniGlobeAmericas, HiMiniHomeModern } from 'react-icons/hi2';
 import BasicInfoIcon from '../icons/basic-info-icon';
 import FormHeading from './FormHeading';
+import { Controller } from 'react-hook-form';
 
 const UserInfoSection = ({
   errors,
+  control,
   register,
   previewUrl,
-  employeeData,
   editEmployee,
   handleFileChange,
 }) => {
@@ -22,10 +23,16 @@ const UserInfoSection = ({
           icon={<BasicInfoIcon classNames="w-4" />}
         />
         {editEmployee && (
-          <ProfilePicture
-            errors={errors}
-            previewUrl={previewUrl}
-            handleFileChange={handleFileChange}
+          <Controller
+            name="profilePictureUrl"
+            control={control}
+            render={({ field }) => (
+              <ProfilePicture
+                errors={errors}
+                previewUrl={previewUrl}
+                handleFileChange={handleFileChange}
+              />
+            )}
           />
         )}
         <div className="grid sm:grid-cols-3 gap-4 my-5">
@@ -102,7 +109,7 @@ const UserInfoSection = ({
               <option value="">Select Status</option>
               <option value="Single">Single</option>
               <option value="Married">Married</option>
-              <option value="Enganged">Enganged</option>
+              <option value="Enganged">Engaged</option>
               <option value="Prefer not say">Prefer not to say</option>
             </select>
 
@@ -166,7 +173,7 @@ const UserInfoSection = ({
             <input
               type="number"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('location.zipCode')}
+              {...register('location.zipCode', { valueAsNumber: true })}
               readOnly={!editEmployee}
             />
             {errors.location?.zipCode && (
@@ -226,11 +233,9 @@ const UserInfoSection = ({
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             Phone
             <input
-              type="text"
+              type="number"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('phoneNumber', {
-                required: 'Phone number is required',
-              })}
+              {...register('phoneNumber', { valueAsNumber: true })}
               readOnly={!editEmployee}
             />
             {errors.phoneNumber && (
@@ -242,11 +247,9 @@ const UserInfoSection = ({
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             Work Phone
             <input
-              type="text"
+              type="number"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('workPhone', {
-                required: 'Work phone number is required',
-              })}
+              {...register('workPhone', { valueAsNumber: true })}
               readOnly={!editEmployee}
             />
             {errors.workPhone && (

@@ -59,9 +59,9 @@ const MyInformation = () => {
       : '',
   };
 
-  console.log('formattedData: ', formattedData);
   const {
     reset,
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -178,10 +178,12 @@ const MyInformation = () => {
     // PUT employee/id needs the following payload.
     // The data parameter ☝ contains extra fields that backend does not expect.
     console.log('from data: ', data);
+    console.log('data.paymentSchedule: ', data.paymentSchedule);
+
     const payLoad = {
       firstName: data.firstName,
       lastName: data.lastName,
-      departmentId: data.department.id,
+      departmentId: data.departmentId,
       email: data.email,
       middleName: data.middleName,
       salary: data.salary,
@@ -204,12 +206,12 @@ const MyInformation = () => {
       reportingManagerId: data.reportingManagerId,
       employmentType: data.employmentType,
       location: {
-        street1: data.street1,
-        street2: data.street2,
-        zipCode: data.zipCode,
-        city: data.city,
-        country: data.country,
-        state: data.state,
+        street1: data.location.street1,
+        street2: data.location.street2,
+        zipCode: data.location.zipCode,
+        city: data.location.city,
+        country: data.location.country,
+        state: data.location.state,
       },
     };
     try {
@@ -261,7 +263,7 @@ const MyInformation = () => {
         errors={errors}
         handleFileChange={handleFileChange}
         previewUrl={previewUrl}
-        employeeData={employeeData}
+        control={control}
       />
     ),
     [editEmployee, errors, register, previewUrl, employeeData, handleFileChange]

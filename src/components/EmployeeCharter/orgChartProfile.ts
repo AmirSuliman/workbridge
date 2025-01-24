@@ -36,29 +36,20 @@ export default function ({
   const hasOpenPositions =
     (d.data.openPositions && d.data.openPositions.length > 0) ||
     checkForOpenPositions(d);
-  return `<div class="nodechart profile-${
-    d.data.id
-  }" style="background-color: ${
+  return `
+  <div class=" profile-${d.data.id}" style="background-color: ${
     d.data._highlighted || d.data._upToTheRootHighlighted
       ? '#ecf0f1'
       : d.data.isOpenPosition
       ? '#BBFFDA'
       : 'white'
-  }; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); display: flex; flex-direction: column; position: relative; border-radius: 5px; border-width: 1.5px; border-color: ${color}; border-style: solid; padding: .5rem; font-size: 11px;">
+  }; 
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); display: flex; flex-direction: column; position: relative; border-radius: 5px; border-width: 1.5px; border-color: ${color}; border-style: solid; padding: .5rem; font-size: 11px;">
     <div style="display: ${
       d.data.isOpenPosition ? 'none' : 'flex'
     }; justify-content: space-between; padding: ${
     d.data.isOpenPosition ? '10px' : 0
   }">
-      <button class="${BTN_TERMINATE}" style="background: ${
-    isTerminated ? '#EF4444' : 'transparent'
-  }; border: 1px solid #97959980; border-radius: 3px; width: 12px; height: 12px; display: ${
-    shouldTerminate ? 'flex' : 'none'
-  }; align-items: center; justify-content: center;">
-        <img src="/icons/${
-          isTerminated ? 'terminated-x.svg' : 'unterminated-x.svg'
-        }" alt="user group" style="width: 6px; height: 6px;">
-      </button>
       <div style="${!shouldTerminate ? 'block' : 'none'}"></div>
       <button class="${BTN_SELECT}" style="background: transparent; width: 12px; height: 12px; border: 1px solid #230E37; border-radius: 3px; display: flex; align-items: center; justify-content: center;">
         ${
@@ -69,20 +60,31 @@ export default function ({
       </button>
     </div>
     <div style="display: flex; align-items: center; padding-left: 1rem; height: 35px; opacity: ${opacity};">
-        <div style="background-color: #86699D; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 25px;">
-          <img src="/icons/user.svg"  alt="user">
-        </div>
-        <div style="display: flex; flex-direction: column; align-items: start; margin-left: .5rem; line-height: 13px">
-          <div>
-            ${d.data.firstName} ${d.data.lastName}
-          </div>
-          <div style="font-size: 9px; color: #979599;">${d.data.tittle}</div>
-          <div style="font-size: 9px; color: #979599; margin-top: .25rem; font-style: italic">${
-            d.data.location?.location
-          }</div>
-        </div>
+      <div style="background-color: #86699D; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 25px;">
+        <img src=${
+          d.data.profilePictureUrl
+        } style="border-radius: 50%;"  alt="user">
       </div>
-    <div style="display: flex; align-items: center; padding-left: 1rem; margin-top: .75rem; opacity: ${opacity}; padding-bottom: 5px;">
+      <div style="display: flex; flex-direction: column; align-items: start; margin-left: .5rem; line-height: 13px">
+        <div>
+          ${d.data.firstName} ${d.data.lastName}
+        </div>
+        
+       <div style="display: flex; align-items: start; gap: 4px;">
+        <div style="font-size: 9px; color: rgba(15, 23, 42, 1);">${
+          d.data.tittle
+        }</div>
+        <span>•</span>
+        <div style="font-size: 9px; color: rgba(15, 23, 42, 1);">${
+          d.data.department.name
+        }</div>
+       </div>
+        <div style="font-size: 9px; color: rgba(151, 149, 153, 1); margin-top: .25rem;">${
+          d.data.employmentType
+        } <span>•</span> In-office <span>•</span> Florida</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; padding-left: 1rem; margin-top: .75rem; opacity: ${opacity};      padding-bottom: 5px;">
       <div style="border: 1px solid #97959980; border-radius: 50px; height: 17px; width: 5rem; padding: 0 .75rem; display: ${
         shouldShowSalary ? 'flex' : 'none'
       }; align-items: center; justify-content: center">
@@ -90,14 +92,7 @@ export default function ({
           d.data.salary ? usFormatNumber(d.data.salary) : 0
         }</span>
       </div>
-      <div style="border: 1px solid #97959980; border-radius: 50px; height: 17px; width: 3rem; margin-left: .25rem; padding: 0 .75rem; display: ${
-        d.data.isOpenPosition ? 'none' : 'flex'
-      }; align-items: center; justify-content: center">
-        <img src="/icons/rate-star.svg" alt="user group">
-        <span style="font-size: 10px; margin-left: .25rem;">${
-          d.data.rating ?? 5
-        }</span>
-      </div>
+      
       <div class="${BTN_HOVER_OPEN_POSITIONS}" style="background: transparent; display: ${
     hasOpenPositions ? 'flex' : 'none'
   }; color: #15A356; margin-left: auto; margin-right: 1rem">
@@ -116,17 +111,17 @@ export default function ({
   }; align-items: center; margin-left: ${
     !hasOpenPositions && hasTerminatedSubordinates ? 'auto' : 0
   }; margin-right: 1rem">
-        <img src="/icons/terminated-user.svg" style="width: 12px; height: 12px;" alt="terminated user">
-        <span style="font-size: 10px; font-style: italic">${
-          totalTerminated > 0 ? totalTerminated : ''
-        }</span>
+          <img src="/icons/terminated-user.svg" style="width: 12px; height: 12px;" alt="terminated user">
+          <span style="font-size: 10px; font-style: italic">${
+            totalTerminated > 0 ? totalTerminated : ''
+          }</span>
       </button>
       <div style="color: #86699D; display: ${
         d.data.isOpenPosition ? 'none' : 'flex'
       }; align-items: center; margin-left: ${
     !hasOpenPositions && !hasTerminatedSubordinates ? 'auto' : 0
   };">
-        <img src="/icons/user-group.svg" style="width: 12px; height: 12px;" alt="user group">
+        <img src="/user-group.svg" style="width: 12px; height: 12px;" alt="user group">
         <span style="font-size: 10px; font-style: italic">${
           d.data._directSubordinatesPaging
         }</span>

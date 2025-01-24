@@ -88,6 +88,7 @@ export function checkForTerminatedEmployees(
 // node -> children or _children -> data: DataTypes.Employee
 // check if there are open positions like openPositions.length > 0
 export function checkForOpenPositions(node: any): boolean {
+  console.log('node.data: ', node.data);
   if (node.data.openPositions.length > 0) {
     return true;
   }
@@ -144,6 +145,7 @@ export function downloadBlob(blob: Blob, filename: string) {
   // in order to attach it to the DOM or use it in some other way
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export function debounce(callback: Function, wait = 500) {
   let timeoutId: any = null;
   return (...args: any[]) => {
@@ -206,7 +208,7 @@ export const downloadOrgChartExcelFile = (selectedCompany: number) => {
 export function prepareOrgChartData(
   employeesData: Partial<DataTypes.Employee>[]
 ): DataTypes.Employee[] {
-  let employeesArray: Partial<DataTypes.Employee>[] = [];
+  const employeesArray: Partial<DataTypes.Employee>[] = [];
   // extract openPositions from employees and add it to array as an employee object
   employeesData?.forEach((employee) => {
     employeesArray.push(employee);

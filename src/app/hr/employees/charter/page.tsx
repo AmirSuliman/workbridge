@@ -22,6 +22,7 @@ import { prepareOrgChartData } from '@/utils/misc';
 // import { OrgChartInsights } from '@/views/OrgChart/OrgChartInsights';
 import { OrgChartComponent } from '@/components/EmployeeCharter/OrgChartComponent';
 import { orgChartData } from '@/utils/dummyOrgCharData';
+import { EmployeeData } from '@/types/employee';
 
 // import { OrgChartComponent } from './OrgChartComponent';
 // import ShowEmptyModal from './ShowEmptyModal';
@@ -40,12 +41,12 @@ const OrgChartPage: FC = () => {
   // const router = useRouter();
   const params = useParams();
   const queryParams = useSearchParams();
-  const refOrgChart = useRef(new OrgChart<DataTypes.Employee>());
+  const refOrgChart = useRef(new OrgChart<EmployeeData>());
   // const modalRef = useRef<ModalHandle>(null);
   // const saveViewRef = useRef<ModalHandle>(null);
 
   const { data: session } = useSession();
-  const user = session?.user as DataTypes.User;
+  const user = session?.user as unknown as DataTypes.User;
 
   const { data: view, isLoading: isViewLoading } = useQuery(
     ['o-view', queryParams.get('viewId')],
@@ -100,7 +101,7 @@ const OrgChartPage: FC = () => {
     }
   );
 
-  const onTerminate = (employee: DataTypes.Employee, node: any) => {
+  const onTerminate = (employee: EmployeeData, node: any) => {
     dispatch({ type: 'TOGGLE_TERMINATE_EMPLOYEE', payload: [employee] });
     dispatch({
       type: 'TERMINATED_PARENTS',
@@ -110,22 +111,20 @@ const OrgChartPage: FC = () => {
       type: 'PARENT_TOTAL_TERMINATED_EMPLOYEES',
       payload: { parentId: node.data.parentId, employeeId: employee.id },
     });
-    dispatch({
-      type: 'CALCULATE_REVENUE_AND_COST',
-      payload: employee.isTerminated ? -employee.salary : employee.salary,
-    });
+    // dispatch({
+    //   type: 'CALCULATE_REVENUE_AND_COST',
+    //   payload: employee.isTerminated ? -employee.salary : employee.salary,
+    // });
   };
 
   useEffect(() => {
     // if (orgChartResponse || view?.view) {
     if (orgChartResponse) {
       const data = orgChartResponse ?? view?.view;
-      dispatch({
-        type: 'TERMINATED_EMPLOYEE',
-        payload: data?.orgChartData.filter(
-          (e: DataTypes.Employee) => e.isTerminated
-        ),
-      });
+      // dispatch({
+      //   type: 'TERMINATED_EMPLOYEE',
+      //   payload: data?.orgChartData.filter((e: EmployeeData) => e.isTerminated),
+      // });
       dispatch({
         type: 'TOTAL_TERMINATED_EMPLOYEES_PER_PARENT',
         payload: data?.orgChartData,
@@ -153,107 +152,11 @@ const OrgChartPage: FC = () => {
       : orgChartResponse?.orgChartData
   );
 
-  // const handleSetAction = (value: RunAction) => {
-  //   if (!state.selectedEmployees.length) {
-  //     modalRef.current?.show();
-  //     return;
-  //   }
-  //   setAction(value);
-  //   setIsActionLoading(true);
-  //   setTimeout(() => {
-  //     setIsActionLoading(false);
-  //     router.push(
-  //       `/run?employeeIds=${state.selectedEmployees.map(
-  //         (id) => id
-  //       )}&action=${value}&companyId=${selectedCompany}`
-  //     );
-  //   }, 500);
-  // };
-
-  // if (isLoading || isCompaniesLoading || isViewLoading) {
-  //   return (
-  //     <div className="w-full h-screen flex items-center justify-center">
-  //       <Spinner />
-  //     </div>
-  //   );
-  // }
-
   return (
     <div
       id="parent"
-      className="w-full h-full relative overflow-hidden no-scrollbar p-2"
+      className="w-full h-full relative overflow-hidden no-scrollbar "
     >
-      {/* <div className="bg-white rounded-lg p-6 shadow-lg items-center mb-8 h-20 flex space-x-2 justify-end w-full top-0 left-0">
-        <Link
-          href="/public"
-          onClick={(e) => {
-            e.preventDefault();
-            router.back();
-          }}
-          className="flex items-center space-x-1 mr-auto"
-        >
-          <div className="bg-primary rounded-full w-6 h-6 p-1 flex items-center justify-center mr-2">
-            <ArrowLeftIcon className="text-white" />
-          </div>
-          <div className="flex flex-col -space-y-1">
-            <div className="text-100C18 text-lg">Company Charter</div>
-          </div>
-        </Link>
-        <div className="relative w-60">
-          <input
-            className="w-full border border-979599 rounded-full p-2 text-sm outline-0"
-            onChange={(e) => setSearch(e.target.value)}
-            value={search}
-            placeholder="Search..."
-          />
-          {search.length > 0 && (
-            <button
-              className="absolute top-3 right-2"
-              onClick={() => setSearch('')}
-            >
-              <XMarkIcon className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-        <div className="flex space-x-2 text-sm ml-auto">
-          <button
-            className={clsx(
-              'border border-primary rounded-full px-4 py-2',
-              !compact && 'bg-primary text-white'
-            )}
-            onClick={() => setCompact(false)}
-          >
-            Horizontal
-          </button>
-          <button
-            className={clsx(
-              'border border-primary rounded-full px-4 py-2',
-              compact && 'bg-primary text-white'
-            )}
-            onClick={() => setCompact(true)}
-          >
-            Vertical
-          </button>
-        </div>
-      </div> */}
-      {/* {!params.id && (
-        <div className="flex justify-between mt-8">
-          <div className="flex items-center relative">
-            <PrivateEquityTitle className="mb-0 mr-12" />
-            <SelectCompany
-              companies={companies?.items ?? []}
-              selectedCompany={selectedCompany}
-              setSelectedCompany={setSelectedCompany}
-            />
-          </div>
-          <Workforce
-            action={action}
-            isActionLoading={isActionLoading}
-            handleSetAction={handleSetAction}
-            user={user}
-          />
-        </div>
-      )} */}
       <OrgChartComponent
         employees={orgChartData}
         refOrgChart2={refOrgChart}
@@ -269,31 +172,6 @@ const OrgChartPage: FC = () => {
         }
         onTerminate={onTerminate}
       />
-      {/* <div>
-        <div className="mb-2">Cost & Savings</div>
-      </div> */}
-      {/* {user && user.role !== EUserRoles.VIEW_ONLY && (
-        <div className="flex justify-between items-center">
-          <OrgChartInsights
-            totalTerminatedEmployees={state.terminatedEmployees.length}
-            totalCost={state.totalCost}
-            totalSaved={state.totalSaved}
-          />
-          <ExportActions
-            selectedCompany={selectedCompany}
-            refOrgChart={refOrgChart}
-            saveViewRef={saveViewRef}
-          />
-        </div>
-      )} */}
-
-      {/* <SaveViewModal
-        employeeIds={Object.keys(state.terminatedEmployees).map(Number)}
-        selectedCompany={selectedCompany}
-        isChartSaveView
-        ref={saveViewRef}
-      />
-      <ShowEmptyModal ref={modalRef} /> */}
     </div>
   );
 };

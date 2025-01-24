@@ -30,7 +30,13 @@ const Addnewpolicies = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
+
+  const dispatch = useDispatch<AppDispatch>();
+  useSelector((state: RootState) => state.myInfo);
+  const [myId, setMyId] = useState(null);
+
   const [policyData, setPolicyData] = useState<Policy>({
+    id: null,
     type: '',
     title: '',
     status: '',
@@ -38,12 +44,11 @@ const Addnewpolicies = () => {
     previewUrl: null,
     description: '',
     effectiveDate: '',
+    uploadBy: myId,
+    totalEmployees: 0,
+    employeeAccepted: 0,
   });
   const { data: session } = useSession();
-
-  const dispatch = useDispatch<AppDispatch>();
-  useSelector((state: RootState) => state.myInfo);
-  const [myId, setMyId] = useState(null);
 
   useEffect(() => {
     const fetchMyId = async () => {

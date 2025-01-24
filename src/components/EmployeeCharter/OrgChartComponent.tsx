@@ -15,7 +15,7 @@ import React, {
   useState,
 } from 'react';
 
-import Modal from '@/components/NewModal';
+// import Modal from '@/components/NewModal';
 import { useModal } from '@/hooks/use-modal';
 import api from '@/modules/api/client';
 import { DataTypes } from '@/types/data';
@@ -126,7 +126,7 @@ export const OrgChartComponent: FC<Props> = ({
           id: employeeId,
         },
       }).then((res) => {
-        onTerminate(res.data.data, node);
+        onTerminate(res.data.data as unknown as EmployeeData, node);
         setIsTerminating({
           ...isTerminating,
           [employeeId]: false,
@@ -192,7 +192,10 @@ export const OrgChartComponent: FC<Props> = ({
             terminatedParents.indexOf(data.data.id) > -1;
           const hasTerminatedSubordinates =
             totalTerminated[data.id] > 0 ||
-            checkForTerminatedEmployees(data, terminatedEmployees) ||
+            checkForTerminatedEmployees(
+              data,
+              terminatedEmployees as unknown as DataTypes.Employee[]
+            ) ||
             isTerminatedParent;
           return orgChartProfile({
             d: data,
@@ -208,6 +211,7 @@ export const OrgChartComponent: FC<Props> = ({
         })
         .nodeUpdate(function (node) {
           const id = node.data.id as number;
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           d3.select(this)
             .select(`.${BTN_MODAL_CLASS_NAME}`)
@@ -215,6 +219,7 @@ export const OrgChartComponent: FC<Props> = ({
               e.stopPropagation();
               handleClickNode(node);
             });
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           d3.select(this)
             .select(`.${BTN_SELECT}`)
@@ -222,6 +227,7 @@ export const OrgChartComponent: FC<Props> = ({
               e.stopPropagation();
               onSelectedEmployees(id);
             });
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           d3.select(this)
             .select(`.${BTN_TERMINATE}`)
@@ -230,6 +236,7 @@ export const OrgChartComponent: FC<Props> = ({
               handleTerminate(id, node);
             });
 
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           d3.select(this)
             .select(`.${BTN_SHOW_TERMINATED}`)
@@ -241,6 +248,7 @@ export const OrgChartComponent: FC<Props> = ({
               showTerminatedEmployeesModal.openModal();
             });
 
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           d3.select(this)
             .select(`.${BTN_HOVER_OPEN_POSITIONS}`)
@@ -249,6 +257,7 @@ export const OrgChartComponent: FC<Props> = ({
               updateElementPosition(e, openPositionsCnt.current);
             });
 
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           d3.select(this)
             .select(`.${BTN_HOVER_TERMINATED}`)
@@ -257,6 +266,7 @@ export const OrgChartComponent: FC<Props> = ({
               updateElementPosition(e, terminatedCnt.current);
             });
 
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           d3.select(this)
             .select(`.${BTN_HOVER_OPEN_POSITIONS}`)
@@ -265,6 +275,7 @@ export const OrgChartComponent: FC<Props> = ({
               hideElement(openPositionsCnt.current);
             });
 
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           d3.select(this)
             .select(`.${BTN_HOVER_TERMINATED}`)
@@ -273,6 +284,7 @@ export const OrgChartComponent: FC<Props> = ({
               hideElement(terminatedCnt.current);
             });
 
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           d3.select(this)
             .select('.node-rect')
@@ -289,6 +301,7 @@ export const OrgChartComponent: FC<Props> = ({
             );
         })
         .linkUpdate(function (d) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           d3.select(this)
             .attr('stroke', () =>
@@ -297,6 +310,7 @@ export const OrgChartComponent: FC<Props> = ({
             .attr('stroke-width', d.data._upToTheRootHighlighted ? 3 : 1);
           // will raise the highlighted link to the top
           if (d.data._upToTheRootHighlighted) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             d3.select(this).raise();
           }
@@ -377,7 +391,7 @@ export const OrgChartComponent: FC<Props> = ({
         </div>
       </div>
       <div ref={d3Container} />
-      <Modal
+      {/* <Modal
         contentClassName="w-96"
         showDialog={modal.showDialog}
         onDismiss={modal.closeModal}
@@ -412,7 +426,7 @@ export const OrgChartComponent: FC<Props> = ({
             !!user && user?.role === DataTypes.EUserRoles.SUPER_ADMIN
           }
         />
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

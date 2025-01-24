@@ -1,6 +1,5 @@
 import React, { forwardRef, useImperativeHandle } from 'react';
 
-import Modal from '@/components/Modal';
 import { useModal } from '@/hooks/use-modal';
 
 type Props = {
@@ -19,11 +18,11 @@ const ShowEmptyModal = forwardRef<Props>((props, ref) => {
     },
   }));
   return (
-    <Modal
-      title="Run d-Crystal"
-      size="medium"
-      showDialog={modal.showDialog}
-      onDismiss={modal.closeModal}
+    <div
+    // title="Run d-Crystal"
+    // size="medium"
+    // showDialog={modal.showDialog}
+    // onDismiss={modal.closeModal}
     >
       <div className="flex flex-col justify-center h-40 items-center px-8">
         <div className="mb-4">Please select employees to run d-Crystal</div>
@@ -41,7 +40,7 @@ const ShowEmptyModal = forwardRef<Props>((props, ref) => {
           Cancel
         </button>
       </div>
-    </Modal>
+    </div>
   );
 });
 

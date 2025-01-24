@@ -31,7 +31,7 @@ const ProfileCard = ({
   loading?: boolean;
 }) => {
   const hireDate = employeeData?.hireDate
-    ? employeeData.hireDate.split('T')[0]
+    ? new Date(employeeData.hireDate).toLocaleDateString()
     : 'N/A';
 
   useSelector((state: RootState) => state.myInfo);
@@ -187,7 +187,7 @@ const ProfileCard = ({
           <div className="flex mt-3 gap-4 flex-wrap">
             <ProfileInfoItem
               icon={HiOutlineHashtag}
-              text={employeeData?.userId.toString() || 'N/A'}
+              text={employeeData?.userId?.toString() || 'N/A'}
               title="Identification No."
             />
             <ProfileInfoItem

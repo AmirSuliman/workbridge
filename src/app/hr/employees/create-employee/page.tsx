@@ -29,7 +29,6 @@ const CreateEmployee = () => {
   const { data: employeeData } = useSelector(
     (state: RootState) => state.employee
   );
-  console.log('create employeeData: ', employeeData);
   // profile picture
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {

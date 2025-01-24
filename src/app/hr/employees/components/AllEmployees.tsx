@@ -107,7 +107,7 @@ export const AllEmployees = () => {
   }, [searchTerm, sortOption, filterOption, employees]);
 
   if (loading) return <ScreenLoader />;
-
+  console.log('employees: ', employees);
   return (
     <main className="bg-white border p-4 rounded-md mt-4">
       <div className="flex gap-3 my-3">
