@@ -8,18 +8,23 @@ interface ConfirmProps {
   onClose: () => void;
 }
 
-const ConfirmLeave: React.FC<ConfirmProps> = ({ timeOffRequestId, onClose }) => {
+const ConfirmLeave: React.FC<ConfirmProps> = ({
+  timeOffRequestId,
+  onClose,
+}) => {
   const [timeOffRequest, setTimeOffRequest] = useState<any | null>(null);
-  const [note, setNote] = useState<string>(''); 
+  const [note, setNote] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (timeOffRequestId) {
       const fetchTimeOffRequest = async () => {
         try {
-          const response = await axiosInstance.get(`/timeoff/${timeOffRequestId}`);
+          const response = await axiosInstance.get(
+            `/timeoff/${timeOffRequestId}`
+          );
           console.log('Time Off Request:', response.data);
-          setTimeOffRequest(response.data.data); 
+          setTimeOffRequest(response.data.data);
         } catch (error) {
           console.error('Failed to fetch time off request:', error);
           setError('Failed to load time off request. Please try again later.');
@@ -38,34 +43,36 @@ const ConfirmLeave: React.FC<ConfirmProps> = ({ timeOffRequestId, onClose }) => 
           status: 'Confirmed',
           note,
         });
-        onClose(); 
+        onClose();
       } catch (error) {
         console.error('Error confirming leave request:', error);
         setError('Failed to confirm leave request. Please try again later.');
       }
     } else {
-      console.error('Time off request details are not available for confirmation');
+      console.error(
+        'Time off request details are not available for confirmation'
+      );
       setError('Leave request details are missing.');
     }
   };
 
   return (
-    <div className="w-[600px] bg-white p-6 rounded-lg">
+    <div className="w-full max-w-[600px] bg-white p-6 rounded-lg">
       <h1 className="font-semibold text-[22px]">Leave Request</h1>
 
       {/* Error Message */}
-      {error && (
-        <div className="text-red-500 text-sm mb-4">
-          {error}
-        </div>
-      )}
+      {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
 
       {/* Time-Off Request Details */}
-      <div className="flex flex-row items-center gap-8 mt-8">
+      <div className="grid grid-cols-2 gap-8 mt-8">
         <label className="w-full">
           <span className="mb-2 text-gray-400 text-[12px]">Employee Name</span>
           <div className="w-full p-3 text-[14px] rounded border border-gray-300 text-gray-600">
-            {timeOffRequest ? `${timeOffRequest.employee.firstName} ${timeOffRequest.employee.middleName || ''} ${timeOffRequest.employee.lastName || ''}` : 'Loading...'}
+            {timeOffRequest
+              ? `${timeOffRequest.employee.firstName} ${
+                  timeOffRequest.employee.middleName || ''
+                } ${timeOffRequest.employee.lastName || ''}`
+              : 'Loading...'}
           </div>
         </label>
 
@@ -73,23 +80,26 @@ const ConfirmLeave: React.FC<ConfirmProps> = ({ timeOffRequestId, onClose }) => 
           <span className="mb-2 text-gray-400 text-[12px]">Leave Duration</span>
           <div className="w-full p-3 text-[14px] rounded border border-gray-300 text-gray-600">
             {timeOffRequest
-              ? `${timeOffRequest.duration} Days (${new Date(timeOffRequest.leaveDay).toLocaleDateString()} - ${new Date(timeOffRequest.returningDay).toLocaleDateString()})`
+              ? `${timeOffRequest.duration} Days (${new Date(
+                  timeOffRequest.leaveDay
+                ).toLocaleDateString()} - ${new Date(
+                  timeOffRequest.returningDay
+                ).toLocaleDateString()})`
               : 'Loading...'}
           </div>
+        </label>
+        <label className="w-full flex flex-col col-span-full">
+          <span className="mb-1 text-gray-400 text-[12px]">Note</span>
+          <textarea
+            className="w-full p-4 rounded border border-gray-300 text-black resize-none"
+            rows={5}
+            value={timeOffRequest?.note || 'No note provided'}
+            readOnly={true}
+          />
         </label>
       </div>
 
       {/* Note */}
-      <label className="w-full mt-8 flex flex-col">
-        <span className="mb-1 text-gray-400 text-[12px]">Note</span>
-        <textarea
-          placeholder="Add a message (optional)"
-          className="w-full p-4 rounded border border-gray-300 text-black resize-none"
-          rows={5}
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-        />
-      </label>
 
       {/* Action Buttons */}
       <div className="flex flex-row items-center gap-5 w-full mt-24 px-8">

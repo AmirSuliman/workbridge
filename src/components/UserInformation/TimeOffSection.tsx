@@ -22,8 +22,7 @@ interface TimeOffItem {
   returningDay: string;
   type: string;
   status: string;
-  employee: Employee,
- 
+  employee: Employee;
 }
 
 const TimeOffSection = () => {
@@ -140,20 +139,20 @@ const TimeOffSection = () => {
     >
       {item.status === 'Pending' ? 'Waiting for Approval' : item.status}
     </span>,
-    item.status !== 'Confirmed' ? (
-      <FaEdit
-        key={`edit-${index}`}
-        className="text-dark-navy w-5 cursor-pointer justify-end flex ml-52"
-        onClick={() => handleEditClick(item)}
-        title="Edit time-off request"
-      />
-    ) : (
-      <span className="text-gray-400" title="Cannot edit confirmed requests">
-        
-      </span>
-    )
+    // item.status === 'Denied' ? (
+    //   <FaEdit
+    //     key={`edit-${index}`}
+    //     className="text-dark-navy w-5 cursor-pointer justify-end flex ml-52"
+    //     onClick={() => handleEditClick(item)}
+    //     title="Edit time-off request"
+    //   />
+    // ) : (
+    //   <span
+    //     className="text-gray-400"
+    //     title="Cannot edit confirmed requests"
+    //   ></span>
+    // ),
   ]);
-  
 
   return (
     <div className="p-1 rounded-md h-full">
@@ -202,7 +201,9 @@ const TimeOffSection = () => {
               item.type,
               new Date(item.leaveDay).toLocaleDateString(),
               new Date(item.returningDay).toLocaleDateString(),
-              `${item.employee.firstName || 'N/A'} ${item.employee.lastName || 'N/A'}`.trim(),
+              `${item.employee.firstName || 'N/A'} ${
+                item.employee.lastName || 'N/A'
+              }`.trim(),
             ])}
           />
         )}
@@ -212,7 +213,11 @@ const TimeOffSection = () => {
         <Modal onClose={closeModal}>
           <div className="p-6 w-full sm:w-[600px]">
             <div className="flex flex-row items-center gap-2">
-              <Image src="/vaction.png" alt="img" width={40} height={40} />
+              {selectedTimeOff?.type?.toLowerCase() === 'vacation' ? (
+                <Image src="/vaction.png" alt="img" width={40} height={40} />
+              ) : (
+                <Image src="/sickleave.png" alt="img" width={40} height={40} />
+              )}
               <h2 className="text-2xl font-semibold">
                 Edit Request {selectedTimeOff?.type}
               </h2>
@@ -258,7 +263,7 @@ const TimeOffSection = () => {
 
             <div className="flex flex-row p-8 px-4 w-full gap-4 mt-24">
               <button
-              type='button'
+                type="button"
                 onClick={handleUpdateTimeOff}
                 className="px-4 py-3 bg-dark-navy text-white rounded w-full"
               >
@@ -266,7 +271,7 @@ const TimeOffSection = () => {
               </button>
               <button
                 onClick={closeModal}
-                type='button'
+                type="button"
                 className="px-4 py-3 border rounded w-full"
               >
                 Close

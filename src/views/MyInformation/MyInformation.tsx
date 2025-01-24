@@ -70,7 +70,6 @@ const MyInformation = () => {
     mode: 'onChange',
     defaultValues: formattedData,
   });
-  console.log('form erros: ', errors);
   useEffect(() => {
     const fetchMyId = async () => {
       if (session?.user?.accessToken) {
