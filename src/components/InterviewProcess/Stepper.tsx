@@ -47,9 +47,10 @@ const Stepper = ({ jobApplication, currentStage, onTabChange }) => {
           icon={<IoDocumentTextOutline size={24} />}
           onClick={() => handleNavigation('Offer')}
         />
-        <StepLine />
+        <StepLine  className={`${['Onboarding'].includes(currentStage) ? 'bg-black' : ''}`} />
+       
         <IconWithBg
-          className="size-[40px]"
+          className={`size-[40px] ${['Onboarding' ].includes(currentStage) ? 'bg-black text-white' : ''}`}
           icon={<FaRegHandshake size={24} />}
           onClick={() => handleNavigation('Onboarding')}
         />
@@ -67,10 +68,10 @@ const Stepper = ({ jobApplication, currentStage, onTabChange }) => {
         <p className={`cursor-pointer ${['Negotiation'].includes(currentStage) ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Negotiation')}>
           Offer and Negotiation
         </p>
-        <p className={`cursor-pointer ${['Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Offer')}>
+        <p className={`cursor-pointer ${['Offer',  'Rejected'].includes(currentStage) ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Offer')}>
           Offer Approval
         </p>
-        <p className="cursor-pointer" onClick={() => handleNavigation('Onboarding')}>
+        <p className={`cursor-pointer ${[ 'Onboarding' ].includes(currentStage) ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Onboarding')}>
           Onboarding
         </p>
       </div>

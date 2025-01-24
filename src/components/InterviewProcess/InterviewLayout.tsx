@@ -7,7 +7,9 @@ import SendInvite from './SendInvite';
 import Stepper from './Stepper';
 import OfferAndNegotiation from './OfferAndNegotiation';
 import OfferApproval from './OfferApproval';
-
+import Onboarding from './Onboarding';
+import { useParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 interface ApiResponse {
   data: {
     offer?: {
@@ -21,7 +23,9 @@ const InterviewLayout = ({ jobApplication }) => {
   const jobData = jobApplication?.data?.items[0] || {};
   const initialStage = jobData?.stage || 'Applied';
   const jobApplicationId = jobData?.id;
-
+  const searchParams = useSearchParams();
+  const candidateId = searchParams.get('candidate');
+  console.log(candidateId, "id");
   const meetingDate = new Date(jobData?.meetingDate);
   const currentDate = new Date();
   const isToday = meetingDate.toDateString() === currentDate.toDateString();
@@ -150,11 +154,17 @@ const InterviewLayout = ({ jobApplication }) => {
           <OfferAndNegotiation jobApplication={jobApplication} />
         )}
 
-        {['Onboarding', 'Rejected', 'Offer'].includes(currentStage) && (
+        {['Rejected', 'Offer'].includes(currentStage) && (
           <OfferApproval
             jobApplication={jobApplication}
             offerId={offerId}
             token={token}
+          />
+        )}
+        {['Onboarding'].includes(currentStage) && (
+          <Onboarding
+            jobId={jobApplicationId}
+            candidateId={candidateId}
           />
         )}
       </section>
