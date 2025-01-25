@@ -33,7 +33,7 @@ const DepartmentDropdown = ({ departmentId, register, errors }) => {
     <>
       <select
         className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-        {...register('departmentId')}
+        {...register('departmentId', { valueAsNumer: false })}
         value={defaultDepartmentId?.toString() || ''}
         onChange={(e) => setDefaultDepartmentId(e.target.value)}
       >

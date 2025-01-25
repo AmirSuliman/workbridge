@@ -67,8 +67,8 @@ const MyInformation = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(employeeSchema),
-    mode: 'onChange',
     defaultValues: formattedData,
+    mode: 'all',
   });
   useEffect(() => {
     const fetchMyId = async () => {

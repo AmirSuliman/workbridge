@@ -51,7 +51,7 @@ const EmploymentSection = ({
             <input
               type="date"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('hireDate', { required: 'hire date is required' })}
+              {...register('hireDate')}
               readOnly={!editEmployee}
             />
             {errors.hireDate && (
@@ -82,9 +82,7 @@ const EmploymentSection = ({
             <input
               type="date"
               className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
-              {...register('effectiveDate', {
-                required: 'effectiveDate is required',
-              })}
+              {...register('effectiveDate')}
               readOnly={!editEmployee}
             />
             {errors.effectiveDate && (
@@ -95,15 +93,18 @@ const EmploymentSection = ({
             Employment Type
             <select
               className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-              {...register('employmentType', {
-                required: 'Employment Type is required',
-              })}
+              {...register('employmentType')}
             >
               <option value="">Select Type</option>
               <option value="Fulltime">Full-Time</option>
               <option value="Part Time">Part-Time</option>
               <option value="Freelance">Freelance</option>
             </select>
+            {errors.employmentType && (
+              <p className="text-red-500 text-xs">
+                {errors.employmentType.message}
+              </p>
+            )}
           </label>
           <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
             Note
@@ -182,9 +183,7 @@ const EmploymentSection = ({
               type="text"
               placeholder="Add job title"
               className="p-2 rounded-md bg-transparent border w-full"
-              {...register('tittle', {
-                required: 'Job title is required',
-              })}
+              {...register('tittle')}
             />
             {errors.tittle && (
               <span className="text-red-500">{errors.tittle.message}</span>
@@ -233,7 +232,6 @@ const EmploymentSection = ({
                 placeholder="Add annual compensation amount"
                 className="p-2 rounded-md bg-transparent border w-full"
                 {...register('salary', {
-                  required: 'Compensation is required',
                   valueAsNumber: true,
                 })}
               />
@@ -245,9 +243,7 @@ const EmploymentSection = ({
               <Label text="Pay type*" /> <br />
               <select
                 className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-                {...register('payType', {
-                  required: 'Paytype is required',
-                })}
+                {...register('payType')}
               >
                 <option value="">Select PayType</option>
                 <option value="Salary">Salary</option>
@@ -263,9 +259,7 @@ const EmploymentSection = ({
               <Label text="Schedule*" /> <br />
               <select
                 className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-                {...register('paymentSchedule', {
-                  required: 'Schedule is required',
-                })}
+                {...register('paymentSchedule')}
               >
                 <option value="">Select Schedule</option>
                 <option value="Weekly">Weekly</option>

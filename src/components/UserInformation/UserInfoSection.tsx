@@ -45,7 +45,7 @@ const UserInfoSection = ({
               readOnly={!editEmployee}
             />
             {errors.firstName && (
-              <p className="text-red-500 text-xs">First Name is required</p>
+              <p className="text-red-500 text-xs">{errors.firstName.message}</p>
             )}
           </div>
           <div className="flex flex-col">
@@ -66,7 +66,7 @@ const UserInfoSection = ({
               readOnly={!editEmployee}
             />
             {errors.lastName && (
-              <p className="text-red-500 text-xs">Last Name is required</p>
+              <p className="text-red-500 text-xs">{errors.lastName.message}</p>
             )}
           </div>
           <div className="flex flex-col">
@@ -85,7 +85,7 @@ const UserInfoSection = ({
             <h6 className="text-[#abaeb4] text-xs mb-1">Gender</h6>
             <select
               className="p-3 rounded-md bg-transparent border w-full text-sm "
-              {...register('gender', { required: 'Gender is required' })}
+              {...register('gender')}
             >
               <option value="" className="font-bold">
                 Select Gender
@@ -95,16 +95,14 @@ const UserInfoSection = ({
             </select>
 
             {errors.gender && (
-              <p className="text-red-500 text-xs">gender is required</p>
+              <p className="text-red-500 text-xs">{errors.gender.message}</p>
             )}
           </div>
           <div className="flex flex-col">
             <h6 className="text-[#abaeb4] text-xs mb-1">Marital Status</h6>
             <select
               className="p-3 rounded-md bg-transparent border w-full text-sm "
-              {...register('marritialStatus', {
-                required: 'Marital status is required',
-              })}
+              {...register('marritialStatus')}
             >
               <option value="">Select Status</option>
               <option value="Single">Single</option>
@@ -115,7 +113,7 @@ const UserInfoSection = ({
 
             {errors.marritialStatus && (
               <p className="text-red-500 text-xs">
-                Marritial Status is required
+                {errors.marritialStatus.message}
               </p>
             )}
           </div>
@@ -148,7 +146,7 @@ const UserInfoSection = ({
               {...register('location.street1')}
               readOnly={!editEmployee}
             />
-            {errors.location?.street1 && (
+            {errors.location && errors.location?.street1 && (
               <p className="text-red-500 text-xs">
                 {errors.location?.street1.message}
               </p>

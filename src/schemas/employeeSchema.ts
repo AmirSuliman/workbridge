@@ -21,24 +21,24 @@ export const employeeSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
-  middleName: z.string().optional(),
+  middleName: z.string().optional().or(z.literal('')),
   salary: z
-    .number({ message: 'salary must be a number and at least 1 digit' })
-    .min(1, 'Salary must be a positive number'),
+    .number({ message: 'salary must be a number' })
+    .min(1000, 'Salary must be at least 1000$ per year'),
   tittle: z.string().min(1, 'Title is required'),
   effectiveDate: z
     .string()
     .regex(
       /^\d{4}-\d{2}-\d{2}$/,
-      'Effective date must be in DD/MM/YYYY format'
+      'Effective date must be in dd/mm/yyyy format'
     ),
   note: z.string().optional(),
   hireDate: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in DD/MM/YYYY format'),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in dd/mm/yyyy format'),
   birthday: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birth date must be in DD/MM/YYYY format'),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birth date must be in dd/mm/yyyy format'),
   phoneNumber: z
     .number({ message: 'Phone number must be at least 7 digits' })
     .min(7, 'Phone number must be at least 7 digits'),
@@ -48,17 +48,21 @@ export const employeeSchema = z.object({
   departmentId: z
     .string({ message: 'Department id is required' })
     .min(1, 'Department id is required'),
-  gender: z.string().min(1, 'Gender is required'),
+  gender: z
+    .string({ message: 'Gender is required' })
+    .min(1, 'Gender is required'),
   marritialStatus: z.string().min(1, 'Marital status is required'),
   paymentSchedule: z.string().min(1, 'Payment schedule is required'),
-  payType: z.string().min(1, 'Pay type is required'),
+  payType: z
+    .string({ message: 'Pay type is required' })
+    .min(1, 'Pay type is required'),
   profilePictureUrl: z
     .union([
-      // z.instanceof(File), // Validate as a File
-      z.string().optional(), // Allow pre-existing URLs
-      z.null(), // Allow no value
+      // z.instanceof(File),
+      z.string().optional(),
+      z.null(),
     ])
-    .optional(), // Make the entire field optional
+    .optional(),
 
   linkedin: z
     .string()

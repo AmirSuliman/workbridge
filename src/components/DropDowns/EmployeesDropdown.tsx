@@ -34,10 +34,10 @@ const EmployeesDropdown = ({ reportingManagerId, register, errors }) => {
       <select
         className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
         {...register('reportingManagerId', {
-          required: 'Reporting Manager is required',
+          valueAsNumer: false,
         })}
-        value={defaultManagerId || ''}
-        onChange={(e) => setDefaultManagerId(e.target.value)} // Sync state with selection
+        value={defaultManagerId?.toString() || ''}
+        onChange={(e) => setDefaultManagerId(e.target.value)}
       >
         <option value="">Select Manager</option>
         {employees.map((employee) => (
