@@ -39,56 +39,53 @@ const UserInfoSection = ({
         )}
         <div className="grid sm:grid-cols-3 gap-4 my-5">
           <div className="flex flex-col">
-            <h6 className="text-[#abaeb4] text-xs mb-1">First Name</h6>
+            <h6 className="form-label">First Name*</h6>
             <input
               type="text"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('firstName')}
               readOnly={!editEmployee}
             />
             {errors.firstName && (
-              <p className="text-red-500 text-xs">{errors.firstName.message}</p>
+              <p className="form-error">{errors.firstName.message}</p>
             )}
           </div>
           <div className="flex flex-col">
-            <h6 className="text-[#abaeb4] text-xs mb-1">Middle Name</h6>
+            <h6 className="form-label">Middle Name</h6>
             <input
               type="text"
               readOnly={!editEmployee}
               {...register('middleName')}
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
             />
           </div>
           <div className="flex flex-col">
-            <h6 className="text-[#abaeb4] text-xs mb-1">Surname</h6>
+            <h6 className="form-label">Surname*</h6>
             <input
               type="text"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('lastName')}
               readOnly={!editEmployee}
             />
             {errors.lastName && (
-              <p className="text-red-500 text-xs">{errors.lastName.message}</p>
+              <p className="form-error">{errors.lastName.message}</p>
             )}
           </div>
           <div className="flex flex-col">
-            <h6 className="text-[#abaeb4] text-xs mb-1">Birthday</h6>
+            <h6 className="form-label">Birthday*</h6>
             <input
               type="date"
-              className="p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md"
+              className="form-input"
               {...register('birthday')}
               readOnly={!editEmployee}
             />
             {errors.birthday && (
-              <p className="text-red-500 text-xs">{errors.birthday.message}</p>
+              <p className="form-error">{errors.birthday.message}</p>
             )}
           </div>
           <div className="flex flex-col">
-            <h6 className="text-[#abaeb4] text-xs mb-1">Gender</h6>
-            <select
-              className="p-3 rounded-md bg-transparent border w-full text-sm "
-              {...register('gender')}
-            >
+            <h6 className="form-label">Gender*</h6>
+            <select className="form-input" {...register('gender')}>
               <option value="" className="font-bold">
                 Select Gender
               </option>
@@ -97,15 +94,12 @@ const UserInfoSection = ({
             </select>
 
             {errors.gender && (
-              <p className="text-red-500 text-xs">{errors.gender.message}</p>
+              <p className="form-error">{errors.gender.message}</p>
             )}
           </div>
           <div className="flex flex-col">
-            <h6 className="text-[#abaeb4] text-xs mb-1">Marital Status</h6>
-            <select
-              className="p-3 rounded-md bg-transparent border w-full text-sm "
-              {...register('marritialStatus')}
-            >
+            <h6 className="form-label">Marital Status*</h6>
+            <select className="form-input" {...register('marritialStatus')}>
               <option value="">Select Status</option>
               <option value="Single">Single</option>
               <option value="Married">Married</option>
@@ -114,16 +108,14 @@ const UserInfoSection = ({
             </select>
 
             {errors.marritialStatus && (
-              <p className="text-red-500 text-xs">
-                {errors.marritialStatus.message}
-              </p>
+              <p className="form-error">{errors.marritialStatus.message}</p>
             )}
           </div>
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
-            Email
+          <label className="form-label">
+            Email*
             <input
               type="email"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('email')}
               readOnly={!editEmployee}
             />
@@ -140,88 +132,76 @@ const UserInfoSection = ({
           text="Address"
         />
         <div className="grid sm:grid-cols-3 gap-4 mt-5">
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
-            Street 1
+          <label className="form-label">
+            Street 1*
             <input
               type="text"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('location.street1')}
               readOnly={!editEmployee}
             />
             {errors.location && errors.location?.street1 && (
-              <p className="text-red-500 text-xs">
-                {errors.location?.street1.message}
-              </p>
+              <p className="form-error">{errors.location?.street1.message}</p>
             )}
           </label>
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
+          <label className="form-label">
             Street 2
             <input
               type="text"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('location.street2')}
               readOnly={!editEmployee}
             />
             {errors.location?.street2 && (
-              <p className="text-red-500 text-xs">
-                {errors.location?.street2.message}
-              </p>
+              <p className="form-error">{errors.location?.street2.message}</p>
             )}
           </label>
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
-            Zip
+          <label className="form-label">
+            Zip*
             <input
               type="number"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('location.zipCode', { valueAsNumber: true })}
               readOnly={!editEmployee}
             />
             {errors.location?.zipCode && (
-              <p className="text-red-500 text-xs">
-                {errors.location?.zipCode.message}
-              </p>
+              <p className="form-error">{errors.location?.zipCode.message}</p>
             )}
           </label>
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
-            City
+          <label className="form-label">
+            City*
             <input
               type="text"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('location.city')}
               readOnly={!editEmployee}
             />
             {errors.location?.city && (
-              <p className="text-red-500 text-xs">
-                {errors.location?.city.message}
-              </p>
+              <p className="form-error">{errors.location?.city.message}</p>
             )}
           </label>
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
-            Country
+          <label className="form-label">
+            Country*
             <input
               type="text"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('location.country')}
               readOnly={!editEmployee}
             />
             {errors.location?.country && (
-              <p className="text-red-500 text-xs">
-                {errors.location?.country.message}
-              </p>
+              <p className="form-error">{errors.location?.country.message}</p>
             )}
           </label>
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
-            State
+          <label className="form-label">
+            State*
             <input
               type="text"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('location.state')}
               readOnly={!editEmployee}
             />
             {errors.location?.state && (
-              <p className="text-red-500 text-xs">
-                {errors.location?.state.message}
-              </p>
+              <p className="form-error">{errors.location?.state.message}</p>
             )}
           </label>
         </div>
@@ -230,30 +210,28 @@ const UserInfoSection = ({
       <div className="my-5">
         <FormHeading icon={<FaPhoneAlt className="w-4" />} text="Contact" />
         <div className="grid sm:grid-cols-3 gap-4 mt-5">
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
-            Phone
+          <label className="form-label">
+            Phone*
             <input
               type="number"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('phoneNumber', { valueAsNumber: true })}
               readOnly={!editEmployee}
             />
             {errors.phoneNumber && (
-              <p className="text-red-500 text-xs">
-                {errors.phoneNumber.message}
-              </p>
+              <p className="form-error">{errors.phoneNumber.message}</p>
             )}
           </label>
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
-            Work Phone
+          <label className="form-label">
+            Work Phone*
             <input
               type="number"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('workPhone', { valueAsNumber: true })}
               readOnly={!editEmployee}
             />
             {errors.workPhone && (
-              <p className="text-red-500 text-xs">{errors.workPhone.message}</p>
+              <p className="form-error">{errors.workPhone.message}</p>
             )}
           </label>
         </div>
@@ -265,52 +243,52 @@ const UserInfoSection = ({
           text="Social Links"
         />
         <div className="grid sm:grid-cols-3 gap-4 mt-5">
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
+          <label className="form-label">
             LinkedIn
             <input
               type="text"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('linkedin')}
               readOnly={!editEmployee}
             />
             {errors.linkedin && (
-              <p className="text-red-500 text-xs">{errors.linkedin.message}</p>
+              <p className="form-error">{errors.linkedin.message}</p>
             )}
           </label>
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
+          <label className="form-label">
             Facebook
             <input
               type="text"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('facebook')}
               readOnly={!editEmployee}
             />
             {errors.facebook && (
-              <p className="text-red-500 text-xs">{errors.facebook.message}</p>
+              <p className="form-error">{errors.facebook.message}</p>
             )}
           </label>
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
+          <label className="form-label">
             Instagram
             <input
               type="text"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('instagram')}
               readOnly={!editEmployee}
             />
             {errors.instagram && (
-              <p className="text-red-500 text-xs">{errors.instagram.message}</p>
+              <p className="form-error">{errors.instagram.message}</p>
             )}
           </label>
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
+          <label className="form-label">
             Personal Website
             <input
               type="text"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('website')}
               readOnly={!editEmployee}
             />
             {errors.website && (
-              <p className="text-red-500 text-xs">{errors.website.message}</p>
+              <p className="form-error">{errors.website.message}</p>
             )}
           </label>
         </div>

@@ -32,7 +32,7 @@ const EmployeesDropdown = ({ reportingManagerId, register, errors }) => {
   return (
     <>
       <select
-        className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
+        className="form-input"
         {...register('reportingManagerId')}
         value={defaultManagerId?.toString() || ''}
         onChange={(e) => setDefaultManagerId(e.target.value)}
@@ -45,9 +45,7 @@ const EmployeesDropdown = ({ reportingManagerId, register, errors }) => {
         ))}
       </select>
       {errors.reportingManagerId && (
-        <span className="text-red-500 text-xs">
-          {errors.reportingManagerId.message}
-        </span>
+        <span className="form-error">{errors.reportingManagerId.message}</span>
       )}
     </>
   );

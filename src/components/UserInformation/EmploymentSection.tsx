@@ -46,16 +46,16 @@ const EmploymentSection = ({
           <FormHeading icon={<HiMiniBriefcase className="w-4" />} text="Job" />
         </div>
         <div className="grid md:grid-cols-3 gap-4">
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
+          <label className="form-label">
             Hire Date*
             <input
               type="date"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('hireDate')}
               readOnly={!editEmployee}
             />
             {errors.hireDate && (
-              <p className="text-red-500">{errors.hireDate.message}</p>
+              <p className="form-error">{errors.hireDate.message}</p>
             )}
           </label>
           {!editEmployee && (
@@ -77,46 +77,39 @@ const EmploymentSection = ({
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
-            Effective Date
+          <label className="form-label">
+            Effective Date*
             <input
               type="date"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('effectiveDate')}
               readOnly={!editEmployee}
             />
             {errors.effectiveDate && (
-              <p className="text-red-500">{errors.effectiveDate.message}</p>
+              <p className="form-error">{errors.effectiveDate.message}</p>
             )}
           </label>
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
-            Employment Type
-            <select
-              className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-              {...register('employmentType')}
-            >
+          <label className="form-label">
+            Employment Type*
+            <select className="form-input" {...register('employmentType')}>
               <option value="">Select Type</option>
               <option value="Fulltime">Full-Time</option>
               <option value="Part Time">Part-Time</option>
               <option value="Freelance">Freelance</option>
             </select>
             {errors.employmentType && (
-              <p className="text-red-500 text-xs">
-                {errors.employmentType.message}
-              </p>
+              <p className="form-error">{errors.employmentType.message}</p>
             )}
           </label>
-          <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
+          <label className="form-label">
             Note
             <input
               type="text"
-              className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md `}
+              className={`form-input`}
               {...register('note')}
               readOnly={!editEmployee}
             />
-            {errors.note && (
-              <p className="text-red-500 text-xs">{errors.note.message}</p>
-            )}
+            {errors.note && <p className="form-error">{errors.note.message}</p>}
           </label>
         </div>
       </div>
@@ -162,7 +155,7 @@ const EmploymentSection = ({
           className={`${editEmployee ? 'grid md:grid-cols-3 gap-4' : 'hidden'}`}
         >
           <article>
-            <Label text="Department*" /> <br />{' '}
+            <Label text="Department*" />{' '}
             <DepratmentDropdown
               errors={errors}
               register={register}
@@ -170,7 +163,7 @@ const EmploymentSection = ({
             />
           </article>
           <article>
-            <Label text="Reporting Manager*" /> <br />
+            <Label text="Reporting Manager*" />
             <EmployeesDropdown
               errors={errors}
               register={register}
@@ -178,15 +171,15 @@ const EmploymentSection = ({
             />
           </article>
           <article>
-            <Label text="Job Title*" /> <br />
+            <Label text="Job Title*" />
             <input
               type="text"
               placeholder="Add job title"
-              className="p-2 rounded-md bg-transparent border w-full"
+              className="form-input"
               {...register('tittle')}
             />
             {errors.tittle && (
-              <span className="text-red-500">{errors.tittle.message}</span>
+              <span className="form-error">{errors.tittle.message}</span>
             )}
           </article>
         </div>
@@ -226,48 +219,40 @@ const EmploymentSection = ({
         ) : (
           <div className="grid grid-cols-3 gap-4">
             <article>
-              <Label text="Compensation*" /> <br />
+              <Label text="Compensation*" />
               <input
                 type="text"
                 placeholder="Add annual compensation amount"
-                className="p-2 rounded-md bg-transparent border w-full"
+                className="form-input"
                 {...register('salary', {
                   valueAsNumber: true,
                 })}
               />
               {errors.salary && (
-                <span className="text-red-500">{errors.salary.message}</span>
+                <span className="form-error">{errors.salary.message}</span>
               )}
             </article>
             <article>
-              <Label text="Pay type*" /> <br />
-              <select
-                className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-                {...register('payType')}
-              >
+              <Label text="Pay type*" />
+              <select className="form-input" {...register('payType')}>
                 <option value="">Select PayType</option>
                 <option value="Salary">Salary</option>
                 <option value="Contract">Contract</option>
               </select>
               {errors.payType && (
-                <span className="text-red-500 text-xs">
-                  {errors.payType.message}
-                </span>
+                <span className="form-error">{errors.payType.message}</span>
               )}
             </article>
             <article>
-              <Label text="Schedule*" /> <br />
-              <select
-                className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-                {...register('paymentSchedule')}
-              >
+              <Label text="Schedule*" />
+              <select className="form-input" {...register('paymentSchedule')}>
                 <option value="">Select Schedule</option>
                 <option value="Weekly">Weekly</option>
                 <option value="Biweekly">Biweekly</option>
                 <option value="Once a month">Once a month</option>
               </select>
               {errors.paymentSchedule && (
-                <span className="text-red-500">
+                <span className="form-error">
                   {errors.paymentSchedule.message}
                 </span>
               )}

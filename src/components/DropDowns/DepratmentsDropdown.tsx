@@ -41,7 +41,7 @@ const DepartmentDropdown = ({ departmentId, register, errors }) => {
   return (
     <>
       <select
-        className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
+        className="form-input"
         {...register('departmentId')}
         value={defaultDepartmentId || ''}
         onChange={handleDepartmentChange}
@@ -54,7 +54,7 @@ const DepartmentDropdown = ({ departmentId, register, errors }) => {
         ))}
       </select>
       {errors.departmentId && (
-        <p className="text-red-500 text-xs">{errors.departmentId.message}</p>
+        <p className="form-error">{errors.departmentId.message}</p>
       )}
     </>
   );

@@ -26,3 +26,26 @@ body {
 ::-ms-reveal {
   display: none;
 }
+
+
+@layer components {
+  .form-input {
+    @apply p-2 border border-gray-border text-dark-navy text-sm outline-none focus:outline-none rounded-md w-full transition-colors;
+
+    &:read-only {
+      @apply cursor-default;
+    }
+
+    &.error {
+      @apply border-red-500;
+    }
+  }
+
+  .form-error {
+    @apply text-red-500 text-xs mt-1;
+  }
+
+  .form-label {
+    @apply text-[#abaeb4] text-sm flex flex-col gap-1;
+  }
+}

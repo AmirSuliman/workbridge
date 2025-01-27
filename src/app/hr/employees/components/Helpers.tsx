@@ -17,7 +17,5 @@ export const Label = ({
   text: string;
   classes?: string;
 }) => {
-  return (
-    <label className={cn('text-sm mb-1 text-[#abaeb4]', classes)}>{text}</label>
-  );
+  return <label className={cn('form-label', classes)}>{text}</label>;
 };
