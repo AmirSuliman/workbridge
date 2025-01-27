@@ -35,7 +35,7 @@ export const AllEmployees = () => {
   const [uniqueJobTitles, setUniqueJobTitles] = useState<string[]>([]);
   const [uniqueDepartments, setUniqueDepartments] = useState<string[]>([]);
   const pageSize = 10;
-
+  console.log('employees', employees);
   useEffect(() => {
     const fetchEmployees = async () => {
       try {

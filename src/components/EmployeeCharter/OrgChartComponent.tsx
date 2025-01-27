@@ -106,7 +106,7 @@ export const OrgChartComponent: FC<Props> = ({
 
     for (const node of employee) {
       if (hasCycle(node.id, idMap)) {
-        console.error('Cycle detected at node:', node);
+        console.log('Cycle detected at node:', node);
         return true;
       }
     }
