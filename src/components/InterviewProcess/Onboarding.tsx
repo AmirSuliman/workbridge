@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 import { PiListChecksLight } from 'react-icons/pi';
 import axiosInstance from '@/lib/axios';
 
-
 interface OnboardingProps {
-  id: number ;
-  candidateId:  string;
+  id: number;
+  candidateId: string;
+  label: string;
 }
 
 interface FileOption {
@@ -16,9 +16,15 @@ interface FileOption {
 const Onboarding = ({ jobId, candidateId }) => {
   const [isOpenOnboarding, setIsOpenOnboarding] = useState(false);
   const [isOpenPolicies, setIsOpenPolicies] = useState(false);
-  const [selectedOnboardingFiles, setSelectedOnboardingFiles] = useState<string[] | number[]>([]);
-  const [onboardingOptions, setOnboardingOptions] = useState<OnboardingProps[]>([]);
-  const [selectedPolicyFiles, setSelectedPolicyFiles] = useState<string[] | number[]>([]);
+  const [selectedOnboardingFiles, setSelectedOnboardingFiles] = useState<
+    (string | number)[]
+  >([]);
+  const [onboardingOptions, setOnboardingOptions] = useState<OnboardingProps[]>(
+    []
+  );
+  const [selectedPolicyFiles, setSelectedPolicyFiles] = useState<
+    (string | number)[]
+  >([]);
   const [policyOptions, setPolicyOptions] = useState<FileOption[]>([]);
   const [loading, setLoading] = useState(false);
   console.log(jobId, 'jobid');
@@ -26,7 +32,10 @@ const Onboarding = ({ jobId, candidateId }) => {
     const fetchOnboardingFiles = async () => {
       try {
         const response = await axiosInstance.get('/files');
-        if (response.data?.data?.items && Array.isArray(response.data.data.items)) {
+        if (
+          response.data?.data?.items &&
+          Array.isArray(response.data.data.items)
+        ) {
           const options = response.data.data.items.map((file) => ({
             id: file.id,
             label: file.fileName,

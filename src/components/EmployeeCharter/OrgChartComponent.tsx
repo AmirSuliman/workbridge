@@ -75,6 +75,7 @@ export const OrgChartComponent: FC<Props> = ({
   const [isTerminating, setIsTerminating] = useState<Record<number, boolean>>(
     {}
   );
+  const [cyclicNode, setCycyclicNode] = useState(null);
 
   function detectCycle(employee) {
     const visited = new Set();
@@ -182,16 +183,10 @@ export const OrgChartComponent: FC<Props> = ({
       processChange();
     }
   }, [processChange, search]);
-  if (hasCycle) {
-    return (
-      <div className="border-b-[1px] border-gray-border px-6 py-4">
-        <h1>There is a cycle in the data</h1>
-      </div>
-    );
-  }
+
   // We need to manipulate DOM
   useLayoutEffect(() => {
-    if (employees && d3Container.current) {
+    if (employees && d3Container.current && !hasCycle) {
       refOrgChart2.current = refOrgChart.current;
       refOrgChart.current
         .container(d3Container.current)
@@ -223,13 +218,6 @@ export const OrgChartComponent: FC<Props> = ({
           }
         })
         .nodeContent((data: any) => {
-          if (hasCycle) {
-            return (
-              <div className="border-b-[1px] border-gray-border px-6 py-4">
-                <h1>There is a cycle in the data</h1>
-              </div>
-            );
-          }
           // props.onTerminate(isEmployeeTerminated);
           if (data.data.isOpenPosition) {
             return OrgChartOpenPositionProfile(
@@ -389,25 +377,31 @@ export const OrgChartComponent: FC<Props> = ({
       });
     };
   }, [
-    handleClickNode,
     modal,
-    employees,
-    refOrgChart,
     compact,
-    selectedEmployees,
-    showTerminatedEmployeesModal,
+    hasCycle,
+    employees,
     user?.role,
+    refOrgChart,
+    refOrgChart2,
+    isTerminating,
     handleTerminate,
+    handleClickNode,
+    totalTerminated,
+    selectedEmployees,
     terminatedParents,
     terminatedEmployees,
-    totalTerminated,
-    refOrgChart2,
     onSelectedEmployees,
-    isTerminating,
+    showTerminatedEmployeesModal,
   ]);
 
   return (
     <div className="h-[calc(100vh-22rem)] overflow-hidden relative">
+      {hasCycle && (
+        <div className="border-b-[1px] border-gray-border px-6 py-4">
+          <h1>There is a cycle in the data</h1>
+        </div>
+      )}
       <div
         className="w-80 bg-white rounded-lg h-24 border p-4 absolute hidden"
         ref={openPositionsCnt}

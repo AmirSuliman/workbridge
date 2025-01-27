@@ -204,12 +204,12 @@ export type MiscEndpoints = {
     };
     responses: {};
   };
-  'GET /company/{id}/organogram': {
-    params: {
-      id: number;
-    };
+  'GET /charter': {
+    // params: {
+    //   id: number;
+    // };
     query?: {
-      withCEO?: boolean;
+      // withCEO?: boolean;
       flat: boolean;
     };
     response: {
