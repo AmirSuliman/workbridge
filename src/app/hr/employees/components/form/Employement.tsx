@@ -1,18 +1,17 @@
 import Button from '@/components/Button';
 import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
 import DepratmentDropdown from '@/components/DropDowns/DepratmentsDropdown';
+import EmployeesDropdown from '@/components/DropDowns/EmployeesDropdown';
 import { EmployeeData } from '@/types/employee';
 import { useFormContext } from 'react-hook-form';
 import { AiFillContacts } from 'react-icons/ai';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { Heading, Label } from '../Helpers';
-import EmployeesDropdown from '@/components/DropDowns/EmployeesDropdown';
 
 const Employment = ({ loader }: { loader: boolean }) => {
   const { activeTab, setActiveTab } = useTabsContext();
 
   const {
-    trigger,
     register,
     formState: { errors },
   } = useFormContext<EmployeeData>();

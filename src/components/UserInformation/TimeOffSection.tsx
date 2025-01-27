@@ -1,17 +1,16 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import UmbrellaIcon from '../icons/umbrella-icon';
-import VacationsCard from './VacationsCard';
-import InfoGrid from './InfoGrid';
-import FormHeading from './FormHeading';
+import Modal from '@/components/modal/Modal';
+import axiosInstance from '@/lib/axios';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import LabelWithIcon from '../common/LabelWithIcon';
 import ClockRotateIcon from '../icons/clock-rotate-icon';
 import SickPersonIcon from '../icons/sick-person-icon';
-import LabelWithIcon from '../common/LabelWithIcon';
-import { FaEdit } from 'react-icons/fa';
+import UmbrellaIcon from '../icons/umbrella-icon';
+import FormHeading from './FormHeading';
+import InfoGrid from './InfoGrid';
 import SickCard from './sickCard';
-import Modal from '@/components/modal/Modal';
-import Image from 'next/image';
-import axiosInstance from '@/lib/axios';
+import VacationsCard from './VacationsCard';
 interface Employee {
   firstName: string;
   lastName: string;

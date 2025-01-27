@@ -23,7 +23,7 @@ import { AxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { FieldErrors, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -40,6 +40,10 @@ const MyInformation = () => {
   const { empId } = useParams(); // This id is used to view any employee's info
   const { data: session } = useSession();
   const [editEmployee, setEditEmployee] = useState<boolean>(false);
+
+  const [schemaErrors, setSchemaErrors] = useState<FieldErrors | undefined>(
+    undefined
+  );
   const {
     data: employeeData,
     error,
@@ -57,10 +61,12 @@ const MyInformation = () => {
     effectiveDate: employeeData?.effectiveDate
       ? new Date(employeeData.effectiveDate).toISOString().split('T')[0]
       : '',
+    departmentId: employeeData?.departmentId,
   };
 
   const {
     reset,
+    trigger,
     control,
     register,
     handleSubmit,
@@ -68,8 +74,9 @@ const MyInformation = () => {
   } = useForm({
     resolver: zodResolver(employeeSchema),
     defaultValues: formattedData,
-    mode: 'all',
+    mode: 'onChange',
   });
+
   useEffect(() => {
     const fetchMyId = async () => {
       if (session?.user?.accessToken) {
@@ -173,11 +180,13 @@ const MyInformation = () => {
     }
   }, [employeeData, reset]);
 
+  useEffect(() => {
+    setSchemaErrors(errors);
+  }, [errors]);
+
   const onSubmit = async (data: any) => {
     // PUT employee/id needs the following payload.
     // The data parameter ☝ contains extra fields that backend does not expect.
-    console.log('from data: ', data);
-    console.log('data.paymentSchedule: ', data.paymentSchedule);
 
     const payLoad = {
       firstName: data.firstName,
@@ -228,7 +237,6 @@ const MyInformation = () => {
         ...payLoad,
         profilePictureUrl: uploadResponse?.uploadedUrl,
       };
-      console.log('finalPayload: ', finalPayload);
       const response = await axiosInstance.put(
         `/employee/${empId || session?.user.userId}`,
         finalPayload
@@ -254,20 +262,6 @@ const MyInformation = () => {
     }
   };
 
-  const UserInfoSectionMemo = useMemo(
-    () => (
-      <UserInfoSection
-        editEmployee={editEmployee}
-        register={register}
-        errors={errors}
-        handleFileChange={handleFileChange}
-        previewUrl={previewUrl}
-        control={control}
-      />
-    ),
-    [editEmployee, errors, register, previewUrl, employeeData, handleFileChange]
-  );
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -279,7 +273,7 @@ const MyInformation = () => {
   if (!employeeData) {
     return <div>No data available.</div>;
   }
-  console.log('Form errors: ', errors);
+  console.log('Form errors: ', schemaErrors);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={`p-4 h-full`}>
       <ProfileCard
@@ -340,11 +334,20 @@ const MyInformation = () => {
           )}
         </div>
         <div>
-          <TabPanel index={0}>{UserInfoSectionMemo}</TabPanel>
+          <TabPanel index={0}>
+            <UserInfoSection
+              control={control}
+              register={register}
+              errors={schemaErrors}
+              previewUrl={previewUrl}
+              editEmployee={editEmployee}
+              handleFileChange={handleFileChange}
+            />
+          </TabPanel>
           <TabPanel index={1}>
             <EmploymentSection
               register={register}
-              errors={errors}
+              errors={schemaErrors}
               editEmployee={editEmployee}
               employeeData={employeeData}
             />

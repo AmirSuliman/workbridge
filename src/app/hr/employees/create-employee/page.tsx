@@ -72,6 +72,7 @@ const CreateEmployee = () => {
     resolver: zodResolver(employeeSchema),
     mode: 'onChange',
   });
+
   const { handleSubmit, reset } = formMethods;
   const onSubmit = async (data) => {
     console.log('onsubmit data: ', data);

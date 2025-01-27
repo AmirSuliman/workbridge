@@ -6,7 +6,7 @@ const DepartmentDropdown = ({ departmentId, register, errors }) => {
   const [departments, setDepartments] = useState<Department[]>([]);
   const [defaultDepartmentId, setDefaultDepartmentId] = useState<
     string | undefined
-  >();
+  >(departmentId?.toString());
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -14,12 +14,15 @@ const DepartmentDropdown = ({ departmentId, register, errors }) => {
         const { data } = await axiosInstance.get('/departments');
         setDepartments(data.data.items);
 
-        // Find and set the default department ID
-        const matchedDepartment = data.data.items.find(
-          (department) => department.id === departmentId
-        );
-        if (matchedDepartment) {
-          setDefaultDepartmentId(String(matchedDepartment.id)); // Ensure it's a string
+        // Set the default department ID if departmentId exists
+        if (departmentId) {
+          const matchedDepartment = data.data.items.find(
+            (department) => department.id === departmentId
+          );
+          if (matchedDepartment) {
+            setDefaultDepartmentId(String(matchedDepartment.id));
+            // trigger('departmentId'); // Trigger validation AFTER setting the default value
+          }
         }
       } catch (error) {
         console.error('Error fetching Departments: ', error);
@@ -29,17 +32,23 @@ const DepartmentDropdown = ({ departmentId, register, errors }) => {
     fetchDepartments();
   }, [departmentId]);
 
+  const handleDepartmentChange = (e) => {
+    const selectedValue = e.target.value;
+    setDefaultDepartmentId(selectedValue);
+    console.log('Selected Department ID:', selectedValue); // Log the selected value
+  };
+
   return (
     <>
       <select
         className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-        {...register('departmentId', { valueAsNumer: false })}
-        value={defaultDepartmentId?.toString() || ''}
-        onChange={(e) => setDefaultDepartmentId(e.target.value)}
+        {...register('departmentId')}
+        value={defaultDepartmentId || ''}
+        onChange={handleDepartmentChange}
       >
         <option value="">Select Department</option>
         {departments.map((department) => (
-          <option key={department.id} value={String(department.id)}>
+          <option key={department.id} value={department.id}>
             {department.name}
           </option>
         ))}
