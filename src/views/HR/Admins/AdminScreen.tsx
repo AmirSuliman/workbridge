@@ -28,7 +28,7 @@ const AdminScreen = () => {
   const users = useSelector((state: RootState) => state.users);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const pageSize = 4;
+  const pageSize = 10;
 
   // Handle page change for pagination
   const handlePageChange = (page: number) => {

@@ -55,7 +55,7 @@ const Auth = () => {
 
       // Attempt to get session after sign-in
       const session = await getSession();
-
+      console.log('session: ', session);
       // Check if session exists and has an access token
       if (session?.user?.accessToken) {
         try {

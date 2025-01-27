@@ -1,29 +1,35 @@
 'use client';
 
-import { useState } from 'react';
-import { HiHome, HiUsers } from 'react-icons/hi';
-import SidebarNavItem from './SidebarNavItem';
-import { FaUserCircle, FaUsers, FaBullhorn } from 'react-icons/fa';
-import { PiHandshakeFill } from 'react-icons/pi';
-import { IoCalendarOutline } from 'react-icons/io5';
-import { IoIosFolderOpen } from 'react-icons/io';
+import { getSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { FaBullhorn, FaUserCircle, FaUsers } from 'react-icons/fa';
 import { FiMenu, FiTrendingUp } from 'react-icons/fi';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+import { HiHome, HiUsers } from 'react-icons/hi';
+import { IoIosFolderOpen } from 'react-icons/io';
+import { IoCalendarOutline } from 'react-icons/io5';
+import { PiHandshakeFill } from 'react-icons/pi';
+import SidebarNavItem from './SidebarNavItem';
 
 const HrSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [roles] = useState<string[]>([]);
+  const [role, setRole] = useState<string>();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
-  useSelector((state: RootState) => state.myInfo);
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      // console.log('session: ', session);
+      setRole(session?.user?.role);
+    };
 
-  const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
-  const isSuperAdmin =
-    userRole === 'SuperAdmin' || roles.includes('SuperAdmin');
+    fetchSession();
+  }, []);
+
+  console.log('hr sidebar: ', role);
+  const isSuperAdmin = role === 'SuperAdmin';
 
   return (
     <>
