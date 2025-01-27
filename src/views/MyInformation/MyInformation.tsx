@@ -37,10 +37,12 @@ const MyInformation = () => {
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.myInfo);
   const myId = user?.user?.employeeId; // This id is used to view the current logged in user's info
+  console.log('myId:', myId);
+
   const { empId } = useParams(); // This id is used to view any employee's info
   const { data: session } = useSession();
   const [editEmployee, setEditEmployee] = useState<boolean>(false);
-
+  console.log('empId:', empId);
   const [schemaErrors, setSchemaErrors] = useState<FieldErrors | undefined>(
     undefined
   );
@@ -236,10 +238,10 @@ const MyInformation = () => {
         profilePictureUrl: uploadResponse?.uploadedUrl,
       };
       const response = await axiosInstance.put(
-        `/employee/${empId || session?.user.userId}`,
+        `/employee/${empId || myId}`,
         finalPayload
       );
-      console.log('response: ', response.data);
+      console.log('put emp response: ', response.data);
       toast.success('Employee information updated successfully!');
       setEditLoading(false);
       dispatch(updateEmployeeData(response.data.data));
