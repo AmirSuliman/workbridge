@@ -16,45 +16,6 @@ const Employment = ({ loader }: { loader: boolean }) => {
     formState: { errors },
   } = useFormContext<EmployeeData>();
 
-  // const handleNext = async () => {
-  //   const fieldNamesForTab = [
-  //     'firstName',
-  //     'lastName',
-  //     'departmentId',
-  //     'email',
-  //     'middleName',
-  //     'salary',
-  //     'tittle',
-  //     'gender',
-  //     'marritialStatus',
-  //     'paymentSchedule',
-  //     'payType',
-  //     'effectiveDate',
-  //     'overtime',
-  //     'note',
-  //     'profilePictureUrl',
-  //     'linkedin',
-  //     'instagram',
-  //     'website',
-  //     'facebook',
-  //     'hireDate',
-  //     'birthday',
-  //     'phoneNumber',
-  //     'workPhone',
-  //     'reportingManagerId',
-  //     'employmentType',
-  //     'street1',
-  //     'street2',
-  //     'zipCode',
-  //     'city',
-  //     'country',
-  //     'state',
-  //   ];
-  //   await trigger(fieldNamesForTab as (keyof EmployeeData)[]);
-  //   // if (isValid) {
-  //   //   setActiveTab(activeTab + 1);
-  //   // }
-  // };
   return (
     <>
       <section className="bg-white rounded-lg border">
@@ -66,7 +27,6 @@ const Employment = ({ loader }: { loader: boolean }) => {
               <Label text="Job Title*" />
               <input
                 type="text"
-                placeholder="Add job title"
                 className="form-input"
                 {...register('tittle')}
               />
@@ -109,12 +69,11 @@ const Employment = ({ loader }: { loader: boolean }) => {
         {/* payment block */}
         <div className="p-4 pb-12">
           <Heading icon={<AiFillContacts />} text="Payment" />
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 ">
             <article>
               <Label text="Compensation*" />
               <input
                 type="number"
-                placeholder="Add annual compensation amount"
                 className="form-input"
                 {...register('salary', { valueAsNumber: true })}
               />
