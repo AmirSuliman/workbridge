@@ -30,6 +30,7 @@ interface Folder {
 interface File {
   id: string;
   fileName: string;
+  fileTitle: string;
   size: number;
   dateUploaded: string;
   fileType: string;

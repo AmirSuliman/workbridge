@@ -105,7 +105,7 @@ const VacationPolicies = () => {
         <Modal onClose={toggleModal}>
           <div className="p-6 w-full sm:w-[600px]">
             <h2 className="text-lg font-bold mb-4">Add Holiday</h2>
-             <Sendholidaynotification onCancel={toggleModal}/>
+            <Sendholidaynotification toggleModal={toggleModal} />
           </div>
         </Modal>
       )}
