@@ -9,6 +9,7 @@ import { PiPlusCircleBold } from 'react-icons/pi';
 import Button from '../../../../components/Button';
 import SingleAnnouncement from '../../../../components/SingleAnnouncement/SingleAnnouncement';
 import Policies from '../policies/components/policies';
+import Vacationpolicies from '../VacationPolicies/page';
 
 type Announcement = {
   id: string;
@@ -118,6 +119,17 @@ const Page = () => {
         >
           Policies
         </button>
+
+        <button
+          className={`px-4 py-2 ${
+            currentTab === 'Vacation Policies'
+              ? 'border-b-2 border-black font-semibold'
+              : 'opacity-50'
+          }`}
+          onClick={() => setCurrentTab('Vacation Policies')}
+        >
+          Vacation Policies
+        </button>
       </div>
 
       {/* Tab Content */}
@@ -161,6 +173,12 @@ const Page = () => {
       {currentTab === 'Policies' && (
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 px-4 space-y-4">
           <Policies />
+        </section>
+      )}
+
+     {currentTab === 'Vacation Policies' && (
+        <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 px-4 space-y-4">
+          <Vacationpolicies />
         </section>
       )}
     </main>
