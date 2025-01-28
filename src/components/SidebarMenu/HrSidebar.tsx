@@ -28,7 +28,6 @@ const HrSidebar = () => {
     fetchSession();
   }, []);
 
-  console.log('hr sidebar: ', role);
   const isSuperAdmin = role === 'SuperAdmin';
 
   return (

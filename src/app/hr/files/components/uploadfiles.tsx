@@ -1,8 +1,7 @@
 'use client';
-import { FaTimes } from 'react-icons/fa';
-import { useState, useEffect } from 'react';
-import { FiUpload } from 'react-icons/fi';
 import axiosInstance from '@/lib/axios';
+import { useEffect, useState } from 'react';
+import { FaTimes } from 'react-icons/fa';
 
 interface Folder {
   id: string;
@@ -66,7 +65,9 @@ const Uploadfiles = ({ setIsModalOpen1 }) => {
         },
         onUploadProgress: (progressEvent) => {
           if (progressEvent.total) {
-            const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            const percentage = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
             setProgress(percentage);
           }
         },
@@ -93,7 +94,7 @@ const Uploadfiles = ({ setIsModalOpen1 }) => {
         <FaTimes size={20} />
       </button>
       <h2 className="font-semibold text-xl mb-4">Upload File</h2>
-      
+
       {/* File Select */}
       <label className="text-gray-400 block text-sm mb-2 mt-8">
         Upload file
@@ -113,15 +114,15 @@ const Uploadfiles = ({ setIsModalOpen1 }) => {
         </div>
         <div className="text-gray-500 text-xs mt-1 text-right">{progress}%</div>
       </div>
-      
+
       <div className="h-[1px]  w-full bg-gray-200 mt-4" />
-      
+
       {/* Folder and Document Title */}
       <div className="flex flex-row items-center w-full gap-6 mt-4">
         <label className="flex flex-col w-full text-gray-400">
           <span className="mb-1 text-gray-400 text-[14px]">Folder</span>
-          <select 
-            id="folderSelect" 
+          <select
+            id="folderSelect"
             className="w-full border p-3 rounded"
             value={folderId}
             onChange={(e) => setFolderId(e.target.value)}
@@ -145,7 +146,7 @@ const Uploadfiles = ({ setIsModalOpen1 }) => {
           />
         </label>
       </div>
-      
+
       <p className="text-black text-[12px] mt-4">
         Leave blank for the file to be saved to the All Files folder
       </p>

@@ -1,11 +1,13 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   FaFolder,
   FaPlusCircle,
   FaUpload,
   FaEdit,
   FaTrash,
+  FaChevronRight,
+  FaChevronDown,
 } from 'react-icons/fa';
 import Modal from '@/components/modal/Modal';
 import Addfolder from './components/addfolder';
@@ -14,9 +16,12 @@ import Editfolder from './components/editfolder';
 import Editdocument from './components/editdocument';
 import Deletedocument from './components/deletedocumnet';
 import axiosInstance from '@/lib/axios';
+import AddSubFolder from './components/addSubFolder';
+import { formatFileSize } from '@/utils/formatFileSize';
 
 interface Folder {
   id: string;
+  parentId: number | null;
   fileName: string;
   files: File[];
   name: string;
@@ -36,6 +41,7 @@ const Page = () => {
   const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [isModalOpen3, setIsModalOpen3] = useState(false);
   const [isModalOpen4, setIsModalOpen4] = useState(false);
+  const [subfolderOpen, setSubfolderOpen] = useState(false);
   const [folders, setFolders] = useState<Folder[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,23 +50,46 @@ const Page = () => {
   const [sortCriteria, setSortCriteria] = useState('Select');
   const [allFiles, setAllFiles] = useState<File[]>([]);
   const [isAllFilesActive, setIsAllFilesActive] = useState(false);
+  const [expandedFolders, setExpandedFolders] = useState(new Set());
+
+  const handleAddfolder = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleUploadfiles = () => {
+    setIsModalOpen1(true);
+  };
+
+  const handleEditfolder = () => {
+    setIsModalOpen2(true);
+  };
+
+  const handleEditdocument = () => {
+    setIsModalOpen3(true);
+  };
 
   useEffect(() => {
-    const fetchFolders = async () => {
+    const fetchInitialData = async () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axiosInstance.get('/folders');
-        setFolders(response.data.data.items);
+        // Fetch both folders and files in parallel
+        const [foldersResponse, filesResponse] = await Promise.all([
+          axiosInstance.get('/folders'),
+          axiosInstance.get(`/files/`),
+        ]);
+
+        setFolders(foldersResponse.data.data.items);
+        setAllFiles(filesResponse.data.data.items);
       } catch (err) {
-        setError('Failed to load folders.');
+        setError('Failed to load data.');
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchFolders();
+    fetchInitialData();
   }, []);
 
   const handleSortFolders = (criteria: string) => {
@@ -106,6 +135,24 @@ const Page = () => {
     try {
       const response = await axiosInstance.get('/files');
       setAllFiles(response.data.data.items);
+      console.log('response.data.data.items', response.data.data.items);
+    } catch (err) {
+      setError('Failed to load files.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchFolderFiles = async (folder) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axiosInstance.get(`/files/${folder.id}`);
+      setAllFiles(response.data.data.items);
+      folder.files = response.data.data.items;
+      setActiveFolder(folder);
+      console.log('response.data.data.items', response.data.data.items);
     } catch (err) {
       setError('Failed to load files.');
       console.error(err);
@@ -120,31 +167,83 @@ const Page = () => {
     await fetchAllFiles();
   };
 
-  const handleAddfolder = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleUploadfiles = () => {
-    setIsModalOpen1(true);
-  };
-
-  const handleEditfolder = () => {
-    setIsModalOpen2(true);
-  };
-
-  const handleEditdocument = () => {
-    setIsModalOpen3(true);
-  };
-
   const handleDeletedocument = (fileId: string) => {
     setFileIdToDelete(fileId);
     setIsModalOpen4(true);
   };
 
   const handleFolderClick = (folder: Folder) => {
+    fetchFolderFiles(folder);
     setActiveFolder(folder);
     setIsAllFilesActive(false);
+    setExpandedFolders((prev) => {
+      const next = new Set(prev);
+      if (next.has(folder.id)) {
+        next.delete(folder.id);
+      } else {
+        next.add(folder.id);
+      }
+      return next;
+    });
   };
+
+  const buildTree = (folders: Folder[]) => {
+    const map: { [key: string]: Folder & { children: Folder[] } } = {};
+    const tree: (Folder & { children: Folder[] })[] = [];
+    folders.forEach((folder) => {
+      map[folder.id] = { ...folder, children: [] };
+    });
+    folders.forEach((folder) => {
+      if (folder.parentId) {
+        const parent = map[folder.parentId];
+        if (parent) {
+          parent.children.push(map[folder.id]);
+        } else {
+          tree.push(map[folder.id]);
+        }
+      } else {
+        tree.push(map[folder.id]);
+      }
+    });
+    return tree;
+  };
+
+  const tree = useMemo(() => buildTree(folders), [folders]);
+
+  const renderFolder = (folder, level) => (
+    <div key={folder.id}>
+      <div
+        onClick={() => handleFolderClick(folder)}
+        className={`flex flex-row items-center justify-between mb-1 p-3 cursor-pointer ${
+          activeFolder?.id === folder.id
+            ? 'bg-black text-white'
+            : 'hover:bg-black hover:text-white'
+        }`}
+        style={{ paddingLeft: `${level * 10}px` }}
+      >
+        <div className="flex flex-row items-center gap-2 px-4 font-medium">
+          <FaFolder size={20} />
+          <p>{folder.name}</p>
+          <span className="text-sm">
+            {folder.children.length > 0 ? (
+              expandedFolders.has(folder.id) ? (
+                <FaChevronDown size={12} />
+              ) : (
+                <FaChevronRight size={12} />
+              )
+            ) : (
+              <span className="w-4" /> // Spacer for folders without children
+            )}
+          </span>
+        </div>
+        <p className="px-4 text-gray-400 text-[16px]">
+          {folder?.files?.length} Files
+        </p>
+      </div>
+      {expandedFolders.has(folder.id) &&
+        folder.children.map((child) => renderFolder(child, level + 1))}
+    </div>
+  );
 
   return (
     <div>
@@ -154,6 +253,16 @@ const Page = () => {
           <h1 className="font-semibold text-[22px]">Files</h1>
         </div>
         <div className="flex flex-row items-center gap-4">
+          {activeFolder?.id && (
+            <button
+              onClick={() => {
+                setSubfolderOpen(true);
+              }}
+              className="flex flex-row items-center p-3 gap-2 px-4 bg-white border rounded text-[12px]"
+            >
+              Add Sub Folder <FaPlusCircle />
+            </button>
+          )}
           <button
             onClick={handleAddfolder}
             className="flex flex-row items-center p-3 gap-2 px-4 bg-white border rounded text-[12px]"
@@ -170,23 +279,23 @@ const Page = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row items-start gap-6 w-full mt-8">
-        <div className="flex flex-col bg-white border rounded-[10px] w-full sm:w-[30%] h-[90vh]">
-          <h1 className="mt-6 px-8 font-medium text-[18px] text-[#0F172A] mb-4">
+        <div className="flex flex-col bg-white border rounded-[10px] w-fit whitespace-nowrap h-full">
+          <h1 className="mt-6 px-4 font-medium text-[18px] text-[#0F172A] mb-4">
             Folders
           </h1>
           <div
             onClick={handleAllFilesClick}
-            className={`flex flex-row items-center justify-between mb-3 p-3 cursor-pointer ${
+            className={`flex flex-row items-center justify-between p-3 cursor-pointer ${
               isAllFilesActive
                 ? 'bg-black text-white'
                 : 'hover:bg-black hover:text-white'
             }`}
           >
-            <div className="flex flex-row items-center gap-2 px-4 font-medium">
+            <div className="flex flex-row items-center gap-2  font-medium">
               <FaFolder size={20} />
               <p>All Files</p>
             </div>
-            <p className="px-4 text-gray-400 text-[16px]">
+            <p className="px-4 text-gray-400 text-sm">
               {allFiles.length} Files
             </p>
           </div>
@@ -194,32 +303,18 @@ const Page = () => {
             <p className="text-center text-gray-500">Loading folders...</p>
           )}
           {error && <p className="text-center text-red-500">{error}</p>}
-          {!loading && !error && folders.length > 0
-            ? folders.map((folder) => (
-                <div
-                  key={folder.id}
-                  onClick={() => handleFolderClick(folder)}
-                  className={`flex flex-row items-center justify-between mb-3 p-3 cursor-pointer ${
-                    activeFolder?.id === folder.id
-                      ? 'bg-black text-white'
-                      : 'hover:bg-black hover:text-white'
-                  }`}
-                >
-                  <div className="flex flex-row items-center gap-2 px-4 font-medium">
-                    <FaFolder size={20} />
-                    <p>{folder.name}</p>
-                  </div>
-                  <p className="px-4 text-gray-400 text-[16px]">
-                    {folder?.files?.length} Files
-                  </p>
-                </div>
-              ))
-            : !loading && (
-                <p className="text-center text-gray-500">No folders found.</p>
-              )}
+          {!loading && !error && folders.length > 0 ? (
+            <div className="text-sm">
+              {tree.map((folder) => renderFolder(folder, 0))}
+            </div>
+          ) : (
+            !loading && (
+              <p className="text-center text-gray-500">No folders found.</p>
+            )
+          )}
         </div>
 
-        <div className="flex flex-col bg-white border rounded-[10px] p-5 w-full sm:w-[70%] h-[90vh]">
+        <div className="flex flex-col bg-white border rounded-[10px] p-5 w-full overflow-x-auto">
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-2">
               <FaFolder size={20} />
@@ -274,13 +369,22 @@ const Page = () => {
                         key={index}
                         className="p-3 border-b text-[14px] font-normal hover:bg-gray-50"
                       >
-                        <td className="p-4 flex items-center gap-2">
+                        <td className="p-4 flex items-center gap-2 ">
                           <input type="checkbox" />
-                          <span>{file.fileName}</span>
+                          <span className="max-w-[300px] truncate">
+                            {file.fileTitle ? file.fileType : file.fileName}
+                          </span>
                         </td>
                         <td className="p-4">{file.dateUploaded}</td>
-                        <td className="p-4">{file.size}</td>
-                        <td className="p-4">{file.fileType}</td>
+                        <td className="p-4">{formatFileSize(file.size)}</td>
+                        <td className="p-4">
+                          {file.fileType
+                            ? file.fileType ===
+                              'vnd.openxmlformats-officedocument.wordprocessingml.document'
+                              ? 'docx'
+                              : file.fileType
+                            : ''}
+                        </td>
                         <td className="flex flex-row gap-3 justify-center items-center">
                           <FaEdit
                             onClick={handleEditdocument}
@@ -329,8 +433,8 @@ const Page = () => {
                   ) : (
                     <tr>
                       <td colSpan={5} className="text-center text-gray-500">
-                        This folder is empty. Use the upload button to add files
-                        or move files from other folders.
+                        This folder is empty. Use the upload button to add
+                        files.
                       </td>
                     </tr>
                   )
@@ -352,6 +456,17 @@ const Page = () => {
           <Addfolder setIsModalOpen={setIsModalOpen} />
         </Modal>
       )}
+
+      {subfolderOpen && (
+        <Modal onClose={() => setIsModalOpen(false)}>
+          <AddSubFolder
+            setIsModalOpen={setSubfolderOpen}
+            // handleFolderClick={handleFolderClick}
+            activeFolder={activeFolder}
+          />
+        </Modal>
+      )}
+
       {isModalOpen1 && (
         <Modal onClose={() => setIsModalOpen1(false)}>
           <Uploadfiles setIsModalOpen1={setIsModalOpen1} />

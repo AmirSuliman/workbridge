@@ -1,5 +1,6 @@
+import axiosInstance from '@/lib/axios';
 import { fetchUserData } from '@/services/myInfo';
-import { createFolder, resetState } from '@/store/slices/folderSlice';
+import { resetState } from '@/store/slices/folderSlice';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { AppDispatch, RootState } from '@/store/store';
 import { getSession } from 'next-auth/react';
@@ -8,10 +9,11 @@ import toast from 'react-hot-toast';
 import { FaTimes } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 
-const Addfolder = ({ setIsModalOpen }) => {
+const AddSubFolder = ({ setIsModalOpen, activeFolder }) => {
+  console.log('activeFolder-> sub: ', activeFolder);
   const [userId, setUserId] = useState<number | undefined>(undefined);
-  const [folderName, setFolderName] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [folderName, setFolderName] = useState('');
   const dispatch = useDispatch<AppDispatch>();
   const { loading, success } = useSelector((state: RootState) => state.folder);
 
@@ -45,7 +47,14 @@ const Addfolder = ({ setIsModalOpen }) => {
         return;
       }
       setErrorMessage(null);
-      await dispatch(createFolder({ folderName, userId }));
+      // await dispatch(createFolder({ folderName, userId }));
+      const response = await axiosInstance.post('/folder', {
+        name: folderName,
+        createdBy: userId,
+        parentId: activeFolder.id,
+      });
+      toast.success('Sub folder created successfully!');
+      console.log('sub folder response: ', response.data);
       setIsModalOpen(false);
     } catch (error) {
       console.log(error);
@@ -101,4 +110,4 @@ const Addfolder = ({ setIsModalOpen }) => {
   );
 };
 
-export default Addfolder;
+export default AddSubFolder;
