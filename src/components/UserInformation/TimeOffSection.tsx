@@ -11,6 +11,7 @@ import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import SickCard from './sickCard';
 import VacationsCard from './VacationsCard';
+import { getSession } from 'next-auth/react';
 interface Employee {
   firstName: string;
   lastName: string;
@@ -35,6 +36,18 @@ const TimeOffSection = () => {
   const [selectedTimeOff, setSelectedTimeOff] = useState<TimeOffItem | null>(
     null
   );
+
+  // const [sessionUser, setSessionUser] = useState('');
+  // useEffect(() => {
+  //   const fetchSession = async () => {
+  //     const session = await getSession();
+  //     console.log('session: ', session);
+  //     setSessionUser(session?.user);
+  //   };
+
+  //   fetchSession();
+  // }, []);
+
   const [totalDays, setTotalDays] = useState<number>(20);
   useEffect(() => {
     const fetchTimeOffData = async () => {

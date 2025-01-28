@@ -41,8 +41,8 @@ const HrSidebar = () => {
         {!isOpen ? <FiMenu size={24} /> : 'x'}
       </button>
 
-      <nav
-        className={`flex flex-col gap-2 w-[270px] bg-white fixed top-0 bottom-0 left-0 1700px:left-auto border-r-[1px] border-[#E8E8E8] z-10 transition-transform duration-300 ${
+      <main
+        className={`flex flex-col gap-2 w-[270px] bg-white fixed top-0 bottom-0 left-0 1700px:left-auto border-r-[1px] border-[#E8E8E8] z-10 transition-transform duration-300 overflow-y-auto ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
@@ -99,7 +99,7 @@ const HrSidebar = () => {
             href="/hr/Reports"
           />
         </>
-      </nav>
+      </main>
     </>
   );
 };

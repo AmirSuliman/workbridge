@@ -72,89 +72,73 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
           />
           <div className="grid grid-cols-3 gap-4">
             <article>
-              <Label text="First Name*" /> <br />
+              <Label text="First Name*" />
               <input
                 type="text"
                 placeholder="Add first name"
-                className="p-2 rounded-md bg-transparent border w-full"
+                className="form-input"
                 {...register('firstName', {
                   required: 'First name is required',
                 })}
               />
               {errors.firstName && (
-                <span className="text-red-500 text-xs">
-                  {errors.firstName.message}
-                </span>
+                <span className="form-error">{errors.firstName.message}</span>
               )}
             </article>
             <article>
-              <Label text="Middle Name" /> <br />
+              <Label text="Middle Name" />
               <input
                 type="text"
                 placeholder="Add middle name"
-                className="p-2 rounded-md bg-transparent border w-full"
+                className="form-input"
                 {...register('middleName')}
               />
               {errors.middleName && (
-                <span className="text-red-500 text-xs">
-                  {errors.middleName.message}
-                </span>
+                <span className="form-error">{errors.middleName.message}</span>
               )}
             </article>
             <article>
-              <Label text="Last Name*" /> <br />
+              <Label text="Last Name*" />
               <input
                 type="text"
                 placeholder="Add last name"
-                className="p-2 rounded-md bg-transparent border w-full"
+                className="form-input"
                 {...register('lastName', {
                   required: 'Last name is required',
                 })}
               />
               {errors.lastName && (
-                <span className="text-red-500 text-xs">
-                  {errors.lastName.message}
-                </span>
+                <span className="form-error">{errors.lastName.message}</span>
               )}
             </article>
             <article>
-              <Label text="Birthday*" /> <br />
+              <Label text="Birthday*" />
               <input
                 type="date"
                 placeholder="Add birthday"
-                className="p-2 rounded-md bg-transparent border w-full"
+                className="form-input"
                 {...register('birthday', {
                   required: 'Birthday is required',
                 })}
               />
               {errors.birthday && (
-                <span className="text-red-500 text-xs">
-                  {errors.birthday.message}
-                </span>
+                <span className="form-error">{errors.birthday.message}</span>
               )}
             </article>
             <article>
-              <Label text="Gender*" /> <br />
-              <select
-                className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-                {...register('gender')}
-              >
+              <Label text="Gender*" />
+              <select className="form-input" {...register('gender')}>
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
               </select>
               {errors.gender && (
-                <span className="text-red-500 text-xs">
-                  {errors.gender.message}
-                </span>
+                <span className="form-error">{errors.gender.message}</span>
               )}
             </article>
             <article>
-              <Label text="Marital Status*" /> <br />
-              <select
-                className="p-3 rounded-md bg-transparent border w-full text-sm text-black"
-                {...register('marritialStatus')}
-              >
+              <Label text="Marital Status*" />
+              <select className="form-input" {...register('marritialStatus')}>
                 <option value="">Select Status</option>
                 <option value="Single">Single</option>
                 <option value="Married">Married</option>
@@ -162,7 +146,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                 <option value="Prefer not say">Prefer not to say</option>
               </select>
               {errors.marritialStatus && (
-                <span className="text-red-500 text-xs">
+                <span className="form-error">
                   {errors.marritialStatus.message}
                 </span>
               )}
@@ -206,18 +190,18 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
               },
             ].map((field) => (
               <article key={field.name}>
-                <Label text={field.label} /> <br />
+                <Label text={field.label} />
                 <input
                   type={field.type}
                   placeholder={`Add ${field.label.toLowerCase().split('*')[0]}`}
-                  className="p-2 rounded-md bg-transparent border w-full"
+                  className="form-input"
                   {...register(field.name as keyof EmployeeData, {
                     valueAsNumber: field.name.includes('zipCode'),
                   })}
                 />
                 {errors.location &&
                   errors.location[field.name.split('.')[1]] && (
-                    <span className="text-red-500 text-xs">
+                    <span className="form-error">
                       {errors.location[field.name.split('.')[1]]?.message}
                     </span>
                   )}
@@ -229,35 +213,31 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
         <div className="p-4 pb-12 border-b">
           <FormHeading icon={<FaPhoneAlt className="w-4" />} text="Contact" />
           <div className="grid sm:grid-cols-3 gap-4 mt-5">
-            <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
+            <label className="form-label">
               Phone
               <input
                 type="number"
-                className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md appearance-none`}
+                className={`form-input`}
                 {...register('phoneNumber', {
                   valueAsNumber: true,
                 })}
               />
               {errors.phoneNumber && (
-                <p className="text-red-500 text-xs">
-                  {errors.phoneNumber.message}
-                </p>
+                <p className="form-error">{errors.phoneNumber.message}</p>
               )}
             </label>
-            <label className="text-[#abaeb4] text-xs flex flex-col gap-1">
+            <label className="form-label">
               Work Phone
               <input
                 type="number"
-                className={`p-3 border border-gray-border text-dark-navy text-xs outline-none focus:outline-none rounded-md appearance-none`}
+                className={`form-input`}
                 {...register('workPhone', {
                   required: 'Work phone number is required',
                   valueAsNumber: true,
                 })}
               />
               {errors.workPhone && (
-                <p className="text-red-500 text-xs">
-                  {errors.workPhone.message}
-                </p>
+                <p className="form-error">{errors.workPhone.message}</p>
               )}
             </label>
           </div>
@@ -289,15 +269,15 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
               },
             ].map((field) => (
               <article key={field.name}>
-                <Label text={field.label} /> <br />
+                <Label text={field.label} />
                 <input
                   type="text"
                   placeholder={`Add ${field.label.toLowerCase().split('*')[0]}`}
-                  className="p-2 rounded-md bg-transparent border w-full"
+                  className="form-input"
                   {...register(field.name as keyof EmployeeData)}
                 />
                 {errors[field.name] && (
-                  <span className="text-red-500 text-xs">
+                  <span className="form-error">
                     {errors[field.name].message}
                   </span>
                 )}
