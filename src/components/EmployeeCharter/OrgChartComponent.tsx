@@ -202,12 +202,7 @@ export const OrgChartComponent: FC<Props> = ({
         .onZoomStart(() => {
           openPositionsCnt.current?.style.setProperty('display', 'none');
         })
-        .onZoomEnd((e) => {
-          openPositionsCnt.current?.style.setProperty(
-            'transform',
-            `scale(${e.transform.k})`
-          );
-        })
+
         .compactMarginPair(() => 40)
         .neighbourMargin(() => 20)
         .onNodeClick((node: any) => {
@@ -403,15 +398,29 @@ export const OrgChartComponent: FC<Props> = ({
         </div>
       )}
       <div
-        className="w-80 bg-white rounded-lg h-24 border p-4 absolute hidden"
+        className="top-0 w-80 bg-white rounded-lg h-24 border p-4 absolute "
         ref={openPositionsCnt}
       >
         <div className="flex mb-2">
-          <img
-            src="/icons/open-positions-indicator.svg"
-            alt="open-positions"
-            className="mr-2"
-          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style={{
+              width: '20px',
+              height: '20px',
+              color: '#000000',
+              marginRight: '1rem',
+            }}
+          >
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 7V5a2 2 0 0 0-2-2H10a2 2 0 0 0-2 2v2"></path>
+            <line x1="2" y1="13" x2="22" y2="13"></line>
+          </svg>
           <div className="text-sm">Open Positions</div>
         </div>
         <div className="text-xs">

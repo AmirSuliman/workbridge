@@ -167,8 +167,8 @@ const OrgChartPage: FC = () => {
         <div className="flex space-x-2 text-sm ml-auto">
           <button
             className={clsx(
-              'border border-primary rounded-full px-4 py-2',
-              !compact && 'bg-primary text-white'
+              'border border-primary rounded-full px-4 py-2 text-black',
+              !compact && 'bg-black text-white'
             )}
             onClick={() => setCompact(false)}
           >
@@ -176,8 +176,8 @@ const OrgChartPage: FC = () => {
           </button>
           <button
             className={clsx(
-              'border border-primary rounded-full px-4 py-2',
-              compact && 'bg-primary text-white'
+              'border border-primary rounded-full px-4 py-2 text-black',
+              compact && 'bg-black text-white'
             )}
             onClick={() => setCompact(true)}
           >

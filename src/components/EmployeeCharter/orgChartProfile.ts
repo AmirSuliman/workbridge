@@ -1,3 +1,4 @@
+import { IMAGES } from '@/constants/images';
 import {
   BTN_SELECT,
   BTN_SHOW_TERMINATED,
@@ -61,9 +62,16 @@ export default function ({
     </div>
     <div style="display: flex; align-items: center; padding-left: 1rem; height: 35px; opacity: ${opacity};">
       <div style="background-color: #86699D; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 25px;">
-        <img src=${
-          d.data.profilePictureUrl
-        } style="border-radius: 50%;"  alt="user">
+        <img 
+          src="${
+            d.data.profilePictureUrl
+              ? d.data.profilePictureUrl
+              : `https://ui-avatars.com/api/?name=${d.data.firstName[0]}${d.data.lastName[0]}`
+          }" 
+          style="border-radius: 50%; width: 100%; height: 100%;" 
+          alt="user" 
+        />
+
       </div>
       <div style="display: flex; flex-direction: column; align-items: start; margin-left: .5rem; line-height: 13px">
         <div>
@@ -73,6 +81,10 @@ export default function ({
        <div style="display: flex; align-items: start; gap: 4px;">
         <div style="font-size: 9px; color: rgba(15, 23, 42, 1);">${
           d.data.tittle
+            ? d.data.tittle.toLowerCase() === 'employee'
+              ? 'Job Title'
+              : d.data.tittle
+            : ''
         }</div>
         <span>•</span>
         <div style="font-size: 9px; color: rgba(15, 23, 42, 1);">${
@@ -80,23 +92,31 @@ export default function ({
         }</div>
        </div>
         <div style="font-size: 9px; color: rgba(151, 149, 153, 1); margin-top: .25rem;">${
-          d.data.employmentType
-        } <span>•</span> In-office <span>•</span> Florida</div>
+          d.data.employmentType ? d.data.employmentType : ''
+        } <span>•</span> In-office <span>•</span>${
+    d.data?.location ? d.data?.location.country : ''
+  }</div>
       </div>
     </div>
-    <div style="display: flex; align-items: center; padding-left: 1rem; margin-top: .75rem; opacity: ${opacity};      padding-bottom: 5px;">
-      <div style="border: 1px solid #97959980; border-radius: 50px; height: 17px; width: 5rem; padding: 0 .75rem; display: ${
-        shouldShowSalary ? 'flex' : 'none'
-      }; align-items: center; justify-content: center">
-        <span style="font-size: 10px">${
-          d.data.salary ? usFormatNumber(d.data.salary) : 0
-        }</span>
-      </div>
+    <div style="display: flex; align-items: center; padding-left: 1rem; margin-top: .75rem; opacity: ${opacity}; padding-bottom: 5px;">
       
       <div class="${BTN_HOVER_OPEN_POSITIONS}" style="background: transparent; display: ${
     hasOpenPositions ? 'flex' : 'none'
   }; color: #15A356; margin-left: auto; margin-right: 1rem">
-        <img src="/user-group.svg" style="width: 12px; height: 12px;" alt="open positions">
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          style="width: 12px; height: 12px; color: #000000;">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 7V5a2 2 0 0 0-2-2H10a2 2 0 0 0-2 2v2"></path>
+          <line x1="2" y1="13" x2="22" y2="13"></line>
+        </svg>
+
         <span style="font-size: 10px; font-style: italic">${
           d.data.openPositions.length > 0 ? d.data.openPositions.length : ''
         }</span>

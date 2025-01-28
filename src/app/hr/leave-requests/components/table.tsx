@@ -132,7 +132,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
                     Employee Name
                   </th>
                   <th className="font-medium text-gray-400 text-[14px] p-3 text-left">
-                    Vacation Type
+                    Type
                   </th>
                   <th className="font-medium text-gray-400 text-[14px] p-3 text-center">
                     Duration
