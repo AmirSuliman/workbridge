@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { BiEdit, BiPlusCircle, BiTrash } from 'react-icons/bi';
 import { FaBullhorn } from 'react-icons/fa';
