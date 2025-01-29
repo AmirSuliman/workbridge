@@ -86,13 +86,11 @@ const VacationPolicies = () => {
   const handleDeleteHoliday = async () => {
     if (holidayToDelete !== null) {
       try {
-        // Make sure the URL format is /holiday/{id}, and pass the holiday ID dynamically
         const response = await axiosInstance.delete(`/holiday/${holidayToDelete}`);
         
         if (response.status === 200) {
-          // Filter out the deleted holiday from the list
           setHolidays(holidays.filter(holiday => holiday.id !== holidayToDelete));
-          setIsModalOpen2(false); // Close the confirmation modal
+          setIsModalOpen2(false); 
         }
       } catch (error) {
         console.error('Error deleting holiday:', error);

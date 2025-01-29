@@ -71,9 +71,8 @@ const SendHolidayNotification = ({ toggleModal  }) => {
 
     try {
       const response = await axiosInstance.post('/holiday/', payload);
-      const newHoliday = response.data; // Assuming the response contains the new holiday
-      addHolidayToState(newHoliday); // Update state in the parent component
-      toggleModal(); // Close the modal
+      const newHoliday = response.data; 
+      toggleModal(); 
     } catch (error) {
       console.error('Error creating holiday:', error.response?.data || error.message);
       alert(`Failed to create holiday: ${error.response?.data?.message || "Unknown error"}`);
