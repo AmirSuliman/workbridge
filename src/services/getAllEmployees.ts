@@ -2,10 +2,14 @@ import { API_ROUTES } from '@/constants/apiRoutes';
 import axiosInstance from '@/lib/axios';
 import axios from 'axios';
 
-export const getAllEmployees = async (page: number, size: number) => {
+export const getAllEmployees = async (
+  page: number,
+  size: number,
+  name?: string
+) => {
   try {
     const response = await axiosInstance.get(API_ROUTES.GET_EMPLOYEES, {
-      params: { associations: true, page: page, size: size },
+      params: { associations: true, page: page, size: size, name: name },
     });
     return response.data;
   } catch (error) {

@@ -35,12 +35,16 @@ export const AllEmployees = () => {
   const [uniqueJobTitles, setUniqueJobTitles] = useState<string[]>([]);
   const [uniqueDepartments, setUniqueDepartments] = useState<string[]>([]);
   const pageSize = 10;
-  console.log('employees', employees);
+
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         setLoading(true);
-        const { data } = await getAllEmployees(currentPage, pageSize);
+        const { data } = await getAllEmployees(
+          currentPage,
+          pageSize,
+          searchTerm
+        );
         dispatch(addEmployees(data.items));
 
         // Extract unique job titles and departments
@@ -62,7 +66,7 @@ export const AllEmployees = () => {
       }
     };
     fetchEmployees();
-  }, [currentPage, dispatch]);
+  }, [currentPage, dispatch, searchTerm]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -107,8 +111,8 @@ export const AllEmployees = () => {
     setFilteredEmployees(updatedList);
   }, [searchTerm, sortOption, filterOption, employees]);
 
-  if (loading) return <ScreenLoader />;
-  console.log('employees: ', employees);
+  // if (loading) return <ScreenLoader />;
+  // console.log('employees: ', employees);
   return (
     <>
       <nav className="flex gap-4 justify-between flex-wrap my-8">
@@ -217,7 +221,7 @@ export const AllEmployees = () => {
             />
           )}
         </div>
-        <div className="mt-12 overflow-x-auto">
+        <div className="mt-12 overflow-x-auto w-full">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="text-sm text-gray-500">
@@ -229,81 +233,93 @@ export const AllEmployees = () => {
                 <th className="py-3 px-4 border-b">Download</th>
               </tr>
             </thead>
-            <tbody>
-              {filteredEmployees?.map((employee) => {
-                const hireDate = employee?.hireDate
-                  ? employee.hireDate.split('T')[0]
-                  : 'N/A';
+            {!loading ? (
+              <tbody className="w-full">
+                {filteredEmployees?.map((employee) => {
+                  const hireDate = employee?.hireDate
+                    ? employee.hireDate.split('T')[0]
+                    : 'N/A';
 
-                const calculateDuration = (
-                  startDate: string | undefined
-                ): string => {
-                  if (!startDate) return 'N/A';
-                  const start = new Date(startDate);
-                  const now = new Date();
-                  const differenceInMilliseconds =
-                    now.getTime() - start.getTime();
-                  const days = Math.floor(
-                    differenceInMilliseconds / (1000 * 60 * 60 * 24)
+                  const calculateDuration = (
+                    startDate: string | undefined
+                  ): string => {
+                    if (!startDate) return 'N/A';
+                    const start = new Date(startDate);
+                    const now = new Date();
+                    const differenceInMilliseconds =
+                      now.getTime() - start.getTime();
+                    const days = Math.floor(
+                      differenceInMilliseconds / (1000 * 60 * 60 * 24)
+                    );
+                    const months =
+                      now.getMonth() -
+                      start.getMonth() +
+                      12 * (now.getFullYear() - start.getFullYear());
+                    if (months < 1) return `${days} d`;
+                    if (months < 12) return `${months} m`;
+                    const years = Math.floor(months / 12);
+                    const remainingMonths = months % 12;
+                    return `${years} y ${remainingMonths} m`;
+                  };
+                  const duration = employee?.hireDate
+                    ? calculateDuration(hireDate)
+                    : 'N/A';
+
+                  return (
+                    <tr
+                      onClick={() => {
+                        router.push(`employees/employee-info/${employee.id}`);
+                      }}
+                      key={employee.id}
+                      className="hover:bg-gray-50 text-[#0F172A] text-[14px] w-full cursor-pointer"
+                    >
+                      <td className="py-3 px-4 border-b min-w-fit w-full lg:w-fit">
+                        <ProfileAvatarItem
+                          src={
+                            employee.profilePictureUrl ||
+                            IMAGES.placeholderAvatar.src
+                          }
+                          title={`${employee.firstName} ${employee.lastName}`}
+                          subtitle={`#${String(employee.id)}`}
+                        />
+                      </td>
+                      <td className="py-3 px-4 border-b ml-4 lg:ml-0">
+                        {employee.tittle}
+                      </td>
+                      <td className="py-3 px-4 border-b">
+                        {employee.department.name}
+                      </td>
+                      <td className="py-3 px-4 border-b">
+                        <a
+                          className="text-blue-700"
+                          href={`mailto:${employee.email}`}
+                        >
+                          {employee.email}
+                        </a>
+                      </td>
+                      <td className="py-3 px-4 border-b">
+                        {new Date(employee.hireDate).toLocaleDateString()}
+                        <br />
+                        <span className="text-[10px] mt-2">{duration}</span>
+                      </td>
+                      <td className="py-3 px-4 border-b ">
+                        <span className="p-2 border w-8 rounded-md flex items-center justify-center hover:bg-black hover:text-white">
+                          <FaChevronRight size={12} />
+                        </span>
+                      </td>
+                    </tr>
                   );
-                  const months =
-                    now.getMonth() -
-                    start.getMonth() +
-                    12 * (now.getFullYear() - start.getFullYear());
-                  if (months < 1) return `${days} d`;
-                  if (months < 12) return `${months} m`;
-                  const years = Math.floor(months / 12);
-                  const remainingMonths = months % 12;
-                  return `${years} y ${remainingMonths} m`;
-                };
-                const duration = employee?.hireDate
-                  ? calculateDuration(hireDate)
-                  : 'N/A';
-
-                return (
-                  <tr
-                    onClick={() => {
-                      router.push(`employees/employee-info/${employee.id}`);
-                    }}
-                    key={employee.id}
-                    className="hover:bg-gray-50 text-[#0F172A] text-[14px] cursor-pointer"
-                  >
-                    <td className="py-3 px-4 border-b">
-                      <ProfileAvatarItem
-                        src={
-                          employee.profilePictureUrl ||
-                          IMAGES.placeholderAvatar.src
-                        }
-                        title={`${employee.firstName} ${employee.lastName}`}
-                        subtitle={`#${String(employee.id)}`}
-                      />
-                    </td>
-                    <td className="py-3 px-4 border-b">{employee.tittle}</td>
-                    <td className="py-3 px-4 border-b">
-                      {employee.department.name}
-                    </td>
-                    <td className="py-3 px-4 border-b">
-                      <a
-                        className="text-blue-700"
-                        href={`mailto:${employee.email}`}
-                      >
-                        {employee.email}
-                      </a>
-                    </td>
-                    <td className="py-3 px-4 border-b">
-                      {new Date(employee.hireDate).toLocaleDateString()}
-                      <br />
-                      <span className="text-[10px] mt-2">{duration}</span>
-                    </td>
-                    <td className="py-3 px-4 border-b ">
-                      <span className="p-2 border w-8 rounded-md flex items-center justify-center hover:bg-black hover:text-white">
-                        <FaChevronRight size={12} />
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
+                })}
+              </tbody>
+            ) : (
+              <tbody className="w-full">
+                <tr>
+                  <td colSpan={6}>
+                    <ScreenLoader />
+                  </td>
+                </tr>
+              </tbody>
+            )}
           </table>
           <Pagination
             styles={{ container: 'mt-5 gap-x-2 !justify-end' }}

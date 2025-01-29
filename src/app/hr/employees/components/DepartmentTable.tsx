@@ -8,6 +8,7 @@ import Link from 'next/link';
 import CreateDepartment from '../../Departement/components/createdepartment';
 import axiosInstance from '@/lib/axios';
 import Modal from '@/components/modal/Modal';
+import Button from '@/components/Button';
 
 interface Department {
   id: string;
@@ -50,8 +51,10 @@ const DepartmentTable = () => {
             employeeCount: dept.employees?.length || 0,
             head: dept.openPositions?.[0]?.hiringLeadId || 'N/A',
             openPositions: dept.openPositions || [],
-            department_head_data: dept.department_head_data || { firstName: '', lastName: 'N/A' },
-
+            department_head_data: dept.department_head_data || {
+              firstName: '',
+              lastName: 'N/A',
+            },
           }));
 
           setDepartments(processedDepartments);
@@ -88,13 +91,31 @@ const DepartmentTable = () => {
           <EmployeesIcon />
           <h1 className="font-semibold text-[22px]">Departments</h1>
         </div>
-        <button className="flex flex-row items-center gap-2 p-2 px-4 bg-white rounded-lg font-medium text-[12px]">
-          See Employee Charter{' '}
-          <FaArrowRight
-            size={14}
-            style={{ transform: 'rotate(310deg)', color: '#0F172A' }}
+        <Link href="employees/charter">
+          <Button
+            bg="white"
+            textColor="black"
+            className="!font-mdium !text-xs"
+            name="See Employee Charter"
+            icon={
+              <svg
+                width="12"
+                height="11"
+                viewBox="0 0 12 11"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M1.49036 10.123L10.9998 0.613646M10.9998 0.613646L3.86771 0.613647M10.9998 0.613646L10.9998 7.7457"
+                  stroke="#0F172A"
+                  strokeWidth="1.15289"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            }
           />
-        </button>
+        </Link>
       </div>
 
       {/* Table Container */}
@@ -163,13 +184,11 @@ const DepartmentTable = () => {
                       <td className="px-4 py-3 flex items-center gap-2">
                         <EmployeesIcon /> {dept.employeeCount}
                       </td>
-                      <td className="px-4 py-3">          
-                      {dept.department_head_data ? (
-                           `${dept.department_head_data.firstName} ${dept.department_head_data.lastName}`
-                         ) : (
-                           'N/A'
-                         )}                     
-                       </td>
+                      <td className="px-4 py-3">
+                        {dept.department_head_data
+                          ? `${dept.department_head_data.firstName} ${dept.department_head_data.lastName}`
+                          : 'N/A'}
+                      </td>
                       <td className="px-4 py-3">
                         <Link href={`/hr/Departement/${dept.id}`}>
                           <div className="p-1 border rounded-lg w-[30px] flex justify-center items-center">
