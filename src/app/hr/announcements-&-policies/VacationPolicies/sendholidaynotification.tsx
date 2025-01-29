@@ -1,5 +1,7 @@
+'use client'
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
+import { AxiosError } from 'axios';
 
 interface Country {
   id: number;
@@ -48,19 +50,20 @@ const SendHolidayNotification = ({ toggleModal  }) => {
     setPrimaryCountry(Number(e.target.value));
   };
 
-  const handleAdditionalCountriesChange = (e) => {
+  const handleAdditionalCountriesChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOptions = Array.from(e.target.selectedOptions, (option) =>
       Number(option.value)
     );
     setAdditionalCountries(selectedOptions);
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     const formattedDate = date.split("T")[0];
-
+  
     const payload = {
       title,
       date: formattedDate,
@@ -68,19 +71,23 @@ const SendHolidayNotification = ({ toggleModal  }) => {
       createdBy,
       countries: primaryCountry ? [primaryCountry, ...additionalCountries] : [],
     };
-
+  
     try {
       const response = await axiosInstance.post('/holiday/', payload);
-      const newHoliday = response.data; 
-      toggleModal(); 
+      const newHoliday = response.data;
+      toggleModal();
     } catch (error) {
-      console.error('Error creating holiday:', error.response?.data || error.message);
-      alert(`Failed to create holiday: ${error.response?.data?.message || "Unknown error"}`);
+      if (error instanceof AxiosError) {
+        console.error('Error creating holiday:', error.response?.data || error.message);
+        alert(`Failed to create holiday: ${error.response?.data?.message || "Unknown error"}`);
+      } else {
+        console.error('Unexpected error:', error);
+        alert('An unexpected error occurred.');
+      }
     } finally {
       setLoading(false);
     }
   };
-
 
   return (
     <div className="w-full">
