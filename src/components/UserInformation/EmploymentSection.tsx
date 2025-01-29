@@ -101,7 +101,7 @@ const EmploymentSection = ({
               <p className="form-error">{errors.employmentType.message}</p>
             )}
           </label>
-          <label className="form-label">
+          {/* <label className="form-label">
             Note
             <input
               type="text"
@@ -110,7 +110,7 @@ const EmploymentSection = ({
               readOnly={!editEmployee}
             />
             {errors.note && <p className="form-error">{errors.note.message}</p>}
-          </label>
+          </label> */}
         </div>
       </div>
 
@@ -233,7 +233,7 @@ const EmploymentSection = ({
               )}
             </article>
             <article>
-              <Label text="Pay type*" />
+              <Label text="Pay type" />
               <select className="form-input" {...register('payType')}>
                 <option value="">Select PayType</option>
                 <option value="Salary">Salary</option>

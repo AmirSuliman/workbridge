@@ -64,8 +64,12 @@ export const employeeSchema = z.object({
     .string({ message: 'Payment schedule is required' })
     .min(1, 'Payment schedule is required'),
   payType: z
-    .string({ message: 'Pay type is required' })
-    .min(1, 'Pay type is required'),
+    .union([
+      // z.instanceof(File),
+      z.string().optional(),
+      z.null(),
+    ])
+    .optional(),
   profilePictureUrl: z
     .union([
       // z.instanceof(File),

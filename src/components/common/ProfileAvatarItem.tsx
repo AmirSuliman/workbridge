@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { IMAGES } from '@/constants/images';
 interface ProfileAvatarItemProps {
@@ -14,14 +14,23 @@ const ProfileAvatarItem: React.FC<ProfileAvatarItemProps> = ({
   subtitle = '-',
   title,
 }) => {
+  const [imgSrc, setImgSrc] = useState(src || IMAGES.placeholderAvatar);
+
+  useEffect(() => {
+    setImgSrc(src || IMAGES.placeholderAvatar);
+  }, [src]);
+
   return (
     <div className="flex  items-center p-0 gap-2">
       <Image
-        src={src && src !== '' ? src : IMAGES.placeholderAvatar}
+        src={imgSrc}
         alt={alt}
         width={500}
         height={500}
-        className="max-w-[2.5rem]  rounded-full object-cover"
+        className="size-12 rounded-full"
+        onError={() => {
+          setImgSrc(IMAGES.placeholderAvatar);
+        }}
       />
       <div className="ml-2">
         <h4 className="text-sm font-[500] text-dark-navy whitespace-nowrap">

@@ -77,7 +77,7 @@ const ProfileCard = ({
       <div className="flex gap-4">
         <div className="flex flex-col items-center">
           <Image
-            className="rounded-full max-w-[6rem] object-contain"
+            className="rounded-full size-16 shrink-0 grow-0"
             src={employeeData?.profilePictureUrl || IMAGES.placeholderAvatar}
             height={1000}
             width={1000}
