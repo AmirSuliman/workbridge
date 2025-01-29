@@ -39,7 +39,7 @@ const OrgChartPage: FC = () => {
   const [search, setSearch] = useState('');
   // const [isActionLoading, setIsActionLoading] = useState(false);
   const [employeesData, setEmployeesData] = useState<EmployeeData[]>([]);
-  // const router = useRouter();
+  const router = useRouter();
   const params = useParams();
   const queryParams = useSearchParams();
   const refOrgChart = useRef(new OrgChart<EmployeeData>());
@@ -133,11 +133,11 @@ const OrgChartPage: FC = () => {
       className="w-full h-full relative overflow-hidden no-scrollbar "
     >
       <div className="bg-white rounded-lg p-6 shadow-lg items-center mb-8 h-20 flex space-x-2 justify-end w-full top-0 left-0">
-        <Link
-          href="/public"
+        <button
+          // href="/public"
           onClick={(e) => {
             e.preventDefault();
-            // router.back();
+            router.back();
           }}
           className="flex items-center space-x-1 mr-auto"
         >
@@ -147,7 +147,7 @@ const OrgChartPage: FC = () => {
           <div className="flex flex-col -space-y-1">
             <div className="text-100C18 text-lg">Company Charter</div>
           </div>
-        </Link>
+        </button>
         <div className="relative w-60">
           <input
             className="w-full border border-979599 rounded-full p-2 text-sm outline-0"

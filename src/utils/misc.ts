@@ -88,8 +88,8 @@ export function checkForTerminatedEmployees(
 // node -> children or _children -> data: DataTypes.Employee
 // check if there are open positions like openPositions.length > 0
 export function checkForOpenPositions(node: any): boolean {
-  console.log('node.data: ', node.data);
   if (node.data.openPositions.length > 0) {
+    console.log('node.data: ', node.data.openPositions);
     return true;
   }
   if (node.children) {
@@ -170,8 +170,8 @@ export function updateElementPosition(
 ) {
   const transformed = element?.style.getPropertyValue('transform');
   const number = extractNumberFromScale(transformed || '');
-  let top = 165;
-  let left = 80;
+  let top = 200;
+  let left = 300;
   if (number) {
     const step = 0.1;
     const multiplier = Math.floor(Math.abs(number - 1) / step);

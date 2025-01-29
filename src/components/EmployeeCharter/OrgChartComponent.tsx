@@ -75,7 +75,6 @@ export const OrgChartComponent: FC<Props> = ({
   const [isTerminating, setIsTerminating] = useState<Record<number, boolean>>(
     {}
   );
-  const [cyclicNode, setCycyclicNode] = useState(null);
 
   function detectCycle(employee) {
     const visited = new Set();
@@ -398,10 +397,10 @@ export const OrgChartComponent: FC<Props> = ({
         </div>
       )}
       <div
-        className="top-0 w-80 bg-white rounded-lg h-24 border p-4 absolute "
+        className="shadow-lg w-80 bg-white rounded-lg h-24 border p-4 absolute hidden"
         ref={openPositionsCnt}
       >
-        <div className="flex mb-2">
+        <div className="flex mb-2 ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"

@@ -241,6 +241,7 @@ const MyInformation = () => {
       console.log('put emp response: ', response.data);
       toast.success('Employee information updated successfully!');
       setEditLoading(false);
+      setEditEmployee(false);
       dispatch(updateEmployeeData(response.data.data));
     } catch (err) {
       console.error('Error updating employee data:', err);
