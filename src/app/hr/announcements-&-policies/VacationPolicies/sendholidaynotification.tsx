@@ -2,16 +2,12 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
 import { AxiosError } from 'axios';
+import { useSession } from "next-auth/react";
 
 interface Country {
   id: number;
   country: string;
   code: string;
-}
-
-interface Employee {
-  id: number;
-  firstName: string;
 }
 
 const SendHolidayNotification = ({ toggleModal  }) => {
@@ -22,9 +18,9 @@ const SendHolidayNotification = ({ toggleModal  }) => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [primaryCountry, setPrimaryCountry] = useState<number | null>(null);
   const [additionalCountries, setAdditionalCountries] = useState<number[]>([]);
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [createdBy, setCreatedBy] = useState<number | ''>('');
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
+  console.log(session, "session");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,10 +30,6 @@ const SendHolidayNotification = ({ toggleModal  }) => {
           setCountries(countriesResponse.data.data.items);
         }
 
-        const employeesResponse = await axiosInstance.get('/employees');
-        if (employeesResponse.data?.data?.items) {
-          setEmployees(employeesResponse.data.data.items);
-        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -68,7 +60,7 @@ const SendHolidayNotification = ({ toggleModal  }) => {
       title,
       date: formattedDate,
       type,
-      createdBy,
+      createdBy: session.user.userId,
       countries: primaryCountry ? [primaryCountry, ...additionalCountries] : [],
     };
   
@@ -115,16 +107,6 @@ const SendHolidayNotification = ({ toggleModal  }) => {
         </div>
 
         <div className="flex flex-row items-center justify-between gap-4 mt-8 w-full">
-
-        <div className="mb-4 w-full">
-          <label className="block text-sm font-medium mb-2 text-gray-400">Created By</label>
-          <select value={createdBy} onChange={(e) => setCreatedBy(Number(e.target.value))} className="p-4 w-full border text-gray-400 rounded focus:outline-none" required>
-            <option value="" disabled>Select Employee</option>
-            {employees.map((employee) => (
-              <option key={employee.id} value={employee.id}>{employee.firstName}</option>
-            ))}
-          </select>
-        </div>
 
         <div className="mb-4 w-full">
           <label className="block text-sm font-medium mb-2 text-gray-400">Primary Country</label>
