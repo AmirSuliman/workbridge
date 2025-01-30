@@ -46,30 +46,33 @@ const InfoGrid: React.FC<InfoGridProps> = ({
         <hr className="col-span-8" />
 
         {/* Render Rows with Dynamic Column Span */}
-        {values.map((row, rowIndex) => (
-          <React.Fragment key={rowIndex}>
-            {row.map((value, colIndex) => {
-              const span = colSpans[colIndex] || 1; // Use colSpans from prop or 1 by default
-              return (
-                <div
-                  key={`${rowIndex}-${colIndex}`}
-                  className={classNames(
-                    'text-xs px-2 text-dark-navy my-1.5 ',
-                    `col-span-${span}`
-                  )}
-                >
-                  {value}
-                </div>
-              );
-            })}
+        {values.map((row, rowIndex) => {
+          const currentRow = Array.isArray(row) ? row : [];
+          return (
+            <React.Fragment key={rowIndex}>
+              {currentRow.map((value, colIndex) => {
+                const span = colSpans[colIndex] || 1; // Use colSpans from prop or 1 by default
+                return (
+                  <div
+                    key={`${rowIndex}-${colIndex}`}
+                    className={classNames(
+                      'text-xs px-2 text-dark-navy my-1.5 ',
+                      `col-span-${span}`
+                    )}
+                  >
+                    {value}
+                  </div>
+                );
+              })}
 
-            {/* Fill empty columns if the row has fewer than 8 items */}
-            {row.length < 8 &&
-              Array.from({ length: 8 - row.length }).map((_, idx) => (
-                <div key={`empty-row-${rowIndex}-${idx}`} />
-              ))}
-          </React.Fragment>
-        ))}
+              {/* Fill empty columns if the row has fewer than 8 items */}
+              {currentRow.length < 8 &&
+                Array.from({ length: 8 - currentRow.length }).map((_, idx) => (
+                  <div key={`empty-row-${rowIndex}-${idx}`} />
+                ))}
+            </React.Fragment>
+          );
+        })}
       </div>
     </div>
   );

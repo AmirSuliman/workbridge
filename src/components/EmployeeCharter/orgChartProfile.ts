@@ -104,7 +104,7 @@ export default function ({
 
         <span style="font-size: 10px; color: #000; margin-right: 20px; margin-left: 2px;" >${
           d.data?.location
-            ? `${d.data?.location?.state} ${d.data?.location?.country}`
+            ? `${d.data?.location?.city}, ${d.data?.location?.country}`
             : ''
         }
         </span>

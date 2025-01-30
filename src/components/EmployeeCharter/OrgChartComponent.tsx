@@ -406,9 +406,9 @@ export const OrgChartComponent: FC<Props> = ({
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             style={{
               width: '20px',
               height: '20px',
@@ -432,11 +432,11 @@ export const OrgChartComponent: FC<Props> = ({
         ref={terminatedCnt}
       >
         <div className="flex mb-2">
-          <img
+          {/* <img
             src="/icons/terminated-hover.svg"
             alt="terminated"
             className="mr-2"
-          />
+          /> */}
           <div className="text-sm">Selected Employees</div>
         </div>
         <div className="text-xs">
