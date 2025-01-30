@@ -47,7 +47,7 @@ const UserInfoSection = ({
               readOnly={!editEmployee}
             />
             {errors?.firstName && (
-              <p className="form-error">{errors.firstName.message}</p>
+              <p className="form-error">{errors?.firstName.message}</p>
             )}
           </div>
           <div className="flex flex-col">
@@ -67,8 +67,8 @@ const UserInfoSection = ({
               {...register('lastName')}
               readOnly={!editEmployee}
             />
-            {errors.lastName && (
-              <p className="form-error">{errors.lastName.message}</p>
+            {errors?.lastName && (
+              <p className="form-error">{errors?.lastName.message}</p>
             )}
           </div>
           <div className="flex flex-col">
@@ -79,8 +79,8 @@ const UserInfoSection = ({
               {...register('birthday')}
               readOnly={!editEmployee}
             />
-            {errors.birthday && (
-              <p className="form-error">{errors.birthday.message}</p>
+            {errors?.birthday && (
+              <p className="form-error">{errors?.birthday.message}</p>
             )}
           </div>
           <div className="flex flex-col">
@@ -93,8 +93,8 @@ const UserInfoSection = ({
               <option value="Female">Female</option>
             </select>
 
-            {errors.gender && (
-              <p className="form-error">{errors.gender.message}</p>
+            {errors?.gender && (
+              <p className="form-error">{errors?.gender.message}</p>
             )}
           </div>
           <div className="flex flex-col">
@@ -107,8 +107,8 @@ const UserInfoSection = ({
               <option value="Prefer not say">Prefer not to say</option>
             </select>
 
-            {errors.marritialStatus && (
-              <p className="form-error">{errors.marritialStatus.message}</p>
+            {errors?.marritialStatus && (
+              <p className="form-error">{errors?.marritialStatus.message}</p>
             )}
           </div>
           <label className="form-label">
@@ -119,8 +119,8 @@ const UserInfoSection = ({
               {...register('email')}
               readOnly={!editEmployee}
             />
-            {errors.email && (
-              <p className="text-red-500">{errors.email.message}</p>
+            {errors?.email && (
+              <p className="text-red-500">{errors?.email.message}</p>
             )}
           </label>
         </div>
@@ -140,8 +140,8 @@ const UserInfoSection = ({
               {...register('location.street1')}
               readOnly={!editEmployee}
             />
-            {errors.location && errors.location?.street1 && (
-              <p className="form-error">{errors.location?.street1.message}</p>
+            {errors?.location && errors?.location?.street1 && (
+              <p className="form-error">{errors?.location?.street1.message}</p>
             )}
           </label>
           <label className="form-label">
@@ -152,8 +152,8 @@ const UserInfoSection = ({
               {...register('location.street2')}
               readOnly={!editEmployee}
             />
-            {errors.location?.street2 && (
-              <p className="form-error">{errors.location?.street2.message}</p>
+            {errors?.location?.street2 && (
+              <p className="form-error">{errors?.location?.street2.message}</p>
             )}
           </label>
           <label className="form-label">
@@ -164,8 +164,8 @@ const UserInfoSection = ({
               {...register('location.zipCode', { valueAsNumber: true })}
               readOnly={!editEmployee}
             />
-            {errors.location?.zipCode && (
-              <p className="form-error">{errors.location?.zipCode.message}</p>
+            {errors?.location?.zipCode && (
+              <p className="form-error">{errors?.location?.zipCode.message}</p>
             )}
           </label>
           <label className="form-label">
@@ -176,8 +176,8 @@ const UserInfoSection = ({
               {...register('location.city')}
               readOnly={!editEmployee}
             />
-            {errors.location?.city && (
-              <p className="form-error">{errors.location?.city.message}</p>
+            {errors?.location?.city && (
+              <p className="form-error">{errors?.location?.city.message}</p>
             )}
           </label>
           <label className="form-label">
@@ -188,8 +188,8 @@ const UserInfoSection = ({
               {...register('location.country')}
               readOnly={!editEmployee}
             />
-            {errors.location?.country && (
-              <p className="form-error">{errors.location?.country.message}</p>
+            {errors?.location?.country && (
+              <p className="form-error">{errors?.location?.country.message}</p>
             )}
           </label>
           <label className="form-label">
@@ -200,8 +200,8 @@ const UserInfoSection = ({
               {...register('location.state')}
               readOnly={!editEmployee}
             />
-            {errors.location?.state && (
-              <p className="form-error">{errors.location?.state.message}</p>
+            {errors?.location?.state && (
+              <p className="form-error">{errors?.location?.state.message}</p>
             )}
           </label>
         </div>
@@ -218,8 +218,8 @@ const UserInfoSection = ({
               {...register('phoneNumber', { valueAsNumber: true })}
               readOnly={!editEmployee}
             />
-            {errors.phoneNumber && (
-              <p className="form-error">{errors.phoneNumber.message}</p>
+            {errors?.phoneNumber && (
+              <p className="form-error">{errors?.phoneNumber.message}</p>
             )}
           </label>
           <label className="form-label">
@@ -230,8 +230,8 @@ const UserInfoSection = ({
               {...register('workPhone', { valueAsNumber: true })}
               readOnly={!editEmployee}
             />
-            {errors.workPhone && (
-              <p className="form-error">{errors.workPhone.message}</p>
+            {errors?.workPhone && (
+              <p className="form-error">{errors?.workPhone.message}</p>
             )}
           </label>
         </div>
@@ -251,8 +251,8 @@ const UserInfoSection = ({
               {...register('linkedin')}
               readOnly={!editEmployee}
             />
-            {errors.linkedin && (
-              <p className="form-error">{errors.linkedin.message}</p>
+            {errors?.linkedin && (
+              <p className="form-error">{errors?.linkedin.message}</p>
             )}
           </label>
           <label className="form-label">
@@ -263,8 +263,8 @@ const UserInfoSection = ({
               {...register('facebook')}
               readOnly={!editEmployee}
             />
-            {errors.facebook && (
-              <p className="form-error">{errors.facebook.message}</p>
+            {errors?.facebook && (
+              <p className="form-error">{errors?.facebook.message}</p>
             )}
           </label>
           <label className="form-label">
@@ -275,8 +275,8 @@ const UserInfoSection = ({
               {...register('instagram')}
               readOnly={!editEmployee}
             />
-            {errors.instagram && (
-              <p className="form-error">{errors.instagram.message}</p>
+            {errors?.instagram && (
+              <p className="form-error">{errors?.instagram.message}</p>
             )}
           </label>
           <label className="form-label">
@@ -287,8 +287,8 @@ const UserInfoSection = ({
               {...register('website')}
               readOnly={!editEmployee}
             />
-            {errors.website && (
-              <p className="form-error">{errors.website.message}</p>
+            {errors?.website && (
+              <p className="form-error">{errors?.website.message}</p>
             )}
           </label>
         </div>
