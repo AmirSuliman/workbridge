@@ -11,6 +11,7 @@ import { FiPlusCircle } from 'react-icons/fi';
 const CreateEvaluation = () => {
   const {
     register,
+    resetField,
     handleSubmit,
     formState: { errors },
   } = useForm();
@@ -39,18 +40,20 @@ const CreateEvaluation = () => {
           <label className=" flex flex-col gap-1">
             <span className="text-gray-400">Department*</span>
             <DepartmentDropdown
-              departmentId={departmentId}
-              register={register}
               errors={errors}
+              register={register}
+              resetField={resetField}
+              departmentId={departmentId}
             />
           </label>
 
           <label className=" flex flex-col gap-1">
             <span className="text-gray-400">Select Employee or Manager*</span>
             <EmployeesDropdown
-              reportingManagerId={employeeId}
               errors={errors}
               register={register}
+              resetField={resetField}
+              reportingManagerId={employeeId}
             />
           </label>
           <label className="flex items-center gap-2 mt-auto mb-3  ">
