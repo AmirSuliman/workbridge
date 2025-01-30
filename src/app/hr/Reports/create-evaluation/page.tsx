@@ -12,14 +12,18 @@ import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { FiPlusCircle } from 'react-icons/fi';
 
+interface User {
+  employeeId: number | null;
+}
+
 const CreateEvaluation = () => {
   const [loading, setLoading] = useState(false);
-  const [employeeId, setEmployeeId] = useState<number | undefined>();
+  const [employeeId, setEmployeeId] = useState<User>();
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
       // console.log('session: ', session);
-      setEmployeeId(session?.user.employeeId);
+      // setEmployeeId(session?.user?.employeeId);
     };
 
     fetchSession();
