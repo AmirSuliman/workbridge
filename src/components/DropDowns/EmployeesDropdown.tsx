@@ -2,24 +2,25 @@ import { getAllEmployees } from '@/services/getAllEmployees';
 import { EmployeeData } from '@/types/employee';
 import { useEffect, useState } from 'react';
 
-const EmployeesDropdown = ({ reportingManagerId, register, errors }) => {
+const EmployeesDropdown = ({
+  errors,
+  register,
+  resetField,
+  reportingManagerId,
+}) => {
   const [employees, setEmployees] = useState<EmployeeData[]>([]);
-  const [defaultManagerId, setDefaultManagerId] = useState<
-    string | undefined
-  >();
 
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const { data } = await getAllEmployees(1, 1000);
         setEmployees(data.items);
-
         // Find and set the default manager ID
         const matchedEmployee = data.items.find(
           (employee) => employee.id === reportingManagerId
         );
         if (matchedEmployee) {
-          setDefaultManagerId(String(matchedEmployee.id)); // Ensure it's a string
+          resetField('reportingManagerId');
         }
       } catch (error) {
         console.error('Error fetching employees: ', error);
@@ -27,16 +28,11 @@ const EmployeesDropdown = ({ reportingManagerId, register, errors }) => {
     };
 
     fetchEmployees();
-  }, [reportingManagerId]);
+  }, [reportingManagerId, resetField]);
 
   return (
     <>
-      <select
-        className="form-input"
-        {...register('reportingManagerId')}
-        value={defaultManagerId?.toString() || ''}
-        onChange={(e) => setDefaultManagerId(e.target.value)}
-      >
+      <select className="form-input" {...register('reportingManagerId')}>
         <option value="">Select Manager</option>
         {employees.map((employee) => (
           <option key={employee.id} value={String(employee.id)}>

@@ -10,6 +10,7 @@ import InfoGrid from './InfoGrid';
 
 const EmploymentSection = ({
   errors,
+  resetField,
   register,
   editEmployee,
   employeeData,
@@ -159,6 +160,7 @@ const EmploymentSection = ({
             <DepratmentDropdown
               errors={errors}
               register={register}
+              resetField={resetField}
               departmentId={employeeData.id}
             />
           </article>
@@ -167,6 +169,7 @@ const EmploymentSection = ({
             <EmployeesDropdown
               errors={errors}
               register={register}
+              resetField={resetField}
               reportingManagerId={employeeData.reportingManagerId}
             />
           </article>

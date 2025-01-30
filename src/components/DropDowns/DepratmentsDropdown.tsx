@@ -2,11 +2,11 @@ import axiosInstance from '@/lib/axios';
 import { Department } from '@/types/employee';
 import { useEffect, useState } from 'react';
 
-const DepartmentDropdown = ({ departmentId, register, errors }) => {
+const DepartmentDropdown = ({ departmentId, resetField, register, errors }) => {
   const [departments, setDepartments] = useState<Department[]>([]);
-  const [defaultDepartmentId, setDefaultDepartmentId] = useState<
-    string | undefined
-  >(departmentId?.toString());
+  // const [defaultDepartmentId, setDefaultDepartmentId] = useState<
+  //   string | undefined
+  // >(departmentId?.toString());
 
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -20,8 +20,8 @@ const DepartmentDropdown = ({ departmentId, register, errors }) => {
             (department) => department.id === departmentId
           );
           if (matchedDepartment) {
-            setDefaultDepartmentId(String(matchedDepartment.id));
-            // trigger('departmentId'); // Trigger validation AFTER setting the default value
+            // setDefaultDepartmentId(String(matchedDepartment.id));
+            resetField('departmentId');
           }
         }
       } catch (error) {
@@ -30,21 +30,15 @@ const DepartmentDropdown = ({ departmentId, register, errors }) => {
     };
 
     fetchDepartments();
-  }, [departmentId]);
-
-  const handleDepartmentChange = (e) => {
-    const selectedValue = e.target.value;
-    setDefaultDepartmentId(selectedValue);
-    console.log('Selected Department ID:', selectedValue); // Log the selected value
-  };
+  }, [departmentId, resetField]);
 
   return (
     <>
       <select
         className="form-input"
         {...register('departmentId')}
-        value={defaultDepartmentId || ''}
-        onChange={handleDepartmentChange}
+        // value={defaultDepartmentId || ''}
+        // onChange={handleDepartmentChange}
       >
         <option value="">Select Department</option>
         {departments.map((department) => (

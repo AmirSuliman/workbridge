@@ -65,6 +65,7 @@ const MyInformation = () => {
   const {
     reset,
     control,
+    resetField,
     register,
     handleSubmit,
     formState: { errors },
@@ -345,6 +346,7 @@ const MyInformation = () => {
           <TabPanel index={1}>
             <EmploymentSection
               register={register}
+              resetField={resetField}
               errors={schemaErrors}
               editEmployee={editEmployee}
               employeeData={employeeData}

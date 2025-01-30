@@ -18,6 +18,7 @@ import InstagramIcon from '../icons/instagram-icon';
 import LinkedinIcon from '../icons/linkedin-icon';
 import ProfileInfoItem from './ProfileInfoItem';
 import { BiLoaderCircle } from 'react-icons/bi';
+import { useEffect, useState } from 'react';
 
 const ProfileCard = ({
   setEditEmployee,
@@ -69,7 +70,13 @@ const ProfileCard = ({
   };
 
   const duration = employeeData?.hireDate ? calculateDuration(hireDate) : 'N/A';
+  const [imgSrc, setImgSrc] = useState(
+    employeeData?.profilePictureUrl || IMAGES.placeholderAvatar
+  );
 
+  useEffect(() => {
+    setImgSrc(employeeData?.profilePictureUrl || IMAGES.placeholderAvatar);
+  }, [employeeData?.profilePictureUrl]);
   return (
     <article
       className={`bg-white shadow-md rounded-md border border-gray-border p-4 pb-6 `}
@@ -77,11 +84,14 @@ const ProfileCard = ({
       <div className="flex gap-4">
         <div className="flex flex-col items-center">
           <Image
-            className="rounded-full size-16 shrink-0 grow-0"
-            src={employeeData?.profilePictureUrl || IMAGES.placeholderAvatar}
-            height={1000}
-            width={1000}
-            alt={'User Image'}
+            src={imgSrc}
+            alt="Avatar"
+            width={500}
+            height={500}
+            className="size-16 shrink-0 grow-0 rounded-full"
+            onError={() => {
+              setImgSrc(IMAGES.placeholderAvatar);
+            }}
           />
           {/* social Icons */}
           <div className="mt-2 flex gap-1 items-center ">

@@ -47,7 +47,9 @@ export const employeeSchema = z.object({
     .min(7, 'Work phone number must be at least 7 digits'),
   departmentId: z.preprocess(
     (val) => Number(val), // Convert string to number
-    z.number().min(1, 'Department is required')
+    z
+      .number({ message: 'Department is required' })
+      .min(1, 'Department is required')
   ),
 
   reportingManagerId: z.preprocess(
