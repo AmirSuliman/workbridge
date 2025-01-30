@@ -18,7 +18,9 @@ interface AddEmployeeProps {
 const Addemployee: React.FC<AddEmployeeProps> = ({ setIsModalOpen }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [localEmployees, setLocalEmployees] = useState<Employee[]>([]);
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(null);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
+    null
+  );
 
   // Fetch the departmentId from the URL
   const params = useParams();
@@ -28,13 +30,7 @@ const Addemployee: React.FC<AddEmployeeProps> = ({ setIsModalOpen }) => {
     const fetchEmployees = async () => {
       setIsLoading(true);
       try {
-        const response = await axiosInstance.get('/employees', {
-          params: {
-            page: 1,
-            size: 10,
-            associations: 'true',
-          },
-        });
+        const response = await axiosInstance.get('/employees');
 
         const employeesData = Array.isArray(response.data?.data?.items)
           ? response.data.data.items
@@ -65,7 +61,10 @@ const Addemployee: React.FC<AddEmployeeProps> = ({ setIsModalOpen }) => {
       const payload = { employeeIds: [selectedEmployeeId] };
       console.log('Payload being sent:', payload);
 
-      await axiosInstance.put(`/department/${departmentId}/assignEmployees`, payload);
+      await axiosInstance.put(
+        `/department/${departmentId}/assignEmployees`,
+        payload
+      );
       console.log('Employee added successfully!');
       setIsModalOpen(false);
     } catch (error) {
@@ -101,7 +100,9 @@ const Addemployee: React.FC<AddEmployeeProps> = ({ setIsModalOpen }) => {
         </div>
         <form onSubmit={(e) => e.preventDefault()}>
           <div className="mb-4 mt-10">
-            <label className="block text-gray-400 mb-2 text-[14px]">Employee</label>
+            <label className="block text-gray-400 mb-2 text-[14px]">
+              Employee
+            </label>
             <select
               value={selectedEmployeeId || ''}
               onChange={(e) => setSelectedEmployeeId(Number(e.target.value))}

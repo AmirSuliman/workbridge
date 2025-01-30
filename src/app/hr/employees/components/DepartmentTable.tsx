@@ -1,14 +1,14 @@
 'use client';
-import { useState, useEffect } from 'react';
-import EmployeesIcon from '@/components/icons/employees-icon';
-import { FaArrowRight, FaSearch } from 'react-icons/fa';
-import { CiCirclePlus } from 'react-icons/ci';
-import { BiChevronRight } from 'react-icons/bi';
-import Link from 'next/link';
-import CreateDepartment from '../../Departement/components/createdepartment';
-import axiosInstance from '@/lib/axios';
-import Modal from '@/components/modal/Modal';
 import Button from '@/components/Button';
+import EmployeesIcon from '@/components/icons/employees-icon';
+import Modal from '@/components/modal/Modal';
+import axiosInstance from '@/lib/axios';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { BiChevronRight } from 'react-icons/bi';
+import { CiCirclePlus } from 'react-icons/ci';
+import { FaSearch } from 'react-icons/fa';
+import CreateDepartment from '../../Departement/components/createdepartment';
 
 interface Department {
   id: string;
@@ -189,6 +189,7 @@ const DepartmentTable = () => {
                           ? `${dept.department_head_data.firstName} ${dept.department_head_data.lastName}`
                           : 'N/A'}
                       </td>
+
                       <td className="px-4 py-3">
                         <Link href={`/hr/Departement/${dept.id}`}>
                           <div className="p-1 border rounded-lg w-[30px] flex justify-center items-center">

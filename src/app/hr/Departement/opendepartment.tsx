@@ -1,56 +1,46 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import FormHeading from '@/components/UserInformation/FormHeading';
-import EmployeesIcon from '@/components/icons/employees-icon';
-import SearchInput from '@/components/common/SearchBar';
-import ProfileAvatarItem from '@/components/common/ProfileAvatarItem';
-import { IMAGES } from '@/constants/images';
-import Table from '@/components/UserInformation/Table';
-import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import Button from '@/components/Button';
-import { CiCirclePlus } from 'react-icons/ci';
-import { FaArrowRight, FaDownload, FaEdit } from 'react-icons/fa';
-import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
+import FormHeading from '@/components/UserInformation/FormHeading';
+import Table from '@/components/UserInformation/Table';
+import ProfileAvatarItem from '@/components/common/ProfileAvatarItem';
+import SearchInput from '@/components/common/SearchBar';
+import EmployeesIcon from '@/components/icons/employees-icon';
+import Modal from '@/components/modal/Modal';
+import { IMAGES } from '@/constants/images';
 import axiosInstance from '@/lib/axios';
 import { useParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
+import { CiCirclePlus } from 'react-icons/ci';
+import { FaEdit } from 'react-icons/fa';
+import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import Addemployee from './components/addemployee';
-import Modal from '@/components/modal/Modal';
-import axios from 'axios';
 import EditDepartment from './components/editdepartment';
-
-interface Employee {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  hireDate?: string;
-  tittle?: string;
-}
+import { EmployeeData } from '@/types/employee';
+import DeleteDepartment from '../employees/components/DeleteDepartment';
+import { FaTrash } from 'react-icons/fa6';
 
 interface DepartmentData {
   id: string;
   name: string;
-  employees: Employee[];
-}
-interface Header {
-  title: string | React.ReactNode;
-  accessor: string;
-  render?: (value: any) => React.ReactNode;
+  employees: EmployeeData[];
 }
 
-const ITEMS_PER_PAGE = 7;
+const ITEMS_PER_PAGE = 10;
 
 const OpendepartmentTable: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
-  const [EmployeeName, setEmployeeName] = useState('');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [departmentData, setDepartmentData] = useState<DepartmentData | null>(
     null
   );
   const [isLoading, setIsLoading] = useState(true);
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
+  const [employees, setEmployees] = useState<EmployeeData[]>([]);
+  const [filteredEmployees, setFilteredEmployees] = useState<EmployeeData[]>(
+    []
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortType, setSortType] = useState<string>('');
@@ -127,7 +117,7 @@ const OpendepartmentTable: React.FC = () => {
       user: {
         email: employee.email || 'N/A',
       },
-      hireDate: employee.hireDate || 'N/A',
+      hireDate: employee.hireDate.split('T')[0] || 'N/A',
       jobTitle: employee.tittle || 'N/A',
     }));
 
@@ -136,10 +126,10 @@ const OpendepartmentTable: React.FC = () => {
       title: 'Employee Name',
       accessor: 'employeeId',
       render: (value: string) => {
-        const employee = employees.find((emp) => emp.id === value);
+        const employee = employees.find((emp) => emp.id === Number(value));
         return (
           <ProfileAvatarItem
-            src={IMAGES.dummyImage.src}
+            src={employee?.profilePictureUrl || IMAGES.placeholderAvatar.src}
             title={`${employee?.firstName || ''} ${employee?.lastName || ''}`}
             subtitle={`#${value}`}
           />
@@ -151,7 +141,7 @@ const OpendepartmentTable: React.FC = () => {
       title: 'Email',
       accessor: 'user.email',
       render: (value: string) => (
-        <a href={`mailto:${value}`} className="text-black">
+        <a href={`mailto:${value}`} className="text-blue-400 text-sm">
           {value}
         </a>
       ),
@@ -164,7 +154,7 @@ const OpendepartmentTable: React.FC = () => {
       ),
     },
     {
-      title: 'Download',
+      title: '',
       accessor: 'actions',
       render: () => (
         <div className="flex items-center">
@@ -184,13 +174,20 @@ const OpendepartmentTable: React.FC = () => {
 
   return (
     <div className="h-full p-2">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-4">
         <FormHeading
           textClasses="text-xl font-[600] font-semibold"
           classNames="mb-4"
           icon={<EmployeesIcon classNames="w-6" />}
           text={departmentData?.name || 'Department Name'}
         />
+        <button
+          onClick={() => setIsDeleteModalOpen(true)}
+          className="flex items-center gap-2 p-2 px-4 bg-black text-white rounded-lg font-medium text-[12px] border ml-auto"
+        >
+          Delete Department
+          <FaTrash size={14} />
+        </button>
         <button
           onClick={() => setIsModalOpen1(true)}
           className="flex items-center gap-2 p-2 px-4 bg-black text-white rounded-lg font-medium text-[12px] border"
@@ -296,6 +293,10 @@ const OpendepartmentTable: React.FC = () => {
         <Modal onClose={() => setIsModalOpen1(false)}>
           <EditDepartment setIsModalOpen1={setIsModalOpen1} />
         </Modal>
+      )}
+
+      {isDeleteModalOpen && (
+        <DeleteDepartment onClose={() => setIsDeleteModalOpen(false)} />
       )}
     </div>
   );
