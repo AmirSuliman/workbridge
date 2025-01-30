@@ -60,6 +60,7 @@ const MyInformation = () => {
     effectiveDate: employeeData?.effectiveDate
       ? new Date(employeeData.effectiveDate).toISOString().split('T')[0]
       : '',
+    salary: employeeData?.salary ? employeeData.salary : 0,
   };
 
   const {
