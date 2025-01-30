@@ -13,6 +13,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
 
   const {
     register,
+    resetField,
     formState: { errors },
   } = useFormContext<EmployeeData>();
 
@@ -38,6 +39,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
               <Label text="Department*" />
               <DepratmentDropdown
                 departmentId={null}
+                resetField={resetField}
                 register={register}
                 errors={errors}
               />
@@ -46,6 +48,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
               <Label text="Reporting Manager*" />
               <EmployeesDropdown
                 reportingManagerId={null}
+                resetField={resetField}
                 register={register}
                 errors={errors}
               />
