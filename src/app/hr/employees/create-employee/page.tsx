@@ -91,7 +91,8 @@ const CreateEmployee = () => {
       dispatch(updateEmployeeData(response.data.data));
       toast.success('Employee created successfully!');
       reset();
-      console.log('post employee: ', response);
+      router.back();
+      console.log('post employee: ', response.data);
       setLoader(false);
     } catch (error) {
       setLoader(false);

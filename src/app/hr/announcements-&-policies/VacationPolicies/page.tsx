@@ -41,14 +41,13 @@ const VacationPolicies = () => {
   const [holidayToDelete, setHolidayToDelete] = useState<number | null>(null);
   const [selectedHoliday, setSelectedHoliday] = useState<Holiday | null>(null);
 
-
   const [title, setTitle] = useState('');
-const [date, setDate] = useState('');
-const [type, setType] = useState('');
-const [primaryCountry, setPrimaryCountry] = useState<number | ''>('');
-const [additionalCountries, setAdditionalCountries] = useState<number[]>([]);
-const [loading, setLoading] = useState(false);
-const [addCountries, setAddCountries] = useState(false);
+  const [date, setDate] = useState('');
+  const [type, setType] = useState('');
+  const [primaryCountry, setPrimaryCountry] = useState<number | ''>('');
+  const [additionalCountries, setAdditionalCountries] = useState<number[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [addCountries, setAddCountries] = useState(false);
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -126,7 +125,9 @@ const [addCountries, setAddCountries] = useState(false);
     setType(holiday.type);
     setPrimaryCountry(holiday.countryholidays?.[0]?.countryId || '');
     setAdditionalCountries(
-      holiday.countryholidays ? holiday.countryholidays.map(ch => ch.countryId) : []
+      holiday.countryholidays
+        ? holiday.countryholidays.map((ch) => ch.countryId)
+        : []
     );
     setIsModalOpen3(true);
   };
@@ -135,7 +136,9 @@ const [addCountries, setAddCountries] = useState(false);
     setPrimaryCountry(Number(e.target.value));
   };
 
-  const handleAdditionalCountriesChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleAdditionalCountriesChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const selectedOptions = Array.from(e.target.selectedOptions, (option) =>
       Number(option.value)
     );
@@ -144,9 +147,9 @@ const [addCountries, setAddCountries] = useState(false);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedHoliday) return;
-  
+
     setLoading(true);
-  
+
     try {
       await axiosInstance.put(`/holiday/${selectedHoliday.id}`, {
         title,
@@ -154,15 +157,15 @@ const [addCountries, setAddCountries] = useState(false);
         type,
         countries: [primaryCountry, ...additionalCountries].filter(Boolean),
       });
-  
-      setHolidays(prev =>
-        prev.map(holiday =>
+
+      setHolidays((prev) =>
+        prev.map((holiday) =>
           holiday.id === selectedHoliday.id
             ? { ...holiday, title, date, type }
             : holiday
         )
       );
-  
+
       setIsModalOpen3(false);
     } catch (error) {
       console.error('Error updating holiday:', error);
@@ -170,7 +173,6 @@ const [addCountries, setAddCountries] = useState(false);
       setLoading(false);
     }
   };
-    
 
   useEffect(() => {
     const fetchData = async () => {
@@ -179,7 +181,6 @@ const [addCountries, setAddCountries] = useState(false);
         if (countriesResponse.data?.data?.items) {
           setCountries(countriesResponse.data.data.items);
         }
-
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -249,7 +250,12 @@ const [addCountries, setAddCountries] = useState(false);
                     title="Delete"
                     onClick={() => deleteModal(holiday.id)}
                   />
-                  <BiEdit size={18} className="cursor-pointer" title="Edit" onClick={() => openEditModal(holiday)}  />
+                  <BiEdit
+                    size={18}
+                    className="cursor-pointer"
+                    title="Edit"
+                    onClick={() => openEditModal(holiday)}
+                  />
                 </td>
               </tr>
             ))}
@@ -277,7 +283,7 @@ const [addCountries, setAddCountries] = useState(false);
               <button
                 type="submit"
                 className="px-4 py-3 w-full bg-black rounded text-white"
-                onClick={handleDeleteHoliday} 
+                onClick={handleDeleteHoliday}
               >
                 Confirm
               </button>
@@ -293,91 +299,134 @@ const [addCountries, setAddCountries] = useState(false);
         </Modal>
       )}
 
-    {isModalOpen3 && selectedHoliday && (
+      {isModalOpen3 && selectedHoliday && (
         <Modal onClose={() => setIsModalOpen3(false)}>
-             <div className='p-6 bg-white w-full sm:w-[600px]'>
-             <form onSubmit={handleSubmit}>
-        <div className="mb-4 mt-8">
-          <label className="block text-sm font-medium mb-2 text-gray-400">Holiday Title</label>
-          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Add Holiday title" className="p-4 w-full border text-gray-400 rounded focus:outline-none" required />
-        </div>
+          <div className="p-6 bg-white w-full sm:w-[600px]">
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4 mt-8">
+                <label className="block text-sm font-medium mb-2 text-gray-400">
+                  Holiday Title
+                </label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Add Holiday title"
+                  className="p-4 w-full border text-gray-400 rounded focus:outline-none"
+                  required
+                />
+              </div>
 
-        <div className="flex flex-row items-center justify-between gap-4 mt-8 w-full">
-          <div className="mb-4 w-full">
-            <label className="block text-sm font-medium mb-2 text-gray-400">Date</label>
-            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="p-4 w-full border text-gray-400 rounded focus:outline-none" required />
+              <div className="flex flex-row items-center justify-between gap-4 mt-8 w-full">
+                <div className="mb-4 w-full">
+                  <label className="block text-sm font-medium mb-2 text-gray-400">
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="p-4 w-full border text-gray-400 rounded focus:outline-none"
+                    required
+                  />
+                </div>
+                <div className="mb-4 w-full">
+                  <label className="block text-sm font-medium mb-2 text-gray-400">
+                    Type
+                  </label>
+                  <select
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                    className="p-4 w-full border text-gray-400 rounded focus:outline-none"
+                    required
+                  >
+                    <option value="" disabled>
+                      Select Holiday Type
+                    </option>
+                    <option value="Public">Public</option>
+                    <option value="Company">Company</option>
+                    <option value="Restricted">Restricted</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex flex-row items-center justify-between gap-4 mt-8 w-full">
+                <div className="mb-4 w-full">
+                  <label className="block text-sm font-medium mb-2 text-gray-400">
+                    Primary Country
+                  </label>
+                  <select
+                    value={primaryCountry || ''}
+                    onChange={handlePrimaryCountryChange}
+                    className="p-4 w-full border text-gray-400 focus:outline-none"
+                    required
+                  >
+                    <option value="" disabled>
+                      Select a country
+                    </option>
+                    {countries.map((country) => (
+                      <option key={country.id} value={country.id}>
+                        {country.country}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex flex-row items-center p-4 mt-4 mb-4 gap-2">
+                <input
+                  type="checkbox"
+                  checked={addCountries}
+                  onChange={() => setAddCountries(!addCountries)}
+                />
+                <p className="text-[14px]">Add Holiday to other countries?</p>
+              </div>
+
+              {addCountries && (
+                <div className="mb-4">
+                  <select
+                    multiple
+                    value={additionalCountries.map(String)}
+                    onChange={handleAdditionalCountriesChange}
+                    className="border p-2 rounded w-full focus:outline-none"
+                  >
+                    {countries
+                      .filter((c) => c.id !== primaryCountry)
+                      .map((country) => (
+                        <option key={country.id} value={country.id}>
+                          {country.country}
+                        </option>
+                      ))}
+                  </select>
+
+                  <p className="text-sm text-gray-400 mt-2">
+                    Hold down Ctrl (Windows) or Command (Mac) to select multiple
+                    countries.
+                  </p>
+                </div>
+              )}
+
+              <div className="flex items-center w-full p-8 gap-5">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="px-4 py-3 w-full bg-black rounded text-white"
+                >
+                  {loading ? 'Submitting...' : 'Confirm'}
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-3 text-black w-full border rounded"
+                  onClick={() => setIsModalOpen3(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
-          <div className="mb-4 w-full">
-            <label className="block text-sm font-medium mb-2 text-gray-400">Type</label>
-            <select value={type} onChange={(e) => setType(e.target.value)} className="p-4 w-full border text-gray-400 rounded focus:outline-none" required>
-              <option value="" disabled>Select Holiday Type</option>
-              <option value="Public">Public</option>
-              <option value="Company">Company</option>
-              <option value="Restricted">Restricted</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="flex flex-row items-center justify-between gap-4 mt-8 w-full">
-
-        <div className="mb-4 w-full">
-          <label className="block text-sm font-medium mb-2 text-gray-400">Primary Country</label>
-          <select
-  value={primaryCountry || ''}
-  onChange={handlePrimaryCountryChange}
-  className="p-4 w-full border text-gray-400 focus:outline-none"
-  required
->
-  <option value="" disabled>
-    Select a country
-  </option>
-  {countries.map((country) => (
-    <option key={country.id} value={country.id}>
-      {country.country}
-    </option>
-  ))}
-</select>
-
-        </div>
-        </div>
-
-        <div className="flex flex-row items-center p-4 mt-4 mb-4 gap-2">
-          <input type="checkbox" checked={addCountries} onChange={() => setAddCountries(!addCountries)} />
-          <p className="text-[14px]">Add Holiday to other countries?</p>
-        </div>
-
-        {addCountries && (
-          <div className="mb-4">
-          <select
-  multiple
-  value={additionalCountries}
-  onChange={handleAdditionalCountriesChange}
-  className="border p-2 rounded w-full focus:outline-none"
->
-  {countries
-    .filter((c) => c.id !== primaryCountry)
-    .map((country) => (
-      <option key={country.id} value={country.id}>
-        {country.country}
-      </option>
-    ))}
-</select>
-
-            <p className="text-sm text-gray-400 mt-2">Hold down Ctrl (Windows) or Command (Mac) to select multiple countries.</p>
-          </div>
-        )}
-
-        <div className="flex items-center w-full p-8 gap-5">
-          <button type="submit" disabled={loading} className="px-4 py-3 w-full bg-black rounded text-white">
-            {loading ? 'Submitting...' : 'Confirm'}
-          </button>
-          <button type="button" className="px-4 py-3 text-black w-full border rounded" onClick={() => setIsModalOpen3(false)}>Cancel</button>
-        </div>
-      </form>
-             </div>
         </Modal>
-    )}
+      )}
     </>
   );
 };

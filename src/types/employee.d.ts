@@ -16,6 +16,8 @@ export interface Department {
 export interface EmployeeData {
   id: number;
   parentId: number | null;
+  countryId: number | null;
+  isManager: boolean | null;
   userId: number;
   firstName: string;
   middleName: string | null;

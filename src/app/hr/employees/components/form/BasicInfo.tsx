@@ -9,10 +9,34 @@ import { Heading, Label } from '../Helpers';
 import ProfilePicture from '../ProfilePicture';
 import FormHeading from '@/components/UserInformation/FormHeading';
 import { FaPhoneAlt } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
+import axiosInstance from '@/lib/axios';
+
+interface Country {
+  id: number;
+  country: string;
+  code: string;
+}
 
 const BasicInfo = ({ previewUrl, handleFileChange }) => {
   const router = useRouter();
   const { activeTab, setActiveTab } = useTabsContext();
+  const [countries, setCountries] = useState<Country[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const countriesResponse = await axiosInstance.get('/countries');
+        if (countriesResponse.data?.data?.items) {
+          setCountries(countriesResponse.data.data.items);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const {
     register,
@@ -41,9 +65,8 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
       'instagram',
       'website',
       'facebook',
-
-      // 'salary',
-      // 'tittle',
+      'isManager',
+      'countryId',
       // 'paymentSchedule',
       // 'payType',
       // 'effectiveDate',
@@ -70,6 +93,11 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
             handleFileChange={handleFileChange}
             errors={errors}
           />
+
+          <label className="flex items-center gap-2 mb-4">
+            <input type="checkbox" {...register('isManager')} />
+            <span className="form-label">Is Manager?</span>
+          </label>
           <div className="grid grid-cols-3 gap-4">
             <article>
               <Label text="First Name*" />
@@ -151,6 +179,19 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                 </span>
               )}
             </article>
+            <select
+              {...register('countryId', { valueAsNumber: true })}
+              className="border p-2 rounded  focus:outline-none"
+            >
+              <option value="" disabled selected>
+                Select a country
+              </option>
+              {countries.map((country) => (
+                <option key={country.id} value={country.id}>
+                  {country.country}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         {/* Address Block */}
@@ -214,7 +255,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
           <FormHeading icon={<FaPhoneAlt className="w-4" />} text="Contact" />
           <div className="grid sm:grid-cols-3 gap-4 mt-5">
             <label className="form-label">
-              Phone
+              Phone*
               <input
                 type="number"
                 className={`form-input`}
@@ -227,7 +268,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
               )}
             </label>
             <label className="form-label">
-              Work Phone
+              Work Phone*
               <input
                 type="number"
                 className={`form-input`}

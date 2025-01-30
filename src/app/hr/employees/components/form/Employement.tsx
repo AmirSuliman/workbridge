@@ -72,7 +72,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
         {/* payment block */}
         <div className="p-4 pb-12">
           <Heading icon={<AiFillContacts />} text="Payment" />
-          <div className="grid grid-cols-3 ">
+          <div className="grid  gap-4 grid-cols-3 ">
             <article>
               <Label text="Compensation*" />
               <input

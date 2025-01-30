@@ -37,11 +37,11 @@ const DeleteDepartment = ({ onClose }) => {
     <Modal onClose={onClose}>
       <section className="p-8 min-h-80 flex flex-col">
         <h1 className="font-semibold text-xl my-4">Delete</h1>
-        <p className="text-lg text-center">
+        <p className="text-xl text-center">
           Are you sure you want to delete this department?
         </p>
-        <p className="font-semibold text-base text-center mb-auto">
-          This action is irreversible.
+        <p className="font-bold text-base text-center mb-auto">
+          All employees will no longer have any departments assigned.
         </p>
         <div className="flex items-center gap-4 justify-center mt-4 mb-0">
           <Button

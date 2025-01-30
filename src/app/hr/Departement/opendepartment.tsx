@@ -12,7 +12,7 @@ import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { CiCirclePlus } from 'react-icons/ci';
-import { FaEdit } from 'react-icons/fa';
+import { FaAngleDown, FaEdit } from 'react-icons/fa';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import Addemployee from './components/addemployee';
 import EditDepartment from './components/editdepartment';
@@ -32,6 +32,7 @@ const OpendepartmentTable: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
+  const [moreOptions, setMoreOptions] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [departmentData, setDepartmentData] = useState<DepartmentData | null>(
     null
@@ -174,27 +175,48 @@ const OpendepartmentTable: React.FC = () => {
 
   return (
     <div className="h-full p-2">
-      <div className="flex justify-between items-center gap-4">
+      <div className="flex justify-between items-center gap-4 mb-4">
         <FormHeading
           textClasses="text-xl font-[600] font-semibold"
-          classNames="mb-4"
+          classNames=""
           icon={<EmployeesIcon classNames="w-6" />}
           text={departmentData?.name || 'Department Name'}
         />
-        <button
-          onClick={() => setIsDeleteModalOpen(true)}
-          className="flex items-center gap-2 p-2 px-4 bg-black text-white rounded-lg font-medium text-[12px] border ml-auto"
-        >
-          Delete Department
-          <FaTrash size={14} />
-        </button>
-        <button
-          onClick={() => setIsModalOpen1(true)}
-          className="flex items-center gap-2 p-2 px-4 bg-black text-white rounded-lg font-medium text-[12px] border"
-        >
-          Edit Department
-          <FaEdit size={14} />
-        </button>
+        <nav className="relative  ">
+          <button
+            onClick={() => setMoreOptions(!moreOptions)}
+            type="button"
+            className="flex items-center justify-center gap-2 p-2 px-4 bg-black text-white rounded text-[12px] border min-w-44"
+          >
+            More Options{' '}
+            <FaAngleDown className={`${moreOptions ? 'rotate-180' : ''}`} />
+          </button>
+          {moreOptions && (
+            <div
+              style={{
+                boxShadow: '0px 4px 4px 0px rgba(15, 23, 42, 0.1)',
+              }}
+              className="absolute right-0 top-[100%] bg-[rgba(255,255,255,1)] border border-gray-border rounded-md divide-y"
+            >
+              <button
+                type="button"
+                onClick={() => setIsDeleteModalOpen(true)}
+                className="flex items-center gap-2 p-2 px-4 text-red-500 text-sm whitespace-nowrap"
+              >
+                <FaTrash size={14} />
+                Delete Department
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen1(true)}
+                className="flex items-center gap-2 p-2 px-4 text-black text-sm whitespace-nowrap"
+              >
+                <FaEdit size={14} />
+                Edit Department
+              </button>
+            </div>
+          )}
+        </nav>
       </div>
 
       {isLoading ? (

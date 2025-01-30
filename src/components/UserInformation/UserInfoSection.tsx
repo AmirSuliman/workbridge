@@ -46,7 +46,7 @@ const UserInfoSection = ({
               {...register('firstName')}
               readOnly={!editEmployee}
             />
-            {errors.firstName && (
+            {errors?.firstName && (
               <p className="form-error">{errors.firstName.message}</p>
             )}
           </div>

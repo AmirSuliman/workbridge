@@ -30,15 +30,15 @@ export const employeeSchema = z.object({
     .string()
     .regex(
       /^\d{4}-\d{2}-\d{2}$/,
-      'Effective date must be in dd/mm/yyyy format'
+      'Effective date must be in mm/dd/yyyy format'
     ),
   note: z.string().optional(),
   hireDate: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in dd/mm/yyyy format'),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in mm/dd/yyyy format'),
   birthday: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birth date must be in dd/mm/yyyy format'),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birth date must be in mm/dd/yyyy format'),
   phoneNumber: z
     .number({ message: 'Phone number must be at least 7 digits' })
     .min(7, 'Phone number must be at least 7 digits'),
@@ -72,13 +72,9 @@ export const employeeSchema = z.object({
       z.null(),
     ])
     .optional(),
-  profilePictureUrl: z
-    .union([
-      // z.instanceof(File),
-      z.string().optional(),
-      z.null(),
-    ])
-    .optional(),
+  countryId: z.union([z.number().optional(), z.null()]).optional(),
+  isManager: z.boolean().optional(),
+  profilePictureUrl: z.union([z.string().optional(), z.null()]).optional(),
 
   linkedin: z
     .string()
