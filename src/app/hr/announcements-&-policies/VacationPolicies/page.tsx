@@ -49,7 +49,6 @@ const [primaryCountry, setPrimaryCountry] = useState<number | ''>('');
 const [additionalCountries, setAdditionalCountries] = useState<number[]>([]);
 const [loading, setLoading] = useState(false);
 const [addCountries, setAddCountries] = useState(false);
-
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -66,7 +65,7 @@ const [addCountries, setAddCountries] = useState(false);
       try {
         const response = await axiosInstance.get('/holidays', {
           params: {
-            association: true,
+            associations: true,
           },
         });
         if (response.data?.data?.items) {
