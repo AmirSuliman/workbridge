@@ -12,6 +12,10 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
+import Image from 'next/image';
+import Navbar from './nav';
+import Footer from './footer';
+
 const inter = Inter({
   variable: '--font-inter',
   preload: false,
@@ -51,7 +55,7 @@ const ForgotPassword = () => {
         .then((res) => {
           toast.success('Password reset instructions sent to your email');
           setLoading(false);
-          router.push('/sign-in');
+          router.push('/Email-sent');
         })
         .catch((error) => {
           setLoading(false);
@@ -83,26 +87,34 @@ const ForgotPassword = () => {
   }, [token]);
 
   return (
+    <>
+    <Navbar/>
     <div
-      className={`${inter.className} flex flex-col items-center justify-center my-auto h-[90%] ] mx-auto bg-gray-100 `}
+      className={`${inter.className} `}
     >
-      <div className="max-w-[90%] min-w-[26rem] sm:max-w-[70%]">
-        <div className="flex flex-col bg-gray-100 ">
-          <div className="py-[3rem] flex flex-col items-center bg-white h-full shadow-custom-deep  pt-[2rem] px-[2rem]">
-            <WorkBridgeLogo classNames="max-w-[14rem] my-[2rem] mb-[2.8rem]" />
-
-            <h3 className="mb-2 text-lg font-semibold text-dark-gray">
+ <div className='h-[400px] ' 
+    style={{
+      background: "linear-gradient(90deg, #0F172A, #11275A)",
+    }}>        
+ <div
+      className={` flex flex-col items-center justify-start my-auto   `}      >
+        <div className="w-[100%] sm:w-[27rem] mt-[150px] z-10 p-4 border rounded-[27px] backdrop-blur-sm bg-white/30 shadow-lg">
+        <div className="flex flex-col items-center bg-white rounded-[27px] p-8 h-full shadow-custom-deep pt-[2rem] px-[1rem]">
+          <Image src="/Flattened (1).svg" alt='img' width={50} height={50} className='mt-6'/>
+           <h1 className='text-[30px] mt-2'>work<span className='font-bold'>Bridge</span></h1>
+            <h3 className="mb-2 text-lg font-semibold text-dark-gray mt-8">
               {step == 'confirmation'
                 ? 'Enter New Password'
                 : 'Forgot Your Password?'}
             </h3>
-            <p className="w-full text-md mb-6 text-center text-dark-gray">
+            <p className="w-full text-md mb-6 text-center text-dark-gray ">
               {step == 'confirmation'
                 ? 'Please Enter New Password'
                 : `Enter your work email and we will send you instructions to reset
               your password.`}
             </p>
             <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+              <label className='text-[14px] mb-1'>Email</label>
               {step == 'email' && (
                 <InputField
                   error={errors.email?.message as string}
@@ -116,6 +128,7 @@ const ForgotPassword = () => {
               {step == 'confirmation' && (
                 <>
                   <div className="relative w-full">
+                    <label className='text-[14px]'>Password</label>
                     <div className="relative flex items-center">
                       <InputField
                         register={register}
@@ -138,6 +151,7 @@ const ForgotPassword = () => {
                     )}
                   </div>
                   <div className="relative w-full">
+                    <label className='text-[14px]'>Password</label>
                     <div className="relative flex items-center">
                       <InputField
                         register={register}
@@ -166,7 +180,7 @@ const ForgotPassword = () => {
 
               <button
                 type="submit"
-                className="p-[10px] bg-dark-navy text-sm text-white rounded-md w-full mt-4 mb-6"
+                className="p-[10px] bg-dark-navy text-sm text-white rounded-md w-full mt-12 mb-3 "
               >
                 {loading ? (
                   <BiLoaderCircle className="h-4 w-4 animate-spin mx-auto" />
@@ -178,15 +192,21 @@ const ForgotPassword = () => {
             {step !== 'confirmation' && (
                <button 
                  onClick={handleNavigation}
-                 className="text-blue-base font-semibold text-xs text-center my-2 w-full hover:cursor-pointer">
-                 Back to WorkBridge
+                 className="text-black border p-[10px] rounded-md font-semibold text-sm text-center  w-full hover:cursor-pointer">
+                 Back 
                </button>
              )}
              
           </div>
+          </div>
         </div>
       </div>
     </div>
+    <div className='bg-white mt-[400px]'>
+    <Footer/>
+
+    </div>
+    </>
   );
 };
 

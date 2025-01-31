@@ -31,7 +31,7 @@ const InputField: React.FC<InputFieldProps> = ({
         {label && (
           <label
             htmlFor={name}
-            className={`text-sm text-gray-700 ${styles?.label} ${
+            className={`text-sm text-gray-700  ${styles?.label} ${
               typeof error == 'string' ? 'text-red-500' : ''
             }`}
           >
@@ -43,7 +43,7 @@ const InputField: React.FC<InputFieldProps> = ({
           id={name}
           type={type}
           placeholder={placeholder}
-          className={`w-full p-2 px-3 shadow-xs outline-0 placeholder-gray-500 border ${
+          className={`w-full p-3 px-3 shadow-xs outline-0 placeholder-gray-500 border ${
             typeof error == 'string' ? '!border-red-500' : ''
           } border-gray-300 rounded-md text-sm text-gray-700 ${styles?.input}`}
         />

@@ -1,8 +1,6 @@
 'use client';
 import InputField from '@/components/common/InputField';
 import EyeIcon from '@/components/icons/eye-icon';
-import GoogleLogo from '@/components/icons/google-logo';
-import WorkBridgeLogo from '@/components/icons/work-bridge-logo';
 import { fetchUserData } from '@/services/myInfo';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { authSchema } from '@/validations/auth';
@@ -16,7 +14,9 @@ import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { useDispatch } from 'react-redux';
 import { z } from 'zod';
-
+import Image from 'next/image';
+import Navbar from './nav';
+import Footer from './footer';
 type AuthFormInputs = z.infer<typeof authSchema>;
 
 const Auth = () => {
@@ -86,21 +86,24 @@ const Auth = () => {
   };
 
   return (
+    <>
+    <Navbar/>
+    <div className='h-[400px] ' 
+    style={{
+      background: "linear-gradient(90deg, #0F172A, #11275A)",
+    }}>
+
+    
     <div
-      className={` flex flex-col items-center justify-center my-auto h-[100%]  bg-gray-100`}
+      className={` flex flex-col items-center justify-start my-auto  mt-32 `}
+      
     >
-      <div className="min-w-[90%] sm:min-w-[24rem]">
-        <div className="flex flex-col items-center bg-white h-full shadow-custom-deep pt-[2rem] px-[1rem]">
-          <WorkBridgeLogo classNames="max-w-[12rem] mb-[1rem]" />
-
-          <h3 className="text-lg mb-2 text-dark-gray font-semibold ">
-            Welcome
-          </h3>
-          <p className="text-sm mb-4 text-dark-gray">
-            Sign In to ISA workBridge
-          </p>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+      <div className="min-w-[100%] sm:min-w-[27rem]  z-10 p-4 border rounded-[27px] backdrop-blur-sm bg-white/30 shadow-lg">
+        <div className="flex flex-col items-center bg-white rounded-[27px] p-8 h-full shadow-custom-deep pt-[2rem] px-[1rem]">
+           <Image src="/Flattened (1).svg" alt='img' width={50} height={50} className='mt-6'/>
+           <h1 className='text-[30px] mt-2'>work<span className='font-bold'>Bridge</span></h1>
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full  mt-12 ">
+            <label className='text-[14px] mb-1 mt-8 '>Email</label>
             <InputField
               name="email"
               type="email"
@@ -108,19 +111,20 @@ const Auth = () => {
               register={register}
               error={errors.email?.message}
             />
-            <div className="relative w-full">
+            <div className="relative w-full mt-6">
+            <label className='text-[14px] mb-1'>Password</label>
               <div className="relative flex items-center">
                 <InputField
                   name="password"
-                  type={passwordVisible ? 'text' : 'password'} // Toggle input type based on visibility state
+                  type={passwordVisible ? 'text' : 'password'} 
                   placeholder="Password"
                   register={register}
                   error={errors.password?.message && ''}
                 />
                 <button
                   type="button"
-                  onClick={() => setPasswordVisible(!passwordVisible)} // Toggle visibility on click
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 pointer-events-auto"
+                  onClick={() => setPasswordVisible(!passwordVisible)} 
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 pointer-events-auto "
                 >
                   <EyeIcon classNames="w-4" />
                 </button>
@@ -134,7 +138,7 @@ const Auth = () => {
             <div className="text-right">
               <Link
                 href={'forgot-password'}
-                className="text-blue-base ml-auto font-semibold !text-xs !text-right my-2 w-full hover:cursor-pointer"
+                className="text-black ml-auto font-semibold !text-xs !text-right my-2 w-full hover:cursor-pointer"
               >
                 Forgot Password?
               </Link>
@@ -142,7 +146,7 @@ const Auth = () => {
 
             <button
               type="submit"
-              className="p-[10px] bg-[#0F172A] text-center text-sm text-white w-full rounded-md mt-4"
+              className="p-[10px] bg-[#0F172A] text-center text-sm text-white w-full rounded-md mt-20"
             >
               {loading ? (
                 <BiLoaderCircle className="h-4 w-4 animate-spin mx-auto" />
@@ -151,27 +155,19 @@ const Auth = () => {
               )}
             </button>
           </form>
-          {/* <p className="text-black text-xs w-full mt-3 ms-[1px]">
-            Don &apos;t have an account?{' '}
-            <Link href={'/sign-up'} className="text-blue-base">
-              {' '}
-              Sign Up
-            </Link>
-          </p> */}
+          
 
-          <div className="flex items-center my-4 w-full">
-            <hr className="flex-grow border-t-[2px] border-light-gray" />
-            <span className="mx-4  text-txt-dark-gray text-sm">OR</span>
-            <hr className="flex-grow border-t-[2px] border-light-gray" />
+         
           </div>
-
-          <button className="flex items-center gap-2 justify-center  p-[4px] mb-6 text-[#0000009E] text-xs rounded-md border border-gray-300 w-full">
-            <GoogleLogo classNames="max-w-5" />
-            Continue with Google
-          </button>
+         
         </div>
       </div>
     </div>
+    <div className='bg-white mt-[400px]'>
+    <Footer/>
+
+    </div>
+    </>
   );
 };
 
