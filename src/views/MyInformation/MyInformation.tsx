@@ -362,11 +362,9 @@ const MyInformation = () => {
           <TabPanel index={4}>
             <EmergencySection />
           </TabPanel>
-          {!empId && (
-            <TabPanel index={5}>
-              <NotesSection />
-            </TabPanel>
-          )}
+          <TabPanel index={5}>
+            <NotesSection employeeId={empId || myId} />
+          </TabPanel>
         </div>
       </TabsContainer>
     </form>

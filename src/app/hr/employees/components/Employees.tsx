@@ -13,19 +13,6 @@ const Employees = () => {
     <div className="w-full h-full">
       <TabsContainer containerClasses="my-1 pb-4 sticky top-0">
         <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
-          {/* <div
-            className="px-[3%]"
-            onClick={(e) => {
-              e.preventDefault();
-              route.push('/hr/employees?tab=0');
-            }}
-          >
-            <Tab
-              index={Number(tab) || 0}
-              tabStyles="text-xs  py-3 text-dark-navy  whitespace-nowrap "
-              activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-            ></Tab>
-          </div> */}
           <button
             className={`px-[3%] text-xs  py-3 text-dark-navy  whitespace-nowrap  ${
               !tab || tab === '0'

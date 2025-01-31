@@ -85,13 +85,22 @@ const UserInfoSection = ({
           </div>
           <div className="flex flex-col">
             <h6 className="form-label">Gender*</h6>
-            <select className="form-input" {...register('gender')}>
-              <option value="" className="font-bold">
-                Select Gender
-              </option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
+            {editEmployee ? (
+              <select className="form-input" {...register('gender')}>
+                <option value="" className="font-bold">
+                  Select Gender
+                </option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            ) : (
+              <input
+                type="text"
+                className={`form-input`}
+                {...register('gender')}
+                readOnly={!editEmployee}
+              />
+            )}
 
             {errors?.gender && (
               <p className="form-error">{errors?.gender.message}</p>
@@ -99,14 +108,22 @@ const UserInfoSection = ({
           </div>
           <div className="flex flex-col">
             <h6 className="form-label">Marital Status*</h6>
-            <select className="form-input" {...register('marritialStatus')}>
-              <option value="">Select Status</option>
-              <option value="Single">Single</option>
-              <option value="Married">Married</option>
-              <option value="Enganged">Engaged</option>
-              <option value="Prefer not say">Prefer not to say</option>
-            </select>
-
+            {editEmployee ? (
+              <select className="form-input" {...register('marritialStatus')}>
+                <option value="">Select Status</option>
+                <option value="Single">Single</option>
+                <option value="Married">Married</option>
+                <option value="Enganged">Engaged</option>
+                <option value="Prefer not say">Prefer not to say</option>
+              </select>
+            ) : (
+              <input
+                type="text"
+                className={`form-input`}
+                {...register('marritialStatus')}
+                readOnly={!editEmployee}
+              />
+            )}
             {errors?.marritialStatus && (
               <p className="form-error">{errors?.marritialStatus.message}</p>
             )}

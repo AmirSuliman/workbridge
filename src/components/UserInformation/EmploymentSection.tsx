@@ -92,12 +92,21 @@ const EmploymentSection = ({
           </label>
           <label className="form-label">
             Employment Type*
-            <select className="form-input" {...register('employmentType')}>
-              <option value="">Select Type</option>
-              <option value="Fulltime">Full-Time</option>
-              <option value="Part Time">Part-Time</option>
-              <option value="Freelance">Freelance</option>
-            </select>
+            {editEmployee ? (
+              <select className="form-input" {...register('employmentType')}>
+                <option value="">Select Type</option>
+                <option value="Fulltime">Full-Time</option>
+                <option value="Part Time">Part-Time</option>
+                <option value="Freelance">Freelance</option>
+              </select>
+            ) : (
+              <input
+                type="text"
+                className={`form-input`}
+                {...register('employmentType')}
+                readOnly={!editEmployee}
+              />
+            )}
             {errors.employmentType && (
               <p className="form-error">{errors.employmentType.message}</p>
             )}
