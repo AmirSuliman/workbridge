@@ -11,7 +11,6 @@ import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import SickCard from './sickCard';
 import VacationsCard from './VacationsCard';
-import { getSession } from 'next-auth/react';
 interface Employee {
   firstName: string;
   lastName: string;
@@ -25,7 +24,8 @@ interface TimeOffItem {
   employee: Employee;
 }
 
-const TimeOffSection = () => {
+const TimeOffSection = ({ employeeData }) => {
+  console.log('counter: ', employeeData.vacationLeaveCounter);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +48,6 @@ const TimeOffSection = () => {
   //   fetchSession();
   // }, []);
 
-  const [totalDays, setTotalDays] = useState<number>(20);
   useEffect(() => {
     const fetchTimeOffData = async () => {
       try {
@@ -169,8 +168,8 @@ const TimeOffSection = () => {
   return (
     <div className="p-1 rounded-md h-full">
       <div className="flex flex-col md:flex-row gap-6">
-        <VacationsCard totalDays={totalDays} />
-        <SickCard totalDays={totalDays} />
+        <VacationsCard totalDays={employeeData?.vacationLeaveCounter} />
+        <SickCard totalDays={employeeData?.sickLeaveCounter} />
       </div>
 
       <div className="bg-white mt-5 border border-gray-border rounded-[10px] p-3 md:p-5 w-full ">

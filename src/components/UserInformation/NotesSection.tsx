@@ -20,6 +20,7 @@ import ScreenLoader from '../common/ScreenLoader';
 import Modal from '../modal/Modal';
 import CreateNote from './CreateNote';
 import { BiLoaderCircle } from 'react-icons/bi';
+import toast from 'react-hot-toast';
 
 interface Note {
   id: number;
@@ -65,8 +66,10 @@ const NotesSection = ({ employeeId }) => {
     useAppSelector((state) => state.notes);
 
   useEffect(() => {
-    dispatch(fetchNotes());
-  }, [dispatch]);
+    if (employeeId) {
+      dispatch(fetchNotes({ id: employeeId }));
+    }
+  }, [dispatch, employeeId]);
 
   const handleEditClick = (note: Note) => {
     dispatch(setSelectedNote(note));
@@ -78,6 +81,7 @@ const NotesSection = ({ employeeId }) => {
       await dispatch(deleteNote(deleteId));
       dispatch(resetCrudStatus());
       setDeleteNoteModal(false);
+      toast.success('Note deleted successfully!');
     }
   }, [deleteId, dispatch]);
 
@@ -104,6 +108,7 @@ const NotesSection = ({ employeeId }) => {
     );
     console.log('put res: ', putResponse);
     dispatch(closeModals());
+    toast.success('Note updated successfully!');
   };
 
   const handleCloseModal = () => {

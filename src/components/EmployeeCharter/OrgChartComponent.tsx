@@ -15,7 +15,6 @@ import React, {
 
 // import Modal from '@/components/NewModal';
 import { useModal } from '@/hooks/use-modal';
-import api from '@/modules/api/client';
 import { DataTypes } from '@/types/data';
 import {
   BTN_MODAL_CLASS_NAME,
@@ -160,19 +159,8 @@ export const OrgChartComponent: FC<Props> = ({
         ...isTerminating,
         [employeeId]: true,
       });
-      api('PUT /employee/toggle-termination/{id}', {
-        params: {
-          id: employeeId,
-        },
-      }).then((res) => {
-        onTerminate(res.data.data as unknown as EmployeeData, node);
-        setIsTerminating({
-          ...isTerminating,
-          [employeeId]: false,
-        });
-      });
     },
-    [isTerminating, onTerminate]
+    [isTerminating]
   );
 
   const processChange = debounce(() => filterChart(search), 1000);

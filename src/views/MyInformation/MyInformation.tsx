@@ -1,7 +1,7 @@
 'use client';
 import ProfileCard from '@/components/common/ProfileCard';
-import Tab from '@/components/common/TabsComponent/Tab';
-import TabPanel from '@/components/common/TabsComponent/TabPanel';
+import TabButton from '@/components/common/TabsComponent/TabButton';
+import TabComponent from '@/components/common/TabsComponent/TabComponent';
 import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
 import DocumentSection from '@/components/UserInformation/DocumentSection';
 import EmergencySection from '@/components/UserInformation/EmergencySection';
@@ -284,57 +284,63 @@ const MyInformation = () => {
       />
       <TabsContainer containerClasses="my-1 pb-2 md:pb-4">
         <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
-          <Tab
-            index={0}
-            tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-            activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-          >
-            Personal
-          </Tab>
-          <Tab
-            index={1}
-            tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-            activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-          >
-            Employment
-          </Tab>
+          <TabButton
+            isRootTab={true}
+            name="Personal"
+            href={`${
+              empId
+                ? `/hr/employees/employee-info/${empId}?tab=0`
+                : '/hr/my-information?tab=0'
+            }`}
+          />
+          <TabButton
+            name="Employment"
+            href={`${
+              empId
+                ? `/hr/employees/employee-info/${empId}?tab=1`
+                : '/hr/my-information?tab=1'
+            }`}
+          />
+
           {!editEmployee && (
             <>
-              <Tab
-                index={2}
-                tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-                activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-              >
-                Time Off{' '}
-              </Tab>
-              <Tab
-                index={3}
-                tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-                activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-              >
-                Documents
-              </Tab>
-              <Tab
-                index={4}
-                tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-                activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-              >
-                Emergency
-              </Tab>
-              {!empId && (
-                <Tab
-                  index={5}
-                  tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-                  activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-                >
-                  Notes
-                </Tab>
-              )}
+              <TabButton
+                name="Time Off"
+                href={`${
+                  empId
+                    ? `/hr/employees/employee-info/${empId}?tab=2`
+                    : '/hr/my-information?tab=2'
+                }`}
+              />
+              <TabButton
+                name="Documents"
+                href={`${
+                  empId
+                    ? `/hr/employees/employee-info/${empId}?tab=3`
+                    : '/hr/my-information?tab=3'
+                }`}
+              />
+              <TabButton
+                name="Emergency"
+                href={`${
+                  empId
+                    ? `/hr/employees/employee-info/${empId}?tab=4`
+                    : '/hr/my-information?tab=4'
+                }`}
+              />
+              <TabButton
+                name="Notes"
+                href={`${
+                  empId
+                    ? `/hr/employees/employee-info/${empId}?tab=5`
+                    : '/hr/my-information?tab=5'
+                }`}
+              />
             </>
           )}
         </div>
         <div>
-          <TabPanel index={0}>
+          <TabComponent index="0" isRootTab={true}>
             <UserInfoSection
               control={control}
               register={register}
@@ -343,8 +349,8 @@ const MyInformation = () => {
               editEmployee={editEmployee}
               handleFileChange={handleFileChange}
             />
-          </TabPanel>
-          <TabPanel index={1}>
+          </TabComponent>
+          <TabComponent index="1">
             <EmploymentSection
               register={register}
               resetField={resetField}
@@ -352,19 +358,19 @@ const MyInformation = () => {
               editEmployee={editEmployee}
               employeeData={employeeData}
             />
-          </TabPanel>
-          <TabPanel index={2}>
-            <TimeOffSection />
-          </TabPanel>
-          <TabPanel index={3}>
+          </TabComponent>
+          <TabComponent index="2">
+            <TimeOffSection employeeData={employeeData} />
+          </TabComponent>
+          <TabComponent index="3">
             <DocumentSection employeeData={employeeData} />
-          </TabPanel>
-          <TabPanel index={4}>
+          </TabComponent>
+          <TabComponent index="4">
             <EmergencySection />
-          </TabPanel>
-          <TabPanel index={5}>
+          </TabComponent>
+          <TabComponent index="5">
             <NotesSection employeeId={empId || myId} />
-          </TabPanel>
+          </TabComponent>
         </div>
       </TabsContainer>
     </form>

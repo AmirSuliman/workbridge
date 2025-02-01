@@ -6,18 +6,22 @@ import FormField from './FormField';
 import { HiMiniHomeModern } from 'react-icons/hi2';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
+import Button from '../Button';
+import { FaEdit } from 'react-icons/fa';
 
 const EmergencySection: React.FC = () => {
   const employeeData = useSelector((state: RootState) => state.employee.data);
 
   return (
     <div className="p-4 rounded-md border-[1px] border-gray-border bg-white h-full">
-      {/* Basic Information */}
       <div className="my-5">
-        <FormHeading
-          icon={<BasicInfoIcon classNames="w-4" />}
-          text="Emergency Contact"
-        />
+        <div className="flex justify-between gap-4 flex-wrap">
+          <FormHeading
+            icon={<BasicInfoIcon classNames="w-4" />}
+            text="Emergency Contact"
+          />
+          <Button name="Edit" icon={<FaEdit />} />
+        </div>
         <div className="grid sm:grid-cols-3 gap-4 my-5">
           <FormField
             onChange={() => {}}
@@ -61,32 +65,32 @@ const EmergencySection: React.FC = () => {
           <FormField
             onChange={() => {}}
             label="Street 1"
-            value={employeeData?.location.street1 || 'N/A'}
+            value={employeeData?.location?.street1 || 'N/A'}
           />
           <FormField
             onChange={() => {}}
             label="Street 2"
-            value={employeeData?.location.street2 || 'N/A'}
+            value={employeeData?.location?.street2 || 'N/A'}
           />
           <FormField
             onChange={() => {}}
             label="Zip"
-            value={String(employeeData?.location.zipCode) || 'N/A'}
+            value={String(employeeData?.location?.zipCode || 'N/A')}
           />
           <FormField
             onChange={() => {}}
             label="City"
-            value={employeeData?.location.city || 'N/A'}
+            value={employeeData?.location?.city || 'N/A'}
           />
           <FormField
             onChange={() => {}}
             label="Country"
-            value={employeeData?.location.country || 'N/A'}
+            value={employeeData?.location?.country || 'N/A'}
           />
           <FormField
             onChange={() => {}}
             label="State"
-            value={employeeData?.location.state || 'N/A'}
+            value={employeeData?.location?.state || 'N/A'}
           />
         </div>
       </div>

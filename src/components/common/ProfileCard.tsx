@@ -19,6 +19,7 @@ import LinkedinIcon from '../icons/linkedin-icon';
 import ProfileInfoItem from './ProfileInfoItem';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 const ProfileCard = ({
   setEditEmployee,
@@ -31,6 +32,8 @@ const ProfileCard = ({
   employeeData: EmployeeData;
   loading?: boolean;
 }) => {
+  const searchParams = useSearchParams();
+  const tab = searchParams.get('tab');
   const hireDate = employeeData?.hireDate
     ? new Date(employeeData.hireDate).toLocaleDateString()
     : 'N/A';
@@ -134,48 +137,50 @@ const ProfileCard = ({
                 {employeeData?.tittle || 'N/A'}
               </p>
             </div>
-            <div className="flex items-center gap-4">
-              {userRole !== 'ViewOnly' &&
-                (loading ? (
-                  <Button
-                    type="button"
-                    className={'!bg-dark-navy !text-white !text-xs'}
-                    icon={
-                      <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
-                    }
-                    name=""
-                  />
-                ) : !editEmployee ? (
-                  <Button
+            {(!tab || tab === '0' || tab === '1') && (
+              <div className="flex items-center gap-4">
+                {userRole !== 'ViewOnly' &&
+                  (loading ? (
+                    <Button
+                      type="button"
+                      className={'!bg-dark-navy !text-white !text-xs'}
+                      icon={
+                        <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+                      }
+                      name=""
+                    />
+                  ) : !editEmployee ? (
+                    <Button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setEditEmployee(true);
+                      }}
+                      className={'!bg-dark-navy !text-white !text-xs'}
+                      icon={<FaEdit />}
+                      name={'Edit Profile'}
+                    />
+                  ) : (
+                    <Button
+                      type="submit"
+                      className={'!bg-dark-navy !text-white !text-xs'}
+                      icon=""
+                      name={'Save Changes'}
+                    />
+                  ))}
+                {editEmployee && (
+                  <button
                     type="button"
                     onClick={(e) => {
                       e.preventDefault();
-                      setEditEmployee(true);
+                      setEditEmployee(false);
                     }}
-                    className={'!bg-dark-navy !text-white !text-xs'}
-                    icon={<FaEdit />}
-                    name={'Edit Profile'}
-                  />
-                ) : (
-                  <Button
-                    type="submit"
-                    className={'!bg-dark-navy !text-white !text-xs'}
-                    icon=""
-                    name={'Save Changes'}
-                  />
-                ))}
-              {editEmployee && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setEditEmployee(false);
-                  }}
-                >
-                  Cancel
-                </button>
-              )}
-            </div>
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+            )}
           </div>
           <div className="flex mt-3 gap-4 flex-wrap">
             <ProfileInfoItem

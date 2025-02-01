@@ -15,7 +15,7 @@ const EmploymentSection = ({
   editEmployee,
   employeeData,
 }) => {
-  // console.log('employeeData: ', employeeData);
+  console.log('employeeData: ', employeeData);
   const hireDate = employeeData?.hireDate
     ? employeeData.hireDate.split('T')[0]
     : 'N/A';
@@ -55,8 +55,8 @@ const EmploymentSection = ({
               {...register('hireDate')}
               readOnly={!editEmployee}
             />
-            {errors.hireDate && (
-              <p className="form-error">{errors.hireDate.message}</p>
+            {errors?.hireDate && (
+              <p className="form-error">{errors?.hireDate.message}</p>
             )}
           </label>
           {!editEmployee && (
@@ -86,8 +86,8 @@ const EmploymentSection = ({
               {...register('effectiveDate')}
               readOnly={!editEmployee}
             />
-            {errors.effectiveDate && (
-              <p className="form-error">{errors.effectiveDate.message}</p>
+            {errors?.effectiveDate && (
+              <p className="form-error">{errors?.effectiveDate.message}</p>
             )}
           </label>
           <label className="form-label">
@@ -107,8 +107,8 @@ const EmploymentSection = ({
                 readOnly={!editEmployee}
               />
             )}
-            {errors.employmentType && (
-              <p className="form-error">{errors.employmentType.message}</p>
+            {errors?.employmentType && (
+              <p className="form-error">{errors?.employmentType.message}</p>
             )}
           </label>
           {/* <label className="form-label">
@@ -119,7 +119,7 @@ const EmploymentSection = ({
               {...register('note')}
               readOnly={!editEmployee}
             />
-            {errors.note && <p className="form-error">{errors.note.message}</p>}
+            {errors?.note && <p className="form-error">{errors?.note.message}</p>}
           </label> */}
         </div>
       </div>
@@ -190,8 +190,8 @@ const EmploymentSection = ({
               className="form-input"
               {...register('tittle')}
             />
-            {errors.tittle && (
-              <span className="form-error">{errors.tittle.message}</span>
+            {errors?.tittle && (
+              <span className="form-error">{errors?.tittle.message}</span>
             )}
           </article>
         </div>
@@ -240,8 +240,8 @@ const EmploymentSection = ({
                   valueAsNumber: true,
                 })}
               />
-              {errors.salary && (
-                <span className="form-error">{errors.salary.message}</span>
+              {errors?.salary && (
+                <span className="form-error">{errors?.salary.message}</span>
               )}
             </article>
             <article>
@@ -251,8 +251,8 @@ const EmploymentSection = ({
                 <option value="Salary">Salary</option>
                 <option value="Contract">Contract</option>
               </select>
-              {errors.payType && (
-                <span className="form-error">{errors.payType.message}</span>
+              {errors?.payType && (
+                <span className="form-error">{errors?.payType.message}</span>
               )}
             </article>
             <article>
@@ -263,9 +263,9 @@ const EmploymentSection = ({
                 <option value="Biweekly">Biweekly</option>
                 <option value="Once a month">Once a month</option>
               </select>
-              {errors.paymentSchedule && (
+              {errors?.paymentSchedule && (
                 <span className="form-error">
-                  {errors.paymentSchedule.message}
+                  {errors?.paymentSchedule.message}
                 </span>
               )}
             </article>
