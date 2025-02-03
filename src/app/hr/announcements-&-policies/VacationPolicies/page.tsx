@@ -6,11 +6,17 @@ import Modal from '@/components/modal';
 import Sendholidaynotification from './sendholidaynotification';
 import axiosInstance from '@/lib/axios';
 
+interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+}
 interface Country {
   id: number;
   country: string;
   code: string;
 }
+
 
 interface Holiday {
   id: number;
@@ -20,6 +26,7 @@ interface Holiday {
   createdBy: number;
   createdAt: string;
   updatedAt: string;
+  user?: User; 
   countryholidays: {
     id: number;
     holidayId: number;
@@ -31,6 +38,7 @@ interface Holiday {
     country: Country;
   }[];
 }
+
 
 const VacationPolicies = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -67,13 +75,15 @@ const VacationPolicies = () => {
             associations: true,
           },
         });
-        if (response.data?.data?.items) {
-          setHolidays(response.data.data.items);
+    
+        if (response.data?.data?.holidays) {
+          setHolidays(response.data.data.holidays); // Update from `items` to `holidays`
         }
       } catch (error) {
         console.error('Error fetching holidays:', error);
       }
     };
+    
 
     fetchCountries();
     fetchHolidays();
@@ -242,7 +252,9 @@ const VacationPolicies = () => {
                 <td className="p-4">{holiday.title}</td>
                 <td className="p-4">{formatDate(holiday.date)}</td>
                 <td className="p-4">{holiday.type}</td>
-                <td className="p-4"> {holiday.createdBy}</td>
+<td className="p-4">
+  {holiday.user ? `${holiday.user.firstName} ${holiday.user.lastName}` : 'N/A'}
+</td>
                 <td className="p-4 text-center flex justify-center space-x-2">
                   <BiTrash
                     size={18}
