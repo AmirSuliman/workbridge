@@ -84,10 +84,6 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
     setIsModalOpen(true);
   };
 
-  const remainingDays = totalDays - vacationDaysUsed;
-  const validRemainingDays =
-    isNaN(remainingDays) || remainingDays < 0 ? 0 : remainingDays;
-
   return (
     <>
       <div className="flex items-center justify-between border border-gray-border rounded-[10px] bg-white p-3 md:p-6 md:gap-[3.3rem] w-full">
@@ -113,7 +109,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
 
         <div className="flex flex-col border border-gray-border items-center justify-center rounded-[7px] h-full px-4">
           <span className="text-lg text-dark-navy font-[400]">
-            {validRemainingDays}
+            {totalDays ?? 0}
           </span>
           <span className="text-xs text-dark-navy">days left</span>
         </div>

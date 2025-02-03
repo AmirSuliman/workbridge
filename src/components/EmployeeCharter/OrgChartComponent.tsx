@@ -15,7 +15,6 @@ import React, {
 
 // import Modal from '@/components/NewModal';
 import { useModal } from '@/hooks/use-modal';
-import api from '@/modules/api/client';
 import { DataTypes } from '@/types/data';
 import {
   BTN_MODAL_CLASS_NAME,
@@ -32,7 +31,7 @@ import {
 // import orgChartProfile from '@/views/Companies/orgChartProfile';
 // import OrgChartOpenPositionProfile from '@/views/OrgChart/Profiles/OrgChartOpenPositionProfile';
 import { EmployeeData } from '@/types/employee';
-import { OrgChartTerminatedEmployees } from './OrgChartTerminatedEmployees';
+// import { OrgChartTerminatedEmployees } from './OrgChartTerminatedEmployees';
 import OrgChartOpenPositionProfile from './Profiles/OrgChartOpenPositionProfile';
 import orgChartProfile from './orgChartProfile';
 
@@ -75,6 +74,20 @@ export const OrgChartComponent: FC<Props> = ({
   const [isTerminating, setIsTerminating] = useState<Record<number, boolean>>(
     {}
   );
+
+  function detectMultipleRoots(employees) {
+    const rootNodes = employees.filter((emp) => emp.parentId === null);
+
+    if (rootNodes.length > 1) {
+      console.error('Multiple root nodes detected:', rootNodes);
+      return rootNodes; // Returns the list of multiple roots for debugging
+    }
+
+    return [];
+  }
+
+  const multipleRoots = detectMultipleRoots(employees);
+  console.log('Multiple roots detected:', multipleRoots.length > 0);
 
   function detectCycle(employee) {
     const visited = new Set();
@@ -160,19 +173,8 @@ export const OrgChartComponent: FC<Props> = ({
         ...isTerminating,
         [employeeId]: true,
       });
-      api('PUT /employee/toggle-termination/{id}', {
-        params: {
-          id: employeeId,
-        },
-      }).then((res) => {
-        onTerminate(res.data.data as unknown as EmployeeData, node);
-        setIsTerminating({
-          ...isTerminating,
-          [employeeId]: false,
-        });
-      });
     },
-    [isTerminating, onTerminate]
+    [isTerminating]
   );
 
   const processChange = debounce(() => filterChart(search), 1000);
@@ -185,7 +187,7 @@ export const OrgChartComponent: FC<Props> = ({
 
   // We need to manipulate DOM
   useLayoutEffect(() => {
-    if (employees && d3Container.current && !hasCycle) {
+    if (employees && d3Container.current && !multipleRoots && !hasCycle) {
       refOrgChart2.current = refOrgChart.current;
       refOrgChart.current
         .container(d3Container.current)
@@ -381,6 +383,7 @@ export const OrgChartComponent: FC<Props> = ({
     isTerminating,
     handleTerminate,
     handleClickNode,
+    multipleRoots,
     totalTerminated,
     selectedEmployees,
     terminatedParents,
@@ -391,6 +394,11 @@ export const OrgChartComponent: FC<Props> = ({
 
   return (
     <div className="h-[calc(100vh-22rem)] overflow-hidden relative">
+      {multipleRoots && (
+        <div className="border-b-[1px] border-gray-border px-6 py-4">
+          <h1>There are multiple roots in the data</h1>
+        </div>
+      )}
       {hasCycle && (
         <div className="border-b-[1px] border-gray-border px-6 py-4">
           <h1>There is a cycle in the data</h1>

@@ -31,10 +31,13 @@ const initialState: NoteState = {
 };
 
 // Async Thunks
-export const fetchNotes = createAsyncThunk('notes/fetchNotes', async () => {
-  const response = await axiosInstance.get('/notes');
-  return response.data.data.items;
-});
+export const fetchNotes = createAsyncThunk(
+  'notes/fetchNotes',
+  async ({ id }: { id: number }) => {
+    const response = await axiosInstance.get(`/notes/${id}`);
+    return response.data.data.items;
+  }
+);
 
 export const createNote = createAsyncThunk(
   'notes/createNote',

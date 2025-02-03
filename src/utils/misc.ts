@@ -7,46 +7,46 @@ import {
   forwardRef,
 } from 'react';
 
-import api from '@/modules/api/client';
+// import api from '@/modules/api/client';
 import { DataTypes } from '@/types/data';
 
-export function styled<El extends ElementType>(el: El, baseClassName?: string) {
-  function PrimitiveWithProps(
-    props: ComponentPropsWithoutRef<El>,
-    ref?: Ref<El>
-  ) {
-    const { children = null, ...propsNoChildren } = props;
+// export function styled<El extends ElementType>(el: El, baseClassName?: string) {
+//   function PrimitiveWithProps(
+//     props: ComponentPropsWithoutRef<El>,
+//     ref?: Ref<El>
+//   ) {
+//     const { children = null, ...propsNoChildren } = props;
 
-    return createElement(
-      el,
-      {
-        ...propsNoChildren,
-        ref,
-        className: clsx(props.className, baseClassName),
-      },
-      children
-    );
-  }
+//     return createElement(
+//       el,
+//       {
+//         ...propsNoChildren,
+//         ref,
+//         className: clsx(props.className, baseClassName),
+//       },
+//       children
+//     );
+//   }
 
-  return forwardRef(PrimitiveWithProps);
-}
+//   return forwardRef(PrimitiveWithProps);
+// }
 
-export const searchResults = (items: any[], search: string) => {
-  if (!search) {
-    return items;
-  }
-  return items.filter((item) =>
-    Object.values(item)
-      .join('')
-      .toLowerCase()
-      .includes(search.toLowerCase().trim().trimEnd().trimStart())
-  );
-};
+// export const searchResults = (items: any[], search: string) => {
+//   if (!search) {
+//     return items;
+//   }
+//   return items.filter((item) =>
+//     Object.values(item)
+//       .join('')
+//       .toLowerCase()
+//       .includes(search.toLowerCase().trim().trimEnd().trimStart())
+//   );
+// };
 
-export function randomHexColorCode() {
-  let n = (Math.random() * 0xfffff * 1000000).toString(16);
-  return '#' + n.slice(0, 6);
-}
+// export function randomHexColorCode() {
+//   let n = (Math.random() * 0xfffff * 1000000).toString(16);
+//   return '#' + n.slice(0, 6);
+// }
 
 const numberFormat = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -108,53 +108,53 @@ export function checkForOpenPositions(node: any): boolean {
   return false;
 }
 
-export function downloadBlob(blob: Blob, filename: string) {
-  // Create an object URL for the blob object
-  const url = URL.createObjectURL(blob);
+// export function downloadBlob(blob: Blob, filename: string) {
+//   // Create an object URL for the blob object
+//   const url = URL.createObjectURL(blob);
 
-  // Create a new anchor element
-  const a = document.createElement('a');
+//   // Create a new anchor element
+//   const a = document.createElement('a');
 
-  // Set the href and download attributes for the anchor element
-  // You can optionally set other attributes like `title`, etc
-  // Especially, if the anchor element will be attached to the DOM
-  a.href = url;
-  a.download = filename || 'download';
+//   // Set the href and download attributes for the anchor element
+//   // You can optionally set other attributes like `title`, etc
+//   // Especially, if the anchor element will be attached to the DOM
+//   a.href = url;
+//   a.download = filename || 'download';
 
-  // Click handler that releases the object URL after the element has been clicked
-  // This is required for one-off downloads of the blob content
-  const clickHandler = () => {
-    setTimeout(() => {
-      URL.revokeObjectURL(url);
-      removeEventListener('click', clickHandler);
-    }, 150);
-  };
+//   // Click handler that releases the object URL after the element has been clicked
+//   // This is required for one-off downloads of the blob content
+//   const clickHandler = () => {
+//     setTimeout(() => {
+//       URL.revokeObjectURL(url);
+//       removeEventListener('click', clickHandler);
+//     }, 150);
+//   };
 
-  // Add the click event listener on the anchor element
-  // Comment out this line if you don't want a one-off download of the blob content
-  a.addEventListener('click', clickHandler, false);
+//   // Add the click event listener on the anchor element
+//   // Comment out this line if you don't want a one-off download of the blob content
+//   a.addEventListener('click', clickHandler, false);
 
-  // Programmatically trigger a click on the anchor element
-  // Useful if you want the download to happen automatically
-  // Without attaching the anchor element to the DOM
-  // Comment out this line if you don't want an automatic download of the blob content
-  a.click();
+//   // Programmatically trigger a click on the anchor element
+//   // Useful if you want the download to happen automatically
+//   // Without attaching the anchor element to the DOM
+//   // Comment out this line if you don't want an automatic download of the blob content
+//   a.click();
 
-  // Return the anchor element
-  // Useful if you want a reference to the element
-  // in order to attach it to the DOM or use it in some other way
-}
+//   // Return the anchor element
+//   // Useful if you want a reference to the element
+//   // in order to attach it to the DOM or use it in some other way
+// }
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-export function debounce(callback: Function, wait = 500) {
-  let timeoutId: any = null;
-  return (...args: any[]) => {
-    window.clearTimeout(timeoutId);
-    timeoutId = window.setTimeout(() => {
-      callback(...args);
-    }, wait);
-  };
-}
+// export function debounce(callback: Function, wait = 500) {
+//   let timeoutId: any = null;
+//   return (...args: any[]) => {
+//     window.clearTimeout(timeoutId);
+//     timeoutId = window.setTimeout(() => {
+//       callback(...args);
+//     }, wait);
+//   };
+// }
 
 function extractNumberFromScale(scaleString: string) {
   // Use a regular expression to match the number inside the parentheses
@@ -190,20 +190,20 @@ export function updateElementPosition(
   element?.style.setProperty('left', `${e.x - left}px`);
 }
 
-export const downloadOrgChartExcelFile = (selectedCompany: number) => {
-  api('GET /company/{id}/organogram/export', {
-    params: {
-      id: selectedCompany,
-    },
-  }).then((response) => {
-    if (response.data) {
-      // Blob object for the content to be download
-      const blob = new Blob([response.data], { type: 'text/csv' });
-      // Create a download link for the blob content
-      downloadBlob(blob, `organogram-${new Date().toISOString()}.csv`);
-    }
-  });
-};
+// export const downloadOrgChartExcelFile = (selectedCompany: number) => {
+//   api('GET /company/{id}/organogram/export', {
+//     params: {
+//       id: selectedCompany,
+//     },
+//   }).then((response) => {
+//     if (response.data) {
+//       // Blob object for the content to be download
+//       const blob = new Blob([response.data], { type: 'text/csv' });
+//       // Create a download link for the blob content
+//       downloadBlob(blob, `organogram-${new Date().toISOString()}.csv`);
+//     }
+//   });
+// };
 
 export function prepareOrgChartData(
   employeesData: Partial<DataTypes.Employee>[]

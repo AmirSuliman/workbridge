@@ -6,23 +6,21 @@ import { OrgChart } from 'd3-org-chart';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { FC, useEffect, useReducer, useRef, useState } from 'react';
-import { useQuery } from 'react-query';
+// import { useQuery } from 'react-query';
 
 // import SaveViewModal from '@/components/Modal/SaveViewModal';
 // import { PrivateEquityTitle } from '@/components/PrivateEquityTitle';
 // import { SelectCompany } from '@/components/SelectCompany';
 // import { Spinner } from '@/components/Spinner';
-import api from '@/modules/api/client';
+// import api from '@/modules/api/client';
 import { initialState, reducer } from '@/store/reducer';
 import { DataTypes } from '@/types/data';
 // import { ModalHandle } from '@/types/misc';
-import { prepareOrgChartData } from '@/utils/misc';
+// import { prepareOrgChartData } from '@/utils/misc';
 // import { ExportActions, Workforce } from '@/views/OrgChart/Actions';
 // import { OrgChartInsights } from '@/views/OrgChart/OrgChartInsights';
 import { OrgChartComponent } from '@/components/EmployeeCharter/OrgChartComponent';
-import { orgChartData } from '@/utils/dummyOrgCharData';
 import { EmployeeData } from '@/types/employee';
-import Link from 'next/link';
 import { getCharter } from '@/services/getCharter';
 
 // import { OrgChartComponent } from './OrgChartComponent';
@@ -35,7 +33,6 @@ const OrgChartPage: FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [compact, setCompact] = useState(false);
   // const [action, setAction] = useState<RunAction | null>(null);
-  const [selectedCompany, setSelectedCompany] = useState<number>(4);
   const [search, setSearch] = useState('');
   // const [isActionLoading, setIsActionLoading] = useState(false);
   const [employeesData, setEmployeesData] = useState<EmployeeData[]>([]);
@@ -49,23 +46,23 @@ const OrgChartPage: FC = () => {
   const { data: session } = useSession();
   const user = session?.user as unknown as DataTypes.User;
 
-  const { data: view, isLoading: isViewLoading } = useQuery(
-    ['o-view', queryParams.get('viewId')],
-    () =>
-      api('GET /saveView/{id}', {
-        params: {
-          id: Number(queryParams.get('viewId')),
-        },
-        query: {
-          associations: true,
-        },
-      }),
-    {
-      select: (res) => res.data.data,
-      enabled: !!queryParams.get('viewId'),
-      refetchOnWindowFocus: false,
-    }
-  );
+  // const { data: view, isLoading: isViewLoading } = useQuery(
+  //   ['o-view', queryParams.get('viewId')],
+  //   () =>
+  //     api('GET /saveView/{id}', {
+  //       params: {
+  //         id: Number(queryParams.get('viewId')),
+  //       },
+  //       query: {
+  //         associations: true,
+  //       },
+  //     }),
+  //   {
+  //     select: (res) => res.data.data,
+  //     enabled: !!queryParams.get('viewId'),
+  //     refetchOnWindowFocus: false,
+  //   }
+  // );
 
   useEffect(() => {
     const fetchCharter = async () => {

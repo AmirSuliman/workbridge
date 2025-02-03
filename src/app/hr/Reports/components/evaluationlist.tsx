@@ -1,8 +1,32 @@
+import { fetchSurveys } from '@/store/slices/surveySlice';
+import { AppDispatch, RootState } from '@/store/store';
+import { SurveyProps } from '@/types/common';
 import Link from 'next/link';
-import React from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
 import { BiChevronRight } from 'react-icons/bi';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Evaluationlist = () => {
+  const router = useRouter();
+  const dispatch: AppDispatch = useDispatch();
+  const { data, loading, error } = useSelector(
+    (
+      state: RootState
+    ): {
+      data: { items: SurveyProps[] } | null;
+      loading: boolean;
+      error: string | null;
+    } => state.surveys
+  );
+
+  useEffect(() => {
+    dispatch(fetchSurveys());
+  }, [dispatch]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className="bg-white p-6 rounded-[10px] border">
       <div className="flex flex-row items-center justify-between w-full">
@@ -23,9 +47,6 @@ const Evaluationlist = () => {
           >
             Create Survey
           </Link>
-          {/* <button className="p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2">
-            Send Survey
-          </button> */}
         </div>
       </div>
 
@@ -34,6 +55,7 @@ const Evaluationlist = () => {
         <table className="min-w-full mt-4 table-auto">
           <thead>
             <tr className="border-b">
+              <th className="text-left p-4 text-[14px] text-gray-400">ID</th>
               <th className="text-left p-4 text-[14px] text-gray-400">
                 Sent by
               </th>
@@ -47,45 +69,51 @@ const Evaluationlist = () => {
               <th className="text-left p-4 text-[14px] text-gray-400">
                 Status
               </th>
-              <th className=" p-4 text-[12px] text-gray-600"></th>
+              <th className="p-4 text-[12px] text-gray-600"></th>
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b">
-              <td className="p-4 text-[14px] text-gray-800">
-                Juliette Nicolas
-              </td>
-              <td className="p-4 text-[14px] text-gray-800">
-                Darlene Robertson
-              </td>
-              <td className="p-4 text-[14px] text-gray-800">Marketing</td>
-              <td className="p-4 text-[14px] text-gray-800">12/11/2024</td>
-              <td className="p-4 text-[14px] text-gray-800">Draft</td>
-              <td className="p-4 text-[14px] text-gray-800 text-end">
-                <button className="flex flex-row items-center gap-3 p-1 px-3 border rounded">
-                  View
-                  <BiChevronRight />
-                </button>
-              </td>
-            </tr>
-
-            <tr className="border-b">
-              <td className="p-4 text-[14px] text-gray-800">
-                Juliette Nicolas
-              </td>
-              <td className="p-4 text-[14px] text-gray-800">
-                Darlene Robertson
-              </td>
-              <td className="p-4 text-[14px] text-gray-800">Marketing</td>
-              <td className="p-4 text-[14px] text-gray-800">12/11/2024</td>
-              <td className="p-4 text-[14px] text-green-500">Completed</td>
-              <td className="p-4 text-[14px] text-gray-800 text-end">
-                <button className="flex flex-row items-center gap-3 p-1 px-3 border rounded">
-                  View
-                  <BiChevronRight />
-                </button>
-              </td>
-            </tr>
+            {data?.items?.map((survey) => (
+              <tr
+                key={survey.id}
+                className="border-b"
+                onClick={() => {
+                  // manager and survey id
+                  router.push(
+                    `/hr/Reports/evaluation/${survey.employeeId}?survey=${survey.id}`
+                  );
+                }}
+              >
+                <td className="p-4 text-[14px] text-gray-800">{survey.id}</td>
+                <td className="p-4 text-[14px] text-gray-800">
+                  {survey.sendBy}
+                </td>
+                <td className="p-4 text-[14px] text-gray-800">
+                  {survey.employeeId}
+                </td>
+                <td className="p-4 text-[14px] text-gray-800">
+                  {survey.departmentId}
+                </td>
+                <td className="p-4 text-[14px] text-gray-800">
+                  {new Date(survey.createdAt).toLocaleDateString()}
+                </td>
+                <td
+                  className={`p-4 text-[14px] ${
+                    survey.status === 'Completed'
+                      ? 'text-[#00B87D]'
+                      : 'text-gray-800'
+                  }`}
+                >
+                  {survey.status}
+                </td>
+                <td className="p-4 text-[14px] text-gray-800 text-end mr-0 ml-auto">
+                  <button className="flex flex-row items-center justify-end gap-3 p-1 px-3 border rounded">
+                    {survey.status === 'Completed' ? 'View Results' : 'View'}
+                    <BiChevronRight />
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
