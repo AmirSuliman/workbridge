@@ -52,7 +52,7 @@ export const AllEmployees = () => {
           new Set(data.items.map((employee) => employee.tittle))
         );
         const departments: string[] = Array.from(
-          new Set(data.items.map((employee) => employee.department.name))
+          new Set(data.items.map((employee) => employee.department?.name))
         );
 
         setEmployeesState(data);
@@ -88,7 +88,7 @@ export const AllEmployees = () => {
     if (filterOption) {
       updatedList = updatedList.filter(
         (employee) =>
-          employee.department.name === filterOption ||
+          employee.department?.name === filterOption ||
           employee.tittle === filterOption
       );
     }
@@ -287,7 +287,7 @@ export const AllEmployees = () => {
                         {employee.tittle}
                       </td>
                       <td className="py-3 px-4 border-b">
-                        {employee.department.name}
+                        {employee.department?.name}
                       </td>
                       <td className="py-3 px-4 border-b">
                         <a

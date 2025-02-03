@@ -8,3 +8,12 @@ export interface SidebarNavItemProps {
   icon: ReactNode;
   href: string;
 }
+
+export interface SurveyProps {
+  createdAt: string;
+  status: string;
+  sendBy: number;
+  id: number;
+  employeeId: number;
+  departmentId: number;
+}

@@ -32,7 +32,7 @@ const ProfileAvatarItem: React.FC<ProfileAvatarItemProps> = ({
           setImgSrc(IMAGES.placeholderAvatar);
         }}
       />
-      <div className="ml-2">
+      <div className="ml-2 text-left">
         <h4 className="text-sm font-[500] text-dark-navy whitespace-nowrap">
           {title}
         </h4>
