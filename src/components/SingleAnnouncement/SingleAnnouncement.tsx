@@ -26,6 +26,7 @@ const SingleAnnouncement = () => {
       try {
         const response = await axiosInstance.get('/announcements');
         const data = response.data?.data?.items || [];
+        console.log(response, 'res');
 
         if (Array.isArray(data)) {
           const formattedData = data.map((item: any) => ({
