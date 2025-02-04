@@ -172,6 +172,7 @@ const Page = () => {
     setFileIdToDelete(fileId);
     setIsModalOpen4(true);
   };
+  
 
   const handleFolderClick = (folder: Folder) => {
     fetchFolderFiles(folder);
@@ -491,11 +492,13 @@ const Page = () => {
       )}
       {isModalOpen4 && (
         <Modal onClose={() => setIsModalOpen4(false)}>
-          <Deletedocument
-            setIsModalOpen4={setIsModalOpen4}
-            fileId={fileIdToDelete}
-            setFolders={setFolders}
-          />
+         <Deletedocument
+           setIsModalOpen4={setIsModalOpen4}
+           fileId={fileIdToDelete}
+           setFolders={setFolders}
+           setAllFiles={setAllFiles}
+           setActiveFolder={setActiveFolder}
+         />
         </Modal>
       )}
     </div>

@@ -55,7 +55,7 @@ const Uploadfiles = ({ setIsModalOpen1 }) => {
     const formData = new FormData();
     formData.append('file', selectedFile);
     formData.append('folderId', folderId);
-    formData.append('title', title); // Send the title entered by the user
+    formData.append('fileTitle', title); 
 
     try {
       setLoading(true);

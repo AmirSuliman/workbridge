@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 import { BiEdit, BiPlusCircle, BiTrash } from 'react-icons/bi';
 import { FaBullhorn } from 'react-icons/fa';
 import Modal from '@/components/modal';
-import Sendholidaynotification from './sendholidaynotification';
 import axiosInstance from '@/lib/axios';
+import SendHolidayNotification from './sendholidaynotification';
 
 interface User {
   id: number;
@@ -56,7 +56,7 @@ const VacationPolicies = () => {
   const [additionalCountries, setAdditionalCountries] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const [addCountries, setAddCountries] = useState(false);
-  useEffect(() => {
+ 
     const fetchCountries = async () => {
       try {
         const response = await axiosInstance.get('/countries');
@@ -71,27 +71,30 @@ const VacationPolicies = () => {
     const fetchHolidays = async () => {
       try {
         const response = await axiosInstance.get('/holidays', {
-          params: {
-            associations: true,
-          },
+          params: { associations: true },
         });
     
         if (response.data?.data?.holidays) {
-          setHolidays(response.data.data.holidays); // Update from `items` to `holidays`
+          setHolidays(response.data.data.holidays);
         }
       } catch (error) {
         console.error('Error fetching holidays:', error);
       }
     };
     
-
+    
+    useEffect(() => {
     fetchCountries();
     fetchHolidays();
   }, []);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+    if (!isModalOpen) {
+      fetchHolidays(); 
+    }
   };
+  
 
   const deleteModal = (holidayId: number) => {
     setHolidayToDelete(holidayId);
@@ -199,6 +202,10 @@ const VacationPolicies = () => {
     fetchData();
   }, []);
 
+  const handleHolidayAdded = (newHoliday) => {
+    setHolidays((prevHolidays) => [...prevHolidays, newHoliday]);
+  };
+
   return (
     <>
       {/* Header */}
@@ -275,15 +282,14 @@ const VacationPolicies = () => {
         </table>
       </div>
 
-      {/* Modal */}
       {isModalOpen && (
-        <Modal onClose={toggleModal}>
-          <div className="p-6 w-full sm:w-[600px]">
-            <h2 className="text-lg font-bold mb-4">Add Holiday</h2>
-            <Sendholidaynotification toggleModal={toggleModal} />
-          </div>
-        </Modal>
-      )}
+  <Modal onClose={toggleModal}>
+    <div className="p-6 w-full sm:w-[600px]">
+      <h2 className="text-lg font-bold mb-4">Add Holiday</h2>
+      <SendHolidayNotification toggleModal={toggleModal} onHolidayAdded={fetchHolidays} />
+      </div>
+  </Modal>
+)}
 
       {isModalOpen2 && (
         <Modal onClose={() => setIsModalOpen2(false)}>

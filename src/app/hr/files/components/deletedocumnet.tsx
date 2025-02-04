@@ -1,23 +1,29 @@
-'use client'
+"use client";
 import { FaTimes } from "react-icons/fa";
-import axiosInstance from '@/lib/axios';
+import axiosInstance from "@/lib/axios";
 
-const Deletedocument = ({ setIsModalOpen4, fileId, setFolders }) => {
-
+const Deletedocument = ({ setIsModalOpen4, fileId, setFolders, setAllFiles, setActiveFolder }) => {
   const handleDelete = async () => {
     try {
       await axiosInstance.delete(`/file/${fileId}`);
-      setFolders((prevFolders) => 
-        prevFolders.map((folder) => {
-          if (folder.files) {
-            return {
-              ...folder,
-              files: folder.files.filter((file) => file.id !== fileId),
-            };
-          }
-          return folder;
-        })
+
+      setFolders((prevFolders) =>
+        prevFolders.map((folder) => ({
+          ...folder,
+          files: folder.files ? folder.files.filter((file) => file.id !== fileId) : [],
+        }))
       );
+
+      setAllFiles((prevFiles) => prevFiles.filter((file) => file.id !== fileId));
+
+      setActiveFolder((prevFolder) => {
+        if (!prevFolder) return prevFolder;
+        return {
+          ...prevFolder,
+          files: prevFolder.files.filter((file) => file.id !== fileId),
+        };
+      });
+
       setIsModalOpen4(false);
     } catch (err) {
       console.error("Error deleting file:", err);

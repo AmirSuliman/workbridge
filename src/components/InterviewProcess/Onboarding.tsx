@@ -31,14 +31,14 @@ const Onboarding = ({ jobId, candidateId }) => {
   useEffect(() => {
     const fetchOnboardingFiles = async () => {
       try {
-        const response = await axiosInstance.get('/files');
+        const response = await axiosInstance.get('/adminfiles');
         if (
           response.data?.data?.items &&
           Array.isArray(response.data.data.items)
         ) {
           const options = response.data.data.items.map((file) => ({
             id: file.id,
-            label: file.fileName,
+            label: file.fileTitle,
           }));
           setOnboardingOptions(options);
         }
@@ -50,8 +50,8 @@ const Onboarding = ({ jobId, candidateId }) => {
     const fetchPolicyFiles = async () => {
       try {
         const response = await axiosInstance.get('/policies');
-        if (response.data?.data && Array.isArray(response.data.data)) {
-          const options = response.data.data.map((file) => ({
+        if (response.data?.data.items && Array.isArray(response.data.data.items)) {
+          const options = response.data.data.items.map((file) => ({
             id: file.id,
             label: file.title,
           }));
@@ -128,7 +128,7 @@ const Onboarding = ({ jobId, candidateId }) => {
         </div>
 
         {isOpenOnboarding && (
-          <div className="absolute top-full left-0 mt-2 bg-white border border-gray-300 w-[300px] rounded shadow-lg z-10">
+          <div className="absolute h-[150px] overflow-y-auto top-full left-0 mt-2 bg-white border border-gray-300 w-[300px] rounded shadow-lg z-10">
             {onboardingOptions.length > 0 ? (
               onboardingOptions.map((option) => (
                 <label
@@ -183,7 +183,7 @@ const Onboarding = ({ jobId, candidateId }) => {
         </div>
 
         {isOpenPolicies && (
-          <div className="absolute top-full left-0 mt-2 w-[300px] bg-white border border-gray-300 rounded shadow-lg z-10">
+          <div className="absolute h-[150px] overflow-y-auto top-full left-0 mt-2 w-[300px] bg-white border border-gray-300 rounded shadow-lg z-10">
             {policyOptions.length > 0 ? (
               policyOptions.map((option) => (
                 <label

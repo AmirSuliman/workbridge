@@ -20,19 +20,23 @@ const Policies = () => {
     const fetchPolicies = async () => {
       try {
         const response = await getAllPolicies(1, 1000);
-        const allPolicies = response.data.data || [];
+        console.log('API Response:', response); 
+        const allPolicies = response.data.data.items || [];
+        console.log('Extracted Policies:', allPolicies); 
+  
         setPolicies(allPolicies);
         setFilteredPolicies(
           allPolicies.filter((policy) => policy.status === 'Published')
-        ); // Initially show published policies
+        ); 
       } catch (error) {
         console.error(error);
         toast.error('Failed to fetch policies.');
       }
     };
-
+  
     fetchPolicies();
   }, []);
+  
 
   const filterPolicies = (status: 'Draft' | 'Published') => {
     const filtered = policies.filter((policy) => policy.status === status);

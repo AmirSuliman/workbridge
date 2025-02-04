@@ -1,8 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
-import { AxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
+import Select from 'react-select';
 
 interface Country {
   id: number;
@@ -10,7 +10,7 @@ interface Country {
   code: string;
 }
 
-const SendHolidayNotification = ({ toggleModal }) => {
+const SendHolidayNotification = ({ toggleModal, onHolidayAdded }) => {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [type, setType] = useState('');
@@ -21,6 +21,12 @@ const SendHolidayNotification = ({ toggleModal }) => {
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   console.log(session, 'session');
+
+  const [selectedCountries, setSelectedCountries] = useState([]);
+
+const handleAdditionalCountriesChange = (selectedOptions) => {
+  setSelectedCountries(selectedOptions); // Store selected countries
+};
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,52 +47,38 @@ const SendHolidayNotification = ({ toggleModal }) => {
     setPrimaryCountry(Number(e.target.value));
   };
 
-  const handleAdditionalCountriesChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const selectedOptions = Array.from(e.target.selectedOptions, (option) =>
-      Number(option.value)
-    );
-    setAdditionalCountries(selectedOptions);
-  };
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    const formattedDate = date.split('T')[0];
-
-    const payload = {
-      title,
-      date: formattedDate,
-      type,
+  
+    // Extracting the selected country IDs
+    const additionalCountryIds = selectedCountries.map(option => option.value);
+  
+    const payload = { 
+      title, 
+      date, 
+      type, 
       createdBy: session?.user?.userId || '',
-      countries: primaryCountry ? [primaryCountry, ...additionalCountries] : [],
+      countries: primaryCountry ? [primaryCountry, ...additionalCountryIds] : [],
     };
-
+  
     try {
       const response = await axiosInstance.post('/holiday/', payload);
-      const newHoliday = response.data;
+      
+      // Fetch updated holidays from API
+      onHolidayAdded(); 
+  
       toggleModal();
     } catch (error) {
-      if (error instanceof AxiosError) {
-        console.error(
-          'Error creating holiday:',
-          error.response?.data || error.message
-        );
-        alert(
-          `Failed to create holiday: ${
-            error.response?.data?.message || 'Unknown error'
-          }`
-        );
-      } else {
-        console.error('Unexpected error:', error);
-        alert('An unexpected error occurred.');
-      }
+      console.error('Error creating holiday:', error);
     } finally {
       setLoading(false);
     }
   };
+  
+  
 
   return (
     <div className="w-full">
@@ -171,27 +163,28 @@ const SendHolidayNotification = ({ toggleModal }) => {
           <p className="text-[14px]">Add Holiday to other countries?</p>
         </div>
 
-        {addCountries && (
-          <div className="mb-4">
-            <select
-              multiple
-              onChange={handleAdditionalCountriesChange}
-              className="border p-2 rounded w-full focus:outline-none"
-            >
-              {countries
-                .filter((c) => c.id !== primaryCountry)
-                .map((country) => (
-                  <option key={country.id} value={country.id}>
-                    {country.country}
-                  </option>
-                ))}
-            </select>
-            <p className="text-sm text-gray-400 mt-2">
-              Hold down Ctrl (Windows) or Command (Mac) to select multiple
-              countries.
-            </p>
-          </div>
-        )}
+
+{addCountries && (
+  <div className="mb-4">
+    <Select
+      isMulti
+      options={countries
+        .filter((c) => c.id !== primaryCountry)
+        .map((country) => ({
+          value: country.id,
+          label: country.country,
+        }))
+      }
+      onChange={handleAdditionalCountriesChange}
+      className="w-full"
+      classNamePrefix="select"
+      placeholder="Search and select countries..."
+    />
+
+    
+  </div>
+)}
+
 
         <div className="flex items-center w-full p-8 gap-5">
           <button
