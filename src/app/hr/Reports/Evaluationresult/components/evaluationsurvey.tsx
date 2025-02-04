@@ -1,3 +1,4 @@
+'use client';
 import ScreenLoader from '@/components/common/ScreenLoader';
 import axiosInstance from '@/lib/axios';
 import { SurveyProps } from '@/types/common';

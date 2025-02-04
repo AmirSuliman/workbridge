@@ -1,3 +1,4 @@
+import ScreenLoader from '@/components/common/ScreenLoader';
 import { fetchSurveys } from '@/store/slices/surveySlice';
 import { AppDispatch, RootState } from '@/store/store';
 import { SurveyProps } from '@/types/common';
@@ -24,8 +25,8 @@ const Evaluationlist = () => {
     dispatch(fetchSurveys());
   }, [dispatch]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  // if (loading) return <div>Loading...</div>;
+  // if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="bg-white p-6 rounded-[10px] border">
@@ -72,49 +73,67 @@ const Evaluationlist = () => {
               <th className="p-4 text-[12px] text-gray-600"></th>
             </tr>
           </thead>
-          <tbody>
-            {data?.items?.map((survey) => (
-              <tr
-                key={survey.id}
-                className="border-b"
-                onClick={() => {
-                  // manager and survey id
-                  router.push(
-                    `/hr/Reports/evaluation/${survey.employeeId}?survey=${survey.id}`
-                  );
-                }}
-              >
-                <td className="p-4 text-[14px] text-gray-800">{survey.id}</td>
-                <td className="p-4 text-[14px] text-gray-800">
-                  {survey.sendBy}
-                </td>
-                <td className="p-4 text-[14px] text-gray-800">
-                  {survey.employeeId}
-                </td>
-                <td className="p-4 text-[14px] text-gray-800">
-                  {survey.departmentId}
-                </td>
-                <td className="p-4 text-[14px] text-gray-800">
-                  {new Date(survey.createdAt).toLocaleDateString()}
-                </td>
-                <td
-                  className={`p-4 text-[14px] ${
-                    survey.status === 'Completed'
-                      ? 'text-[#00B87D]'
-                      : 'text-gray-800'
-                  }`}
-                >
-                  {survey.status}
-                </td>
-                <td className="p-4 text-[14px] text-gray-800 text-end mr-0 ml-auto">
-                  <button className="flex flex-row items-center justify-end gap-3 p-1 px-3 border rounded">
-                    {survey.status === 'Completed' ? 'View Results' : 'View'}
-                    <BiChevronRight />
-                  </button>
+          {loading ? (
+            <tbody>
+              <tr>
+                <td className="text-center p-1" colSpan={6}>
+                  <ScreenLoader />
                 </td>
               </tr>
-            ))}
-          </tbody>
+            </tbody>
+          ) : error ? (
+            <tbody>
+              <tr>
+                <td className="text-center p-1" colSpan={6}>
+                  Error: {error}
+                </td>
+              </tr>
+            </tbody>
+          ) : (
+            <tbody>
+              {data?.items?.map((survey) => (
+                <tr
+                  key={survey.id}
+                  className="border-b"
+                  onClick={() => {
+                    // manager and survey id
+                    router.push(
+                      `/hr/Reports/evaluation/${survey.employeeId}?survey=${survey.id}`
+                    );
+                  }}
+                >
+                  <td className="p-4 text-[14px] text-gray-800">{survey.id}</td>
+                  <td className="p-4 text-[14px] text-gray-800">
+                    {survey.sendBy}
+                  </td>
+                  <td className="p-4 text-[14px] text-gray-800">
+                    {survey.employeeId}
+                  </td>
+                  <td className="p-4 text-[14px] text-gray-800">
+                    {survey.departmentId}
+                  </td>
+                  <td className="p-4 text-[14px] text-gray-800">
+                    {new Date(survey.createdAt).toLocaleDateString()}
+                  </td>
+                  <td
+                    className={`p-4 text-[14px] ${
+                      survey.status === 'Completed'
+                        ? 'text-[#00B87D]'
+                        : 'text-gray-800'
+                    }`}
+                  >
+                    {survey.status}
+                  </td>
+                  <td className="p-4 text-[14px] text-gray-800 text-end mr-0 ml-auto">
+                    <button className="flex flex-row items-center justify-end gap-3 p-1 px-3 border rounded">
+                      {survey.status === 'Completed' ? 'View Results' : 'View'}
+                      <BiChevronRight />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
       </div>
     </div>

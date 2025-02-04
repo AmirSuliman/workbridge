@@ -15,6 +15,7 @@ import folderReducer from './slices/folderSlice';
 import policyReducer from './slices/postPolicy';
 import noteReducer from './slices/noteSlice';
 import surveyReducer from './slices/surveySlice';
+import emergencyContactReducer from './slices/emergencyContactSlice';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
@@ -33,4 +34,5 @@ export const rootReducer = combineReducers({
   interview: interviewReducer,
   folder: folderReducer,
   surveys: surveyReducer,
+  emergencyContact: emergencyContactReducer,
 });

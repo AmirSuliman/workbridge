@@ -366,7 +366,7 @@ const MyInformation = () => {
             <DocumentSection employeeData={employeeData} />
           </TabComponent>
           <TabComponent index="4">
-            <EmergencySection />
+            <EmergencySection employeeData={employeeData} />
           </TabComponent>
           <TabComponent index="5">
             <NotesSection employeeId={empId || myId} />
