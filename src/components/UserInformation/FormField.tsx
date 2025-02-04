@@ -5,7 +5,7 @@ interface FormFieldProps {
   label: string;
   value: string;
   name?: string;
-  readOnly: boolean;
+  readOnly?: boolean;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
   placeholder?: string;
   className?: string;
