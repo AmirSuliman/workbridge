@@ -72,11 +72,11 @@ const NotesSection = ({ employeeId }) => {
   }, [dispatch, employeeId]);
 
   const handleEditClick = (note: Note) => {
+    setShowModal(true);
     dispatch(setSelectedNote(note));
   };
 
   const handleDeleteClick = useCallback(async () => {
-    console.log('delete id: ', deleteId);
     if (deleteId) {
       await dispatch(deleteNote(deleteId));
       dispatch(resetCrudStatus());
@@ -207,7 +207,7 @@ const NotesSection = ({ employeeId }) => {
         </div>
       </div>
 
-      {selectedNote && (
+      {showModal && selectedNote && (
         <Modal onClose={handleCloseModal}>
           <div className="p-8 w-full sm:w-[600px]">
             <h2 className="text-2xl font-semibold mb-4">Edit Note</h2>
