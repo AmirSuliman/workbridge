@@ -15,63 +15,95 @@ const Stepper = ({ jobApplication, currentStage, onTabChange }) => {
     }
   };
 
+  const stages = ['Applied', 'Technical', 'Second', 'Negotiation', 'Offer', 'Onboarding'];
+  const currentIndex = stages.indexOf(currentStage);
+
   return (
     <>
       <div className="flex items-center">
         <IconWithBg
-          className={`size-[40px] ${currentStage === 'Applied' ? 'bg-black text-white' : ''}`}
+          className={`size-[40px] ${
+            currentIndex === 0 ? 'bg-black text-white' : currentIndex > 0 ? 'bg-green-500 text-white' : ''
+          }`}
           icon={<PiListChecksLight size={24} />}
           onClick={() => handleNavigation('Applied')}
         />
-        <StepLine className={`${['Technical', 'Second', 'Negotiation', 'Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'bg-black' : ''}`} />
+        <StepLine className={`${currentIndex >= 1 ? 'bg-green-500' : ''}`} />
         <IconWithBg
-          className={`size-[40px] ${['Technical', 'Second', 'Negotiation', 'Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'bg-black text-white' : ''}`}
+          className={`size-[40px] ${
+            currentIndex === 1 ? 'bg-black text-white' : currentIndex > 1 ? 'bg-green-500 text-white' : ''
+          }`}
           icon={<PiListNumbersFill size={24} />}
           onClick={() => handleNavigation('Technical')}
         />
-        <StepLine className={`${['Second', 'Negotiation', 'Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'bg-black' : ''}`} />
+        <StepLine className={`${currentIndex >= 2 ? 'bg-green-500' : ''}`} />
         <IconWithBg
-          className={`size-[40px] ${['Second', 'Negotiation', 'Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'bg-black text-white' : ''}`}
+          className={`size-[40px] ${
+            currentIndex === 2 ? 'bg-black text-white' : currentIndex > 2 ? 'bg-green-500 text-white' : ''
+          }`}
           icon={<PiListChecksFill size={24} />}
           onClick={() => handleNavigation('Second')}
         />
-        <StepLine className={`${['Negotiation', 'Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'bg-black' : ''}`} />
+        <StepLine className={`${currentIndex >= 3 ? 'bg-green-500' : ''}`} />
         <IconWithBg
-          className={`size-[40px] ${['Negotiation', 'Offer', 'Onboarding', 'Rejected'].includes(currentStage) ? 'bg-black text-white' : ''}`}
+          className={`size-[40px] ${
+            currentIndex === 3 ? 'bg-black text-white' : currentIndex > 3 ? 'bg-green-500 text-white' : ''
+          }`}
           icon={<IoDocumentTextOutline size={24} />}
           onClick={() => handleNavigation('Negotiation')}
         />
-        <StepLine className={`${['Onboarding', 'Rejected', 'Offer'].includes(currentStage) ? 'bg-black' : ''}`} />
+        <StepLine className={`${currentIndex >= 4 ? 'bg-green-500' : ''}`} />
         <IconWithBg
-          className={`size-[40px] ${['Onboarding', 'Rejected', 'Offer'].includes(currentStage) ? 'bg-black text-white' : ''}`}
+          className={`size-[40px] ${
+            currentIndex === 4 ? 'bg-black text-white' : currentIndex > 4 ? 'bg-green-500 text-white' : ''
+          }`}
           icon={<IoDocumentTextOutline size={24} />}
           onClick={() => handleNavigation('Offer')}
         />
-        <StepLine  className={`${['Onboarding'].includes(currentStage) ? 'bg-black' : ''}`} />
-       
+        <StepLine className={`${currentIndex >= 5 ? 'bg-green-500' : ''}`} />
         <IconWithBg
-          className={`size-[40px] ${['Onboarding' ].includes(currentStage) ? 'bg-black text-white' : ''}`}
+          className={`size-[40px] ${
+            currentIndex === 5 ? 'bg-black text-white' : ''
+          }`}
           icon={<FaRegHandshake size={24} />}
           onClick={() => handleNavigation('Onboarding')}
         />
       </div>
       <div className="flex items-center justify-between">
-        <p className={`cursor-pointer ${currentStage === 'Applied' ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Applied')}>
+        <p
+          className={`cursor-pointer ${currentStage === 'Applied' ? 'font-semibold' : ''}`}
+          onClick={() => handleNavigation('Applied')}
+        >
           First Round
         </p>
-        <p className={`cursor-pointer ${['Technical'].includes(currentStage) ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Technical')}>
+        <p
+          className={`cursor-pointer ${currentStage === 'Technical' ? 'font-semibold' : ''}`}
+          onClick={() => handleNavigation('Technical')}
+        >
           Technical Interview
         </p>
-        <p className={`cursor-pointer ${['Second'].includes(currentStage) ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Second')}>
+        <p
+          className={`cursor-pointer ${currentStage === 'Second' ? 'font-semibold' : ''}`}
+          onClick={() => handleNavigation('Second')}
+        >
           Second Round
         </p>
-        <p className={`cursor-pointer ${['Negotiation'].includes(currentStage) ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Negotiation')}>
+        <p
+          className={`cursor-pointer ${currentStage === 'Negotiation' ? 'font-semibold' : ''}`}
+          onClick={() => handleNavigation('Negotiation')}
+        >
           Offer and Negotiation
         </p>
-        <p className={`cursor-pointer ${['Offer',  'Rejected'].includes(currentStage) ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Offer')}>
+        <p
+          className={`cursor-pointer ${currentStage === 'Offer' ? 'font-semibold' : ''}`}
+          onClick={() => handleNavigation('Offer')}
+        >
           Offer Approval
         </p>
-        <p className={`cursor-pointer ${[ 'Onboarding' ].includes(currentStage) ? 'font-semibold' : ''}`} onClick={() => handleNavigation('Onboarding')}>
+        <p
+          className={`cursor-pointer ${currentStage === 'Onboarding' ? 'font-semibold' : ''}`}
+          onClick={() => handleNavigation('Onboarding')}
+        >
           Onboarding
         </p>
       </div>
