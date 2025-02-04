@@ -1,24 +1,28 @@
 'use client';
+
 import axiosInstance from '@/lib/axios';
 import { useEffect, useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
+import { useSession } from 'next-auth/react';
 
 interface Folder {
   id: string;
   name: string;
-  files: File[];
 }
 
-const Uploadfiles = ({ setIsModalOpen1 }) => {
+const UploadFiles = ({ setIsModalOpen1 }) => {
+  const { data: session } = useSession();
+  const userId = session?.user?.userId; 
+  console.log(userId, 'id');
+  console.log(session);
   const [progress, setProgress] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [folders, setFolders] = useState<Folder[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [folderId, setFolderId] = useState<string>('');
-  const [title, setTitle] = useState<string>(''); // Document title
+  const [title, setTitle] = useState<string>(''); 
 
-  // Fetch folders from the server
   useEffect(() => {
     const fetchFolders = async () => {
       setLoading(true);
@@ -40,8 +44,7 @@ const Uploadfiles = ({ setIsModalOpen1 }) => {
   // Handle file selection
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      const file = event.target.files[0];
-      setSelectedFile(file);
+      setSelectedFile(event.target.files[0]);
     }
   };
 
@@ -52,28 +55,46 @@ const Uploadfiles = ({ setIsModalOpen1 }) => {
       return;
     }
 
+    if (!userId) {
+      setError('User not authenticated.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('file', selectedFile);
     formData.append('folderId', folderId);
-    formData.append('fileTitle', title); 
+    formData.append('fileTitle', title);
 
     try {
       setLoading(true);
-      const response = await axiosInstance.post('/file/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+
+      // Step 1: Upload the file
+      const uploadResponse = await axiosInstance.post('/file/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
         onUploadProgress: (progressEvent) => {
           if (progressEvent.total) {
-            const percentage = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
+            const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
             setProgress(percentage);
           }
         },
       });
 
-      console.log(response.data, 'upload response');
+      const fileId = uploadResponse.data?.data?.id;
+      if (!fileId) {
+        throw new Error('File upload failed, missing file ID.');
+      }
+
+      console.log('File uploaded:', uploadResponse.data);
+
+      // Step 2: Call /adminfile/upload API
+      const adminUploadResponse = await axiosInstance.post('/adminfile/upload', {
+        fileId,
+        uploadedBy: userId,
+      });
+
+      console.log('Admin file uploaded:', adminUploadResponse.data);
+
+      // Close modal after successful API calls
       setProgress(0);
       setIsModalOpen1(false);
     } catch (err) {
@@ -96,9 +117,7 @@ const Uploadfiles = ({ setIsModalOpen1 }) => {
       <h2 className="font-semibold text-xl mb-4">Upload File</h2>
 
       {/* File Select */}
-      <label className="text-gray-400 block text-sm mb-2 mt-8">
-        Upload file
-      </label>
+      <label className="text-gray-400 block text-sm mb-2 mt-8">Upload file</label>
       <input
         type="file"
         onChange={handleFileSelect}
@@ -107,15 +126,12 @@ const Uploadfiles = ({ setIsModalOpen1 }) => {
 
       <div className="w-full mt-2">
         <div className="h-2 bg-gray-200 rounded">
-          <div
-            className="h-2 bg-gray-400 rounded"
-            style={{ width: `${progress}%` }}
-          ></div>
+          <div className="h-2 bg-gray-400 rounded" style={{ width: `${progress}%` }}></div>
         </div>
         <div className="text-gray-500 text-xs mt-1 text-right">{progress}%</div>
       </div>
 
-      <div className="h-[1px]  w-full bg-gray-200 mt-4" />
+      <div className="h-[1px] w-full bg-gray-200 mt-4" />
 
       {/* Folder and Document Title */}
       <div className="flex flex-row items-center w-full gap-6 mt-4">
@@ -142,7 +158,7 @@ const Uploadfiles = ({ setIsModalOpen1 }) => {
             placeholder="Add document title"
             className="w-full border p-3 rounded"
             value={title}
-            onChange={(e) => setTitle(e.target.value)} // Allow user to set title
+            onChange={(e) => setTitle(e.target.value)}
           />
         </label>
       </div>
@@ -167,8 +183,10 @@ const Uploadfiles = ({ setIsModalOpen1 }) => {
           Cancel
         </button>
       </div>
+
+      {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
     </div>
   );
 };
 
-export default Uploadfiles;
+export default UploadFiles;
