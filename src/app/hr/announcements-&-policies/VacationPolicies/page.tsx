@@ -5,6 +5,7 @@ import { FaBullhorn } from 'react-icons/fa';
 import Modal from '@/components/modal';
 import axiosInstance from '@/lib/axios';
 import SendHolidayNotification from './sendholidaynotification';
+import toast from 'react-hot-toast';
 
 interface User {
   id: number;
@@ -48,7 +49,7 @@ const VacationPolicies = () => {
   const [isModalOpen3, setIsModalOpen3] = useState(false);
   const [holidayToDelete, setHolidayToDelete] = useState<number | null>(null);
   const [selectedHoliday, setSelectedHoliday] = useState<Holiday | null>(null);
-
+  const [selectedCountry, setSelectedCountry] = useState<number>(3); 
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [type, setType] = useState('');
@@ -68,14 +69,19 @@ const VacationPolicies = () => {
       }
     };
 
-    const fetchHolidays = async () => {
+    const fetchHolidays = async (countryId: number) => {
       try {
-        const response = await axiosInstance.get('/holidays', {
-          params: { associations: true },
-        });
-    
-        if (response.data?.data?.holidays) {
-          setHolidays(response.data.data.holidays);
+        const response = await axiosInstance.get(`/holidays/${countryId}`);
+        if (response.data?.data?.rows) {
+          setHolidays(response.data.data.rows.map((item) => ({
+            id: item.holiday.id,
+            title: item.holiday.title,
+            date: item.holiday.date,
+            type: item.holiday.type,
+            createdBy: item.holiday.createdBy,
+            user: item.holiday.user, // Include user object
+            countryholidays: [item],
+          })));
         }
       } catch (error) {
         console.error('Error fetching holidays:', error);
@@ -83,15 +89,18 @@ const VacationPolicies = () => {
     };
     
     
+    
+    
     useEffect(() => {
-    fetchCountries();
-    fetchHolidays();
-  }, []);
+      fetchCountries();
+      fetchHolidays(selectedCountry);
+    }, [selectedCountry]);
+    
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
     if (!isModalOpen) {
-      fetchHolidays(); 
+      fetchHolidays(selectedCountry); 
     }
   };
   
@@ -110,6 +119,7 @@ const VacationPolicies = () => {
         );
 
         if (response.status === 200) {
+          toast.success("Holiday successfully deleted!")
           setHolidays(
             holidays.filter((holiday) => holiday.id !== holidayToDelete)
           );
@@ -215,20 +225,20 @@ const VacationPolicies = () => {
 
       {/* Dropdown and Add Button */}
       <div className="flex flex-row items-center justify-between">
-        <select
-          id="countries"
-          name="countries"
-          className="border p-2 rounded w-[400px] focus:outline-none"
-        >
-          <option value="" disabled selected>
-            Select a country
-          </option>
-          {countries.map((country) => (
-            <option key={country.id} value={country.code}>
-              {country.country}
-            </option>
-          ))}
-        </select>
+      <select
+  id="countries"
+  name="countries"
+  value={selectedCountry}
+  onChange={(e) => setSelectedCountry(Number(e.target.value))}
+  className="border p-2 rounded w-[400px] focus:outline-none"
+>
+  {countries.map((country) => (
+    <option key={country.id} value={country.id}>
+      {country.country}
+    </option>
+  ))}
+</select>
+
 
         <button
           onClick={toggleModal}
@@ -260,7 +270,7 @@ const VacationPolicies = () => {
                 <td className="p-4">{formatDate(holiday.date)}</td>
                 <td className="p-4">{holiday.type}</td>
 <td className="p-4">
-  {holiday.user ? `${holiday.user.firstName} ${holiday.user.lastName}` : 'N/A'}
+  {holiday.user ? `${holiday.user.firstName} ${holiday.user.lastName}` : ''}
 </td>
                 <td className="p-4 text-center flex justify-center space-x-2">
                   <BiTrash
