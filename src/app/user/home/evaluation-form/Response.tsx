@@ -30,7 +30,7 @@ const Response = () => {
     };
     getQuestions();
     if (session?.user?.accessToken) {
-      getQuestions(); // Fetch questions only if accessToken is available
+      getQuestions();
     }
   }, [surveyId, session]);
 
