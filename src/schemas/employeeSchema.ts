@@ -3,6 +3,7 @@ const locationSchema = z.object({
   street1: z
     .string({ message: 'Street1 is required' })
     .min(1, 'Street1 is required'),
+  street2: z.union([z.string().optional(), z.null()]).optional(),
   zipCode: z
     .number({ message: 'zip code is required' })
     .min(1, 'zip code is required')

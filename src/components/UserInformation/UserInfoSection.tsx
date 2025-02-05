@@ -37,6 +37,12 @@ const UserInfoSection = ({
             )}
           />
         )}
+        {editEmployee && (
+          <label className="flex items-center gap-2 my-4">
+            <input type="checkbox" {...register('isManager')} />
+            <span className="form-label">Is Manager?</span>
+          </label>
+        )}
         <div className="grid sm:grid-cols-3 gap-4 my-5">
           <div className="flex flex-col">
             <h6 className="form-label">First Name*</h6>
@@ -169,7 +175,7 @@ const UserInfoSection = ({
               {...register('location.street2')}
               readOnly={!editEmployee}
             />
-            {errors?.location?.street2 && (
+            {errors?.location && errors?.location?.street2 && (
               <p className="form-error">{errors?.location?.street2.message}</p>
             )}
           </label>

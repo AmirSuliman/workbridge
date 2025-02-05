@@ -186,10 +186,11 @@ const MyInformation = () => {
   const onSubmit = async (data: any) => {
     // PUT employee/id needs the following payload.
     // The data parameter ☝ contains extra fields that backend does not expect.
-
+    console.log('data: ', data);
     const payLoad = {
       firstName: data.firstName,
       lastName: data.lastName,
+      isManager: data.isManager,
       departmentId: data.departmentId,
       email: data.email,
       middleName: data.middleName,
@@ -221,6 +222,8 @@ const MyInformation = () => {
         state: data.location.state,
       },
     };
+    console.log('payload: ', payLoad);
+
     try {
       setEditLoading(true);
       // handle profile picture to get url from the upload picture

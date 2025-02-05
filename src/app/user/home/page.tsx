@@ -12,8 +12,25 @@ import { HiSpeakerphone } from 'react-icons/hi';
 import { PiArrowUpRightThin } from 'react-icons/pi';
 import Evaluation from './components/evaluation';
 import Newpolicyupdate from './components/newpolicyupdate';
+import { useEffect, useState } from 'react';
+import axiosInstance from '@/lib/axios';
 
-const page = () => {
+const Home = () => {
+  const [evaluation, setEvaluation] = useState();
+
+  useEffect(() => {
+    const getEvaluationNotification = async () => {
+      try {
+        const response = await axiosInstance.get(
+          '/survey/notification/employee/4'
+        );
+        console.log('response: ', response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getEvaluationNotification();
+  }, []);
   return (
     <div className="p-6">
       <main className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -47,4 +64,4 @@ const page = () => {
     </div>
   );
 };
-export default page;
+export default Home;

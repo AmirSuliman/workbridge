@@ -2,9 +2,10 @@ import { fetchJobApplications } from '@/store/slices/jobApplicationsSlice';
 import { useEffect, useState } from 'react';
 import { FaChevronRight, FaSearch } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import ScreenLoader from '../common/ScreenLoader';
 import { Pagination } from '../common/Pagination';
 import { AppDispatch, RootState } from '@/store/store';
+
+import ScreenLoader from '../common/ScreenLoader';
 
 const CandidateTable = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -13,9 +14,9 @@ const CandidateTable = () => {
   );
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [sort, setSort] = useState('');
   const [filter, setFilter] = useState('');
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const pageSize = 10;
 
   const handlePageChange = (page: number) => {
