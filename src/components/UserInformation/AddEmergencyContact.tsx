@@ -10,17 +10,21 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store/store';
 import { setEmergencyContact } from '@/store/slices/emergencyContactSlice';
 
-const AddEmergencyContact = ({ employeeData, emergencyContacts }) => {
+const AddEmergencyContact = ({
+  setAddNew,
+  employeeData,
+  emergencyContacts,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const {
     reset,
-    formState,
     register,
+    formState,
     handleSubmit,
     formState: { errors },
   } = useForm({
     // resolver: zodResolver(employeeSchema),
-    mode: 'onChange',
+    // mode: 'onChange',
   });
   const { isSubmitting } = formState;
   const onSubmit = async (data: any) => {
@@ -49,6 +53,7 @@ const AddEmergencyContact = ({ employeeData, emergencyContacts }) => {
       console.log('res: ', response.data);
       dispatch(setEmergencyContact([...emergencyContacts, response.data.data]));
       toast.success('Emergency contact added successfully!');
+      setAddNew(false);
       reset();
     } catch (error) {
       toast.error(

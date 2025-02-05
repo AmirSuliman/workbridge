@@ -13,9 +13,11 @@ import AddEmergencyContact from './AddEmergencyContact';
 import DeleteEmergencyContactModal from './DeleteEmergencyContactModal';
 import FormField from './FormField';
 import FormHeading from './FormHeading';
+import { BiLoaderCircle } from 'react-icons/bi';
 
 const EmergencySection = ({ employeeData }) => {
   const [addeNew, setAddNew] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editingContactId, setEditingContactId] = useState<number | null>(null);
   const [formData, setFormData] = useState({});
@@ -72,6 +74,7 @@ const EmergencySection = ({ employeeData }) => {
 
   // Handle edit submission
   const handleEditSubmit = async (id) => {
+    setEditLoading(true);
     const payload = {
       employeeId: employeeData.id,
       ...formData[id],
@@ -89,7 +92,9 @@ const EmergencySection = ({ employeeData }) => {
       dispatch(setEmergencyContact(updatedContacts));
       toast.success('Emergency contact edited successfully!');
       setEditingContactId(null);
+      setEditLoading(false);
     } catch (error) {
+      setEditLoading(false);
       console.log(error);
       toast.error(
         (error as any).response?.data?.message ||
@@ -118,6 +123,7 @@ const EmergencySection = ({ employeeData }) => {
                   <Button
                     onClick={(e) => {
                       e.preventDefault();
+                      setAddNew(false);
                       setEditingContactId(contact.id);
                       setFormData((prev) => ({
                         ...prev,
@@ -131,9 +137,27 @@ const EmergencySection = ({ employeeData }) => {
                 )}
                 {isEditing && (
                   <Button
+                    disabled={editLoading}
                     onClick={() => handleEditSubmit(contact.id)}
-                    name="Save changes"
+                    name={editLoading ? '' : 'Save changes'}
+                    icon={
+                      editLoading && (
+                        <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+                      )
+                    }
                     className="ml-auto mr-0 text-xs"
+                  />
+                )}
+                {isEditing && (
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setEditingContactId(null);
+                    }}
+                    name="Cancel"
+                    bg="transparent"
+                    textColor="black"
+                    className="mr-0 text-xs"
                   />
                 )}
                 {!isEditing && (
@@ -310,6 +334,7 @@ const EmergencySection = ({ employeeData }) => {
         <AddEmergencyContact
           employeeData={employeeData}
           emergencyContacts={emergencyContacts}
+          setAddNew={setAddNew}
         />
       )}
       {!addeNew && !editingContactId && (
