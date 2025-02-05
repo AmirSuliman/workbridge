@@ -1,17 +1,15 @@
 'use client';
 
-import React from 'react';
-import WhosOut from '@/components/WhosOut/WhosOut';
+import Button from '@/components/Button';
+import Celebrations from '@/components/Celebrations/Celebrations';
+import Companyinfo from '@/components/companyinformation/companyinformaion';
+import NewEmployees from '@/components/NewEmployees/NewEmployees';
 import SingleAnnouncement from '@/components/SingleAnnouncement/SingleAnnouncement';
+import Training from '@/components/Training/Training';
+import WhosOut from '@/components/WhosOut/WhosOut';
 import Link from 'next/link';
 import { HiSpeakerphone } from 'react-icons/hi';
-import Button from '@/components/Button';
 import { PiArrowUpRightThin } from 'react-icons/pi';
-import Celebrations from '@/components/Celebrations/Celebrations';
-import Training from '@/components/Training/Training';
-import NewEmployees from '@/components/NewEmployees/NewEmployees';
-import Companyinfo from '@/components/companyinformation/companyinformaion';
-import Employeementreport from '@/components/Employementreport/employmentreport';
 import Evaluation from './components/evaluation';
 import Newpolicyupdate from './components/newpolicyupdate';
 

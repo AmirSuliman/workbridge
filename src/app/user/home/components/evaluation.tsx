@@ -13,7 +13,7 @@ const Evaluation = () => {
           <p className="text-[14px] font-semibold">Yearly Evaluation Form</p>
           <p className="text-[11px]">Date: October 23, 2024</p>
         </div>
-        <Link href="/user/home/EvaluationForm">
+        <Link href="/user/home/evaluation-form">
           <button className="text-white text-[11px] bg-black p-2 rounded mt-3">
             Start Survey
           </button>

@@ -1,11 +1,8 @@
 'use client';
-import React from 'react';
+import { EventTypes } from '@/types/events';
+import eventEmitter from '@/utils/eventEmitter';
 import { GoBell } from 'react-icons/go';
 import { TiThMenu } from 'react-icons/ti';
-import { FaAngleDown } from 'react-icons/fa';
-import Image from 'next/image';
-import eventEmitter from '@/utils/eventEmitter';
-import { EventTypes } from '@/types/events';
 import UserProfileInfo from '../UserProfileInfo';
 const UserHeader = () => {
   const toggleSidebar = () => {
@@ -19,11 +16,9 @@ const UserHeader = () => {
         <GoBell size={18} />
       </button>
 
-      <button className="flex flex-nowrap gap-4 justify-end items-center mr-0">
-       
-             <UserProfileInfo />
-
-      </button>
+      <div className="flex flex-nowrap gap-4 justify-end items-center mr-0">
+        <UserProfileInfo />
+      </div>
     </header>
   );
 };

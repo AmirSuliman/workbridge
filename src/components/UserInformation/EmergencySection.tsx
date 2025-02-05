@@ -44,13 +44,30 @@ const EmergencySection = ({ employeeData }) => {
   // Handle input change for editing
   const handleInputChange = (e, id) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [id]: {
-        ...prev[id],
-        [name]: value,
-      },
-    }));
+
+    // Check if the field is part of the location object
+    if (name.includes('location.')) {
+      const locationField = name.split('.')[1]; // Extract the field name (e.g., 'street1', 'city')
+      setFormData((prev) => ({
+        ...prev,
+        [id]: {
+          ...prev[id],
+          location: {
+            ...prev[id]?.location,
+            [locationField]: value,
+          },
+        },
+      }));
+    } else {
+      // Handle top-level fields
+      setFormData((prev) => ({
+        ...prev,
+        [id]: {
+          ...prev[id],
+          [name]: value,
+        },
+      }));
+    }
   };
 
   // Handle edit submission
@@ -210,66 +227,66 @@ const EmergencySection = ({ employeeData }) => {
                     label="Street 1"
                     value={
                       isEditing
-                        ? formData[contact.id]?.street1
+                        ? formData[contact.id]?.location?.street1
                         : contact.location?.street1 || ''
                     }
                     onChange={(e) => handleInputChange(e, contact.id)}
-                    name="street1"
+                    name="location.street1"
                     readOnly={!isEditing}
                   />
                   <FormField
                     label="Street 2"
                     value={
                       isEditing
-                        ? formData[contact.id]?.street2
+                        ? formData[contact.id]?.location?.street2
                         : contact.location?.street2 || ''
                     }
                     onChange={(e) => handleInputChange(e, contact.id)}
-                    name="street2"
+                    name="location.street2"
                     readOnly={!isEditing}
                   />
                   <FormField
                     label="Zip"
                     value={
                       isEditing
-                        ? formData[contact.id]?.zipCode
+                        ? formData[contact.id]?.location?.zipCode
                         : contact.location?.zipCode || ''
                     }
                     onChange={(e) => handleInputChange(e, contact.id)}
-                    name="zipCode"
+                    name="location.zipCode"
                     readOnly={!isEditing}
                   />
                   <FormField
                     label="City"
                     value={
                       isEditing
-                        ? formData[contact.id]?.city
+                        ? formData[contact.id]?.location?.city
                         : contact.location?.city || ''
                     }
                     onChange={(e) => handleInputChange(e, contact.id)}
-                    name="city"
+                    name="location.city"
                     readOnly={!isEditing}
                   />
                   <FormField
                     label="Country"
                     value={
                       isEditing
-                        ? formData[contact.id]?.country
+                        ? formData[contact.id]?.location?.country
                         : contact.location?.country || ''
                     }
                     onChange={(e) => handleInputChange(e, contact.id)}
-                    name="country"
+                    name="location.country"
                     readOnly={!isEditing}
                   />
                   <FormField
                     label="State"
                     value={
                       isEditing
-                        ? formData[contact.id]?.state
+                        ? formData[contact.id]?.location?.state
                         : contact.location?.state || ''
                     }
                     onChange={(e) => handleInputChange(e, contact.id)}
-                    name="state"
+                    name="location.state"
                     readOnly={!isEditing}
                   />
                 </div>
