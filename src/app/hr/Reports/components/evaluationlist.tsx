@@ -56,15 +56,17 @@ const Evaluationlist = () => {
         <table className="min-w-full mt-4 table-auto">
           <thead>
             <tr className="border-b">
-              <th className="text-left p-4 text-[14px] text-gray-400">ID</th>
               <th className="text-left p-4 text-[14px] text-gray-400">
                 Sent by
               </th>
               <th className="text-left p-4 text-[14px] text-gray-400">
-                Employee
+                Employee/Manager
               </th>
               <th className="text-left p-4 text-[14px] text-gray-400">
                 Department
+              </th>
+              <th className="text-left p-4 text-[14px] text-gray-400">
+                No. of Employees
               </th>
               <th className="text-left p-4 text-[14px] text-gray-400">Date</th>
               <th className="text-left p-4 text-[14px] text-gray-400">
@@ -102,15 +104,17 @@ const Evaluationlist = () => {
                     );
                   }}
                 >
-                  <td className="p-4 text-[14px] text-gray-800">{survey.id}</td>
                   <td className="p-4 text-[14px] text-gray-800">
-                    {survey.sendBy}
+                    {`${survey?.user?.firstName} ${survey?.user?.lastName}`}
                   </td>
                   <td className="p-4 text-[14px] text-gray-800">
-                    {survey.employeeId}
+                    {`${survey?.employee?.firstName} ${survey?.employee?.lastName}`}
                   </td>
                   <td className="p-4 text-[14px] text-gray-800">
-                    {survey.departmentId}
+                    {survey.department?.name}
+                  </td>
+                  <td className="p-4 text-[14px] text-gray-800">
+                    {survey.surveyEmployees?.length || 0}
                   </td>
                   <td className="p-4 text-[14px] text-gray-800">
                     {new Date(survey.createdAt).toLocaleDateString()}

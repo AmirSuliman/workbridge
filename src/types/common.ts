@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Location } from './employee';
+import { Department, EmployeeData, Location } from './employee';
 
 export interface IconProps {
   classNames?: string;
@@ -17,6 +17,13 @@ export interface SurveyProps {
   id: number;
   employeeId: number;
   departmentId: number;
+  surveyEmployees: [];
+  user: {
+    firstName: string;
+    lastName: string;
+  };
+  employee: EmployeeData;
+  department: Department;
 }
 
 export interface EmergencyContactProps {

@@ -12,7 +12,7 @@ const Employeelist = () => {
   const searchParams = useSearchParams();
   const survey = searchParams.get('survey');
   const employeeId = searchParams.get('employee');
-  console.log('surveyId: ', survey, 'employeeId: ', employeeId);
+  // console.log('surveyId: ', survey, 'employeeId: ', employeeId);
   useEffect(() => {
     const getManagerEmployees = async () => {
       try {
@@ -37,7 +37,7 @@ const Employeelist = () => {
                 e.preventDefault();
                 // manager and survey id
                 router.push(
-                  `/hr/Reports/evaluation/${managerId}?survey=${survey}&employee=${employee.id}`
+                  `user/home/evaluation-form/${managerId}?survey=${survey}&employee=${employee.id}`
                 );
               }}
               key={employee.id}

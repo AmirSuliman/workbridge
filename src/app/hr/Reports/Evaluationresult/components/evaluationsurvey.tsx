@@ -15,7 +15,9 @@ const Evaluationsurvey = () => {
   useEffect(() => {
     const getSurvey = async () => {
       try {
-        const response = await axiosInstance.get(`/survey/${surveyId}`);
+        const response = await axiosInstance.get(`/survey/${surveyId}`, {
+          params: { associations: true },
+        });
         console.log('single survey res:', response.data);
         setSurvey(response.data.data);
         setIsLoading(false);
@@ -50,7 +52,7 @@ const Evaluationsurvey = () => {
             <label className="flex flex-col gap-1 w-full ">
               <span className="text-gray-400 text-[14px]">Sent by</span>
               <div className="p-3 w-full border rounded text-[14px]">
-                {survey?.sendBy}
+                {`${survey?.user?.firstName} ${survey?.user?.lastName}`}
               </div>
             </label>
             <label className="flex flex-col gap-1 w-full ">
@@ -64,7 +66,7 @@ const Evaluationsurvey = () => {
             <label className="flex flex-col gap-1 w-full ">
               <span className="text-gray-400 text-[14px]">Department </span>
               <div className="p-3 w-full border rounded text-[14px]">
-                {survey?.departmentId}
+                {survey?.department?.name}
               </div>
             </label>
             <label className="flex flex-col gap-1 w-full ">
@@ -72,7 +74,7 @@ const Evaluationsurvey = () => {
                 Employee/Manager
               </span>
               <div className="p-3 w-full border rounded text-[14px]">
-                {survey?.employeeId}
+                {`${survey?.employee?.firstName} ${survey?.employee?.lastName}`}
               </div>
             </label>
           </div>

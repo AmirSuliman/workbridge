@@ -1,24 +1,39 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-const Evaluation = () => {
+const Evaluation = ({ evaluation }) => {
   return (
     <div className="w-full p-6 bg-white rounded-[10px] border ">
       <p className="text-[18px] font-medium flex flex-row items-center gap-2">
         <Image src="/Vector (Stroke).png" alt="img" width={30} height={30} />
         Evaluation
       </p>
-      <div className="flex flex-row items-center justify-between w-full">
-        <div className="flex flex-col mt-8">
-          <p className="text-[14px] font-semibold">Yearly Evaluation Form</p>
-          <p className="text-[11px]">Date: October 23, 2024</p>
-        </div>
-        <Link href="/user/home/evaluation-form">
-          <button className="text-white text-[11px] bg-black p-2 rounded mt-3">
+      {evaluation.map((item) => (
+        <div
+          key={item.id}
+          className="flex flex-row items-center justify-between w-full"
+        >
+          <div className="flex flex-col mt-8">
+            <p className="text-[14px] font-semibold">Yearly Evaluation Form</p>
+            <p className="text-[11px] font-bold">
+              <span className="font-normal">Date:</span>{' '}
+              {item.createdAt
+                ? new Date(item.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })
+                : ''}
+            </p>
+          </div>
+          <Link
+            href={`/user/home/evaluation-form?survey=${item.id}&employee=${item.employeeId}`}
+            className="text-white text-[11px] bg-black p-2 rounded mt-3"
+          >
             Start Survey
-          </button>
-        </Link>
-      </div>
+          </Link>
+        </div>
+      ))}
 
       <div className="mt-5 w-full h-[1px] bg-gray-200" />
 

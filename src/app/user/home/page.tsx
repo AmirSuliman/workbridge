@@ -14,31 +14,82 @@ import Evaluation from './components/evaluation';
 import Newpolicyupdate from './components/newpolicyupdate';
 import { useEffect, useState } from 'react';
 import axiosInstance from '@/lib/axios';
+import { getSession } from 'next-auth/react';
+
+interface InnerUser {
+  active: boolean;
+  email: string;
+  firstName: string;
+  id: number;
+  lastName: string;
+  permissions: string[];
+  profilePictureUrl: string;
+  role: string;
+  roleId: number;
+  userId: string;
+  accessToken: string;
+  employeeId?: number; // Add employeeId as optional
+}
+
+interface Session {
+  user: InnerUser;
+}
+
+interface User {
+  employeeId: number | null;
+}
 
 const Home = () => {
-  const [evaluation, setEvaluation] = useState();
+  const [evaluation, setEvaluation] = useState<any[]>([]);
+  const [employeeId, setEmployeeId] = useState<User>();
+
+  const fetchSession = async (): Promise<Session | null> => {
+    const session = await getSession();
+    console.log('session: ', session);
+    return session;
+  };
+
+  useEffect(() => {
+    const fetchSessionAndSetEmployeeId = async () => {
+      const session = await fetchSession();
+      if (session?.user?.employeeId) {
+        setEmployeeId({ employeeId: session.user.employeeId });
+      } else {
+        setEmployeeId({ employeeId: null }); // Handle the case where employeeId is not available
+      }
+    };
+
+    fetchSessionAndSetEmployeeId();
+  }, []);
+  console.log('Home employeeId: ', employeeId);
 
   useEffect(() => {
     const getEvaluationNotification = async () => {
       try {
-        const response = await axiosInstance.get(
-          '/survey/notification/employee/4'
-        );
-        console.log('response: ', response.data);
+        if (employeeId) {
+          const response = await axiosInstance.get(
+            `/survey/notification/employee/${employeeId.employeeId}`
+          );
+          console.log('Evalution response: ', response.data.data.notifications);
+          setEvaluation(response.data.data.notifications);
+        }
       } catch (error) {
         console.log(error);
       }
     };
     getEvaluationNotification();
-  }, []);
+  }, [employeeId]);
+
   return (
     <div className="p-6">
       <main className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <WhosOut />
-        <div className="flex flex-col gap-5">
-          <Evaluation />
-          <Newpolicyupdate />
-        </div>
+
+        {evaluation
+          ? evaluation.length > 0 && <Evaluation evaluation={evaluation} />
+          : ''}
+        <Newpolicyupdate />
+
         <Celebrations />
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
           <header className="px-4 flex items-center gap-4 justify-between">
