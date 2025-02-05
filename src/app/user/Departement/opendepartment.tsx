@@ -12,12 +12,9 @@ import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { CiCirclePlus } from 'react-icons/ci';
-import { FaAngleDown, FaEdit } from 'react-icons/fa';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import Addemployee from './components/addemployee';
-import EditDepartment from './components/editdepartment';
 import { EmployeeData } from '@/types/employee';
-import { FaTrash } from 'react-icons/fa6';
 
 interface DepartmentData {
   id: string;
@@ -30,9 +27,6 @@ const ITEMS_PER_PAGE = 10;
 const OpendepartmentTable: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalOpen1, setIsModalOpen1] = useState(false);
-  const [moreOptions, setMoreOptions] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [departmentData, setDepartmentData] = useState<DepartmentData | null>(
     null
   );

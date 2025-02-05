@@ -1,6 +1,5 @@
 'use client';
 
-import Button from '@/components/Button';
 import { Pagination } from '@/components/common/Pagination';
 import ProfileAvatarItem from '@/components/common/ProfileAvatarItem';
 import ScreenLoader from '@/components/common/ScreenLoader';
@@ -11,18 +10,12 @@ import { addEmployees } from '@/store/slices/allEmployeesSlice';
 import { AllEmployeeData } from '@/types/employee';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { CiCirclePlus } from 'react-icons/ci';
 import { FaChevronRight } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+import { useDispatch } from 'react-redux';
 export const AllEmployees = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const state = useSelector((state: RootState) => state.myInfo);
-
-  console.log(state, 'Redux State');
-  const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
   
   const [employees, setEmployeesState] = useState<AllEmployeeData | undefined>();
   const [filteredEmployees, setFilteredEmployees] = useState<AllEmployeeData['items'] | undefined>([]);
