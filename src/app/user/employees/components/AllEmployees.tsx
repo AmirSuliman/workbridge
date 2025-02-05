@@ -11,11 +11,17 @@ import { AllEmployeeData } from '@/types/employee';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FaChevronRight } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 export const AllEmployees = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const state = useSelector((state: RootState) => state.myInfo);
+
+  console.log(state, 'Redux State');
+  const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
+  console.log(userRole, 'role');
   
   const [employees, setEmployeesState] = useState<AllEmployeeData | undefined>();
   const [filteredEmployees, setFilteredEmployees] = useState<AllEmployeeData['items'] | undefined>([]);
@@ -31,46 +37,32 @@ export const AllEmployees = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-          setLoading(true);
-          const response = await getAllEmployees(currentPage, pageSize);
-          
-          console.log('API Response:', response); // Debugging
-  
-          if (!response || !response.data) {
-              console.error('Unexpected API response format');
-              setLoading(false);
-              return;
-          }
-  
-          let employeesArray = [];
-  
-          // Check if the response contains an array or a single object
-          if (Array.isArray(response.data)) {
-              employeesArray = response.data;
-          } else {
-              employeesArray = [response.data]; // Wrap single object into an array
-          }
-  
-          dispatch(addEmployees(employeesArray));
-          setEmployeesState({ items: employeesArray, totalItems: employeesArray.length });
-          setFilteredEmployees(employeesArray);
-  
-          // Extract unique job titles and departments
-          const jobTitles = Array.from(new Set(employeesArray.map(emp => emp.tittle)));
-          const departments = Array.from(new Set(employeesArray.map(emp => emp.department?.name || '')));
-  
-          setUniqueJobTitles(jobTitles);
-          setUniqueDepartments(departments);
-      } catch (error) {
-          console.error('Error fetching employees:', error);
-      } finally {
-          setLoading(false);
-      }
-  };
-  
+        setLoading(true);
+        const { data } = await getAllEmployees(currentPage, pageSize);
+        console.log('Employees: ', data);
+        dispatch(addEmployees(data.items));
 
+        // Extract unique job titles and departments
+        const jobTitles: string[] = Array.from(
+          new Set(data.items.map((employee) => employee.tittle))
+        );
+        const departments: string[] = Array.from(
+          new Set(data.items.map((employee) => employee.department.name))
+        );
+
+        setEmployeesState(data);
+        setFilteredEmployees(data.items);
+        setUniqueJobTitles(jobTitles);
+        setUniqueDepartments(departments);
+
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
+    };
     fetchEmployees();
-}, [currentPage, dispatch]);
+  }, [currentPage, dispatch]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

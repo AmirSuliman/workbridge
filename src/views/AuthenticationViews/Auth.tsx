@@ -37,7 +37,7 @@ const Auth = () => {
 
   const onSubmit = async (data: AuthFormInputs) => {
     setLoading(true);
-
+  
     try {
       // Attempt to sign in
       const res = await signIn('credentials', {
@@ -45,34 +45,35 @@ const Auth = () => {
         password: data.password,
         redirect: false,
       });
-
-      // If sign-in fails
+  
       if (!res?.ok) {
         setLoading(false);
         toast.error('Invalid Email or Password!');
         return;
       }
-
-      // Attempt to get session after sign-in
+  
+      // Get session after sign-in
       const session = await getSession();
       console.log('session: ', session);
-      // Check if session exists and has an access token
+  
       if (session?.user?.accessToken) {
         try {
-          // Fetch user data using the service function
+          // Fetch user data
           const userData = await fetchUserData(session.user.accessToken);
-
+  
           // Dispatch user data to Redux
           dispatch(setUser(userData));
           toast.success('Login Successful!');
-          router.push('/hr/home');
+  
+          // Redirect based on role
+          if (userData.role === 'Manager' || userData.role === 'ViewOnly') {
+            router.push('/user/home');
+          } else {
+            router.push('/hr/home');
+          }
         } catch (error) {
           console.error('Error fetching user data:', error);
-          if (error instanceof Error) {
-            toast.error(error.message || 'Failed to load user data!');
-          } else {
-            toast.error('Failed to load user data!');
-          }
+          toast.error(error instanceof Error ? error.message : 'Failed to load user data!');
         }
       } else {
         toast.error('Authentication failed. Please try again.');
@@ -84,7 +85,7 @@ const Auth = () => {
       setLoading(false);
     }
   };
-
+  
   return (
     <>
     <Navbar/>
