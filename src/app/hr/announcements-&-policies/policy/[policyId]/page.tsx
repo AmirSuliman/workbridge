@@ -9,27 +9,54 @@ import { FaDeleteLeft } from 'react-icons/fa6';
 import DeletePolicyModal from '../../policies/components/DeletePolicyModal';
 import Link from 'next/link';
 import PreviewPolicy from '../../policies/components/PreviewPolicy';
+
 const Polices = () => {
   const { policyId } = useParams();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [policyData, setPolicyData] = useState({});
+  const [policyData, setPolicyData] = useState(null); // Default to null to check if data is loaded
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
 
   useEffect(() => {
+    // Check if the policyId is valid
+    if (!policyId) {
+      setError('Invalid policy ID.');
+      setLoading(false);
+      return;
+    }
+
     const fetchPolicie = async () => {
+      setLoading(true); // Set loading to true before starting the request
       try {
         const response = await getPolicy(policyId);
-        setPolicyData(response.data.data || {});
-        console.log('policy res: ', response.data.data);
+
+        // Ensure the response is valid and contains the expected data
+        if (response?.data?.data) {
+          setPolicyData(response.data.data);
+          console.log('policy res: ', response.data.data);
+        } else {
+          throw new Error('Policy data is missing.');
+        }
       } catch (error) {
         console.error(error);
-        toast.error('Failed to fetch policy.');
+      } finally {
+        setLoading(false); 
       }
     };
 
     fetchPolicie();
-  }, []);
-  console.log('policyData: ', policyData);
+  }, [policyId]);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // If there is an error, show the error message
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  // Render the policy data once it's loaded
   return (
     <>
       <div className="flex flex-row items-center justify-between w-full">
@@ -52,7 +79,7 @@ const Polices = () => {
       </div>
 
       <div className="p-6 bg-white border rounded-[10px] mt-8 flex flex-col gap-4 xl:flex-row">
-        <PreviewPolicy previewData={policyData} />
+        {policyData && <PreviewPolicy previewData={policyData} />}
       </div>
       {openDeleteModal && (
         <DeletePolicyModal
