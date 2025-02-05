@@ -11,24 +11,30 @@ const EmployeesDropdown = ({
   const [employees, setEmployees] = useState<EmployeeData[]>([]);
 
   useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const { data } = await getAllEmployees(1, 1000);
-        setEmployees(data.items);
-        // Find and set the default manager ID
-        const matchedEmployee = data.items.find(
+  const fetchEmployees = async () => {
+    try {
+      const response = await getAllEmployees(1, 1000);
+      const items = response?.data?.items || []; // Ensure items is an array
+      setEmployees(items);
+
+      // Find and set the default manager ID
+      if (reportingManagerId) {
+        const matchedEmployee = items.find(
           (employee) => employee.id === reportingManagerId
         );
         if (matchedEmployee) {
           resetField('reportingManagerId');
         }
-      } catch (error) {
-        console.error('Error fetching employees: ', error);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching employees: ', error);
+      setEmployees([]); // Ensure employees is always an array
+    }
+  };
 
-    fetchEmployees();
-  }, [reportingManagerId, resetField]);
+  fetchEmployees();
+}, [reportingManagerId, resetField]);
+
 
   return (
     <>

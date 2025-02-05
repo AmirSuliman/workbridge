@@ -29,7 +29,7 @@ const Employees = () => {
             <AllEmployees />
           </TabPanel>
           <TabPanel index={1}>
-            Dept
+            <DepartmentTable/>
           </TabPanel>
         </div>
       </TabsContainer>

@@ -2,12 +2,9 @@
 import { useState, useEffect } from 'react';
 import EmployeesIcon from '@/components/icons/employees-icon';
 import { FaArrowRight, FaSearch } from 'react-icons/fa';
-import { CiCirclePlus } from 'react-icons/ci';
 import { BiChevronRight } from 'react-icons/bi';
 import Link from 'next/link';
-import CreateDepartment from '@/app/hr/Departement/components/createdepartment';
 import axiosInstance from '@/lib/axios';
-import Modal from '@/components/modal/Modal';
 
 interface Department {
   id: string;
@@ -18,7 +15,6 @@ interface Department {
 }
 
 const DepartmentTable = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [filteredDepartments, setFilteredDepartments] = useState<Department[]>(
     []
@@ -124,13 +120,7 @@ const DepartmentTable = () => {
           </div>
 
           {/* Add Button */}
-          <button
-            className="flex flex-row text-[12px] items-center gap-2 bg-[#0F172A] p-3 px-4 text-white rounded-lg"
-            onClick={() => setIsModalOpen(true)}
-          >
-            Add new Department
-            <CiCirclePlus className="text-white" size={18} />
-          </button>
+         
         </div>
 
         {/* Responsive Table */}
@@ -159,7 +149,7 @@ const DepartmentTable = () => {
                       </td>
                       <td className="px-4 py-3">{dept.head || 'N/A'}</td>
                       <td className="px-4 py-3">
-                        <Link href={`/hr/Departement/${dept.id}`}>
+                        <Link href={`/user/Departement/${dept.id}`}>
                           <div className="p-1 border rounded-lg w-[30px] flex justify-center items-center">
                             <BiChevronRight size={20} />
                           </div>
@@ -180,14 +170,7 @@ const DepartmentTable = () => {
         </div>
       </div>
 
-      {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <CreateDepartment
-            isModalOpen={isModalOpen}
-            setIsModalOpen={setIsModalOpen}
-          />
-        </Modal>
-      )}
+     
     </div>
   );
 };

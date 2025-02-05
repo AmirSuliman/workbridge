@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
 import { useSession } from 'next-auth/react';
 import Select from 'react-select';
+import toast from 'react-hot-toast';
 
 interface Country {
   id: number;
@@ -66,7 +67,8 @@ const handleAdditionalCountriesChange = (selectedOptions) => {
   
     try {
       const response = await axiosInstance.post('/holiday/', payload);
-      
+      toast.success('Holiday successfully created!');
+
       // Fetch updated holidays from API
       onHolidayAdded(); 
   

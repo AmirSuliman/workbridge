@@ -11,6 +11,8 @@ import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import SickCard from './sickCard';
 import VacationsCard from './VacationsCard';
+import { FaEdit } from 'react-icons/fa';
+
 interface Employee {
   firstName: string;
   lastName: string;
@@ -150,20 +152,21 @@ const TimeOffSection = ({ employeeData }) => {
     >
       {item.status === 'Pending' ? 'Waiting for Approval' : item.status}
     </span>,
-    // item.status === 'Denied' ? (
-    //   <FaEdit
-    //     key={`edit-${index}`}
-    //     className="text-dark-navy w-5 cursor-pointer justify-end flex ml-52"
-    //     onClick={() => handleEditClick(item)}
-    //     title="Edit time-off request"
-    //   />
-    // ) : (
-    //   <span
-    //     className="text-gray-400"
-    //     title="Cannot edit confirmed requests"
-    //   ></span>
-    // ),
+    item.status === 'Pending' ? (
+      <div key={`edit-${index}`} className="flex justify-end">
+        <FaEdit
+          className="text-dark-navy w-5 cursor-pointer"
+          onClick={() => handleEditClick(item)}
+          title="Edit time-off request"
+        />
+      </div>
+    ) : (
+      <div key={`edit-${index}`} className="flex justify-end">
+        <span className="text-gray-400" title="Cannot edit confirmed requests"></span>
+      </div>
+    ),
   ]);
+  
 
   return (
     <div className="p-1 rounded-md h-full">
