@@ -22,11 +22,13 @@ const SendHolidayNotification = ({ toggleModal, onHolidayAdded }) => {
   const { data: session } = useSession();
   console.log(session, 'session');
 
-  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [selectedCountries, setSelectedCountries] = useState<
+    { value: number; label: string }[]
+  >([]);
 
-const handleAdditionalCountriesChange = (selectedOptions) => {
-  setSelectedCountries(selectedOptions); // Store selected countries
-};
+  const handleAdditionalCountriesChange = (selectedOptions) => {
+    setSelectedCountries(selectedOptions); // Store selected countries
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,29 +49,31 @@ const handleAdditionalCountriesChange = (selectedOptions) => {
     setPrimaryCountry(Number(e.target.value));
   };
 
- 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     // Extracting the selected country IDs
-    const additionalCountryIds = selectedCountries.map(option => option.value);
-  
-    const payload = { 
-      title, 
-      date, 
-      type, 
+    const additionalCountryIds = selectedCountries.map(
+      (option) => option.value
+    );
+
+    const payload = {
+      title,
+      date,
+      type,
       createdBy: session?.user?.userId || '',
-      countries: primaryCountry ? [primaryCountry, ...additionalCountryIds] : [],
+      countries: primaryCountry
+        ? [primaryCountry, ...additionalCountryIds]
+        : [],
     };
-  
+
     try {
       const response = await axiosInstance.post('/holiday/', payload);
-      
+
       // Fetch updated holidays from API
-      onHolidayAdded(); 
-  
+      onHolidayAdded();
+
       toggleModal();
     } catch (error) {
       console.error('Error creating holiday:', error);
@@ -77,8 +81,6 @@ const handleAdditionalCountriesChange = (selectedOptions) => {
       setLoading(false);
     }
   };
-  
-  
 
   return (
     <div className="w-full">
@@ -163,28 +165,23 @@ const handleAdditionalCountriesChange = (selectedOptions) => {
           <p className="text-[14px]">Add Holiday to other countries?</p>
         </div>
 
-
-{addCountries && (
-  <div className="mb-4">
-    <Select
-      isMulti
-      options={countries
-        .filter((c) => c.id !== primaryCountry)
-        .map((country) => ({
-          value: country.id,
-          label: country.country,
-        }))
-      }
-      onChange={handleAdditionalCountriesChange}
-      className="w-full"
-      classNamePrefix="select"
-      placeholder="Search and select countries..."
-    />
-
-    
-  </div>
-)}
-
+        {addCountries && (
+          <div className="mb-4">
+            <Select
+              isMulti
+              options={countries
+                .filter((c) => c.id !== primaryCountry)
+                .map((country) => ({
+                  value: country.id,
+                  label: country.country,
+                }))}
+              onChange={handleAdditionalCountriesChange}
+              className="w-full"
+              classNamePrefix="select"
+              placeholder="Search and select countries..."
+            />
+          </div>
+        )}
 
         <div className="flex items-center w-full p-8 gap-5">
           <button

@@ -15,7 +15,7 @@ const Polices = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [policyData, setPolicyData] = useState(null); // Default to null to check if data is loaded
   const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [error, setError] = useState<string | null>(null); // Error state
 
   useEffect(() => {
     // Check if the policyId is valid
@@ -40,7 +40,7 @@ const Polices = () => {
       } catch (error) {
         console.error(error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
