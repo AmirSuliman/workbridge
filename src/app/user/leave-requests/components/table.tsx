@@ -7,8 +7,6 @@ import Modal from '@/components/modal/Modal';
 import ConfirmLeave from './confirmleave';
 import Deny from './deny';
 import UserImgPlaceholder from '@/components/LeaveRequests/UserImgPlaceholder';
-import { getSession } from 'next-auth/react';
-
 const ITEMS_PER_PAGE = 7;
 
 export interface Employee {
@@ -46,18 +44,6 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
- const [role, setRole] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role || null);
-    };
-
-    fetchSession();
-  }, []);
-
-  const isSuperadmin = role === 'SuperAdmin';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -212,25 +198,33 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
                       {new Date(employee.returningDay).toLocaleDateString()}
                     </td>
                     <td className="p-4 flex justify-center items-center whitespace-nowrap gap-2">
-            {employee.status === 'Pending' ? (
-              isSuperadmin ? (
-                <>
-                  <button className="p-2 text-white bg-[#25A244] rounded text-[10px] flex items-center gap-2" onClick={() => handleConfirmRequest(employee)}>
-                    Confirm Request <FaCheck />
-                  </button>
-                  <button className="p-2 text-white bg-[#F53649] rounded text-[10px] flex items-center gap-2" onClick={() => handleDenyRequest(employee)}>
-                    Deny <FaTimes />
-                  </button>
-                </>
-              ) : (
-                <span className="font-semibold text-yellow-600 border rounded p-2 px-4 border-yellow-600">Pending</span>
-              )
-            ) : (
-              <span className={`font-semibold ${employee.status === 'Confirmed' ? 'text-green-600 border rounded p-2 px-4 border-green-600' : 'text-red-600 border rounded p-2 px-7 border-red-600'}`}>
-                {employee.status}
-              </span>
-            )}
-          </td>
+                      {employee.status === 'Pending' ? (
+                        <>
+                          <button
+                            className="p-2 text-white bg-[#25A244] rounded text-[10px] flex items-center gap-2"
+                            onClick={() => handleConfirmRequest(employee)}
+                          >
+                            Confirm Request <FaCheck />
+                          </button>
+                          <button
+                            className="p-2 text-white bg-[#F53649] rounded text-[10px] flex items-center gap-2"
+                            onClick={() => handleDenyRequest(employee)}
+                          >
+                            Deny <FaTimes />
+                          </button>
+                        </>
+                      ) : (
+                        <span
+                          className={`font-semibold ${
+                            employee.status === 'Confirmed'
+                              ? 'text-green-600 border rounded p-2 px-4 border-green-600'
+                              : 'text-red-600 border rounded p-2 px-7 border-red-600'
+                          }`}
+                        >
+                          {employee.status}
+                        </span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

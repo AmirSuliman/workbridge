@@ -1,39 +1,65 @@
+'use client'
+import { useEffect, useState } from 'react';
+
 import SideNavigation from '@/components/common/SideNavigation';
 import UserHeader from '@/components/Headers/UserHeader';
 import EmployeesIcon from '@/components/icons/employees-icon';
 import FileIcon from '@/components/icons/file-icon';
 import HomeIcon from '@/components/icons/home-icon';
 import UserIcon from '@/components/icons/user-icon';
-import UserProfileInfo from '@/components/UserProfileInfo';
-import { GoBell } from 'react-icons/go';
+import { IoCalendarOutline } from 'react-icons/io5';
+import { getSession } from 'next-auth/react';
 
-const navItems = [
-  {
-    label: 'Home',
-    icon: <HomeIcon classNames="w-4" />,
-    path: '/user/home',
-  },
-  {
-    label: 'My Information',
-    icon: <UserIcon classNames="w-4" />,
-    path: '/user/my-information',
-  },
-  {
-    label: 'Employees',
-    icon: <EmployeesIcon classNames="w-4" />,
-    path: '/user/employees',
-  },
-  {
-    label: 'Files',
-    icon: <FileIcon classNames="w-4" />,
-    path: '/user/files',
-  },
-];
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setRole(session?.user?.role || null);
+    };
+
+    fetchSession();
+  }, []);
+
+  const isManager = role === 'Manager';
+
+  const navItems = [
+    {
+      label: 'Home',
+      icon: <HomeIcon classNames="w-4" />,
+      path: '/user/home',
+    },
+    {
+      label: 'My Information',
+      icon: <UserIcon classNames="w-4" />,
+      path: '/user/my-information',
+    },
+    {
+      label: 'Employees',
+      icon: <EmployeesIcon classNames="w-4" />,
+      path: '/user/employees',
+    },
+    {
+      label: 'Files',
+      icon: <FileIcon classNames="w-4" />,
+      path: '/user/files',
+    },
+    ...(isManager
+      ? [
+          {
+            label: 'Leave Requests',
+            icon: <IoCalendarOutline />,
+            path: '/user/leave-requests',
+          },
+        ]
+      : []),
+  ];
+
   return (
     <section className="flex w-full h-full overflow-hidden">
       <SideNavigation items={navItems}></SideNavigation>

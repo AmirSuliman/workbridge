@@ -38,6 +38,13 @@ const TimeOffSection = ({ employeeData }) => {
   const [selectedTimeOff, setSelectedTimeOff] = useState<TimeOffItem | null>(
     null
   );
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  const totalDays =
+  selectedTimeOff?.type === 'Vacation'
+    ? employeeData?.vacationLeaveCounter
+    : employeeData?.sickLeaveCounter || 0;
 
   // const [sessionUser, setSessionUser] = useState('');
   // useEffect(() => {
@@ -49,6 +56,36 @@ const TimeOffSection = ({ employeeData }) => {
 
   //   fetchSession();
   // }, []);
+
+  const calculateDuration = (start: string, end: string) => {
+    if (start && end) {
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+      if (startDate > endDate) {
+        return 0;
+      }
+      const duration =
+        Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+      return duration > 0 ? duration : 0;
+    }
+    return 0;
+  };
+  
+
+  useEffect(() => {
+    setDuration(calculateDuration(startDate, endDate));
+  }, [startDate, endDate]);
+  
+  
+
+ 
+  
+  const getMaxDate = (start: string, days: number) => {
+    if (!start) return '';
+    const startDateObj = new Date(start);
+    startDateObj.setDate(startDateObj.getDate() + days - 1);
+    return startDateObj.toISOString().split('T')[0];
+  };
 
   useEffect(() => {
     const fetchTimeOffData = async () => {
@@ -85,24 +122,10 @@ const TimeOffSection = ({ employeeData }) => {
     setDuration(0);
   };
 
-  const calculateDuration = (start, end) => {
-    const diffTime = end - start;
-    const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-    setDuration(days);
-  };
+ 
 
-  const handleLeaveDateChange = (e) => {
-    const newLeaveDate = new Date(e.target.value);
-    setLeaveDate(e.target.value);
-    calculateDuration(newLeaveDate, new Date(returningDate));
-  };
-
-  const handleReturningDateChange = (e) => {
-    const newReturningDate = new Date(e.target.value);
-    setReturningDate(e.target.value);
-    calculateDuration(new Date(leaveDate), newReturningDate);
-  };
-
+  
+  
   const handleUpdateTimeOff = async () => {
     if (!selectedTimeOff) return;
 
@@ -241,11 +264,13 @@ const TimeOffSection = ({ employeeData }) => {
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">Leaving Date</span>
                 <input
-                  type="date"
-                  value={leaveDate}
-                  onChange={handleLeaveDateChange}
-                  className="p-3 border rounded w-full"
-                />
+                   type="date"
+                   className="p-3 border rounded w-full"
+                   min={new Date().toISOString().split('T')[0]}
+                   max={getMaxDate(new Date().toISOString().split('T')[0], totalDays)}
+                   value={startDate}
+                   onChange={(e) => setStartDate(e.target.value)}
+                 />
               </label>
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">
@@ -253,9 +278,11 @@ const TimeOffSection = ({ employeeData }) => {
                 </span>
                 <input
                   type="date"
-                  value={returningDate}
-                  onChange={handleReturningDateChange}
                   className="p-3 border rounded w-full"
+                  min={startDate}
+                  max={getMaxDate(startDate, totalDays)}
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
                 />
               </label>
             </div>

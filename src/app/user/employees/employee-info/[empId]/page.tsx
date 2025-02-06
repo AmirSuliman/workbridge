@@ -1,6 +1,6 @@
 'use client';
 
-import MyInformation from '@/views/MyInformation/MyInformation';
+import MyInformation from '@/views/MyInformation/Userinformation';
 
 const Page = () => {
   return <MyInformation />;

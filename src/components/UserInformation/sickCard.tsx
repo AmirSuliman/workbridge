@@ -84,6 +84,15 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
     setIsModalOpen(true);
   };
 
+ 
+  
+  const getMaxDate = (start: string, days: number) => {
+    if (!start) return '';
+    const startDateObj = new Date(start);
+    startDateObj.setDate(startDateObj.getDate() + days - 1);
+    return startDateObj.toISOString().split('T')[0];
+  };
+
   return (
     <>
       <div className="flex items-center justify-between border border-gray-border rounded-[10px] bg-white p-3 md:p-6 md:gap-[3.3rem] w-full">
@@ -99,12 +108,15 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
             </div>
           </div>
           <button
-            type="button"
-            onClick={handleButtonClick}
-            className="text-white bg-dark-navy py-1 w-[13rem] rounded-[4px] font-[200] text-sm"
-          >
-            Request Sick Leave
-          </button>
+  type="button"
+  onClick={handleButtonClick}
+  className={`text-white bg-dark-navy py-1 w-[13rem] rounded-[4px] font-[200] text-sm ${
+    totalDays === 0 ? 'opacity-50 cursor-not-allowed' : ''
+  }`}
+  disabled={totalDays === 0}
+>
+  Request Sick leave
+</button>
         </div>
 
         <div className="flex flex-col border border-gray-border items-center justify-center rounded-[7px] h-full px-4">
@@ -127,12 +139,13 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">Leaving Date</span>
                 <input
-                  type="date"
-                  className="p-3 border rounded w-full"
-                  min={new Date().toISOString().split('T')[0]}
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
+                   type="date"
+                   className="p-3 border rounded w-full"
+                   min={new Date().toISOString().split('T')[0]}
+                   max={getMaxDate(new Date().toISOString().split('T')[0], totalDays)}
+                   value={startDate}
+                   onChange={(e) => setStartDate(e.target.value)}
+                 />
               </label>
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">
@@ -142,6 +155,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                   type="date"
                   className="p-3 border rounded w-full"
                   min={startDate}
+                  max={getMaxDate(startDate, totalDays)}
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
@@ -169,7 +183,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
               </div>
             </div>
 
-            <div className="flex flex-row p-8 px-4 w-full gap-4 mt-24">
+            <div className="flex flex-row  px-6 w-full gap-4 mt-16">
               <button
                 onClick={handleRequestVacation}
                 className="mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full"
