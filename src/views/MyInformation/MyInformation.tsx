@@ -61,6 +61,16 @@ const MyInformation = () => {
       ? new Date(employeeData.effectiveDate).toISOString().split('T')[0]
       : '',
     salary: employeeData?.salary ? employeeData.salary : 0,
+    location: {
+      zipCode: Number(employeeData?.location?.zipCode) || '',
+      street1: employeeData?.location?.street1 || '',
+      street2: employeeData?.location?.street2 || '',
+      city: employeeData?.location?.city || '',
+      country: employeeData?.location?.country || '',
+      state: employeeData?.location?.state || '',
+    },
+    phoneNumber: Number(employeeData?.phoneNumber) || '',
+    workPhone: Number(employeeData?.workPhone) || '',
   };
 
   const {
@@ -73,7 +83,7 @@ const MyInformation = () => {
   } = useForm({
     resolver: zodResolver(employeeSchema),
     defaultValues: formattedData,
-    mode: 'onChange',
+    mode: 'all',
   });
 
   useEffect(() => {
