@@ -78,7 +78,11 @@ const PaymentSection = ({ employeeId }) => {
 
       setisEditPayment(false);
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Cannot update payment.');
+      if (isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error('Cannot update payment.');
+      }
       console.log(error);
     }
   };
