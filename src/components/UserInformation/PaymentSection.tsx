@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import axiosInstance from '@/lib/axios';
+import { isAxiosError } from 'axios';
 
 interface PaymentProps {
   id: number;
@@ -31,7 +32,11 @@ const PaymentSection = ({ employeeId }) => {
         setPayments(response.data.data.items);
       } catch (error) {
         console.log(error);
-        toast.error(error.response.data.message);
+        if (isAxiosError(error) && error.response) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error('An unexpected error occurred');
+        }
       }
     };
     fetchPayments();
@@ -90,7 +95,9 @@ const PaymentSection = ({ employeeId }) => {
               })}
             />
             {errors?.salary && (
-              <span className="form-error">{errors?.salary.message}</span>
+              <span className="form-error">
+                {errors?.salary.message?.toString()}
+              </span>
             )}
           </article>
           <article>
@@ -101,7 +108,9 @@ const PaymentSection = ({ employeeId }) => {
               <option value="Contract">Contract</option>
             </select>
             {errors?.payType && (
-              <span className="form-error">{errors?.payType.message}</span>
+              <span className="form-error">
+                {errors?.payType.message?.toString()}
+              </span>
             )}
           </article>
           <article>
@@ -114,7 +123,7 @@ const PaymentSection = ({ employeeId }) => {
             </select>
             {errors?.paymentSchedule && (
               <span className="form-error">
-                {errors?.paymentSchedule.message}
+                {errors?.paymentSchedule?.message?.toString()}
               </span>
             )}
           </article>
