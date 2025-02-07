@@ -93,9 +93,9 @@ const HrSidebar = () => {
             />
           )}
           <SidebarNavItem
-            name="Reports"
+            name="Evaluation & Reports"
             icon={<FiTrendingUp size={22} />}
-            href="/hr/Reports"
+            href="/hr/evaluation-&-reports"
           />
         </>
       </main>
