@@ -100,7 +100,7 @@ const Evaluationlist = () => {
                   onClick={() => {
                     // manager and survey id
                     router.push(
-                      `/hr/Reports/evaluation/${survey.employeeId}?survey=${survey.id}`
+                      `/hr/evaluation-&-reports/evaluation/${survey.employeeId}?survey=${survey.id}`
                     );
                   }}
                 >
