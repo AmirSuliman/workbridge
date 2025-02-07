@@ -26,7 +26,7 @@ export const WorldMap = ({
   return (
     <div className="w-full h-[450px] overflow-hidden">
       <ComposableMap projection="geoMercator">
-        <ZoomableGroup center={[60, 10]} zoom={2}>
+        <ZoomableGroup center={[60, 20]} zoom={3}>
           <Geographies geography={geoUrl}>
             {({ geographies }) =>
               geographies.map((geo) => {

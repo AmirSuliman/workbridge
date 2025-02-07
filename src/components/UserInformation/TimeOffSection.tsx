@@ -42,9 +42,9 @@ const TimeOffSection = ({ employeeData }) => {
   const [endDate, setEndDate] = useState('');
 
   const totalDays =
-  selectedTimeOff?.type === 'Vacation'
-    ? employeeData?.vacationLeaveCounter
-    : employeeData?.sickLeaveCounter || 0;
+    selectedTimeOff?.type === 'Vacation'
+      ? employeeData?.vacationLeaveCounter
+      : employeeData?.sickLeaveCounter || 0;
 
   // const [sessionUser, setSessionUser] = useState('');
   // useEffect(() => {
@@ -65,21 +65,18 @@ const TimeOffSection = ({ employeeData }) => {
         return 0;
       }
       const duration =
-        Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+        Math.ceil(
+          (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+        ) + 1;
       return duration > 0 ? duration : 0;
     }
     return 0;
   };
-  
 
   useEffect(() => {
     setDuration(calculateDuration(startDate, endDate));
   }, [startDate, endDate]);
-  
-  
 
- 
-  
   const getMaxDate = (start: string, days: number) => {
     if (!start) return '';
     const startDateObj = new Date(start);
@@ -110,7 +107,10 @@ const TimeOffSection = ({ employeeData }) => {
     setSelectedTimeOff(item);
     setLeaveDate(new Date(item.leaveDay).toISOString().split('T')[0]);
     setReturningDate(new Date(item.returningDay).toISOString().split('T')[0]);
-    calculateDuration(new Date(item.leaveDay), new Date(item.returningDay));
+    calculateDuration(
+      new Date(item.leaveDay).toISOString(),
+      new Date(item.returningDay).toISOString()
+    );
     setIsModalOpen(true);
   };
 
@@ -122,10 +122,6 @@ const TimeOffSection = ({ employeeData }) => {
     setDuration(0);
   };
 
- 
-
-  
-  
   const handleUpdateTimeOff = async () => {
     if (!selectedTimeOff) return;
 
@@ -185,11 +181,13 @@ const TimeOffSection = ({ employeeData }) => {
       </div>
     ) : (
       <div key={`edit-${index}`} className="flex justify-end">
-        <span className="text-gray-400" title="Cannot edit confirmed requests"></span>
+        <span
+          className="text-gray-400"
+          title="Cannot edit confirmed requests"
+        ></span>
       </div>
     ),
   ]);
-  
 
   return (
     <div className="p-1 rounded-md h-full">
@@ -264,13 +262,16 @@ const TimeOffSection = ({ employeeData }) => {
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">Leaving Date</span>
                 <input
-                   type="date"
-                   className="p-3 border rounded w-full"
-                   min={new Date().toISOString().split('T')[0]}
-                   max={getMaxDate(new Date().toISOString().split('T')[0], totalDays)}
-                   value={startDate}
-                   onChange={(e) => setStartDate(e.target.value)}
-                 />
+                  type="date"
+                  className="p-3 border rounded w-full"
+                  min={new Date().toISOString().split('T')[0]}
+                  max={getMaxDate(
+                    new Date().toISOString().split('T')[0],
+                    totalDays
+                  )}
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
               </label>
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">
