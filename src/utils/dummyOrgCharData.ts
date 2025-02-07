@@ -57,7 +57,25 @@ export const orgChartData = [
       id: 1,
       name: 'Finance',
     },
-    openPositions: [],
+    openPositions: [
+      {
+        location: {
+          country: 'Albania',
+          state: 'Kosovo',
+          city: 'Prishtine',
+          zipCode: 23000,
+          id: 1,
+          street1: '1365',
+          street2: null,
+        },
+        department: {
+          id: 1,
+          name: 'Finance',
+        },
+        salary: 45000,
+        tittle: 'Sales Representative',
+      },
+    ],
     parentId: null,
   },
   {

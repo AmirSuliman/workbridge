@@ -7,6 +7,7 @@ import DocumentSection from '@/components/UserInformation/DocumentSection';
 import EmergencySection from '@/components/UserInformation/EmergencySection';
 import EmploymentSection from '@/components/UserInformation/EmploymentSection';
 import NotesSection from '@/components/UserInformation/NotesSection';
+import PaymentSection from '@/components/UserInformation/PaymentSection';
 import TimeOffSection from '@/components/UserInformation/TimeOffSection';
 import UserInfoSection from '@/components/UserInformation/UserInfoSection';
 import axiosInstance from '@/lib/axios';
@@ -349,6 +350,14 @@ const MyInformation = () => {
                     : '/hr/my-information?tab=5'
                 }`}
               />
+              <TabButton
+                name="Payments"
+                href={`${
+                  empId
+                    ? `/hr/employees/employee-info/${empId}?tab=6`
+                    : '/hr/my-information?tab=6'
+                }`}
+              />
             </>
           )}
         </div>
@@ -383,6 +392,9 @@ const MyInformation = () => {
           </TabComponent>
           <TabComponent index="5">
             <NotesSection employeeId={empId || myId} />
+          </TabComponent>
+          <TabComponent index="6">
+            <PaymentSection employeeId={empId || myId} />
           </TabComponent>
         </div>
       </TabsContainer>

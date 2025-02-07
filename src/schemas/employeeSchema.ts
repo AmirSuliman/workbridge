@@ -66,13 +66,13 @@ export const employeeSchema = z.object({
   paymentSchedule: z
     .string({ message: 'Payment schedule is required' })
     .min(1, 'Payment schedule is required'),
-  payType: z
-    .union([
-      // z.instanceof(File),
-      z.string().optional(),
-      z.null(),
-    ])
-    .optional(),
+  // payType: z
+  //   .union([
+  //     // z.instanceof(File),
+  //     z.string().optional(),
+  //     z.null(),
+  //   ])
+  //   .optional(),
   countryId: z.union([z.number().optional(), z.null()]).optional(),
   isManager: z.boolean().optional(),
   profilePictureUrl: z.union([z.string().optional(), z.null()]).optional(),

@@ -38,7 +38,7 @@ export default function ({
   return `
   <div class=" profile-${d.data.id}" style="background-color: ${
     d.data._highlighted || d.data._upToTheRootHighlighted
-      ? '#ecf0f1'
+      ? '#D5F6DD'
       : d.data.isOpenPosition
       ? '#BBFFDA'
       : 'white'
