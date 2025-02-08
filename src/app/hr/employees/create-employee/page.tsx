@@ -76,6 +76,44 @@ const CreateEmployee = () => {
   const { handleSubmit, reset } = formMethods;
   const onSubmit = async (data) => {
     console.log('onsubmit data: ', data);
+    const payLoad = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      departmentId: data.departmentId,
+      email: data.email,
+      middleName: data.middleName,
+      salary: data.salary,
+      tittle: data.tittle,
+      gender: data.gender,
+      marritialStatus: data.marritialStatus,
+      paymentSchedule: data.paymentSchedule,
+      payType: data.payType,
+      effectiveDate: data.effectiveDate,
+      overtime: data.overtime,
+      note: data.note,
+      // profilePictureUrl: data.profilePictureUrl,
+      linkedin: data.linkedin,
+      instagram: data.instagram,
+      website: data.website,
+      facebook: data.facebook,
+      hireDate: data.hireDate,
+      birthday: data.birthday,
+      phoneNumber: data.phoneNumber,
+      workPhone: data.workPhone,
+      reportingManagerId: data.reportingManagerId,
+      employmentType: data.employmentType,
+      isManager: data.isManager,
+      countryId: data.countryId,
+      location: {
+        street1: data.location.street1,
+        street2: data.location.street2,
+        zipCode: data.location.zipCode,
+        city: data.location.city,
+        country: data.location.country,
+        state: data.location.state,
+      },
+    };
+    console.log('payload: ', payLoad);
     try {
       setLoader(true);
       // handle profile picture to get url from the upload picture
@@ -85,7 +123,7 @@ const CreateEmployee = () => {
       }
 
       const response = await axiosInstance.post('/employee', {
-        ...data,
+        ...payLoad,
         profilePictureUrl: previewUrl,
       });
       dispatch(updateEmployeeData(response.data.data));

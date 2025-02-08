@@ -179,19 +179,28 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                 </span>
               )}
             </article>
-            <select
-              {...register('countryId', { valueAsNumber: true })}
-              className="border p-2 rounded  focus:outline-none"
-            >
-              <option value="" disabled selected>
-                Select a country
-              </option>
-              {countries.map((country) => (
-                <option key={country.id} value={country.id}>
-                  {country.country}
+            <article>
+              <Label text="Country*" />
+              <select
+                {...register('countryId', {
+                  valueAsNumber: true,
+                  required: 'Country is required',
+                })}
+                className="border p-2 rounded  focus:outline-none"
+              >
+                <option value="" disabled>
+                  Select a country
                 </option>
-              ))}
-            </select>
+                {countries.map((country) => (
+                  <option key={country.id} value={country.id}>
+                    {country.country}
+                  </option>
+                ))}
+                {errors.countryId && (
+                  <span className="form-error">{errors.countryId.message}</span>
+                )}
+              </select>
+            </article>
           </div>
         </div>
         {/* Address Block */}

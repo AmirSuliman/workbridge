@@ -10,9 +10,6 @@ const DepartmentDropdown = ({ departmentId, resetField, register, errors }) => {
       try {
         const { data } = await axiosInstance.get('/departments');
         setDepartments(data.data.items);
-        resetField('location.zipCode');
-        resetField('phoneNumber');
-        resetField('workPhone');
         // Set the default department ID if departmentId exists
         if (departmentId) {
           const matchedDepartment = data.data.items.find(
@@ -20,9 +17,6 @@ const DepartmentDropdown = ({ departmentId, resetField, register, errors }) => {
           );
           if (matchedDepartment) {
             resetField('departmentId');
-            resetField('location.zipCode');
-            resetField('phoneNumber');
-            resetField('workPhone');
           }
         }
       } catch (error) {

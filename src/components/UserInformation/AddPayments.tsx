@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import Button from '../Button';
 import { BiLoaderCircle } from 'react-icons/bi';
 
-const AddPayments = ({ employeeId, setAddNew }) => {
+const AddPayments = ({ employeeId, setPayments, setAddNew }) => {
   const {
     register,
     handleSubmit,
@@ -30,7 +30,7 @@ const AddPayments = ({ employeeId, setAddNew }) => {
       console.log('res: ', response.data);
       toast.success('Payment added successfully!');
       setAddNew(false);
-      // reset();
+      setPayments((prevPayments) => [...prevPayments, response.data.data]);
     } catch (error) {
       toast.error(
         (error as any).response?.data?.message || 'Cannot add Payment'

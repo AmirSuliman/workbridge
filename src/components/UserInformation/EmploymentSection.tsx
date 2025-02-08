@@ -150,9 +150,12 @@ const EmploymentSection = ({
                     ? employeeData?.effectiveDate.split('T')[0] || 'N/A'
                     : 'N/A'
                 }`,
-                `${employeeData?.location?.country || ''}, ${
-                  employeeData?.location?.state || ''
-                }`,
+                employeeData?.location?.country ===
+                employeeData?.location?.state
+                  ? `${employeeData?.location?.country || ''}`
+                  : `${employeeData?.location?.country || ''}, ${
+                      employeeData?.location?.state || ''
+                    }`,
                 `${employeeData?.location?.country}`,
                 `${employeeData?.department?.name || 'N/A'}`,
                 `${employeeData?.tittle || 'N/A'}`,

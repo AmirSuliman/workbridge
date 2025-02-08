@@ -11,7 +11,7 @@ import PaymentSection from '@/components/UserInformation/PaymentSection';
 import TimeOffSection from '@/components/UserInformation/TimeOffSection';
 import UserInfoSection from '@/components/UserInformation/UserInfoSection';
 import axiosInstance from '@/lib/axios';
-import { employeeSchema } from '@/schemas/employeeSchema';
+import { putEmployeeSchema } from '@/schemas/employeeSchema';
 import {
   clearEmployeeData,
   fetchEmployeeData,
@@ -82,7 +82,7 @@ const MyInformation = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(employeeSchema),
+    resolver: zodResolver(putEmployeeSchema),
     defaultValues: formattedData,
     mode: 'all',
   });
@@ -205,11 +205,11 @@ const MyInformation = () => {
       departmentId: data.departmentId,
       email: data.email,
       middleName: data.middleName,
-      salary: data.salary,
+      // salary: data.salary,
       tittle: data.tittle,
       gender: data.gender,
       marritialStatus: data.marritialStatus,
-      paymentSchedule: data.paymentSchedule,
+      // paymentSchedule: data.paymentSchedule,
       payType: data.payType,
       effectiveDate: data.effectiveDate,
       overtime: data.overtime,

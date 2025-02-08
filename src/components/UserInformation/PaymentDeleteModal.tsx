@@ -1,17 +1,14 @@
 import Button from '@/components/Button';
 import Modal from '@/components/modal/Modal';
 import axiosInstance from '@/lib/axios';
-import { AppDispatch } from '@/store/store';
 import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
-import { useDispatch } from 'react-redux';
 
-const PaymentDeleteModal = ({ onClose, id }) => {
+const PaymentDeleteModal = ({ setPayments, payments, onClose, id }) => {
   console.log('delete id: ', id);
   const [loading, setLoading] = useState(false);
-  const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = async () => {
     try {
@@ -20,6 +17,8 @@ const PaymentDeleteModal = ({ onClose, id }) => {
       toast.success('Payment deleted successfully!');
       setLoading(false);
       onClose();
+      const updatedPayments = payments.filter((payment) => payment.id !== id);
+      setPayments(updatedPayments);
       console.log(response.data);
     } catch (error) {
       console.error(error);

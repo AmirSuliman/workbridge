@@ -24,9 +24,6 @@ const EmployeesDropdown = ({
           );
           if (matchedEmployee) {
             resetField('reportingManagerId');
-            resetField('zipCode');
-            resetField('phoneNumber');
-            resetField('workPhone');
           }
         }
       } catch (error) {

@@ -9,6 +9,8 @@ import { BiLoaderCircle } from 'react-icons/bi';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store/store';
 import { setEmergencyContact } from '@/store/slices/emergencyContactSlice';
+import { emergencyContactSchema } from '@/schemas/employeeSchema';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const AddEmergencyContact = ({
   setAddNew,
@@ -23,8 +25,8 @@ const AddEmergencyContact = ({
     handleSubmit,
     formState: { errors },
   } = useForm({
-    // resolver: zodResolver(employeeSchema),
-    // mode: 'onChange',
+    resolver: zodResolver(emergencyContactSchema),
+    mode: 'onChange',
   });
   const { isSubmitting } = formState;
   const onSubmit = async (data: any) => {
@@ -107,9 +109,9 @@ const AddEmergencyContact = ({
           <label className="form-label">
             Phone*
             <input
-              type="text"
+              type="number"
               className={`form-input`}
-              {...register('phone', { required: 'Phone is required' })}
+              {...register('phone', { valueAsNumber: true })}
             />
             {errors?.phone && (
               <p className="form-error">{String(errors?.phone.message)}</p>
@@ -118,9 +120,11 @@ const AddEmergencyContact = ({
           <label className="form-label">
             Work Phone
             <input
-              type="text"
+              type="number"
               className={`form-input`}
-              {...register('workPhone')}
+              {...register('workPhone', {
+                setValueAs: (value) => (value === '' ? null : Number(value)), // Handle empty string
+              })}
             />
             {errors?.workPhone && (
               <p className="form-error">{String(errors?.workPhone.message)}</p>
@@ -176,7 +180,9 @@ const AddEmergencyContact = ({
               <input
                 type="number"
                 className={`form-input`}
-                {...register('location.zipCode', { valueAsNumber: true })}
+                {...register('location.zipCode', {
+                  setValueAs: (value) => (value === '' ? null : Number(value)), // Handle empty string
+                })}
               />
               {errors?.location?.['zipCode'] && (
                 <p className="form-error">

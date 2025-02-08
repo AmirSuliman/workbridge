@@ -11,6 +11,7 @@ import AddPayments from './AddPayments';
 import Button from '../Button';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import PaymentDeleteModal from './PaymentDeleteModal';
+import { BiLoaderCircle } from 'react-icons/bi';
 
 interface PaymentProps {
   id: number;
@@ -52,21 +53,27 @@ const PaymentSection = ({ employeeId }) => {
   }, [employeeId]);
 
   const {
-    control,
     register,
-    handleSubmit,
     setValue,
-    formState: { errors },
+    handleSubmit,
+    formState: { errors, isSubmitting },
   } = useForm();
 
-  const { fields, append } = useFieldArray({
-    control,
-    name: 'editPayment',
-  });
-
   const handleEdit = async (data) => {
+    const payload = {
+      employeeId: employeeId,
+      paymentSchedule: data.paymentSchedule,
+      note: data.note,
+      overtime: data.overtime,
+      payType: data.payType,
+      payRate: data.payRate,
+      effectiveDate: data.effectiveDate,
+    };
     try {
-      const response = await axiosInstance.put(`/payment/${paymentId}`, data);
+      const response = await axiosInstance.put(
+        `/payment/${paymentId}`,
+        payload
+      );
       console.log('put response: ', response.data);
       toast.success('Payment updated successfully.');
 
@@ -127,13 +134,16 @@ const PaymentSection = ({ employeeId }) => {
             values={
               payments && payments.length > 0
                 ? payments.map((payment) => [
-                    payment.effectiveDate.split('T')[0] || '',
+                    payment.effectiveDate
+                      ? payment.effectiveDate.split('T')[0]
+                      : '',
                     payment.payRate || '',
                     payment.paymentSchedule || '',
                     payment.payType || '',
                     payment.overtime ? 'Liable' : 'Exempt',
                     payment.note || '',
                     <FaTrash
+                      className="cursor-pointer"
                       key={payment.id}
                       onClick={(e) => {
                         e.preventDefault();
@@ -143,6 +153,7 @@ const PaymentSection = ({ employeeId }) => {
                       }}
                     />,
                     <FaEdit
+                      className="cursor-pointer"
                       key={payment.id}
                       onClick={(e) => {
                         e.preventDefault();
@@ -155,117 +166,125 @@ const PaymentSection = ({ employeeId }) => {
           />
         ) : (
           <div>
-            {fields.map((item, index) => (
-              <div key={item.id} className="grid grid-cols-3 gap-4">
-                <article>
-                  <Label text="Pay rate*" />
-                  <input
-                    type="number"
-                    className="form-input"
-                    {...register(`editPayment.${index}.payRate`, {
-                      required: 'Pay rate is required',
-                      valueAsNumber: true,
-                    })}
-                  />
-                  {errors?.payRate && (
-                    <span className="form-error">
-                      {errors?.payRate.message?.toString()}
-                    </span>
-                  )}
-                </article>
-                <article>
-                  <Label text="Pay type*" />
-                  <select
-                    className="form-input"
-                    {...register('payType', {
-                      required: 'Pay type is required',
-                    })}
-                  >
-                    <option value="">Select PayType</option>
-                    <option value="Salary">Salary</option>
-                    <option value="Contract">Contract</option>
-                  </select>
-                  {errors?.payType && (
-                    <span className="form-error">
-                      {errors?.payType.message?.toString()}
-                    </span>
-                  )}
-                </article>
-                <article>
-                  <Label text="Schedule*" />
-                  <select
-                    className="form-input"
-                    {...register('paymentSchedule', {
-                      required: 'Payment Schedule is required',
-                    })}
-                  >
-                    <option value="">Select Schedule</option>
-                    <option value="Weekly">Weekly</option>
-                    <option value="Biweekly">Biweekly</option>
-                    <option value="Once a month">Once a month</option>
-                  </select>
-                  {errors?.paymentSchedule && (
-                    <span className="form-error">
-                      {errors?.paymentSchedule?.message?.toString()}
-                    </span>
-                  )}
-                </article>
+            <div className="grid grid-cols-3 gap-4">
+              <article>
+                <Label text="Pay rate*" />
+                <input
+                  type="number"
+                  className="form-input"
+                  {...register(`payRate`, {
+                    required: 'Pay rate is required',
+                    valueAsNumber: true,
+                  })}
+                />
+                {errors?.payRate && (
+                  <span className="form-error">
+                    {errors?.payRate.message?.toString()}
+                  </span>
+                )}
+              </article>
+              <article>
+                <Label text="Pay type*" />
+                <select
+                  className="form-input"
+                  {...register('payType', {
+                    required: 'Pay type is required',
+                  })}
+                >
+                  <option value="">Select PayType</option>
+                  <option value="Salary">Salary</option>
+                  <option value="Contract">Contract</option>
+                </select>
+                {errors?.payType && (
+                  <span className="form-error">
+                    {errors?.payType.message?.toString()}
+                  </span>
+                )}
+              </article>
+              <article>
+                <Label text="Schedule*" />
+                <select
+                  className="form-input"
+                  {...register('paymentSchedule', {
+                    required: 'Payment Schedule is required',
+                  })}
+                >
+                  <option value="">Select Schedule</option>
+                  <option value="Weekly">Weekly</option>
+                  <option value="Biweekly">Biweekly</option>
+                  <option value="Once a month">Once a month</option>
+                </select>
+                {errors?.paymentSchedule && (
+                  <span className="form-error">
+                    {errors?.paymentSchedule?.message?.toString()}
+                  </span>
+                )}
+              </article>
 
-                <article>
-                  <Label text="Payment note" />
+              <article>
+                <Label text="Payment note" />
+                <input
+                  type="text"
+                  className="form-input"
+                  {...register('note')}
+                />
+                {errors?.note && (
+                  <span className="form-error">
+                    {errors?.note.message?.toString()}
+                  </span>
+                )}
+              </article>
+              <article>
+                <Label text="Effective date*" />
+                <input
+                  type="date"
+                  className="form-input"
+                  {...register('effectiveDate', {
+                    required: 'Effective date is required',
+                  })}
+                />
+                {errors?.effectiveDate && (
+                  <span className="form-error">
+                    {errors?.effectiveDate.message?.toString()}
+                  </span>
+                )}
+              </article>
+              <article className="my-auto">
+                <label className="flex gap-2">
                   <input
-                    type="text"
-                    className="form-input"
-                    {...register('note')}
+                    type="checkbox"
+                    className="appearance-none border-2 border-black checked:bg-black size-4 rounded"
+                    {...register('overtime')}
                   />
-                  {errors?.note && (
-                    <span className="form-error">
-                      {errors?.note.message?.toString()}
-                    </span>
-                  )}
-                </article>
-                <article>
-                  <Label text="Effective date*" />
-                  <input
-                    type="date"
-                    className="form-input"
-                    {...register('effectiveDate', {
-                      required: 'Effective date is required',
-                    })}
-                  />
-                  {errors?.effectiveDate && (
-                    <span className="form-error">
-                      {errors?.effectiveDate.message?.toString()}
-                    </span>
-                  )}
-                </article>
-                <article className="my-auto">
-                  <label className="flex gap-2">
-                    <input
-                      type="checkbox"
-                      className="appearance-none border-2 border-black checked:bg-black size-4 rounded"
-                      {...register('overtime')}
-                    />
-                    <span className="form-label">Over time?</span>
-                  </label>
-                  {errors?.overtime && (
-                    <span className="form-error">
-                      {errors?.overtime.message?.toString()}
-                    </span>
-                  )}
-                </article>
+                  <span className="form-label">Over time?</span>
+                </label>
+                {errors?.overtime && (
+                  <span className="form-error">
+                    {errors?.overtime.message?.toString()}
+                  </span>
+                )}
+              </article>
+              <div className="flex gap-4 flex-wrap col-span-full justify-center mt-8">
+                <Button
+                  onClick={handleSubmit(handleEdit)}
+                  type="submit"
+                  disabled={isSubmitting}
+                  name={isSubmitting ? '' : 'Save Changes'}
+                  icon={
+                    isSubmitting && (
+                      <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+                    )
+                  }
+                />
+                <Button
+                  bg="transparent"
+                  textColor="black"
+                  type="button"
+                  name="Cancel"
+                  onClick={() => setisEditPayment(false)}
+                />
               </div>
-            ))}
-            <Button
-              onClick={handleSubmit(handleEdit)}
-              type="submit"
-              name="Save Changes"
-            />
-            <Button
-              type="button"
-              name="Cancel"
-              onClick={() => setisEditPayment(false)}
-            />
+            </div>
           </div>
         )}
       </div>
@@ -280,13 +299,21 @@ const PaymentSection = ({ employeeId }) => {
           className="w-full max-w-xl mx-auto col-span-full mt-4"
         />
       )}
-      {addeNew && <AddPayments employeeId={employeeId} setAddNew={setAddNew} />}
+      {addeNew && (
+        <AddPayments
+          setPayments={setPayments}
+          employeeId={employeeId}
+          setAddNew={setAddNew}
+        />
+      )}
       {deleteModal && (
         <PaymentDeleteModal
           onClose={() => {
             setDeleteModal(false);
           }}
           id={paymentId}
+          setPayments={setPayments}
+          payments={payments}
         />
       )}
     </>
