@@ -98,7 +98,6 @@ export const employeeSchema = z.object({
     .optional()
     .nullable()
     .or(z.literal('')),
-
   employmentType: z
     .string({ message: 'Employment type is required' })
     .min(1, 'Employment type is required'),
@@ -111,9 +110,6 @@ export const putEmployeeSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
   middleName: z.string().optional().nullable().or(z.literal('')),
-  // salary: z
-  //   .number({ message: 'salary must be a number' })
-  //   .min(1000, 'Salary must be at least 1000$ per year'),
   tittle: z.string().min(1, 'Title is required'),
   effectiveDate: z
     .string()
@@ -151,16 +147,6 @@ export const putEmployeeSchema = z.object({
   marritialStatus: z
     .string({ message: 'Marital status is required' })
     .min(1, 'Marital status is required'),
-  // paymentSchedule: z
-  //   .string({ message: 'Payment schedule is required' })
-  //   .min(1, 'Payment schedule is required'),
-  // payType: z
-  //   .union([
-  //     // z.instanceof(File),
-  //     z.string().optional(),
-  //     z.null(),
-  //   ])
-  //   .optional(),
   countryId: z.union([z.number().optional(), z.null()]).optional(),
   isManager: z.boolean().optional(),
   profilePictureUrl: z.union([z.string().optional(), z.null()]).optional(),
