@@ -28,6 +28,7 @@ const SingleJob = () => {
             associations: true,
           },
         });
+        console.log('job res: ', data);
         setSingleJobData(data);
         setLoading(false);
       } catch (error) {

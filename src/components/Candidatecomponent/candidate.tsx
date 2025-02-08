@@ -8,11 +8,34 @@ import {
   FaUsers,
 } from 'react-icons/fa';
 import UserImgPlaceholder from '../LeaveRequests/UserImgPlaceholder';
+import Button from '../Button';
+import { useState } from 'react';
+import Modal from '../modal';
+import RejectCandidateModal from './RejectCandidateModal';
 const Candidatecomponent = ({ data, jobTitle }) => {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <>
-      <div className="flex flex-row items-center gap-3 text-[18px] font-medium">
-        <FaUsers /> Candidate
+      {showModal && (
+        <Modal onClose={() => setShowModal(false)}>
+          <RejectCandidateModal onClose={() => setShowModal(false)} />
+        </Modal>
+      )}
+      <div className="flex flex-wrap items-center gap-4 justify-between">
+        <div className="flex flex-row items-center gap-3 text-[18px] font-medium">
+          <FaUsers /> Candidate
+        </div>
+        <Button
+          onClick={(e) => {
+            e.preventDefault();
+            setShowModal(true);
+          }}
+          bg="#F53649"
+          textColor="white"
+          name="Reject"
+          className="!text-base font-medium px-8"
+        />
       </div>
       <div className="flex flex-col sm:flex-row items-start gap-8 mt-8">
         {data?.data?.profilePictureUrl ? (
