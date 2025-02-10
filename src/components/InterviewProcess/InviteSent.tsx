@@ -106,9 +106,7 @@ const InviteSent = ({ jobApplication, heading, buttonText }) => {
           })}
           className="opacity-50 outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
         >
-          <option value="" disabled>
-            Select a rating
-          </option>
+          <option value="">Select a rating</option>
           <option value="1">1 - Poor</option>
           <option value="2">2 - Below Average</option>
           <option value="3">3 - Average</option>
@@ -137,7 +135,7 @@ const InviteSent = ({ jobApplication, heading, buttonText }) => {
           rows={5}
           placeholder="Add notes for interview"
           className="opacity-50 outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full resize-none"
-          {...register('notes', { required: 'Notes is required.' })}
+          {...register('notes')}
         ></textarea>
         {errors.notes?.message && (
           <p className="text-red-500 text-sm">{String(errors.notes.message)}</p>

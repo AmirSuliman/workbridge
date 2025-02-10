@@ -85,7 +85,11 @@ export const JobCandidates = () => {
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {`${item.candidate.firstName} ${item.candidate.lastName}`}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <td
+                className={`px-6 py-4 whitespace-nowrap text-sm ${
+                  item.stage === 'Rejected' ? 'text-[#F53649]' : 'text-gray-500'
+                }`}
+              >
                 {item.stage}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

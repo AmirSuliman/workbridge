@@ -39,7 +39,13 @@ const Jobapplied = ({ candidateId }) => {
           {data?.items.map((job, index) => (
             <tr key={index} className="border-b hover:bg-gray-50">
               <td className="px-6 py-4 text-sm ">{job.job.tittle}</td>
-              <td className="px-6 py-4 text-sm ">{job.stage}</td>
+              <td
+                className={`px-6 py-4 text-sm ${
+                  job.stage === 'Rejected' ? 'text-[#F53649]' : ''
+                }`}
+              >
+                {job.stage}
+              </td>
               <td className="px-6 py-4 text-sm ">{'N/A'}</td>
               <td className="px-6 py-4 text-sm ">
                 {job.createdAt.split('T')[0]}

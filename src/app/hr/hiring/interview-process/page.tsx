@@ -29,7 +29,7 @@ const InterviewProcess = () => {
     (state: RootState) => state.jobApplications
   );
 
-  // console.log('interview- Job applications: ', jobApplication);
+  console.log('interview- Job application: ', jobApplication);
 
   useEffect(() => {
     const fetchSingleJob = async () => {

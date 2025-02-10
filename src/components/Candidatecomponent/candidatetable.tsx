@@ -122,7 +122,13 @@ const CandidateTable = () => {
                     {job.candidate.firstName} {job.candidate.lastName}
                   </td>
                   <td className="px-6 py-4 text-sm">{job.job.tittle}</td>
-                  <td className="px-6 py-4 text-sm">{job.stage}</td>
+                  <td
+                    className={`px-6 py-4 text-sm  ${
+                      job.stage === 'Rejected' ? 'text-[#F53649]' : ''
+                    }`}
+                  >
+                    {job.stage}
+                  </td>
                   <td className="px-6 py-4 text-sm">
                     {job.rating || 'No rating yet'}
                   </td>

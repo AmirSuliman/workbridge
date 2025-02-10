@@ -12,30 +12,55 @@ import Button from '../Button';
 import { useState } from 'react';
 import Modal from '../modal';
 import RejectCandidateModal from './RejectCandidateModal';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
+
 const Candidatecomponent = ({ data, jobTitle }) => {
   const [showModal, setShowModal] = useState(false);
+  const jobApplication = useSelector(
+    (state: RootState) => state.jobApplications
+  );
+
+  console.log('candidate component: ', jobApplication);
+  const jobApplicationId = jobApplication?.data?.items[0]?.id;
+  const stage = jobApplication?.data?.items[0]?.stage;
+  const stages = ['Technical', 'Second', 'Negotiation', 'Offer', 'Onboarding'];
 
   return (
-    <>
+    <section className="p-6 bg-white border rounded-lg mt-8">
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
-          <RejectCandidateModal onClose={() => setShowModal(false)} />
+          <RejectCandidateModal
+            jobApplicationId={jobApplicationId}
+            onClose={() => setShowModal(false)}
+          />
         </Modal>
       )}
       <div className="flex flex-wrap items-center gap-4 justify-between">
         <div className="flex flex-row items-center gap-3 text-[18px] font-medium">
           <FaUsers /> Candidate
         </div>
-        <Button
-          onClick={(e) => {
-            e.preventDefault();
-            setShowModal(true);
-          }}
-          bg="#F53649"
-          textColor="white"
-          name="Reject"
-          className="!text-base font-medium px-8"
-        />
+        {stage && stages.includes(stage) && (
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              setShowModal(true);
+            }}
+            bg="#F53649"
+            textColor="white"
+            name="Reject"
+            className="!text-base font-medium px-8"
+          />
+        )}
+        {stage === 'Rejected' && (
+          <Button
+            disabled
+            bg="#FDCED3"
+            textColor="#F53649"
+            name="Rejected"
+            className="!text-base !font-medium px-8 "
+          />
+        )}
       </div>
       <div className="flex flex-col sm:flex-row items-start gap-8 mt-8">
         {data?.data?.profilePictureUrl ? (
@@ -97,7 +122,7 @@ const Candidatecomponent = ({ data, jobTitle }) => {
           <img src="/asdasd.png" alt="img" className="w-4" />
         </div> */}
       </div>
-    </>
+    </section>
   );
 };
 

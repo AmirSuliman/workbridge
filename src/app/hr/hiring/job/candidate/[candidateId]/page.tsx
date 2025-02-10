@@ -64,13 +64,12 @@ const Candidate = () => {
 
         <Link
           href={`/hr/hiring/interview-process?candidate=${candidateId}&job=${jobId}`}
-          // href={`/hr/hiring/interview-process/${candidateId}`}
           className="flex flex-row items-center gap-4 p-3 bg-[#0F172A] text-white text-[12px] rounded-lg"
         >
           Proceed to First Round Interview <FaArrowRight />{' '}
         </Link>
       </div>
-      <div className="p-6 bg-white border rounded-lg mt-8">
+      <div>
         {loading && <ScreenLoader />}
         {error && <p className="text-red-500">Error: {error}</p>}
         {data && (
@@ -79,7 +78,7 @@ const Candidate = () => {
               data={data}
               jobTitle={singleJobData?.data.tittle || ''}
             />
-            <div className="w-full h-[1.5px] bg-gray-300 mt-8" />
+            {/* <div className="p-6 bg-white border rounded-lg mt-8"></div> */}
             <CandidateInfo data={data} />
           </>
         )}

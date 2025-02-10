@@ -1,7 +1,6 @@
 const CandidateInfo = ({ data }) => {
-  console.log('candidateInfo: ', data);
   return (
-    <>
+    <section className="p-6 bg-white border rounded-lg mt-8">
       <div className="mt-8 space-y-8">
         <div className="text-[18px] font-medium flex gap-3 flex-row items-center">
           <img src="/compensation.png" alt="img" className="w-5 h-5" />{' '}
@@ -186,7 +185,7 @@ const CandidateInfo = ({ data }) => {
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 };
 

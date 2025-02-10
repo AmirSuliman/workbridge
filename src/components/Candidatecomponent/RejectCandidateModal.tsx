@@ -1,14 +1,44 @@
 import { useForm } from 'react-hook-form';
 import Button from '../Button';
+import toast from 'react-hot-toast';
+import axiosInstance from '@/lib/axios';
+import { isAxiosError } from 'axios';
+import { BiLoaderCircle } from 'react-icons/bi';
+import { useRouter } from 'next/navigation';
 
-const RejectCandidateModal = ({ onClose }) => {
+const RejectCandidateModal = ({ onClose, jobApplicationId }) => {
+  const route = useRouter();
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    const payload = {
+      rating: data.rating,
+      reason: data.reason,
+    };
+    try {
+      const response = await axiosInstance.put(
+        `/offer/reject/jobApplication/${jobApplicationId}`,
+        payload
+      );
+      console.log('reject res: ', response.data);
+      toast.success('Candidate rejeced successfully');
+      onClose();
+      route.back();
+    } catch (error) {
+      console.log(error);
+      if (isAxiosError(error) && error.response) {
+        toast.error(error.response.data.message || 'Cannot reject candidate.');
+      } else {
+        toast.error('Cannot reject candidate.');
+      }
+    }
+  };
+
   return (
     <div className="w-full max-w-[600px] bg-white p-6 rounded-lg">
       <h1 className="font-semibold text-[22px]">Reject Candidate</h1>
@@ -18,7 +48,7 @@ const RejectCandidateModal = ({ onClose }) => {
         <label className="w-full">
           <span className="mb-2 text-gray-400 text-[12px]">Rate Candidate</span>
           <select
-            {...register('ratingScore', {
+            {...register('rating', {
               required: 'Rating is required.',
               validate: (value) =>
                 (value >= 1 && value <= 10) ||
@@ -26,9 +56,7 @@ const RejectCandidateModal = ({ onClose }) => {
             })}
             className="form-input"
           >
-            <option value="" disabled>
-              Select a rating
-            </option>
+            <option value="">Select a rating</option>
             <option value="1">1 - Poor</option>
             <option value="2">2 - Below Average</option>
             <option value="3">3 - Average</option>
@@ -40,9 +68,9 @@ const RejectCandidateModal = ({ onClose }) => {
             <option value="9">9 - Excellent</option>
             <option value="10">10 - Outstanding</option>
           </select>
-          {errors.ratingScore?.message && (
+          {errors.rating?.message && (
             <p className="text-red-500 text-sm">
-              {String(errors.ratingScore.message)}
+              {String(errors.rating.message)}
             </p>
           )}
         </label>
@@ -56,24 +84,25 @@ const RejectCandidateModal = ({ onClose }) => {
           <textarea
             className="w-full p-4 rounded border border-gray-300 text-black resize-none"
             rows={5}
-            // value={'No note provided'}
-            // readOnly={true}
+            {...register('reason')}
             placeholder="Write reason of rejection"
           />
         </label>
       </div>
 
-      {/* Note */}
-
       {/* Action Buttons */}
       <div className="flex flex-row items-center gap-5 w-full mt-24 px-8">
         <Button
-          onClick={(e) => {
-            e.preventDefault();
-          }}
+          onClick={handleSubmit(onSubmit)}
           bg="#F53649"
           textColor="white"
-          name="Reject"
+          disabled={isSubmitting}
+          name={isSubmitting ? '' : 'Reject'}
+          icon={
+            isSubmitting && (
+              <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+            )
+          }
           className="!text-base font-medium px-8 w-full"
         />
 
