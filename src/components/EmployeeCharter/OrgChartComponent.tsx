@@ -393,7 +393,7 @@ export const OrgChartComponent: FC<Props> = ({
     onSelectedEmployees,
     showTerminatedEmployeesModal,
   ]);
-  console.log('employees: ', employees);
+  // console.log('employees: ', employees);
   return (
     <div className="h-[calc(100vh-10rem)] overflow-hidden relative">
       {hasMultiRoots && (

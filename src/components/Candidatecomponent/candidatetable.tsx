@@ -81,7 +81,7 @@ const CandidateTable = () => {
             <option value="">Select</option>
             <option value="Published">Active</option>
             <option value="Draft">Pending</option>
-            <option value="Draft">Closed</option>
+            {/* <option value="Draft">Closed</option> */}
           </select>
         </div>
       </div>
@@ -144,7 +144,9 @@ const CandidateTable = () => {
                     </a>
                   </td>
                   <td className="py-3 px-4 border-b">
-                    <a href={`/hr/hiring/job/candidate/${job.candidate.id}`}>
+                    <a
+                      href={`/hr/hiring/job/candidate/${job.candidate.id}?job=${job.job.id}`}
+                    >
                       <span className="p-2 border w-8 rounded-md flex items-center justify-center hover:bg-black hover:text-white">
                         <FaChevronRight size={12} />
                       </span>

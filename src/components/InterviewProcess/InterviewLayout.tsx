@@ -25,7 +25,6 @@ const InterviewLayout = ({ jobApplication }) => {
   const jobApplicationId = jobData?.id;
   const searchParams = useSearchParams();
   const candidateId = searchParams.get('candidate');
-  console.log(candidateId, "id");
   const meetingDate = new Date(jobData?.meetingDate);
   const currentDate = new Date();
   const isToday = meetingDate.toDateString() === currentDate.toDateString();
@@ -40,9 +39,12 @@ const InterviewLayout = ({ jobApplication }) => {
       if (!jobApplicationId) return;
 
       try {
-        const response = await axiosInstance.get(`/jobApplication/${jobApplicationId}`, {
-          params: { associations: true },
-        });
+        const response = await axiosInstance.get(
+          `/jobApplication/${jobApplicationId}`,
+          {
+            params: { associations: true },
+          }
+        );
         setApiData(response.data);
       } catch (err) {
         console.error('Error fetching job application data:', err);
@@ -162,10 +164,7 @@ const InterviewLayout = ({ jobApplication }) => {
           />
         )}
         {['Onboarding'].includes(currentStage) && (
-          <Onboarding
-            jobId={jobApplicationId}
-            candidateId={candidateId}
-          />
+          <Onboarding jobId={jobApplicationId} candidateId={candidateId} />
         )}
       </section>
     </>

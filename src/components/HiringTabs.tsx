@@ -9,7 +9,7 @@ export const HiringTabs = ({
   setActiveTab: (value: string) => void;
   jobApplication: JobApplicationsState;
 }) => {
-  const stage = jobApplication.data?.items[0].stage || 'Applied';
+  const stage = jobApplication.data?.items[0]?.stage || 'Applied';
   return (
     <nav className="relative flex items-center gap-8 border-b border-gray-300">
       {stage === 'Interview Summary' && (

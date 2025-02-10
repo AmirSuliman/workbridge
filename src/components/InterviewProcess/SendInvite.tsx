@@ -50,8 +50,8 @@ const SendInvite: React.FC<JobApplication> = ({ jobApplication, heading }) => {
       reset();
 
       setTimeout(() => {
-        window.location.reload(); 
-      }, 1000); 
+        window.location.reload();
+      }, 1000);
     }
 
     if (error) {
@@ -77,6 +77,7 @@ const SendInvite: React.FC<JobApplication> = ({ jobApplication, heading }) => {
         >
           <option value="">Select invite type</option>
           <option value="teams">MS Teams</option>
+          <option value="zoom">Zoom</option>
         </select>
         {errors.type?.message && (
           <p className="text-red-500 text-sm">{String(errors.type.message)}</p>
@@ -92,7 +93,7 @@ const SendInvite: React.FC<JobApplication> = ({ jobApplication, heading }) => {
             validate: (value) => {
               const selectedDate = new Date(value);
               const today = new Date();
-              today.setHours(0, 0, 0, 0); 
+              today.setHours(0, 0, 0, 0);
               return selectedDate >= today || 'Date cannot be in the past.';
             },
           })}
