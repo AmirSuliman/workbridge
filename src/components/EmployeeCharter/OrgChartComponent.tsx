@@ -89,6 +89,8 @@ export const OrgChartComponent: FC<Props> = ({
   const multipleRoots = detectMultipleRoots(employees);
   console.log('Multiple roots detected:', multipleRoots.length > 0);
 
+  const hasMultiRoots = multipleRoots.length > 0;
+
   function detectCycle(employee) {
     const visited = new Set();
     const stack = new Set();
@@ -187,7 +189,7 @@ export const OrgChartComponent: FC<Props> = ({
 
   // We need to manipulate DOM
   useLayoutEffect(() => {
-    if (employees && d3Container.current && !multipleRoots && !hasCycle) {
+    if (employees && d3Container.current && !hasMultiRoots && !hasCycle) {
       refOrgChart2.current = refOrgChart.current;
       refOrgChart.current
         .container(d3Container.current)
@@ -383,7 +385,7 @@ export const OrgChartComponent: FC<Props> = ({
     isTerminating,
     handleTerminate,
     handleClickNode,
-    multipleRoots,
+    hasMultiRoots,
     totalTerminated,
     selectedEmployees,
     terminatedParents,
@@ -394,7 +396,7 @@ export const OrgChartComponent: FC<Props> = ({
   console.log('employees: ', employees);
   return (
     <div className="h-[calc(100vh-10rem)] overflow-hidden relative">
-      {multipleRoots && (
+      {hasMultiRoots && (
         <div className="border-b-[1px] border-gray-border px-6 py-4">
           <h1>There are multiple roots in the data</h1>
         </div>
