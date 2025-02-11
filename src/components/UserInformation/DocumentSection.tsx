@@ -27,7 +27,7 @@ interface DocumentType {
 
 interface EmployeeDataType {
   id: number;
-  documents: DocumentType[];
+  documents?: DocumentType[];
 }
 const SelectableCell = (text, document, onClick) => {
   return (
@@ -50,12 +50,12 @@ const getFileExtension = (mimeType) => {
   return mimeToExtensionMap[mimeType] || '';
 };
 
-const DocumentSection = ({ employeeData }: { employeeData: EmployeeDataType }) => {
+const DocumentSection = ({ employeeData }: { employeeData?: EmployeeDataType }) => {
   const [documentId, setDocumentId] = useState<number | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [sortOption, setSortOption] = useState<'size' | 'date'>('size');
-  const [documents, setDocuments] = useState<DocumentType[]>([]);
+  const [documents, setDocuments] = useState<DocumentType[]>(employeeData?.documents ?? []);
   const [selectedDocument, setSelectedDocument] = useState<DocumentType | null>(null);
   const [openDocumentModal, setOpenDocumentModal] = useState(false);
   const [documentContent, setDocumentContent] = useState<string>(''); 
@@ -111,12 +111,7 @@ const DocumentSection = ({ employeeData }: { employeeData: EmployeeDataType }) =
   };
 
   useEffect(() => {
-    if (!employeeData || !employeeData.documents) {
-      setDocuments([]); 
-      return;
-    }
-
-    setDocuments(employeeData.documents); 
+    setDocuments(employeeData?.documents ?? []);
   }, [employeeData]);
 
   const handleDocumentOpen = async (document) => {
@@ -138,7 +133,7 @@ const DocumentSection = ({ employeeData }: { employeeData: EmployeeDataType }) =
         setDocumentContent('');
         setIsLoading(false);
       } catch (error) {
-        setError(`Error loading PDF file. Please check the URL or try again. Details: ${error.message}`);
+        setError(`Error loading PDF file. Please check the URL or try again. Details: ${(error as Error).message}`);
         console.log("Error loading PDF:", error);
         setIsLoading(false);
       }
@@ -160,19 +155,15 @@ const DocumentSection = ({ employeeData }: { employeeData: EmployeeDataType }) =
     }
   };
   
-  const sortedDocuments = [...documents];
+  documents.sort((a, b) => {
+    const dateA = a.EmployeeDocument?.createdAt ? new Date(a.EmployeeDocument.createdAt).getTime() : 0;
+    const dateB = b.EmployeeDocument?.createdAt ? new Date(b.EmployeeDocument.createdAt).getTime() : 0;
+    return dateA - dateB;
+  });
+  
+  
 
-  if (sortOption === 'size') {
-    sortedDocuments.sort((a, b) => a.size - b.size); 
-  } else if (sortOption === 'date') {
-    sortedDocuments.sort(
-      (a, b) =>
-        new Date(a.EmployeeDocument.createdAt).getTime() - 
-        new Date(b.EmployeeDocument.createdAt).getTime()
-    ); 
-  }
-
-  const values = sortedDocuments?.map((document) => {
+  const values = documents?.map((document) => {
     const sizeInBytes = document.size ?? 0;
     const sizeInKB = sizeInBytes / 1024;
     const formattedSize =
@@ -205,8 +196,9 @@ const DocumentSection = ({ employeeData }: { employeeData: EmployeeDataType }) =
             <span className="text-xs ">Sort</span>{' '}
             <select
               value={sortOption}
-              onChange={(e) => setSortOption(e.target.value)}
-              className="outline-none text-xs"
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
+                setSortOption(e.target.value as 'size' | 'date')}
+                            className="outline-none text-xs"
             >
               <option value="size">Size</option>
               <option value="date">Date</option>
@@ -237,7 +229,7 @@ const DocumentSection = ({ employeeData }: { employeeData: EmployeeDataType }) =
       {openDeleteModal && (
         <DeleteDocumentModal
           onClose={() => setOpenDeleteModal(false)}
-          employeeId={employeeData.id}
+          employeeId={employeeData?.id ?? 0} 
           documentId={documentId}
           onDocumentDelete={handleDocumentDelete}
         />
