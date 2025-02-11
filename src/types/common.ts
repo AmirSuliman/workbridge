@@ -24,6 +24,15 @@ export interface SurveyProps {
   };
   employee: EmployeeData;
   department: Department;
+  managers: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    department: {
+      name: string;
+    };
+  }[];
+  managerEmployeeCount: { [key: string]: number };
 }
 
 export interface EmergencyContactProps {

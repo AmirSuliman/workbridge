@@ -8,7 +8,7 @@ import Modal from '../modal/Modal';
 import UploadDocument from './UploadDocument';
 import { BiLoaderCircle } from 'react-icons/bi';
 
-const UploadDocumentModal = ({ onClose, employeeData }) => {
+const UploadDocumentModal = ({ onClose, employeeData, onDocumentUpload }) => {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -37,48 +37,46 @@ const UploadDocumentModal = ({ onClose, employeeData }) => {
       toast.error('Please select a file before submitting.');
       return;
     }
-
+  
     try {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('type', file.type);
       formData.append('size', file.size.toString());
       setLoading(true);
+  
       const response = await axiosInstance.post(
         `/employee/${employeeData.id}/document/upload`,
         formData,
         {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+          headers: { 'Content-Type': 'multipart/form-data' },
           onUploadProgress: (progressEvent) => {
             const percentCompleted = Math.round(
-              progressEvent.total
-                ? (progressEvent.loaded * 100) / progressEvent.total
-                : 0
+              (progressEvent.loaded * 100) / (progressEvent.total || 1)
             );
             setUploadPercentage(percentCompleted);
           },
         }
       );
-
+  
       toast.success('File uploaded successfully!');
+  
+      // Update document list immediately in the parent component
+      if (response.data) {
+        onDocumentUpload(response.data);  // This should update the table instantly
+      }
+  
       setLoading(false);
-      onClose();
-      console.log(response);
+      onClose();  // Close the modal after upload
     } catch (error) {
       console.error(error);
       setLoading(false);
       setUploadPercentage(0);
-
-      if (isAxiosError(error) && error.response) {
-        toast.error(error.response.data.message || 'Failed to upload file.');
-      } else {
-        toast.error('Failed to upload file.');
-      }
+      toast.error('Failed to upload file.');
     }
   };
-
+  
+  
   return (
     <Modal onClose={onClose}>
       <section className="w-full p-8">

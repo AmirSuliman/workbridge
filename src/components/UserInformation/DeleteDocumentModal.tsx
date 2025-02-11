@@ -6,8 +6,7 @@ import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import axiosInstance from '@/lib/axios';
 
-const DeleteDocumentModal = ({ onClose, employeeId, documentId }) => {
-  console.log('employeeId: ', employeeId, 'documentId: ', documentId);
+const DeleteDocumentModal = ({ onClose, employeeId, documentId, onDocumentDelete }) => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -19,8 +18,8 @@ const DeleteDocumentModal = ({ onClose, employeeId, documentId }) => {
 
       toast.success('File deleted successfully!');
       setLoading(false);
+      onDocumentDelete(documentId);  // Notify parent to update state
       onClose();
-      console.log(response);
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -32,6 +31,7 @@ const DeleteDocumentModal = ({ onClose, employeeId, documentId }) => {
       }
     }
   };
+
   return (
     <Modal onClose={onClose}>
       <section className="p-8 min-h-80 flex flex-col">
@@ -65,4 +65,5 @@ const DeleteDocumentModal = ({ onClose, employeeId, documentId }) => {
     </Modal>
   );
 };
+
 export default DeleteDocumentModal;

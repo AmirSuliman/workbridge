@@ -43,7 +43,7 @@ const Evaluationlist = () => {
             </select>
           </div>
           <Link
-            href="/hr/Reports/create-evaluation"
+            href="/hr/evaluation-&-reports/create-evaluation"
             className="p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2"
           >
             Create Survey
@@ -98,9 +98,8 @@ const Evaluationlist = () => {
                   key={survey.id}
                   className="border-b"
                   onClick={() => {
-                    // manager and survey id
                     router.push(
-                      `/hr/evaluation-&-reports/evaluation/${survey.employeeId}?survey=${survey.id}`
+                      `/hr/evaluation-&-reports/evaluation/${survey.managers[0]?.id}?survey=${survey.id}`
                     );
                   }}
                 >
@@ -108,13 +107,15 @@ const Evaluationlist = () => {
                     {`${survey?.user?.firstName} ${survey?.user?.lastName}`}
                   </td>
                   <td className="p-4 text-[14px] text-gray-800">
-                    {`${survey?.employee?.firstName} ${survey?.employee?.lastName}`}
+                    {survey.managers.length > 0
+                      ? `${survey.managers[0]?.firstName} ${survey.managers[0]?.lastName}`
+                      : 'N/A'}
                   </td>
                   <td className="p-4 text-[14px] text-gray-800">
-                    {survey.department?.name}
+                    {survey.managers[0]?.department?.name || 'N/A'}
                   </td>
                   <td className="p-4 text-[14px] text-gray-800">
-                    {survey.surveyEmployees?.length || 0}
+                    {survey.managerEmployeeCount[survey.managers[0]?.id] || 0}
                   </td>
                   <td className="p-4 text-[14px] text-gray-800">
                     {new Date(survey.createdAt).toLocaleDateString()}

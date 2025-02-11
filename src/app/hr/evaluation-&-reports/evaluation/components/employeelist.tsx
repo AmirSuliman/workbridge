@@ -12,22 +12,27 @@ const Employeelist = () => {
   const searchParams = useSearchParams();
   const survey = searchParams.get('survey');
   const employeeId = searchParams.get('employee');
-  console.log('surveyId: ', survey, 'employeeId: ', employeeId);
+
+  console.log('searchParams:', searchParams.toString()); // Debugging
+  console.log('surveyId:', survey, 'employeeId:', employeeId);
+
   useEffect(() => {
     const getManagerEmployees = async () => {
+      if (!managerId) return; // Prevent API calls if managerId is missing
       try {
         const response = await axiosInstance.get(`/employees/${managerId}`);
         console.log('resp:', response.data);
         setEmployees(response.data.data);
       } catch (error) {
-        console.log(error);
+        console.error('Error fetching employees:', error);
       }
     };
+
     getManagerEmployees();
   }, [managerId]);
 
   return (
-    <div className=" bg-white border rounded-[10px] mt-8">
+    <div className="bg-white border rounded-[10px] mt-8">
       <h1 className="font-medium text-[18px] p-6">List of employees</h1>
       <div className="flex flex-col items-start w-full my-4">
         {employees.length > 0 ? (
@@ -35,9 +40,14 @@ const Employeelist = () => {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                // manager and survey id
+                if (!survey) {
+                  console.warn('Survey ID is missing');
+                  return;
+                }
+
+                // Navigate with survey and employee ID
                 router.push(
-                  `/hr/Reports/evaluation/${managerId}?survey=${survey}&employee=${employee.id}`
+                  `/hr/evaluation-&-reports/evaluation/${managerId}?survey=${survey}&employee=${employee.id}`
                 );
               }}
               key={employee.id}
@@ -54,14 +64,14 @@ const Employeelist = () => {
                   subtitle={`${employee.tittle}`}
                 />
               </div>
-              <div className="text-[#00B87D] bg-[#D5F6DD] p-1 px-3 text-[12px] font-medium rounded ">
+              <div className="text-[#00B87D] bg-[#D5F6DD] p-1 px-3 text-[12px] font-medium rounded">
                 Completed
               </div>
             </button>
           ))
         ) : (
           <div className="flex flex-row items-center justify-between w-full px-6">
-            no employees avaible
+            No employees available
           </div>
         )}
       </div>

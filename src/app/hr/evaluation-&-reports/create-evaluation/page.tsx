@@ -1,8 +1,5 @@
 'use client';
-
 import Button from '@/components/Button';
-import DepartmentDropdown from '@/components/DropDowns/DepratmentsDropdown';
-import EmployeesDropdown from '@/components/DropDowns/EmployeesDropdown';
 import axiosInstance from '@/lib/axios';
 import { isAxiosError } from 'axios';
 import { getSession } from 'next-auth/react';
@@ -12,6 +9,9 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { FiPlusCircle } from 'react-icons/fi';
+import ManagersDropdown from './ManagersDropdown';
+import DepartmentDropdown from './DepartmentDropdown';
+
 interface InnerUser {
   active: boolean;
   email: string;
@@ -24,7 +24,7 @@ interface InnerUser {
   roleId: number;
   userId: string;
   accessToken: string;
-  employeeId?: number; // Add employeeId as optional
+  employeeId?: number;
 }
 
 interface Session {
@@ -39,10 +39,13 @@ const CreateEvaluation = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [employeeId, setEmployeeId] = useState<User>();
+  const [isEvaluativeReportingEmployee, setIsEvaluativeReportingEmployee] =
+    useState(false);
+  const [departmentIds, setDepartmentIds] = useState<number[]>([]);
+  const [managerIds, setManagerIds] = useState<number[]>([]);
 
   const fetchSession = async (): Promise<Session | null> => {
     const session = await getSession();
-    console.log('session: ', session);
     return session;
   };
 
@@ -52,19 +55,19 @@ const CreateEvaluation = () => {
       if (session?.user?.employeeId) {
         setEmployeeId({ employeeId: session.user.employeeId });
       } else {
-        setEmployeeId({ employeeId: null }); // Handle the case where employeeId is not available
+        setEmployeeId({ employeeId: null });
       }
     };
 
     fetchSessionAndSetEmployeeId();
   }, []);
-  console.log(employeeId);
 
   const {
     reset,
     register,
     resetField,
     handleSubmit,
+    setValue,
     control,
     formState: { errors },
   } = useForm({});
@@ -75,30 +78,36 @@ const CreateEvaluation = () => {
   });
 
   const onSubmit = async (data, status) => {
-    console.log('status: ', status);
     const transformedQuestions = data.questions.map((question) => ({
       ...question,
-      responseType: question.responseType ? 'Text' : 'Rating',
+      responseType: question.responseType ? 'text' : 'Rating',
     }));
+
+    console.log('Selected Department IDs:', departmentIds);
+    console.log('Selected Manager IDs:', managerIds);
+
+    const type = managerIds.length > 0 ? 'Manager' : 'Department';
+
     const payload = {
-      status: status,
       sendBy: employeeId?.employeeId || null,
-      departmentId: data.departmentId,
-      isReportingEmployee: data.isReportingEmployee,
+      departmentIds: departmentIds,
+      title: 'Survey Title',
+      type: type,
+      isReportingEmployee: true,
+      status: status,
       questions: transformedQuestions,
       employeeId: data.reportingManagerId,
+      managerIds: managerIds,
     };
-    console.log('payload: ', payload);
+
     try {
       setLoading(true);
-      const response = await axiosInstance.post('/survey/', payload);
+      await axiosInstance.post('/survey/', payload);
+
       if (status === 'In Progress') {
-        const sendRes = await axiosInstance.post('/survey/send/', {
-          employeeId: data.reportingManagerId,
-        });
-        console.log('sendRes: ', sendRes.data);
+        await axiosInstance.post('/survey/send/', payload);
       }
-      console.log('response: ', response.data);
+
       setLoading(false);
       toast.success(
         `${status === 'Draft' ? 'Draft saved' : 'Survey sent'} successfully!`
@@ -106,7 +115,6 @@ const CreateEvaluation = () => {
       reset();
     } catch (error) {
       setLoading(false);
-      console.log(error);
       if (isAxiosError(error) && error.response) {
         toast.error(error.response.data.message || 'Failed to create survey.');
       } else {
@@ -143,30 +151,36 @@ const CreateEvaluation = () => {
       <div className=" bg-white rounded-[10px] border mt-8">
         <h1 className="text-[18px] font-medium p-6">Department</h1>
         <div className="flex items-center gap-4 p-6">
-          <label className=" flex flex-col gap-1">
-            <span className="form-label">Department*</span>
-            <DepartmentDropdown
-              errors={errors}
-              register={register}
-              resetField={resetField}
-              departmentId={null}
-            />
-          </label>
+          {!isEvaluativeReportingEmployee && (
+            <label className=" flex flex-col gap-1">
+              <span className="form-label">Department*</span>
+              <DepartmentDropdown
+                departmentId={departmentIds}
+                setValue={setValue}
+                errors={errors}
+                onSelect={(selectedIds) => setDepartmentIds(selectedIds)}
+              />
+            </label>
+          )}
 
           <label className=" flex flex-col gap-1">
             <span className="form-label">Select Employee or Manager*</span>
-            <EmployeesDropdown
+            <ManagersDropdown
               errors={errors}
               register={register}
               resetField={resetField}
               reportingManagerId={null}
+              onSelect={(selectedIds) => setManagerIds(selectedIds)}
             />
           </label>
-          <label className="flex items-center gap-2 mt-auto mb-3  ">
+          <label className="flex items-center gap-2 mt-auto mb-3">
             <input
               type="checkbox"
               {...register('isReportingEmployee')}
               className="appearance-none border-2 border-black checked:bg-black text-white size-4 rounded"
+              onChange={(e) =>
+                setIsEvaluativeReportingEmployee(e.target.checked)
+              }
             />
             Evaluative Reporting Employees
           </label>
@@ -234,4 +248,5 @@ const CreateEvaluation = () => {
     </form>
   );
 };
+
 export default CreateEvaluation;
