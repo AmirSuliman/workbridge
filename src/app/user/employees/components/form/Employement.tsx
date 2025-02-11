@@ -107,6 +107,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
                 <option value="">Select PayType</option>
                 <option value="Salary">Salary</option>
                 <option value="Contract">Contract</option>
+                <option value="Bonus">Bonus</option>
               </select>
               {errors.payType && (
                 <span className="text-red-500">{errors.payType.message}</span>

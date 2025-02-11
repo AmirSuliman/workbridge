@@ -69,6 +69,7 @@ const AddPayments = ({ employeeId, setPayments, setAddNew }) => {
             <option value="">Select PayType</option>
             <option value="Salary">Salary</option>
             <option value="Contract">Contract</option>
+            <option value="Bonus">Bonus</option>
           </select>
           {errors?.payType && (
             <span className="form-error">
