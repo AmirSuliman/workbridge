@@ -13,6 +13,22 @@ import mammoth from 'mammoth';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
+
+interface DocumentType {
+  id: number;
+  fileName: string;
+  fileType: string;
+  size?: number;
+  url: string;
+  EmployeeDocument?: {
+    createdAt?: string;
+  };
+}
+
+interface EmployeeDataType {
+  id: number;
+  documents: DocumentType[];
+}
 const SelectableCell = (text, document, onClick) => {
   return (
     <div className="text-dark-navy text-md items-center justify-start flex gap-2 cursor-pointer" onClick={() => onClick(document)}>
@@ -34,22 +50,22 @@ const getFileExtension = (mimeType) => {
   return mimeToExtensionMap[mimeType] || '';
 };
 
-const DocumentSection = ({ employeeData }) => {
-  const [documentId, setDocumentId] = useState(null);
+const DocumentSection = ({ employeeData }: { employeeData: EmployeeDataType }) => {
+  const [documentId, setDocumentId] = useState<number | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [sortOption, setSortOption] = useState('size');
-  const [documents, setDocuments] = useState([]);
-  const [selectedDocument, setSelectedDocument] = useState(null);
+  const [sortOption, setSortOption] = useState<'size' | 'date'>('size');
+  const [documents, setDocuments] = useState<DocumentType[]>([]);
+  const [selectedDocument, setSelectedDocument] = useState<DocumentType | null>(null);
   const [openDocumentModal, setOpenDocumentModal] = useState(false);
   const [documentContent, setDocumentContent] = useState<string>(''); 
   const [pdfPageNumber, setPdfPageNumber] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [numPages, setNumPages] = useState(null);
-const [pdfBlobUrl, setPdfBlobUrl] = useState(null);
+ // const [numPages, setNumPages] = useState(null);
+//const [pdfBlobUrl, setPdfBlobUrl] = useState(null);
 
-useEffect(() => {
+{/*useEffect(() => {
   if (selectedDocument?.url) {
     fetch(selectedDocument.url)
       .then((response) => response.blob())
@@ -69,11 +85,10 @@ useEffect(() => {
   onLoadSuccess={({ numPages }) => setNumPages(numPages)}
 >
   <Page pageNumber={pdfPageNumber} />
-</Document>
+</Document>*/}
 
 
 
-  // Update documents after deletion
   const handleDocumentDelete = (deletedDocumentId: number) => {
     setDocuments((prevDocuments) =>
       prevDocuments.filter((document) => document.id !== deletedDocumentId)
@@ -87,28 +102,27 @@ useEffect(() => {
       ...newDoc,
       EmployeeDocument: {
         ...newDoc.EmployeeDocument,
-        createdAt: newDoc.EmployeeDocument?.createdAt || new Date().toISOString(), // Ensure createdAt exists
+        createdAt: newDoc.EmployeeDocument?.createdAt || new Date().toISOString(),
       },
-      size: newDoc.size || 0, // Ensure size is present
+      size: newDoc.size || 0, 
     };
   
-    setDocuments((prevDocuments) => [updatedDoc, ...prevDocuments]); // Add new document at the beginning
+    setDocuments((prevDocuments) => [updatedDoc, ...prevDocuments]); 
   };
 
   useEffect(() => {
     if (!employeeData || !employeeData.documents) {
-      setDocuments([]); // Fallback to an empty array if data is unavailable
+      setDocuments([]); 
       return;
     }
 
-    setDocuments(employeeData.documents); // Set the documents from employeeData
+    setDocuments(employeeData.documents); 
   }, [employeeData]);
 
   const handleDocumentOpen = async (document) => {
-    // Open the document URL in a new tab
+
     window.open(document.url, '_blank');
   
-    // Set the selected document and open the modal to show the content
     setSelectedDocument(document);
     setOpenDocumentModal(true);
     setIsLoading(true);
@@ -121,7 +135,7 @@ useEffect(() => {
         const response = await fetch(document.url);
         if (!response.ok) throw new Error(`PDF not found, status code: ${response.status}`);
         console.log('PDF fetched successfully');
-        setDocumentContent(''); // Clear previous content
+        setDocumentContent('');
         setIsLoading(false);
       } catch (error) {
         setError(`Error loading PDF file. Please check the URL or try again. Details: ${error.message}`);
@@ -146,17 +160,16 @@ useEffect(() => {
     }
   };
   
-  // Sorting logic
   const sortedDocuments = [...documents];
 
   if (sortOption === 'size') {
-    sortedDocuments.sort((a, b) => a.size - b.size); // Sort by size
+    sortedDocuments.sort((a, b) => a.size - b.size); 
   } else if (sortOption === 'date') {
     sortedDocuments.sort(
       (a, b) =>
         new Date(a.EmployeeDocument.createdAt).getTime() - 
         new Date(b.EmployeeDocument.createdAt).getTime()
-    ); // Sort by date
+    ); 
   }
 
   const values = sortedDocuments?.map((document) => {
@@ -211,7 +224,7 @@ useEffect(() => {
       </div>
       <InfoGrid
         headers={['Document Name', 'Date Uploaded', 'Size', 'File Type']}
-        values={values} // Use the updated documents array after deletion
+        values={values} 
       />
 
       {openModal && (
