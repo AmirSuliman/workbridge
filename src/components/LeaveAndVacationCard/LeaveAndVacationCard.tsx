@@ -35,8 +35,8 @@ const LeaveAndVacationCard = ({
         <DaysCard daysNum={daysNum} />
       </div>
 
-      <div onClick={navigateToTimeRequestTab} className="w-fit h-fit">
-        <Button name={name} icon="" bg="black" textColor="white" />
+      <div onClick={navigateToTimeRequestTab} className="w-full h-fit ">
+        <Button name={name} icon="" bg="#0F172A" textColor="white" className='w-full mt-8' />
       </div>
     </div>
   );

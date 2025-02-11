@@ -43,7 +43,7 @@ const Evaluationlist = () => {
             </select>
           </div>
           <Link
-            href="/hr/Reports/create-evaluation"
+            href="/hr/evaluation-&-reports/create-evaluation"
             className="p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2"
           >
             Create Survey
@@ -93,50 +93,50 @@ const Evaluationlist = () => {
             </tbody>
           ) : (
             <tbody>
-              {data?.items?.map((survey) => (
-                <tr
-                  key={survey.id}
-                  className="border-b"
-                  onClick={() => {
-                    // manager and survey id
-                    router.push(
-                      `/hr/Reports/evaluation/${survey.employeeId}?survey=${survey.id}`
-                    );
-                  }}
-                >
-                  <td className="p-4 text-[14px] text-gray-800">
-                    {`${survey?.user?.firstName} ${survey?.user?.lastName}`}
-                  </td>
-                  <td className="p-4 text-[14px] text-gray-800">
-                    {`${survey?.employee?.firstName} ${survey?.employee?.lastName}`}
-                  </td>
-                  <td className="p-4 text-[14px] text-gray-800">
-                    {survey.department?.name}
-                  </td>
-                  <td className="p-4 text-[14px] text-gray-800">
-                    {survey.surveyEmployees?.length || 0}
-                  </td>
-                  <td className="p-4 text-[14px] text-gray-800">
-                    {new Date(survey.createdAt).toLocaleDateString()}
-                  </td>
-                  <td
-                    className={`p-4 text-[14px] ${
-                      survey.status === 'Completed'
-                        ? 'text-[#00B87D]'
-                        : 'text-gray-800'
-                    }`}
-                  >
-                    {survey.status}
-                  </td>
-                  <td className="p-4 text-[14px] text-gray-800 text-end mr-0 ml-auto">
-                    <button className="flex flex-row items-center justify-end gap-3 p-1 px-3 border rounded">
-                      {survey.status === 'Completed' ? 'View Results' : 'View'}
-                      <BiChevronRight />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {data?.items?.map((survey) => (
+    <tr
+      key={survey.id}
+      className="border-b"
+      onClick={() => {
+        router.push(
+          `/hr/evaluation-&-reports/evaluation/${survey.managers[0]?.id}?survey=${survey.id}`
+        );
+      }}
+    >
+      <td className="p-4 text-[14px] text-gray-800">
+        {`${survey?.user?.firstName} ${survey?.user?.lastName}`}
+      </td>
+      <td className="p-4 text-[14px] text-gray-800">
+        {survey.managers.length > 0
+          ? `${survey.managers[0]?.firstName} ${survey.managers[0]?.lastName}`
+          : "N/A"}
+      </td>
+      <td className="p-4 text-[14px] text-gray-800">
+        {survey.managers[0]?.department?.name || "N/A"}
+      </td>
+      <td className="p-4 text-[14px] text-gray-800">
+        {survey.managerEmployeeCount[survey.managers[0]?.id] || 0}
+      </td>
+      <td className="p-4 text-[14px] text-gray-800">
+        {new Date(survey.createdAt).toLocaleDateString()}
+      </td>
+      <td
+        className={`p-4 text-[14px] ${
+          survey.status === "Completed" ? "text-[#00B87D]" : "text-gray-800"
+        }`}
+      >
+        {survey.status}
+      </td>
+      <td className="p-4 text-[14px] text-gray-800 text-end mr-0 ml-auto">
+        <button className="flex flex-row items-center justify-end gap-3 p-1 px-3 border rounded">
+          {survey.status === "Completed" ? "View Results" : "View"}
+          <BiChevronRight />
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           )}
         </table>
       </div>

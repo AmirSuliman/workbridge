@@ -1,52 +1,55 @@
 import axiosInstance from '@/lib/axios';
 import { Department } from '@/types/employee';
 import { useEffect, useState } from 'react';
+import Select from 'react-select';
 
-const DepartmentDropdown = ({ departmentId, resetField, register, errors }) => {
+const DepartmentDropdown = ({ departmentId, setValue, errors, onSelect }) => {
   const [departments, setDepartments] = useState<Department[]>([]);
 
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
         const { data } = await axiosInstance.get('/departments');
-        setDepartments(data.data.items);
-        resetField('location.zipCode');
-        resetField('phoneNumber');
-        resetField('workPhone');
-        // Set the default department ID if departmentId exists
-        if (departmentId) {
-          const matchedDepartment = data.data.items.find(
-            (department) => department.id === departmentId
+        const departmentOptions = data.data.items.map((dept) => ({
+          value: dept.id,
+          label: dept.name,
+        }));
+        setDepartments(departmentOptions);
+
+        if (departmentId && departmentId.length) {
+          const matchedDepartments = departmentOptions.filter(dept =>
+            departmentId.includes(dept.value)
           );
-          if (matchedDepartment) {
-            resetField('departmentId');
-            resetField('location.zipCode');
-            resetField('phoneNumber');
-            resetField('workPhone');
-          }
+          setValue('departmentId', departmentId);  
+          onSelect(departmentId); 
         }
       } catch (error) {
-        console.error('Error fetching Departments: ', error);
+        console.error('Error fetching Departments:', error);
       }
     };
 
     fetchDepartments();
-  }, [departmentId, resetField]);
+  }, [departmentId, setValue, onSelect]);
+
+  const handleChange = (selectedOptions) => {
+    const selectedIds = selectedOptions.map(option => option.value);
+    setValue('departmentId', selectedIds); 
+    onSelect(selectedIds);  
+  };
 
   return (
-    <>
-      <select className="form-input" {...register('departmentId')}>
-        <option value="">Select Department</option>
-        {departments.map((department) => (
-          <option key={department.id} value={department.id}>
-            {department.name}
-          </option>
-        ))}
-      </select>
+    <div>
+      <Select
+        options={departments}
+        value={departments.filter(dept => departmentId.includes(dept.value))}  
+        onChange={handleChange}
+        isMulti
+        className="w-[300px] border rounded"
+      />
       {errors.departmentId && (
-        <p className="form-error">{errors.departmentId.message}</p>
+        <p className="text-red-500 text-sm">{errors.departmentId.message}</p>
       )}
-    </>
+    </div>
   );
 };
 

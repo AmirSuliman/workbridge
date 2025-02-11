@@ -1,12 +1,14 @@
 import { getAllEmployees } from '@/services/getAllEmployees';
 import { EmployeeData } from '@/types/employee';
 import { useEffect, useState } from 'react';
+import Select from 'react-select';
 
 const EmployeesDropdown = ({
   errors,
   register,
   resetField,
   reportingManagerId,
+  onSelect, 
 }) => {
   const [employees, setEmployees] = useState<EmployeeData[]>([]);
 
@@ -14,45 +16,56 @@ const EmployeesDropdown = ({
     const fetchEmployees = async () => {
       try {
         const response = await getAllEmployees(1, 1000);
-        const items = response?.data?.items || []; // Ensure items is an array
+        const items = response?.data?.items || [];
         setEmployees(items);
 
-        // Find and set the default manager ID
-        if (reportingManagerId) {
-          const matchedEmployee = items.find(
-            (employee) => employee.id === reportingManagerId
+        if (reportingManagerId && Array.isArray(reportingManagerId)) {
+          const matchedEmployees = items.filter((employee) =>
+            reportingManagerId.includes(employee.id)
           );
-          if (matchedEmployee) {
+          if (matchedEmployees.length) {
             resetField('reportingManagerId');
-            resetField('zipCode');
-            resetField('phoneNumber');
-            resetField('workPhone');
           }
         }
       } catch (error) {
         console.error('Error fetching employees: ', error);
-        setEmployees([]); // Ensure employees is always an array
+        setEmployees([]); 
       }
     };
 
     fetchEmployees();
   }, [reportingManagerId, resetField]);
 
+  const handleChange = (selectedOptions) => {
+    const selectedIds = selectedOptions.map((option) => option.value);
+    onSelect(selectedIds); 
+    register('reportingManagerId').onChange({ target: { value: selectedIds } });
+  };
+
+  const employeeOptions = employees.map((employee) => ({
+    value: employee.id,
+    label: `${employee.firstName} ${employee.lastName} - ${employee.tittle}`,
+  }));
+
   return (
     <>
-      <select className="form-input" {...register('reportingManagerId')}>
-        <option value="">Select Manager</option>
-        {employees.map((employee) => (
-          <option key={employee.id} value={String(employee.id)}>
-            {employee.firstName} {employee.lastName} - {employee.tittle}
-          </option>
-        ))}
-      </select>
+      <Select
+        options={employeeOptions}
+        isMulti 
+        onChange={handleChange}
+        className="w-[300px] border rounded"
+        defaultValue={reportingManagerId
+          ? employeeOptions.filter((option) =>
+              reportingManagerId.includes(option.value)
+            )
+          : []}
+      />
       {errors.reportingManagerId && (
         <span className="form-error">{errors.reportingManagerId.message}</span>
       )}
     </>
   );
 };
+
 
 export default EmployeesDropdown;
