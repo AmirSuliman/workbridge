@@ -1,7 +1,14 @@
 import axiosInstance from '@/lib/axios';
-import { Department } from '@/types/employee';
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
+
+
+interface Department {
+  id: string;  
+  name: string;
+  value?: string;  
+  label?: string;  
+}
 
 const DepartmentDropdown = ({ departmentId, setValue, errors, onSelect }) => {
   const [departments, setDepartments] = useState<Department[]>([]);
@@ -11,9 +18,10 @@ const DepartmentDropdown = ({ departmentId, setValue, errors, onSelect }) => {
       try {
         const { data } = await axiosInstance.get('/departments');
         const departmentOptions = data.data.items.map((dept) => ({
-          value: dept.id,
-          label: dept.name,
+          value: dept.id, 
+          label: dept.name, 
         }));
+        
         setDepartments(departmentOptions);
 
         if (departmentId && departmentId.length) {
