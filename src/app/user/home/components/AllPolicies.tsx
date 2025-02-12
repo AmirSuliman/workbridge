@@ -88,7 +88,7 @@ const AllPolicies = () => {
                 {announcement.title || ''}
               </h1>
               <p className="text-[12px] text-gray-400">
-                {getTimeAgo(announcement.updatedAt)}
+                {getTimeAgo(announcement.updatedAt || '')}
               </p>
             </div>
 

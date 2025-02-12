@@ -11,8 +11,9 @@ export interface Policy {
   effectiveDate: string;
   totalEmployees: number;
   employeeAccepted: number;
-  users: {
+  users?: {
     firstName: string;
     lastName: string;
   };
+  updatedAt?: string | undefined;
 }
