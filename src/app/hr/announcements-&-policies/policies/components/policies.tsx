@@ -126,7 +126,7 @@ const Policies = () => {
                     {policy.type}
                   </td>
                   <td className="border-b border-gray-300 p-4 text-[14px]">
-                    John Doe {/* Placeholder for 'Uploaded By' */}
+                  {`${policy.users.firstName} ${policy.users.lastName}`}                  
                   </td>
                   <td className="border-b border-gray-300 p-4 text-[14px]">
                     {`${policy.employeeAccepted} / ${policy.totalEmployees}`}{' '}

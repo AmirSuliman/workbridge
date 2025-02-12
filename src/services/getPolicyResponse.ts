@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const getPolicyResponse = async (id) => {
   try {
-    const response = await axiosInstance.get(`/${id}/responses`);
+    const response = await axiosInstance.get(`policy/${id}/responses`);
     return { data: response.data, error: null };
   } catch (error) {
     if (axios.isAxiosError(error)) {

@@ -39,7 +39,8 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
   }, [startDate, endDate]);
 
   const formatDate = (date: string) => {
-    return `${date} 00:00:00`;
+    const parsedDate = new Date(date);
+    return parsedDate.toISOString().split('T')[0];
   };
 
   const handleRequestVacation = async () => {
@@ -90,6 +91,8 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
     return startDateObj.toISOString().split('T')[0];
   };
 
+ 
+  
   return (
     <>
       <div className="flex items-center justify-between border border-gray-border rounded-[10px] bg-white p-3 md:p-6 md:gap-[3.3rem] w-full">
@@ -140,13 +143,13 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">Leaving Date</span>
                 <input
-                   type="date"
-                   className="p-3 border rounded w-full"
-                   min={new Date().toISOString().split('T')[0]}
-                   max={getMaxDate(new Date().toISOString().split('T')[0], totalDays)}
-                   value={startDate}
-                   onChange={(e) => setStartDate(e.target.value)}
-                 />
+                 type="date"
+                 className="p-3 border rounded w-full"
+                 min={new Date().toISOString().split('T')[0]}
+                 max={getMaxDate(new Date().toISOString().split('T')[0], totalDays)}
+                 value={startDate ? formatDate(startDate) : ''}
+                 onChange={(e) => setStartDate(e.target.value)}
+               />
               </label>
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">
@@ -157,7 +160,7 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
                   className="p-3 border rounded w-full"
                   min={startDate}
                   max={getMaxDate(startDate, totalDays)}
-                  value={endDate}
+                  value={endDate ? formatDate(endDate) : ''}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
               </label>

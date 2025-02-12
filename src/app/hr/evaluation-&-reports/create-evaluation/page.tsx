@@ -151,39 +151,38 @@ const CreateEvaluation = () => {
       <div className=" bg-white rounded-[10px] border mt-8">
         <h1 className="text-[18px] font-medium p-6">Department</h1>
         <div className="flex items-center gap-4 p-6">
-          {!isEvaluativeReportingEmployee && (
-            <label className=" flex flex-col gap-1">
-              <span className="form-label">Department*</span>
-              <DepartmentDropdown
-                departmentId={departmentIds}
-                setValue={setValue}
-                errors={errors}
-                onSelect={(selectedIds) => setDepartmentIds(selectedIds)}
-              />
-            </label>
-          )}
+    {!isEvaluativeReportingEmployee ? (
+      <label className=" flex flex-col gap-1">
+        <span className="form-label">Department*</span>
+        <DepartmentDropdown
+          departmentId={departmentIds}
+          setValue={setValue}
+          errors={errors}
+          onSelect={(selectedIds) => setDepartmentIds(selectedIds)}
+        />
+      </label>
+    ) : (
+      <label className=" flex flex-col gap-1">
+        <span className="form-label">Select Employee or Manager*</span>
+        <ManagersDropdown
+          errors={errors}
+          register={register}
+          resetField={resetField}
+          reportingManagerId={null}
+          onSelect={(selectedIds) => setManagerIds(selectedIds)}
+        />
+      </label>
+    )}
 
-          <label className=" flex flex-col gap-1">
-            <span className="form-label">Select Employee or Manager*</span>
-            <ManagersDropdown
-              errors={errors}
-              register={register}
-              resetField={resetField}
-              reportingManagerId={null}
-              onSelect={(selectedIds) => setManagerIds(selectedIds)}
-            />
-          </label>
-          <label className="flex items-center gap-2 mt-auto mb-3">
-            <input
-              type="checkbox"
-              {...register('isReportingEmployee')}
-              className="appearance-none border-2 border-black checked:bg-black text-white size-4 rounded"
-              onChange={(e) =>
-                setIsEvaluativeReportingEmployee(e.target.checked)
-              }
-            />
-            Evaluative Reporting Employees
-          </label>
+    <label className="flex items-center gap-2 mt-auto mb-3">
+      <input
+        type="checkbox"
+        {...register('isReportingEmployee')}
+        className="appearance-none border-2 border-black checked:bg-black text-white size-4 rounded"
+        onChange={(e) => setIsEvaluativeReportingEmployee(e.target.checked)}
+      />
+      Evaluative Reporting Employees
+    </label>
         </div>
         <div className="h-[1.5px] w-full bg-gray-300 " />
 

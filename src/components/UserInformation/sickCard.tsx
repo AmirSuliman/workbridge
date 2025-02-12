@@ -39,8 +39,9 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
   }, [startDate, endDate]);
 
   const formatDate = (date: string) => {
-    return `${date} 00:00:00`;
-  };
+    const parsedDate = new Date(date);
+    return parsedDate.toISOString().split('T')[0];
+  }
 
   const handleRequestVacation = async () => {
     const duration = calculateDuration();
@@ -139,13 +140,13 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">Leaving Date</span>
                 <input
-                   type="date"
-                   className="p-3 border rounded w-full"
-                   min={new Date().toISOString().split('T')[0]}
-                   max={getMaxDate(new Date().toISOString().split('T')[0], totalDays)}
-                   value={startDate}
-                   onChange={(e) => setStartDate(e.target.value)}
-                 />
+                 type="date"
+                 className="p-3 border rounded w-full"
+                 min={new Date().toISOString().split('T')[0]}
+                 max={getMaxDate(new Date().toISOString().split('T')[0], totalDays)}
+                 value={startDate ? formatDate(startDate) : ''}
+                 onChange={(e) => setStartDate(e.target.value)}
+               />
               </label>
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">
@@ -156,7 +157,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                   className="p-3 border rounded w-full"
                   min={startDate}
                   max={getMaxDate(startDate, totalDays)}
-                  value={endDate}
+                  value={endDate ? formatDate(endDate) : ''}
                   onChange={(e) => setEndDate(e.target.value)}
                 />
               </label>
