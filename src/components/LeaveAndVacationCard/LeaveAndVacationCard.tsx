@@ -1,8 +1,9 @@
 import IconWithBg from '../SingleAnnouncement/IconWithBg';
 import DaysCard from './DaysCard';
 import Button from '../Button';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { getSession } from 'next-auth/react';
 
 const LeaveAndVacationCard = ({
   title,
@@ -20,10 +21,27 @@ const LeaveAndVacationCard = ({
   name: string;
 }) => {
   const router = useRouter();
+  const [role, setRole] = useState<string>();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setRole(session?.user?.role);
+    };
+
+    fetchSession();
+  }, []);
+
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 
   const navigateToTimeRequestTab = () => {
-    router.push('/hr/my-information?tab=2'); // Pass tab index via query param
+    router.push(
+      `${
+        isUserPanel ? '/user/my-information?tab=2' : '/hr/my-information?tab=2'
+      }`
+    );
   };
+
   return (
     <div className="border-[0.5px] border-[#E8E8E8] bg-[#F5F6FA] p-4 rounded space-y-2 w-full">
       <div className="flex items-center gap-2">
@@ -36,7 +54,13 @@ const LeaveAndVacationCard = ({
       </div>
 
       <div onClick={navigateToTimeRequestTab} className="w-full h-fit ">
-        <Button name={name} icon="" bg="#0F172A" textColor="white" className='w-full mt-8' />
+        <Button
+          name={name}
+          icon=""
+          bg="#0F172A"
+          textColor="white"
+          className="w-full mt-8"
+        />
       </div>
     </div>
   );

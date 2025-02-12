@@ -3,6 +3,8 @@ import { GoArrowUpRight } from 'react-icons/go';
 import Button from '../Button';
 import UserImgPlaceholder from '../LeaveRequests/UserImgPlaceholder';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { getSession } from 'next-auth/react';
 
 interface NewEmployeeInfoProps {
   name: string;
@@ -21,6 +23,17 @@ const NewEmployeeInfo = ({
   startDate,
   id,
 }: NewEmployeeInfoProps) => {
+  const [role, setRole] = useState<string>();
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setRole(session?.user?.role);
+    };
+    fetchSession();
+  }, []);
+
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
+
   return (
     <article className="flex items-start gap-4 pt-4">
       {img ? (
@@ -35,7 +48,13 @@ const NewEmployeeInfo = ({
           <FaLocationDot />
           {location} - Started: <span>{`  ${startDate}`}</span>
         </p>
-        <Link href={`/hr/employees/employee-info/${id}`}>
+        <Link
+          href={
+            isUserPanel
+              ? `/user/employees/employee-info/${id}`
+              : `/hr/employees/employee-info/${id}`
+          }
+        >
           <Button
             name="See more"
             icon={<GoArrowUpRight />}

@@ -188,9 +188,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                 })}
                 className="border p-2 rounded  focus:outline-none"
               >
-                <option value="" disabled>
-                  Select a country
-                </option>
+                <option value="">Select a country</option>
                 {countries.map((country) => (
                   <option key={country.id} value={country.id}>
                     {country.country}

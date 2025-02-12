@@ -7,14 +7,14 @@ import NewEmployees from '@/components/NewEmployees/NewEmployees';
 import SingleAnnouncement from '@/components/SingleAnnouncement/SingleAnnouncement';
 import Training from '@/components/Training/Training';
 import WhosOut from '@/components/WhosOut/WhosOut';
+import axiosInstance from '@/lib/axios';
+import { getSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { HiSpeakerphone } from 'react-icons/hi';
 import { PiArrowUpRightThin } from 'react-icons/pi';
 import Evaluation from './components/evaluation';
-import Newpolicyupdate from './components/newpolicyupdate';
-import { useEffect, useState } from 'react';
-import axiosInstance from '@/lib/axios';
-import { getSession } from 'next-auth/react';
+import HomePolicies from './components/HomePolicies';
 
 interface InnerUser {
   active: boolean;
@@ -79,17 +79,16 @@ const Home = () => {
     };
     getEvaluationNotification();
   }, [employeeId]);
-  console.log('surveys: ');
+  // console.log('surveys: ');
+
   return (
     <div className="p-6">
       <main className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <WhosOut />
-
         {evaluation
           ? evaluation.length > 0 && <Evaluation evaluation={evaluation} />
           : ''}
-        <Newpolicyupdate />
-
+        <HomePolicies />
         <Celebrations />
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
           <header className="px-4 flex items-center gap-4 justify-between">
@@ -97,7 +96,7 @@ const Home = () => {
               <HiSpeakerphone />
               Announcements
             </h1>
-            <Link href="/hr/announcements-&-policies/announcements">
+            <Link href="/user/home/all-announcements">
               <Button
                 name="See All"
                 icon={<PiArrowUpRightThin size={18} />}

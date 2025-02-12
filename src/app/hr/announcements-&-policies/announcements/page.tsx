@@ -176,7 +176,7 @@ const Page = () => {
         </section>
       )}
 
-     {currentTab === 'Vacation Policies' && (
+      {currentTab === 'Vacation Policies' && (
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 px-4 space-y-4">
           <Vacationpolicies />
         </section>

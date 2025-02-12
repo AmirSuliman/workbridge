@@ -15,7 +15,7 @@ const ManagersDropdown = ({
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await getAllEmployees(1, 1000);
+        const response = await getAllEmployees(1, 1000, '', true);
         const items = response?.data?.items || [];
         setEmployees(items);
 

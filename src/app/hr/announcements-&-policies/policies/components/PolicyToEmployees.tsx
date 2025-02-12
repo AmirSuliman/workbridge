@@ -26,7 +26,7 @@ const PolicyToEmployees: React.FC<PolicyToEmployeesProps> = ({
     const fetchEmployees = async () => {
       try {
         setLoading(true);
-        const { data } = await getAllEmployees(1, 1000000);
+        const { data } = await getAllEmployees(1, 1000000, '', true);
         setEmployees(data.items);
         setLoading(false);
       } catch (error) {
