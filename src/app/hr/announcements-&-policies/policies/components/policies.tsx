@@ -20,23 +20,22 @@ const Policies = () => {
     const fetchPolicies = async () => {
       try {
         const response = await getAllPolicies(1, 1000);
-        console.log('API Response:', response); 
+        console.log('API Response:', response);
         const allPolicies = response.data.data.items || [];
-        console.log('Extracted Policies:', allPolicies); 
-  
+        console.log('Extracted Policies:', allPolicies);
+
         setPolicies(allPolicies);
         setFilteredPolicies(
           allPolicies.filter((policy) => policy.status === 'Published')
-        ); 
+        );
       } catch (error) {
         console.error(error);
         toast.error('Failed to fetch policies.');
       }
     };
-  
+
     fetchPolicies();
   }, []);
-  
 
   const filterPolicies = (status: 'Draft' | 'Published') => {
     const filtered = policies.filter((policy) => policy.status === status);
@@ -126,7 +125,7 @@ const Policies = () => {
                     {policy.type}
                   </td>
                   <td className="border-b border-gray-300 p-4 text-[14px]">
-                  {`${policy.users.firstName} ${policy.users.lastName}`}                  
+                    {`${policy?.users?.firstName} ${policy?.users?.lastName}`}
                   </td>
                   <td className="border-b border-gray-300 p-4 text-[14px]">
                     {`${policy.employeeAccepted} / ${policy.totalEmployees}`}{' '}
