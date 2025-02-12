@@ -2,7 +2,7 @@ import { createUser } from '@/store/slices/userSlice';
 import { RootState } from '@/store/store';
 import { hrFormSchema } from '@/validations/formValidations';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,6 +10,13 @@ import { z } from 'zod';
 import InputField from '../common/InputField';
 import SelectField from '../common/SelectField';
 import EyeIcon from '../icons/eye-icon';
+import axiosInstance from '@/lib/axios';
+import { Label } from '@/app/hr/employees/components/Helpers';
+interface Country {
+  id: number;
+  country: string;
+  code: string;
+}
 
 type HRFormInputs = z.infer<typeof hrFormSchema>;
 const HRForm = () => {
@@ -19,6 +26,23 @@ const HRForm = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const { items } = useSelector((state: RootState) => state.userRoles.roles);
+  const [countries, setCountries] = useState<Country[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const countriesResponse = await axiosInstance.get('/countries');
+        if (countriesResponse.data?.data?.items) {
+          setCountries(countriesResponse.data.data.items);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const roles = items.map((role) => ({
     label: role.name as string,
     value: role.id as string,
@@ -40,6 +64,7 @@ const HRForm = () => {
     error: 'text-[9px]',
   };
   const onSubmit = (data: HRFormInputs) => {
+    console.log('admin form data: ', data);
     dispatch(createUser(data) as any);
   };
 
@@ -73,10 +98,31 @@ const HRForm = () => {
           register={register}
           error={errors.roleId?.message}
           key={'roleId'}
-          styles={{ ...style, container: 'col-span-2' }}
+          // styles={{ ...style, container: 'col-span-2' }}
           placeholder="Select Role"
           options={roles}
         />
+
+        <article className="w-full">
+          {/* <Label text="Country*" /> */}
+          <select
+            {...register('countryId', {
+              valueAsNumber: true,
+              setValueAs: (value) => (value === '' ? null : Number(value)), // Handle empty string
+            })}
+            className="form-input"
+          >
+            <option value="">Select a country*</option>
+            {countries.map((country) => (
+              <option key={country.id} value={country.id}>
+                {country.country}
+              </option>
+            ))}
+          </select>
+          {errors.countryId && (
+            <span className="form-error">{errors.countryId.message}</span>
+          )}
+        </article>
 
         <div className="relative w-full col-span-2">
           <div className="relative flex items-center">
