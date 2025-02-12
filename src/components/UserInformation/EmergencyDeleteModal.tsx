@@ -9,7 +9,8 @@ import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { useDispatch } from 'react-redux';
 
-const DeleteEmergencyContactModal = ({ onClose, id, emergencyContacts }) => {
+const EmergencyDeleteModal = ({ emergencyContacts, onClose, id }) => {
+  console.log('delete id: ', id);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -23,19 +24,16 @@ const DeleteEmergencyContactModal = ({ onClose, id, emergencyContacts }) => {
           emergencyContacts.filter((contact) => contact.id !== id)
         )
       );
-      setLoading(false);
       onClose();
+      setLoading(false);
       console.log(response.data);
-      // dispatch(setEmergencyContact(response.data));
     } catch (error) {
       console.error(error);
       setLoading(false);
       if (isAxiosError(error) && error.response) {
-        toast.error(
-          error.response.data.message || 'Failed to delete emergency contact.'
-        );
+        toast.error(error.response.data.message || 'Failed to delete contact.');
       } else {
-        toast.error('Failed to delete emergency contact.');
+        toast.error('Failed to delete contact.');
       }
     }
   };
@@ -73,4 +71,4 @@ const DeleteEmergencyContactModal = ({ onClose, id, emergencyContacts }) => {
     </Modal>
   );
 };
-export default DeleteEmergencyContactModal;
+export default EmergencyDeleteModal;
