@@ -34,7 +34,7 @@ const PolicyAcceptanceInfo = () => {
         setPolicyData(response.data.data || []);
       } catch (error) {
         console.error(error);
-        toast.error('Failed to fetch policy responses.');
+        //toast.error('Failed to fetch policy responses.');
       }
     };
 

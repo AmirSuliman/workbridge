@@ -28,6 +28,7 @@ const CreatePolicy = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const router = useRouter();
   const { data: session } = useSession();
+  console.log(session, 'session');
   const dispatch = useDispatch<AppDispatch>();
   useSelector((state: RootState) => state.myInfo);
   const [myId, setMyId] = useState(null);
@@ -39,9 +40,10 @@ const CreatePolicy = () => {
           const response = await axiosInstance.get('/user/my', {
             headers: { Authorization: `Bearer ${session.user.accessToken}` },
           });
-          const userId = response.data.data?.employeeId;
-          setMyId(userId); // Save it locally
-          dispatch(setUser(response.data.data)); // Update Redux as well
+          const userId = response.data.data?.id;
+          console.log(userId, 'id');
+          setMyId(userId);
+          dispatch(setUser(response.data.data)); 
         } catch (error) {
           console.error('Error fetching user data:', error);
           toast.error('Failed to load user data!');
