@@ -10,22 +10,24 @@ const DepartmentDropdown = ({ departmentId, resetField, register, errors }) => {
       try {
         const { data } = await axiosInstance.get('/departments');
         setDepartments(data.data.items);
-        // Set the default department ID if departmentId exists
-        if (departmentId) {
-          const matchedDepartment = data.data.items.find(
-            (department) => department.id === departmentId
-          );
-          if (matchedDepartment) {
-            resetField('departmentId');
-          }
-        }
       } catch (error) {
         console.error('Error fetching Departments: ', error);
       }
     };
 
     fetchDepartments();
-  }, [departmentId, resetField]);
+  }, []);
+
+  useEffect(() => {
+    if (departmentId && departments.length > 0) {
+      const matchedDepartment = departments.find(
+        (department) => department.id === departmentId
+      );
+      if (matchedDepartment) {
+        resetField('departmentId');
+      }
+    }
+  }, [departments, departmentId, resetField]);
 
   return (
     <>
