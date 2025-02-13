@@ -1,15 +1,28 @@
 import Logout from '@/app/user/home/Logout';
 import { IMAGES } from '@/constants/images';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaAngleDown, FaUser } from 'react-icons/fa';
 
 const UserProfileInfo: React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement>
 > = ({ ...props }) => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [role, setRole] = useState<string>();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setRole(session?.user?.role);
+    };
+
+    fetchSession();
+  }, []);
+
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
+
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
@@ -46,7 +59,9 @@ const UserProfileInfo: React.FC<
       {showDropdown && (
         <nav className="absolute right-0 top-[100%] z-10 flex flex-col py-4 rounded-md divide-y shadow-md bg-white">
           <Link
-            href="/hr/my-information"
+            href={`${
+              isUserPanel ? '/user/my-information' : '/hr/my-information'
+            }`}
             className="flex gap-2 items-center text-xs px-4 py-2 bg-white/100 hover:bg-white/50"
           >
             <FaUser />

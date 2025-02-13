@@ -11,7 +11,7 @@ import PaymentSection from '@/components/UserInformation/PaymentSection';
 import TimeOffSection from '@/components/UserInformation/TimeOffSection';
 import UserInfoSection from '@/components/UserInformation/UserInfoSection';
 import axiosInstance from '@/lib/axios';
-import { employeeSchema } from '@/schemas/employeeSchema';
+import { putEmployeeSchema } from '@/schemas/employeeSchema';
 import {
   clearEmployeeData,
   fetchEmployeeData,
@@ -62,6 +62,16 @@ const MyInformation = () => {
       ? new Date(employeeData.effectiveDate).toISOString().split('T')[0]
       : '',
     salary: employeeData?.salary ? employeeData.salary : 0,
+    location: {
+      zipCode: Number(employeeData?.location?.zipCode) || '',
+      street1: employeeData?.location?.street1 || '',
+      street2: employeeData?.location?.street2 || '',
+      city: employeeData?.location?.city || '',
+      country: employeeData?.location?.country || '',
+      state: employeeData?.location?.state || '',
+    },
+    phoneNumber: Number(employeeData?.phoneNumber) || '',
+    workPhone: Number(employeeData?.workPhone) || '',
   };
 
   const {
@@ -72,9 +82,9 @@ const MyInformation = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(employeeSchema),
+    resolver: zodResolver(putEmployeeSchema),
     defaultValues: formattedData,
-    mode: 'onChange',
+    mode: 'all',
   });
 
   useEffect(() => {
@@ -187,18 +197,19 @@ const MyInformation = () => {
   const onSubmit = async (data: any) => {
     // PUT employee/id needs the following payload.
     // The data parameter ☝ contains extra fields that backend does not expect.
-
+    console.log('data: ', data);
     const payLoad = {
       firstName: data.firstName,
       lastName: data.lastName,
+      isManager: data.isManager,
       departmentId: data.departmentId,
       email: data.email,
       middleName: data.middleName,
-      salary: data.salary,
+      // salary: data.salary,
       tittle: data.tittle,
       gender: data.gender,
       marritialStatus: data.marritialStatus,
-      paymentSchedule: data.paymentSchedule,
+      // paymentSchedule: data.paymentSchedule,
       payType: data.payType,
       effectiveDate: data.effectiveDate,
       overtime: data.overtime,
@@ -222,6 +233,8 @@ const MyInformation = () => {
         state: data.location.state,
       },
     };
+    console.log('payload: ', payLoad);
+
     try {
       setEditLoading(true);
       // handle profile picture to get url from the upload picture

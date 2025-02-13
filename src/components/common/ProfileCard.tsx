@@ -39,8 +39,12 @@ const ProfileCard = ({
     : 'N/A';
 
   useSelector((state: RootState) => state.myInfo);
+  // const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
+  const logedInUser = useSelector((state: RootState) => state.myInfo?.user);
+  console.log('logedInUser: ', logedInUser);
+  const userRole = logedInUser?.role;
+  const logedInUserId = logedInUser?.employeeId;
 
-  const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
   const calculateDuration = (startDate: string | undefined): string => {
     if (!startDate) return 'N/A';
 
@@ -80,6 +84,7 @@ const ProfileCard = ({
   useEffect(() => {
     setImgSrc(employeeData?.profilePictureUrl || IMAGES.placeholderAvatar);
   }, [employeeData?.profilePictureUrl]);
+
   return (
     <article
       className={`bg-white shadow-md rounded-md border border-gray-border p-4 pb-6 `}
@@ -137,9 +142,10 @@ const ProfileCard = ({
                 {employeeData?.tittle || 'N/A'}
               </p>
             </div>
+            {/* hide buttons for all tabs except for 0, 1 and root (no tab) */}
             {(!tab || tab === '0' || tab === '1') && (
               <div className="flex items-center gap-4">
-                {(userRole === 'Admin' || userRole === 'SuperAdmin') &&
+                {userRole !== 'ViewOnly' &&
                   (loading ? (
                     <Button
                       type="button"
