@@ -4,9 +4,110 @@ import { BiTrendingUp } from 'react-icons/bi';
 import toast from 'react-hot-toast';
 import { isAxiosError } from 'axios';
 import axiosInstance from '@/lib/axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as XLSX from 'xlsx';
 
+// Download logic for PDF
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { FaFilePdf } from 'react-icons/fa';
+
+const downloadPDF = async (
+  data,
+  year: number,
+  quarter: string,
+  reportRef: React.RefObject<HTMLDivElement>
+) => {
+  try {
+    if (!reportRef.current) {
+      toast.error('Could not generate PDF');
+      return;
+    }
+
+    // Prepare data with totals
+    const reportData = prepareExcelData(data);
+
+    // Create PDF
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    // Add header text
+    pdf.setFontSize(16);
+    pdf.text(
+      `Quarterly Recruitment Report - ${year} ${
+        quarter === 'all' ? 'All Quarters' : `Q${quarter}`
+      }`,
+      20,
+      20
+    );
+    pdf.setFontSize(12);
+    pdf.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 30);
+
+    // Prepare table data
+    const tableData = reportData.map((item) => [
+      item.name,
+      item.Applicants.toString(),
+      item.Rejected.toString(),
+      item.Interviewed.toString(),
+      (item['Offers Extended'] || 0).toString(),
+      (item['Employees Hired'] || 0).toString(),
+    ]);
+
+    // Add table to PDF
+    (pdf as any).autoTable({
+      head: [
+        [
+          'Quarter',
+          'Applicants',
+          'Rejected',
+          'Interviewed',
+          'Offers Extended',
+          'Employees Hired',
+        ],
+      ],
+      body: tableData,
+      startY: 40,
+      theme: 'grid',
+      headStyles: { fillColor: [51, 51, 51] },
+      styles: { fontSize: 9 },
+      columnStyles: {
+        0: { cellWidth: 25 },
+        1: { cellWidth: 25, halign: 'right' },
+        2: { cellWidth: 25, halign: 'right' },
+        3: { cellWidth: 25, halign: 'right' },
+        4: { cellWidth: 30, halign: 'right' },
+        5: { cellWidth: 30, halign: 'right' },
+      },
+    });
+    // Capture the bar chart
+    const chartElement = reportRef.current.querySelector(
+      '.recharts-wrapper'
+    ) as HTMLElement;
+    if (chartElement) {
+      const canvas = await html2canvas(chartElement);
+      const chartImage = canvas.toDataURL('image/png');
+
+      // Add chart image to PDF
+      pdf.addPage();
+      pdf.text('Recruitment Metrics Visualization', 20, 20);
+      const imgWidth = 170;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(chartImage, 'PNG', 20, 30, imgWidth, imgHeight);
+    }
+
+    // Save the PDF
+    const filename = `recruitment_report_${year}_${
+      quarter === 'all' ? 'all_quarters' : `Q${quarter}`
+    }.pdf`;
+    pdf.save(filename);
+    toast.success('PDF downloaded successfully!');
+  } catch (error) {
+    console.error('Error downloading PDF:', error);
+    toast.error('Failed to download PDF');
+  }
+};
+
+// Download logic for Excel
 const prepareExcelData = (data) => {
   // Add a summary row with totals
   const totals = {
@@ -97,7 +198,22 @@ const QuarterlyReport = () => {
   const [selectedQuarter, setSelectedQuarter] = useState('all');
   const [chartData, setChartData] = useState([]);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isPdfDownloading, setIsPdfDownloading] = useState(false);
+  const reportRef = useRef<HTMLDivElement>(null);
 
+  const handlePdfDownload = async () => {
+    if (chartData.length === 0) {
+      toast.error('No data available to download');
+      return;
+    }
+
+    setIsPdfDownloading(true);
+    try {
+      await downloadPDF(chartData, selectedYear, selectedQuarter, reportRef);
+    } finally {
+      setIsPdfDownloading(false);
+    }
+  };
   // Generate an array of the last 10 years for the dropdown
   const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
 
@@ -140,7 +256,7 @@ const QuarterlyReport = () => {
   };
 
   return (
-    <div className="p-6 bg-white border rounded-lg">
+    <div ref={reportRef} className="p-6 bg-white border rounded-lg">
       <div className="flex flex-row items-center justify-between w-full mb-12">
         <div className="flex flex-row items-center gap-2">
           <BiTrendingUp className="text-gray-600" />
@@ -181,6 +297,13 @@ const QuarterlyReport = () => {
             className="p-2 bg-black rounded text-white text-sm flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             <FaDownload /> {isDownloading ? 'Downloading...' : 'Download'}
+          </button>
+          <button
+            onClick={handlePdfDownload}
+            disabled={isPdfDownloading || chartData.length === 0}
+            className="p-2 bg-black rounded text-white text-sm flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            <FaFilePdf /> {isPdfDownloading ? 'Downloading...' : 'PDF'}
           </button>
         </div>
       </div>

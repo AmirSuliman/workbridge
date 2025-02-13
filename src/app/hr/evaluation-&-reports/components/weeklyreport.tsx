@@ -1,11 +1,15 @@
 import { BiCalendar, BiTrendingUp } from 'react-icons/bi';
-import { FaDownload } from 'react-icons/fa';
+import { FaDownload, FaFilePdf } from 'react-icons/fa';
 import StackedBarChart from './charts/weeklychart';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axiosInstance from '@/lib/axios';
 import toast from 'react-hot-toast';
 import { isAxiosError } from 'axios';
 import * as XLSX from 'xlsx';
+
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 interface WeeklyProps {
   count: number | null;
@@ -14,6 +18,104 @@ interface WeeklyProps {
   interviewed: number | null;
 }
 
+// Download logic for PDF
+
+const downloadPDF = async (
+  data: WeeklyProps | null,
+  startDate: string,
+  endDate: string,
+  reportRef: React.RefObject<HTMLDivElement>
+) => {
+  try {
+    if (!reportRef.current) {
+      toast.error('Could not generate PDF');
+      return;
+    }
+
+    // Format dates for display
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      });
+    };
+
+    // Create PDF
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    // Add header text
+    pdf.setFontSize(16);
+    pdf.text('Weekly Recruitment Report', 20, 20);
+    pdf.setFontSize(12);
+    pdf.text(
+      `Period: ${formatDate(startDate)} - ${formatDate(endDate)}`,
+      20,
+      30
+    );
+    pdf.text(`Generated on: ${new Date().toLocaleDateString('en-GB')}`, 20, 40);
+
+    // Add table data
+    const tableData = [
+      ['Metric', 'Count'],
+      ['Total Applicants', data?.count?.toString() || '0'],
+      ['Onboarding', data?.onboarding?.toString() || '0'],
+      ['Rejected', data?.rejected?.toString() || '0'],
+      ['Interviewed', data?.interviewed?.toString() || '0'],
+    ];
+
+    // Calculate rates
+    const interviewRate = data?.count
+      ? (((data.interviewed || 0) / data.count) * 100).toFixed(2)
+      : '0';
+    const onboardingRate = data?.count
+      ? (((data.onboarding || 0) / data.count) * 100).toFixed(2)
+      : '0';
+    const rejectionRate = data?.count
+      ? (((data.rejected || 0) / data.count) * 100).toFixed(2)
+      : '0';
+
+    tableData.push(
+      ['Interview Rate', `${interviewRate}%`],
+      ['Onboarding Rate', `${onboardingRate}%`],
+      ['Rejection Rate', `${rejectionRate}%`]
+    );
+
+    // Add table to PDF
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    pdf.autoTable({
+      head: [['Metric', 'Count']],
+      body: tableData.slice(1),
+      startY: 50,
+      theme: 'grid',
+    });
+
+    // Capture the chart
+    const canvas = await html2canvas(
+      reportRef.current.querySelector('.recharts-wrapper') as HTMLElement
+    );
+    const chartImage = canvas.toDataURL('image/png');
+
+    // Add chart image to PDF
+    pdf.addPage();
+    pdf.text('Recruitment Metrics Chart', 20, 20);
+    const imgWidth = 170;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    pdf.addImage(chartImage, 'PNG', 20, 30, imgWidth, imgHeight);
+
+    // Save the PDF
+    const filename = `weekly_recruitment_report_${startDate}_to_${endDate}.pdf`;
+    pdf.save(filename);
+    toast.success('PDF downloaded successfully!');
+  } catch (error) {
+    console.error('Error downloading PDF:', error);
+    toast.error('Failed to download PDF');
+  }
+};
+
+// Download logic for excel
 const prepareExcelData = (
   data: WeeklyProps | null,
   startDate: string,
@@ -140,6 +242,22 @@ const WeeklyReport = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [isDownloading, setIsDownloading] = useState(false);
+  const reportRef = useRef<HTMLDivElement>(null);
+  const [isPdfDownloading, setIsPdfDownloading] = useState(false);
+
+  const handlePdfDownload = async () => {
+    if (!startDate || !endDate || !weeklyReports) {
+      toast.error('No data available to download');
+      return;
+    }
+
+    setIsPdfDownloading(true);
+    try {
+      await downloadPDF(weeklyReports, startDate, endDate, reportRef);
+    } finally {
+      setIsPdfDownloading(false);
+    }
+  };
   // Function to get the previous week's start and end dates
   const getPreviousWeekDates = () => {
     const today = new Date();
@@ -230,7 +348,7 @@ const WeeklyReport = () => {
   };
 
   return (
-    <div className="p-6 bg-white border rounded-[10px] w-full">
+    <div ref={reportRef} className="p-6 bg-white border rounded-[10px] w-full">
       <div className="flex flex-row items-center justify-between w-full">
         <div className="flex flex-row items-center gap-2">
           <BiTrendingUp />
@@ -258,6 +376,13 @@ const WeeklyReport = () => {
             className="p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             <FaDownload /> {isDownloading ? 'Downloading...' : 'Download'}
+          </button>
+          <button
+            onClick={handlePdfDownload}
+            disabled={isPdfDownloading || !weeklyReports}
+            className="p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            <FaFilePdf /> {isPdfDownloading ? 'Downloading...' : 'PDF'}
           </button>
         </div>
       </div>

@@ -12,6 +12,7 @@ import Button from '../Button';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import PaymentDeleteModal from './PaymentDeleteModal';
 import { BiLoaderCircle } from 'react-icons/bi';
+import { getSession } from 'next-auth/react';
 
 interface PaymentProps {
   id: number;
@@ -33,6 +34,19 @@ const PaymentSection = ({ employeeId }) => {
   const [currentPayment, setCurrentPayment] = useState<PaymentProps | null>(
     null
   );
+  const [role, setRole] = useState<string>();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      // console.log('session: ', session);
+      setRole(session?.user?.role);
+    };
+
+    fetchSession();
+  }, []);
+
+  const isEmployee = role === 'ViewOnly';
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -142,24 +156,28 @@ const PaymentSection = ({ employeeId }) => {
                     payment.payType || '',
                     payment.overtime ? 'Liable' : 'Exempt',
                     payment.note || '',
-                    <FaTrash
-                      className="cursor-pointer"
-                      key={payment.id}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setDeleteModal(true);
-                        setAddNew(false);
-                        setPaymentId(payment.id);
-                      }}
-                    />,
-                    <FaEdit
-                      className="cursor-pointer"
-                      key={payment.id}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleEditClick(payment);
-                      }}
-                    />,
+                    !isEmployee && (
+                      <FaTrash
+                        className="cursor-pointer"
+                        key={payment.id}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setDeleteModal(true);
+                          setAddNew(false);
+                          setPaymentId(payment.id);
+                        }}
+                      />
+                    ),
+                    !isEmployee && (
+                      <FaEdit
+                        className="cursor-pointer"
+                        key={payment.id}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleEditClick(payment);
+                        }}
+                      />
+                    ),
                   ])
                 : [['', '', '', '', '', '', '', '']]
             }
@@ -289,7 +307,7 @@ const PaymentSection = ({ employeeId }) => {
           </div>
         )}
       </div>
-      {!addeNew && !isEditPayment && (
+      {!isEmployee && !addeNew && !isEditPayment && (
         <Button
           onClick={(e) => {
             e.preventDefault();
@@ -300,14 +318,14 @@ const PaymentSection = ({ employeeId }) => {
           className="w-full max-w-xl mx-auto col-span-full mt-4"
         />
       )}
-      {addeNew && (
+      {!isEmployee && addeNew && (
         <AddPayments
           setPayments={setPayments}
           employeeId={employeeId}
           setAddNew={setAddNew}
         />
       )}
-      {deleteModal && (
+      {!isEmployee && deleteModal && (
         <PaymentDeleteModal
           onClose={() => {
             setDeleteModal(false);
