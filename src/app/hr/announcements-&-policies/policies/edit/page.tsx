@@ -62,9 +62,9 @@ const Addnewpolicies = () => {
           const response = await axiosInstance.get('/user/my', {
             headers: { Authorization: `Bearer ${session.user.accessToken}` },
           });
-          const userId = response.data.data?.employeeId;
-          setMyId(userId); // Save it locally
-          dispatch(setUser(response.data.data)); // Update Redux as well
+          const userId = response.data.data?.id;
+          setMyId(userId); 
+          dispatch(setUser(response.data.data)); 
         } catch (error) {
           console.error('Error fetching user data:', error);
           toast.error('Failed to load user data!');
@@ -80,29 +80,46 @@ const Addnewpolicies = () => {
     const fetchPolicie = async () => {
       try {
         const response = await getPolicy(id);
-        setPolicyData(response.data.data || {});
-        console.log('policy res: ', response.data.data);
+        console.log('Full API Response:', response.data); // Log full response
+  
+        const policy = response.data.data;
+        setPolicyData({
+          ...policy,
+          previewUrl: policy?.file?.url || null, 
+          description: policy?.description || '', 
+        });
+  
+        console.log('Fetched Policy Data:', policy);
+        console.log('Image URL:', policy?.file?.url);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching policy:', error);
         toast.error('Failed to fetch policy.');
       }
     };
-
-    fetchPolicie();
-  }, []);
+  
+    if (id) fetchPolicie();
+  }, [id]);
+  
+  useEffect(() => {
+    if (policyData.fileId) {
+      setPreviewUrl(policyData.previewUrl);
+    }
+  }, [policyData]);
+  
 
   const previewData = {
     type: policyData?.type || '',
     title: policyData?.title || '',
     status: policyData?.status || '',
     fileId: policyData?.fileId || fileId,
-    previewUrl: policyData?.previewUrl || previewUrl,
-    description: policyData?.description || '',
+    previewUrl: policyData?.previewUrl || previewUrl, 
+    description: policyData?.description || '', 
     effectiveDate: policyData?.effectiveDate
       ? new Date(policyData?.effectiveDate).toISOString().split('T')[0]
       : '',
   };
-
+  
+  
   const {
     control,
     handleSubmit,
@@ -110,14 +127,30 @@ const Addnewpolicies = () => {
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: previewData,
+    defaultValues: previewData, 
   });
-
+  
   useEffect(() => {
     if (policyData) {
-      reset(previewData);
+      reset({
+        title: policyData?.title || '',
+        type: policyData?.type || '',
+        effectiveDate: policyData?.effectiveDate
+          ? new Date(policyData?.effectiveDate).toISOString().split('T')[0]
+          : '',
+        description: policyData?.description || '', // ensure this value is set
+        previewUrl: policyData?.previewUrl || previewUrl,
+      });
     }
-  }, [reset, policyData]);
+  }, [policyData, previewUrl, reset]);
+  
+  
+    
+    
+  useEffect(() => {
+    console.log('Fetched Policy Description:', policyData.description);
+  }, [policyData.description]);
+  
 
   const handleFileChange = (event) => {
     if (event.target.files) {
@@ -149,15 +182,24 @@ const Addnewpolicies = () => {
       return null;
     }
   };
+ 
+
   const handleSaveDraft = async (data) => {
     try {
       setLoading(true);
-      const uploadedFileId = await handleUpload();
+      let uploadedFileId = fileId; // Use existing fileId by default
+  
+      // Upload only if a new file is selected
+      if (selectedFile) {
+        uploadedFileId = await handleUpload();
+      }
+  
       const payload = {
         ...data,
         fileId: uploadedFileId,
         status: 'Draft',
       };
+  
       const response = await axiosInstance.put(`/policy/${id}`, payload);
       console.log('put policy res: ', response.data);
       toast.success('Draft saved successfully!');
@@ -169,40 +211,41 @@ const Addnewpolicies = () => {
       setLoading(false);
     }
   };
-
+  
   const handlePublish = async (data) => {
-    let uploadedFileId = null;
     try {
       setLoading(true);
-      if (previewUrl && selectedFile) {
+      let uploadedFileId = fileId; // Use existing fileId by default
+  
+      // Upload only if a new file is selected
+      if (selectedFile) {
         uploadedFileId = await handleUpload();
       }
+  
       const payload = {
         ...data,
         status: 'Published',
         uploadBy: myId,
         fileId: uploadedFileId,
       };
+  
       const response = await axiosInstance.put(`/policy/${id}`, payload);
       console.log('put policy res: ', response.data);
       if (id) {
         sessionStorage.setItem('policy', id);
       }
-
+  
       toast.success('Policy published successfully!');
       reset();
       return response.data.id;
     } catch (error) {
       console.error('Error publishing policy:', error);
-      if (axios.isAxiosError(error) && error.response) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error('An unexpected error occurred.');
-      }
+      toast.error('An unexpected error occurred.');
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handlePreviewPost = () => {
     setIsPreview(true);
@@ -394,45 +437,46 @@ const Addnewpolicies = () => {
               </label>
             </div>
             <div className="w-full h-[1.5px] bg-gray-300 mt-12 mb-8 " />
-            {!previewUrl ? (
-              <div>
-                <label
-                  htmlFor="policyImg"
-                  className="cursor-pointer flex flex-col gap-1 text-gray-400 mb-8 max-w-xs"
-                >
-                  Upload image (Optional)
-                  <div className="px-6 py-3 bg-black rounded-md flex gap-2 items-center justify-between  text-white">
-                    Upload Image
-                    <HiOutlineUpload />
-                  </div>
-                  <input
-                    onChange={handleFileChange}
-                    type="file"
-                    accept="image/*"
-                    name="fileId"
-                    id="policyImg"
-                    className="hidden"
-                  />
-                </label>
-              </div>
-            ) : (
-              <div className="my-4 relative">
-                <button
-                  onClick={() => setPreviewUrl(null)}
-                  type="button"
-                  className="absolute top-2 right-2 px-6 py-1 bg-white rounded-lg text-2xl"
-                >
-                  x
-                </button>
-                <Image
-                  width={300}
-                  height={150}
-                  src={previewUrl}
-                  alt="Profile Preview"
-                  className="w-full mx-auto max-h-[500px] rounded-lg border"
-                />
-              </div>
-            )}
+            {previewUrl ? (
+  <div className="my-4 relative">
+    <button
+      onClick={() => setPreviewUrl(null)}
+      type="button"
+      className="absolute top-2 right-2 px-6 py-1 bg-white rounded-lg text-2xl"
+    >
+      x
+    </button>
+    <Image
+      width={300}
+      height={150}
+      src={previewUrl}
+      alt="Profile Preview"
+      className="w-full mx-auto max-h-[500px] rounded-lg border"
+    />
+  </div>
+) : (
+  <div>
+    <label
+      htmlFor="policyImg"
+      className="cursor-pointer flex flex-col gap-1 text-gray-400 mb-8 max-w-xs"
+    >
+      Upload image (Optional)
+      <div className="px-6 py-3 bg-black rounded-md flex gap-2 items-center justify-between text-white">
+        Upload Image
+        <HiOutlineUpload />
+      </div>
+      <input
+        onChange={handleFileChange}
+        type="file"
+        accept="image/*"
+        name="fileId"
+        id="policyImg"
+        className="hidden"
+      />
+    </label>
+  </div>
+)}
+
             <h1 className="text-[18px] font-medium">Policy Description</h1>
             <label className="flex flex-col gap-2 mt-8">
               <span className=" text-[13px] text-gray-400">Description</span>
@@ -440,17 +484,22 @@ const Addnewpolicies = () => {
                 onClick={(e) => e.preventDefault()}
                 className="border rounded "
               >
-                <Controller
-                  name="description"
-                  control={control}
-                  defaultValue={policyData?.description}
-                  render={({ field }) => (
-                    <CustomTextEditor
-                      setContent={(value) => field.onChange(value)}
-                      body={field.value || policyData?.description}
-                    />
-                  )}
-                />
+          <Controller
+  name="description"
+  control={control}
+  defaultValue={policyData?.description || ''}
+  render={({ field }) => (
+    <CustomTextEditor
+      // Force re-mount when policyData.description changes
+      key={`desc-${policyData?.description || 'default'}`}
+      setContent={field.onChange}
+      body={field.value || ''}
+    />
+  )}
+/>
+      
+
+
                 {errors.description && (
                   <span className="text-red-500 text-xs">
                     {errors.description.message}
