@@ -3,7 +3,6 @@ import CustomTextEditor from '@/components/CustomEditor/CustomTextEditor';
 import axiosInstance from '@/lib/axios';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
-
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -23,9 +22,10 @@ const CreatePolicy = () => {
   const [loading, setLoading] = useState(false);
   const [isPreview, setIsPreview] = useState(false);
   const [openPolicyModa, setOpenPolicyMoad] = useState(false);
-  let [fileId, setFileId] = useState(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  let [fileId, setFileId] = useState(null);
+
   const router = useRouter();
   const { data: session } = useSession();
   console.log(session, 'session');
@@ -33,6 +33,7 @@ const CreatePolicy = () => {
   useSelector((state: RootState) => state.myInfo);
   const [myId, setMyId] = useState(null);
 
+  // Fetch user data (and set myId) from your backend using the access token.
   useEffect(() => {
     const fetchMyId = async () => {
       if (session?.user?.accessToken) {
@@ -43,7 +44,7 @@ const CreatePolicy = () => {
           const userId = response.data.data?.id;
           console.log(userId, 'id');
           setMyId(userId);
-          dispatch(setUser(response.data.data)); 
+          dispatch(setUser(response.data.data));
         } catch (error) {
           console.error('Error fetching user data:', error);
           toast.error('Failed to load user data!');
@@ -55,6 +56,7 @@ const CreatePolicy = () => {
     fetchMyId();
   }, [dispatch, session?.user?.accessToken]);
 
+  // Initialize the form with default values
   const {
     control,
     handleSubmit,
@@ -63,24 +65,41 @@ const CreatePolicy = () => {
     reset,
     formState: { errors },
   } = useForm({
-    // resolver: zodResolver(announcementSchema),
     defaultValues: {
       type: '',
       title: '',
       status: '',
       fileId: fileId,
       uploadBy: myId,
-      description: '',
+      description: '', // description field default value
       effectiveDate: '',
     },
   });
 
-  // profile picture
+  // Watch form fields (including description)
+  const type = watch('type');
+  const title = watch('title');
+  const status = watch('status');
+  const description = watch('description'); // get description from the form
+  const effectiveDate = watch('effectiveDate');
+
+  // Construct preview data from the form
+  const previewData = {
+    type,
+    title,
+    status,
+    fileId,
+    previewUrl,
+    effectiveDate,
+    uploadBy: myId,
+    description, // description from form state
+  };
+
+  // Handle image selection and preview
   const handleFileChange = (event) => {
     if (event.target.files) {
       const file = event.target.files[0];
       const fileType = file.type;
-
       if (!['image/png', 'image/jpeg'].includes(fileType)) {
         console.log('selected file type: ', fileType);
         return toast.error('Only jpeg, jpg and png files are allowed!');
@@ -91,15 +110,13 @@ const CreatePolicy = () => {
     }
   };
 
-  // Handle profile picture upload
+  // Handle file upload
   const handleUpload = async () => {
     const formData = new FormData();
     formData.append('file', selectedFile || '');
     try {
       const response = await axiosInstance.post('/file/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       const uploadedUrl = response.data.data.url;
       setFileId(response.data.data.id);
@@ -111,22 +128,7 @@ const CreatePolicy = () => {
     }
   };
 
-  fileId = watch('fileId');
-  const type = watch('type');
-  const title = watch('title');
-  const status = watch('status');
-  const body = watch('description');
-  const effectiveDate = watch('effectiveDate');
-  const previewData = {
-    type,
-    body,
-    title,
-    fileId,
-    status,
-    previewUrl,
-    effectiveDate,
-    uploadBy: myId,
-  };
+  // Save draft – description is included in ...data (form payload)
   const handleSaveDraft = async (data) => {
     let uploadedFileId = null;
     try {
@@ -149,14 +151,7 @@ const CreatePolicy = () => {
     }
   };
 
-  const handlePreviewPost = () => {
-    setIsPreview(true);
-  };
-
-  const handleCancel = () => {
-    reset();
-    router.back();
-  };
+  // Publish policy – description is part of the payload
   const handlePublish = async (data) => {
     let uploadedFileId = null;
     try {
@@ -170,7 +165,6 @@ const CreatePolicy = () => {
         uploadBy: myId,
         fileId: uploadedFileId,
       };
-      // console.log('handle publish payload: ', payload);
       const postedPolicy = await dispatch(publishPolicy(payload)).unwrap();
       if (postedPolicy.id !== null) {
         sessionStorage.setItem('policy', postedPolicy.id.toString());
@@ -186,6 +180,15 @@ const CreatePolicy = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePreviewPost = () => {
+    setIsPreview(true);
+  };
+
+  const handleCancel = () => {
+    reset();
+    router.back();
   };
 
   return (
@@ -229,7 +232,7 @@ const CreatePolicy = () => {
               >
                 Preview Policy
               </button>
-              <button onClick={handleCancel} className="text-[14px] p-2 ">
+              <button onClick={handleCancel} className="text-[14px] p-2">
                 Cancel
               </button>
             </>
@@ -243,8 +246,8 @@ const CreatePolicy = () => {
           <h1 className="flex flex-row items-center gap-2 text-[18px] font-medium">
             <FaBox /> New Policy
           </h1>
-
           <form className="w-full mt-8">
+            {/* Policy Title */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-8">
               <label className="flex flex-col gap-1 w-full">
                 <span className="text-[14px] text-gray-400 font-medium">
@@ -255,7 +258,7 @@ const CreatePolicy = () => {
                   placeholder="Add a title for policy"
                   className="p-3 w-full border rounded-lg focus:outline-none"
                   {...register('title', {
-                    required: 'Policy titile is required!',
+                    required: 'Policy title is required!',
                   })}
                 />
                 {errors.title && (
@@ -264,6 +267,7 @@ const CreatePolicy = () => {
                   </span>
                 )}
               </label>
+              {/* Policy Type */}
               <label className="flex flex-col gap-1 w-full">
                 <span className="text-[14px] text-gray-400 font-medium">
                   Policy Type
@@ -277,79 +281,52 @@ const CreatePolicy = () => {
                   <option value="">Select a Policy Type</option>
                   <optgroup label="Human Resources">
                     <option value="employee-benefits">Employee Benefits</option>
-                    <option value="leave-attendance">
-                      Leave and Attendance
-                    </option>
+                    <option value="leave-attendance">Leave and Attendance</option>
                     <option value="code-of-conduct">Code of Conduct</option>
-                    <option value="recruitment-hiring">
-                      Recruitment and Hiring
-                    </option>
-                    <option value="workplace-harassment">
-                      Workplace Harassment
-                    </option>
+                    <option value="recruitment-hiring">Recruitment and Hiring</option>
+                    <option value="workplace-harassment">Workplace Harassment</option>
                   </optgroup>
                   <optgroup label="Information Technology">
                     <option value="data-security">Data Security</option>
-                    <option value="acceptable-use">
-                      Acceptable Use Policy
-                    </option>
+                    <option value="acceptable-use">Acceptable Use Policy</option>
                     <option value="byod">Bring Your Own Device (BYOD)</option>
-                    <option value="software-use">
-                      Software Installation and Use
-                    </option>
-                    <option value="password-management">
-                      Password Management
-                    </option>
+                    <option value="software-use">Software Installation and Use</option>
+                    <option value="password-management">Password Management</option>
                   </optgroup>
                   <optgroup label="Finance">
-                    <option value="expense-reimbursement">
-                      Expense Reimbursement
-                    </option>
+                    <option value="expense-reimbursement">Expense Reimbursement</option>
                     <option value="budget-allocation">Budget Allocation</option>
                     <option value="procurement">Procurement Policy</option>
-                    <option value="financial-reporting">
-                      Financial Reporting
-                    </option>
+                    <option value="financial-reporting">Financial Reporting</option>
                     <option value="travel-expense">Travel and Expense</option>
                   </optgroup>
                   <optgroup label="Operations">
                     <option value="health-safety">Health and Safety</option>
-                    <option value="business-continuity">
-                      Business Continuity
-                    </option>
+                    <option value="business-continuity">Business Continuity</option>
                     <option value="environmental">Environmental Policy</option>
                     <option value="quality-assurance">Quality Assurance</option>
                     <option value="vendor-management">Vendor Management</option>
                   </optgroup>
                   <optgroup label="Compliance and Legal">
-                    <option value="anti-bribery">
-                      Anti-Bribery and Corruption
-                    </option>
+                    <option value="anti-bribery">Anti-Bribery and Corruption</option>
                     <option value="data-protection">Data Protection</option>
                     <option value="whistleblower">Whistleblower Policy</option>
-                    <option value="intellectual-property">
-                      Intellectual Property
-                    </option>
+                    <option value="intellectual-property">Intellectual Property</option>
                   </optgroup>
                   <optgroup label="Other">
                     <option value="remote-work">Remote Work Policy</option>
                     <option value="social-media">Social Media Policy</option>
-                    <option value="conflict-of-interest">
-                      Conflict of Interest
-                    </option>
-                    <option value="performance-review">
-                      Performance Review and Management
-                    </option>
+                    <option value="conflict-of-interest">Conflict of Interest</option>
+                    <option value="performance-review">Performance Review and Management</option>
                   </optgroup>
                 </select>
-
                 {errors.type && (
                   <span className="text-red-500 text-xs">
                     {errors.type?.message}
                   </span>
                 )}
               </label>
-
+              {/* Effective Date */}
               <label className="flex flex-col gap-1 w-full">
                 <span className="text-[14px] text-gray-400 font-medium">
                   Effective Date
@@ -357,7 +334,7 @@ const CreatePolicy = () => {
                 <input
                   type="date"
                   placeholder="Add a title for policy"
-                  className="p-3 w-full border text-gray-400 rounded-lg focus:outline-none"
+                  className="p-3 w-full border rounded-lg focus:outline-none text-gray-400"
                   {...register('effectiveDate', {
                     required: 'Effective is required!',
                   })}
@@ -369,7 +346,8 @@ const CreatePolicy = () => {
                 )}
               </label>
             </div>
-            <div className="w-full h-[1.5px] bg-gray-300 mt-12 mb-8 " />
+            <div className="w-full h-[1.5px] bg-gray-300 mt-12 mb-8" />
+            {/* Image Upload / Preview */}
             {!previewUrl ? (
               <div>
                 <label
@@ -377,7 +355,7 @@ const CreatePolicy = () => {
                   className="cursor-pointer flex flex-col gap-1 text-gray-400 mb-8 max-w-xs"
                 >
                   Upload image (Optional)
-                  <div className="px-6 py-3 bg-black rounded-md flex gap-2 items-center justify-between  text-white">
+                  <div className="px-6 py-3 bg-black rounded-md flex gap-2 items-center justify-between text-white">
                     Upload Image
                     <HiOutlineUpload />
                   </div>
@@ -409,20 +387,19 @@ const CreatePolicy = () => {
                 />
               </div>
             )}
+            {/* Policy Description */}
             <h1 className="text-[18px] font-medium">Policy Description</h1>
             <label className="flex flex-col gap-2 mt-8">
-              <span className=" text-[13px] text-gray-400">Description</span>
-              <div
-                onClick={(e) => e.preventDefault()}
-                className="border rounded "
-              >
+              <span className="text-[13px] text-gray-400">Description</span>
+              <div onClick={(e) => e.preventDefault()} className="border rounded">
                 <Controller
                   name="description"
                   control={control}
+                  defaultValue=""
                   render={({ field }) => (
                     <CustomTextEditor
-                      setContent={(value) => field.onChange(value)}
-                      body={field.value}
+                      setContent={field.onChange}
+                      body={field.value || ''}
                     />
                   )}
                 />

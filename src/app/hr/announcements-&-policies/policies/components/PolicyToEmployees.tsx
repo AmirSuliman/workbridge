@@ -51,7 +51,6 @@ const PolicyToEmployees: React.FC<PolicyToEmployeesProps> = ({
       const response = await axiosInstance.post('/policy/send/', {
         policyId: sessionStorage.getItem('policy'),
         employeeIds: data.employeeIds,
-        departmentId: null,
       });
 
       toast.success('Policy sent successfully!');
