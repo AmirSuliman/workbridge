@@ -1,16 +1,13 @@
 'use client';
-import React, { useState } from 'react';
-import WeeklyReport from './components/weeklyreport';
-import QuartelyReport from './components/quartelyreport';
-import Demographics from './components/Demographics';
-import Yearlyreport from './components/yearlyreport';
-import Evaluationlist from './components/evaluationlist';
 import TabButton from '@/components/common/TabsComponent/TabButton';
 import TabComponent from '@/components/common/TabsComponent/TabComponent';
+import Demographics from './components/Demographics';
+import Evaluationlist from './components/evaluationlist';
+import QuartelyReport from './components/quartelyreport';
+import WeeklyReport from './components/weeklyreport';
+import Yearlyreport from './components/yearlyreport';
 
 const Reports = () => {
-  const [activeTab, setActiveTab] = useState('reports');
-
   return (
     <div className="w-full">
       {/* Tab Navigation */}

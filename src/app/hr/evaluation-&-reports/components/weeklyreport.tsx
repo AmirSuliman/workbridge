@@ -13,6 +13,7 @@ interface WeeklyProps {
   rejected: number | null;
   interviewed: number | null;
 }
+
 const prepareExcelData = (
   data: WeeklyProps | null,
   startDate: string,

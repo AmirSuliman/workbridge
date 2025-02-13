@@ -26,6 +26,7 @@ interface Folder {
   files: File[];
   name: string;
   createdBy: number;
+  folderId: string;
 }
 interface File {
   id: string;
@@ -34,6 +35,7 @@ interface File {
   size: number;
   dateUploaded: string;
   fileType: string;
+  folderId: string; // Add this line
 }
 
 const Page = () => {
@@ -53,10 +55,9 @@ const Page = () => {
   const [isAllFilesActive, setIsAllFilesActive] = useState(false);
   const [expandedFolders, setExpandedFolders] = useState(new Set());
 
-
   const [documentId, setDocumentId] = useState<string | null>(null);
-const [currentTitle, setCurrentTitle] = useState<string | null>(null);
-const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
+  const [currentTitle, setCurrentTitle] = useState<string | null>(null);
+  const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
 
   const handleAddfolder = () => {
     setIsModalOpen(true);
@@ -69,8 +70,6 @@ const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
   const handleEditfolder = () => {
     setIsModalOpen2(true);
   };
-
-  
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -97,14 +96,12 @@ const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
   }, []);
 
   const handleEditdocument = (file: File) => {
-    setDocumentId(file.id);  
-    setCurrentTitle(file.fileTitle);  
-    setCurrentFolderId(file.folderId);  
-    setIsModalOpen3(true);  
+    setDocumentId(file.id);
+    setCurrentTitle(file.fileTitle);
+    setCurrentFolderId(file.folderId);
+    setIsModalOpen3(true);
   };
-  
-  
-  
+
   const handleSortFolders = (criteria: string) => {
     setSortCriteria(criteria);
     const sortedFolders = [...folders];
@@ -184,7 +181,6 @@ const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
     setFileIdToDelete(fileId);
     setIsModalOpen4(true);
   };
-  
 
   const handleFolderClick = (folder: Folder) => {
     fetchFolderFiles(folder);
@@ -400,10 +396,10 @@ const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
                             : ''}
                         </td>
                         <td className="flex flex-row gap-3 justify-center items-center">
-                        <FaEdit
-                          onClick={() => handleEditdocument(file)}
-                          className="cursor-pointer"
-                        />
+                          <FaEdit
+                            onClick={() => handleEditdocument(file)}
+                            className="cursor-pointer"
+                          />
                           <FaTrash
                             onClick={() => handleDeletedocument(file.id)}
                             className="cursor-pointer"
@@ -433,10 +429,10 @@ const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
                         <td className="p-4">{file.size}</td>
                         <td className="p-4">{file.fileType}</td>
                         <td className="flex flex-row gap-3 justify-center items-center">
-                        <FaEdit
-                         onClick={() => handleEditdocument(file)}
-                         className="cursor-pointer"
-                       />
+                          <FaEdit
+                            onClick={() => handleEditdocument(file)}
+                            className="cursor-pointer"
+                          />
                           <FaTrash
                             onClick={() => handleDeletedocument(file.id)}
                             className="cursor-pointer"
@@ -497,25 +493,25 @@ const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
           />
         </Modal>
       )}
-    {isModalOpen3 && (
-  <Modal onClose={() => setIsModalOpen3(false)}>
-    <Editdocument
-      setIsModalOpen3={setIsModalOpen3}
-      documentId={documentId}
-      currentTitle={currentTitle}
-      currentFolderId={currentFolderId}
-    />
-  </Modal>
-)}
+      {isModalOpen3 && (
+        <Modal onClose={() => setIsModalOpen3(false)}>
+          <Editdocument
+            setIsModalOpen3={setIsModalOpen3}
+            documentId={documentId}
+            currentTitle={currentTitle}
+            currentFolderId={currentFolderId}
+          />
+        </Modal>
+      )}
       {isModalOpen4 && (
         <Modal onClose={() => setIsModalOpen4(false)}>
-         <Deletedocument
-           setIsModalOpen4={setIsModalOpen4}
-           fileId={fileIdToDelete}
-           setFolders={setFolders}
-           setAllFiles={setAllFiles}
-           setActiveFolder={setActiveFolder}
-         />
+          <Deletedocument
+            setIsModalOpen4={setIsModalOpen4}
+            fileId={fileIdToDelete}
+            setFolders={setFolders}
+            setAllFiles={setAllFiles}
+            setActiveFolder={setActiveFolder}
+          />
         </Modal>
       )}
     </div>
