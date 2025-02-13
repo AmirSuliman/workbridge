@@ -139,7 +139,7 @@ const ProfileCard = ({
             </div>
             {(!tab || tab === '0' || tab === '1') && (
               <div className="flex items-center gap-4">
-                {userRole !== 'ViewOnly' &&
+                {(userRole === 'Admin' || userRole === 'SuperAdmin') &&
                   (loading ? (
                     <Button
                       type="button"

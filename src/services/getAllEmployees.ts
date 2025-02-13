@@ -5,11 +5,18 @@ import axios from 'axios';
 export const getAllEmployees = async (
   page: number,
   size: number,
-  name?: string
+  name?: string,
+  isManager?: boolean
 ) => {
   try {
     const response = await axiosInstance.get(API_ROUTES.GET_EMPLOYEES, {
-      params: { associations: true, page: page, size: size, name: name },
+      params: {
+        associations: true,
+        page: page,
+        size: size,
+        name: name,
+        isManager: isManager,
+      },
     });
     return response.data;
   } catch (error) {

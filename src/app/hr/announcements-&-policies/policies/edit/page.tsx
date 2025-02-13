@@ -47,7 +47,12 @@ const Addnewpolicies = () => {
     uploadBy: myId,
     totalEmployees: 0,
     employeeAccepted: 0,
+    users: {
+      firstName: '',
+      lastName: '',
+    },
   });
+
   const { data: session } = useSession();
 
   useEffect(() => {

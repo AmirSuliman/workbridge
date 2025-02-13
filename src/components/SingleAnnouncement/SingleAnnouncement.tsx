@@ -4,6 +4,7 @@ import IconWithBg from './IconWithBg';
 import { IoCalendarOutline } from 'react-icons/io5';
 import { useRouter } from 'next/navigation';
 import { BiLoaderCircle } from 'react-icons/bi';
+import { getSession } from 'next-auth/react';
 
 interface Announcement {
   id: number;
@@ -20,7 +21,18 @@ const SingleAnnouncement = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [role, setRole] = useState<string>();
 
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setRole(session?.user?.role);
+    };
+
+    fetchSession();
+  }, []);
+
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
@@ -72,7 +84,7 @@ const SingleAnnouncement = () => {
   if (error) {
     return <div className="text-red-500">{error}</div>;
   }
-
+  // /home/home/announcement/
   return (
     <div>
       {announcements.length > 0 ? (
@@ -81,7 +93,9 @@ const SingleAnnouncement = () => {
             key={announcement.id}
             onClick={() =>
               router.push(
-                `/hr/announcements-&-policies/announcements/${announcement.id}`
+                isUserPanel
+                  ? `/user/home/announcement/${announcement.id}`
+                  : `/hr/announcements-&-policies/announcements/${announcement.id}`
               )
             }
             className="flex items-center flex-wrap md:flex-nowrap gap-3 py-3 px-4 cursor-pointer hover:bg-background"

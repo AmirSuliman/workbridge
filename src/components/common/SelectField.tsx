@@ -41,7 +41,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
         {...register(name)}
         id={name}
         defaultValue=""
-        className={`w-full p-2 px-3 shadow-xs outline-0 border ${
+        className={`form-input ${
           error ? '!border-red-500' : 'border-gray-300'
         } rounded-md text-sm text-gray-700 ${styles?.input}`}
       >
@@ -54,11 +54,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
           </option>
         ))}
       </select>
-      {error && (
-        <p className={`text-red-400 text-xs mt-1 ms-1 ${styles?.error}`}>
-          {error}
-        </p>
-      )}
+      {error && <p className={`form-error ${styles?.error}`}>{error}</p>}
     </div>
   );
 };

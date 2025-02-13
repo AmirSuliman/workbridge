@@ -13,7 +13,7 @@ const EmployeesDropdown = ({
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await getAllEmployees(1, 1000);
+        const response = await getAllEmployees(1, 1000, '', true);
         const items = response?.data?.items || []; // Ensure items is an array
         setEmployees(items);
 

@@ -67,7 +67,7 @@ const AddEmergencyContact = ({
 
   return (
     <>
-      <div className="p-4 mt-4 rounded-md border-[1px] border-gray-border bg-white h-full">
+      <div className="p-8 rounded-md bg-white h-full">
         <FormHeading
           icon={<BasicInfoIcon classNames="w-4" />}
           text="Emergency Contact"
@@ -234,17 +234,26 @@ const AddEmergencyContact = ({
           </div>
         </div>
       </div>
-      <Button
-        onClick={handleSubmit(onSubmit)}
-        disabled={isSubmitting}
-        name={isSubmitting ? '' : 'Save emergency contact'}
-        icon={
-          isSubmitting && (
-            <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
-          )
-        }
-        className="w-full max-w-xl mx-auto col-span-full mt-4"
-      />
+      <div className="flex items-center gap-4 justify-center mb-4">
+        <Button
+          onClick={handleSubmit(onSubmit)}
+          disabled={isSubmitting}
+          name={isSubmitting ? '' : 'Confirm'}
+          icon={
+            isSubmitting && (
+              <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+            )
+          }
+          className="disabled:cursor-not-allowed"
+        />
+
+        <Button
+          onClick={() => setAddNew(false)}
+          bg="transparent"
+          textColor="black"
+          name="Cancel"
+        />
+      </div>
     </>
   );
 };
