@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import axiosInstance from '@/lib/axios';
 import { PiListChecksLight } from 'react-icons/pi';
 import InviteSent from './InviteSent';
@@ -20,7 +20,11 @@ interface ApiResponse {
 }
 
 const InterviewLayout = ({ jobApplication }) => {
-  const jobData = jobApplication?.data?.items[0] || {};
+  const jobData = useMemo(
+    () => jobApplication?.data?.items[0] || {},
+    [jobApplication]
+  );
+  console.log('jobData interview layout: ', jobData);
   const initialStage = jobData?.stage || 'Applied';
   const jobApplicationId = jobData?.id;
   const searchParams = useSearchParams();
@@ -64,6 +68,50 @@ const InterviewLayout = ({ jobApplication }) => {
       setCurrentStage(jobData.stage);
     }
   }, [jobData]);
+
+  const RenderCurrentInterviewComponent = () => {
+    if (currentStage === 'Applied') {
+      return (
+        <SendInvite
+          heading={
+            <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
+              <PiListChecksLight size={24} />
+              First Round
+            </h2>
+          }
+          jobApplication={jobApplication}
+        />
+      );
+    } else if (currentStage === 'First') {
+      return (
+        <InviteSent
+          jobApplication={jobApplication}
+          heading={
+            <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
+              <PiListChecksLight size={24} />
+              First Round
+            </h2>
+          }
+          buttonText="Continue to Technical Interview"
+        />
+      );
+    } else if (
+      currentStage === 'Technical' &&
+      jobData.reviews[0].stage === 'Technical'
+    ) {
+      return (
+        <SendInvite
+          heading={
+            <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
+              <PiListChecksLight size={24} />
+              Technical Interview
+            </h2>
+          }
+          jobApplication={jobApplication}
+        />
+      );
+    }
+  };
 
   return (
     <>

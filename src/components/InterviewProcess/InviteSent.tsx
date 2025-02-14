@@ -14,14 +14,18 @@ const InviteSent = ({ jobApplication, heading, buttonText }) => {
   const jobData = jobApplication.data.items[0];
   console.log(jobData);
 
-  const date = new Date(jobData.meetingDate);
+  // const date = new Date(jobData.meetingDate);
+  const meetingDate = new Date(jobData?.meetingDate);
+  const currentDate = new Date();
+  // const isToday = meetingDate.toDateString() === currentDate.toDateString();
+  const isFuture = meetingDate > currentDate;
 
   const formattedTime = new Intl.DateTimeFormat('en-US', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: true,
     timeZone: 'America/New_York',
-  }).format(date); // Example: "4:33 AM" in EST
+  }).format(meetingDate); // Example: "4:33 AM" in EST
 
   const [loading, setLoading] = useState(false);
   const {
@@ -151,8 +155,9 @@ const InviteSent = ({ jobApplication, heading, buttonText }) => {
             <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
           )
         }
-        className="w-full max-w-xl mx-auto col-span-full mt-12"
+        className="w-full max-w-xl mx-auto col-span-full mt-12 disabled:opacity-50 disabled:cursor-not-allowed"
         type="submit"
+        // disabled={isFuture}
       />
     </form>
   );

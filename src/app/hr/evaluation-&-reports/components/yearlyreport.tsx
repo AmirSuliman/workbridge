@@ -271,13 +271,13 @@ const YearlyReport = () => {
             <FaDownload /> {isDownloading ? 'Downloading...' : 'Download'}
           </button>
 
-          <button
+          {/* <button
             onClick={handlePdfDownload}
             disabled={isPdfDownloading || !yearlyReports}
             className="p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             <FaFilePdf /> {isPdfDownloading ? 'Downloading...' : 'PDF'}
-          </button>
+          </button> */}
         </div>
       </div>
 

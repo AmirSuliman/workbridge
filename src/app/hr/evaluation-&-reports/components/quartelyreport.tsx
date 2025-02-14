@@ -298,13 +298,13 @@ const QuarterlyReport = () => {
           >
             <FaDownload /> {isDownloading ? 'Downloading...' : 'Download'}
           </button>
-          <button
+          {/* <button
             onClick={handlePdfDownload}
             disabled={isPdfDownloading || chartData.length === 0}
             className="p-2 bg-black rounded text-white text-sm flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             <FaFilePdf /> {isPdfDownloading ? 'Downloading...' : 'PDF'}
-          </button>
+          </button> */}
         </div>
       </div>
       {chartData.length > 0 ? (

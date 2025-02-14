@@ -377,13 +377,13 @@ const WeeklyReport = () => {
           >
             <FaDownload /> {isDownloading ? 'Downloading...' : 'Download'}
           </button>
-          <button
+          {/* <button
             onClick={handlePdfDownload}
             disabled={isPdfDownloading || !weeklyReports}
             className="p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             <FaFilePdf /> {isPdfDownloading ? 'Downloading...' : 'PDF'}
-          </button>
+          </button> */}
         </div>
       </div>
       <div className="flex flex-row items-center gap-3 text-[14px] mt-4 mb-8">

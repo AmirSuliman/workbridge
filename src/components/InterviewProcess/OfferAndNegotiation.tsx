@@ -8,13 +8,12 @@ import { PiListChecksLight } from 'react-icons/pi';
 import Button from '../Button';
 import GenerateOffer from './GenerateOffer';
 import axios, { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 
 const OfferAndNegotiation = ({ jobApplication }) => {
   const stage = jobApplication?.data?.items?.[0]?.stage || 'Applied';
   const jobApplicationId = jobApplication?.data?.items?.[0]?.id;
   const [showOffer, setShowOffer] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
 
   const handlePopup = (event) => {
     event.preventDefault();
@@ -28,29 +27,29 @@ const OfferAndNegotiation = ({ jobApplication }) => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    setErrorMessage('');
-    setSuccessMessage('');
+    const payload = {
+      startDate: data.startDate,
+      compensation: Number(data.compensation),
+      jobApplicationId: jobApplicationId,
+    };
+
     try {
-      await axiosInstance.post(API_ROUTES.POST_OFFER, {
-        ...data,
-        jobApplicationId,
-      });
-    
-      setSuccessMessage('Offer sent successfully!');
+      await axiosInstance.post(API_ROUTES.POST_OFFER, payload);
+
+      toast.success('Offer sent successfully!');
       setShowOffer(false);
       window.location.reload();
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setErrorMessage(
+        toast.error(
           error.response?.data?.message ||
             'An error occurred while submitting the offer.'
         );
       } else {
-        setErrorMessage('An unexpected error occurred.');
+        toast.error('An unexpected error occurred.');
       }
     }
   };
-  
 
   return (
     <form
@@ -61,12 +60,7 @@ const OfferAndNegotiation = ({ jobApplication }) => {
         <PiListChecksLight size={24} />
         Offer and Negotiation
       </h2>
-      {errorMessage && (
-        <p className="col-span-full text-red-500 text-sm">{errorMessage}</p>
-      )}
-      {successMessage && (
-        <p className="col-span-full text-green-500 text-sm">{successMessage}</p>
-      )}
+
       <label className="font-medium text-sm flex flex-col">
         <span className="opacity-35">Start Date</span>
         <input
@@ -118,7 +112,7 @@ const OfferAndNegotiation = ({ jobApplication }) => {
         disabled={stage === 'Negotiation'}
         name={`Continue to Offer Approval`}
         className={`w-full max-w-xl mx-auto col-span-full mt-12 ${
-          stage =='Negotiation' && 'opacity-50'
+          stage == 'Negotiation' && 'opacity-50'
         }`}
       />
     </form>

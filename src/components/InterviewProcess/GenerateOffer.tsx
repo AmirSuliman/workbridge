@@ -20,7 +20,7 @@ const GenerateOffer = ({ setShowOffer, jobApplication }) => {
   }, [jobApplicationId]);
 
   return (
-    <div className="fixed top-0 left-0 right-0 bottom-0 bg-[#000000]/50 flex items-center justify-center z-50">
+    <div className="fixed top-0 left-0 right-0 bottom-0 bg-[#000000]/50 flex items-center justify-center overflow-y-auto z-50">
       <div className="max-w-4xl my-4 lg:my-8 p-4 bg-white rounded-lg">
         <header className="flex items-center gap-4 justify-between pb-4 border-b-[1px] border-[#E0E0E0]">
           <h2 className="font-semibold text-lg">Offer</h2>
