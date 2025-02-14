@@ -62,13 +62,13 @@ const UserLeaveInfo = () => {
     fetchLeaveData();
   }, []);
 
-  const handleConfirmRequest = (leave: LeaveData) => {
-    setSelectedLeave(leave);
+  const handleConfirmRequest = (employee: LeaveData) => {
+    setSelectedLeave(employee);
     setIsConfirmModalOpen(true);
   };
 
-  const handleDenyRequest = (leave: LeaveData) => {
-    setSelectedLeave(leave);
+  const handleDenyRequest = (employee: LeaveData) => {
+    setSelectedLeave(employee);
     setIsDenyModalOpen(true);
   };
 
@@ -80,6 +80,20 @@ const UserLeaveInfo = () => {
   const handleCloseDenyModal = () => {
     setIsDenyModalOpen(false);
     setSelectedLeave(null);
+  };
+
+  // Callback to update the local state after confirmation
+  const updateEmployeeStatus = (
+    employeeId: number,
+    newStatus: 'Confirmed' | 'Denied'
+  ) => {
+    setLeaveData((prevData) =>
+      prevData.map((employee) =>
+        employee.id === employeeId
+          ? { ...employee, status: newStatus }
+          : employee
+      )
+    );
   };
 
   if (loading) {
@@ -196,6 +210,9 @@ const UserLeaveInfo = () => {
           <ConfirmLeave
             timeOffRequestId={selectedLeave.id}
             onClose={handleCloseConfirmModal}
+            onConfirm={() =>
+              updateEmployeeStatus(selectedLeave.id, 'Confirmed')
+            }
           />
         </Modal>
       )}
@@ -205,6 +222,7 @@ const UserLeaveInfo = () => {
           <Deny
             timeOffRequestId={selectedLeave.id}
             onClose={handleCloseDenyModal}
+            onDeny={() => updateEmployeeStatus(selectedLeave.id, 'Denied')}
           />
         </Modal>
       )}
