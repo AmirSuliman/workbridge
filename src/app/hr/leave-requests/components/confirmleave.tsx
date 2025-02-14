@@ -2,16 +2,9 @@
 import { FaCheck } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
+import { isAxiosError } from 'axios';
 
-interface ConfirmProps {
-  timeOffRequestId: number;
-  onClose: () => void;
-}
-
-const ConfirmLeave: React.FC<ConfirmProps> = ({
-  timeOffRequestId,
-  onClose,
-}) => {
+const ConfirmLeave = ({ timeOffRequestId, onConfirm, onClose }) => {
   const [timeOffRequest, setTimeOffRequest] = useState<any | null>(null);
   const [note, setNote] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
@@ -44,9 +37,17 @@ const ConfirmLeave: React.FC<ConfirmProps> = ({
           note,
         });
         onClose();
+        onConfirm();
       } catch (error) {
         console.error('Error confirming leave request:', error);
-        setError('Failed to confirm leave request. Please try again later.');
+        if (isAxiosError(error) && error.response) {
+          setError(
+            error.response.data.message ||
+              'Failed to confirm leave request. Please try again later.'
+          );
+        } else {
+          setError('Failed to confirm leave request. Please try again later.');
+        }
       }
     } else {
       console.error(

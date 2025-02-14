@@ -115,6 +115,20 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
     setSelectedEmployee(null);
   };
 
+  // Callback to update the local state after confirmation
+  const updateEmployeeStatus = (
+    employeeId: number,
+    newStatus: 'Confirmed' | 'Denied'
+  ) => {
+    setEmployeeData((prevData) =>
+      prevData.map((employee) =>
+        employee.id === employeeId
+          ? { ...employee, status: newStatus }
+          : employee
+      )
+    );
+  };
+
   return (
     <div className="p-4 mt-8 overflow-x-auto">
       {isLoading && <p>Loading...</p>}
@@ -278,6 +292,9 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
             <ConfirmLeave
               timeOffRequestId={selectedEmployee.id}
               onClose={handleCloseConfirmModal}
+              onConfirm={() =>
+                updateEmployeeStatus(selectedEmployee.id, 'Confirmed')
+              }
             />
           )}
         </Modal>
@@ -288,6 +305,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
           <Deny
             timeOffRequestId={selectedEmployee.id}
             onClose={handleCloseDenyModal}
+            onDeny={() => updateEmployeeStatus(selectedEmployee.id, 'Denied')}
           />
         </Modal>
       )}

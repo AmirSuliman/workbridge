@@ -2,13 +2,9 @@
 import { FaTimes } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
+import { isAxiosError } from 'axios';
 
-interface DenyProps {
-  timeOffRequestId: number;
-  onClose: () => void;
-}
-
-const Deny: React.FC<DenyProps> = ({ timeOffRequestId, onClose }) => {
+const Deny = ({ timeOffRequestId, onDeny, onClose }) => {
   const [timeOffRequest, setTimeOffRequest] = useState<any | null>(null);
   const [note, setNote] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
@@ -45,9 +41,17 @@ const Deny: React.FC<DenyProps> = ({ timeOffRequestId, onClose }) => {
           note,
         });
         onClose();
+        onDeny();
       } catch (error) {
-        console.error('Error confirming leave request:', error);
-        setError('Failed to confirm leave request. Please try again later.');
+        console.error('Error deny leave request:', error);
+        if (isAxiosError(error) && error.response) {
+          setError(
+            error.response.data.message ||
+              'Failed to deny leave request. Please try again later.'
+          );
+        } else {
+          setError('Failed to deny leave request. Please try again later.');
+        }
       }
     } else {
       console.error(
