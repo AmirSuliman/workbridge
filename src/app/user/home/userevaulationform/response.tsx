@@ -38,12 +38,13 @@ const Response = () => {
           </label>
           <label className="mt-2 flex flex-col">
             <span className="text-[16px] text-gray-400 mb-1">Answer</span>
-            {question.responseType === 'Text' && (
-              <input type="text" className="border p-2 rounded w-full" value={question.responseText} readOnly />
-            )}
-            {question.responseType === 'Rating' && (
-              <div className="border p-2 rounded w-full">{question.rating}</div>
-            )}
+            <div className="border p-3 rounded text-[18px]">
+            {question.responses.length > 0 ? question.responses[0].response || '' : 'No response given'}
+
+            </div>
+
+
+            
           </label>
         </div>
       ))}

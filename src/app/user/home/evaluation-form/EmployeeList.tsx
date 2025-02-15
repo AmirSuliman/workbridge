@@ -12,21 +12,23 @@ const Employeelist = () => {
   const searchParams = useSearchParams();
   const survey = searchParams.get('survey');
   const managerId = searchParams.get('employee'); 
-  console.log(managerId, 'managerId');
-  
+
   useEffect(() => {
     const getManagerEmployees = async () => {
       if (!managerId) return;
       try {
         const response = await axiosInstance.get(`/employees/${managerId}`);
         setEmployees(response.data.data);
-        console.log(response, "employeeres");
       } catch (error) {
         console.log(error);
       }
     };
     getManagerEmployees();
   }, [managerId]);
+
+  // Find the selected employee details
+  const selectedEmployee = employees.find(emp => emp.id === selectedEmployeeId);
+  const surveyStatus = selectedEmployee?.surveyStatus?.[0]?.status;
 
   return (
     <div className='flex flex-col gap-8 w-full items-start sm:flex-row'>
@@ -50,7 +52,7 @@ const Employeelist = () => {
                   />
                 </div>
                 <div className="text-[#00B87D] bg-[#D5F6DD] p-1 px-3 text-[12px] font-medium rounded">
-                  Completed
+                  {employee.surveyStatus?.[0]?.status }
                 </div>
               </button>
             ))
@@ -69,10 +71,13 @@ const Employeelist = () => {
         </div>
       )}
 
-      {/* Show Response Component When an Employee is Selected */}
       {selectedEmployeeId && (
         <div className='bg-white p-6 mt-8 rounded-[10px] border w-full'>
-          <Response surveyId={survey} employeeId={selectedEmployeeId} managerId={managerId} />
+          {surveyStatus === 'Completed' ? (
+            <p className="text-center text-green-600 font-semibold">Survey Completed</p>
+          ) : (
+            <Response surveyId={survey} employeeId={selectedEmployeeId} managerId={managerId} />
+          )}
         </div>
       )}
     </div>

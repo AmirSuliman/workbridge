@@ -140,6 +140,7 @@ const CreatePolicy = () => {
         ...data,
         fileId: uploadedFileId,
         status: 'Draft',
+        uploadBy: myId,
       };
       await axiosInstance.post('/policy/', payload);
       toast.success('Draft saved successfully!');
