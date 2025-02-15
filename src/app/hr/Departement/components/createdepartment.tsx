@@ -36,7 +36,11 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
       setLoadingEmployees(true);
       setEmployeeError('');
       try {
-        const response = await axiosInstance.get('/employees');
+        const response = await axiosInstance.get('/employees', {
+          params: {
+            isManager: true,
+          },
+        });
         console.log('Employees data:', response.data);
         setEmployees(response.data.data.items);
       } catch (error) {
