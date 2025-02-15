@@ -37,6 +37,8 @@ const Policy = () => {
       <div className="flex flex-row items-center justify-between w-full">
         <h1 className="text-[22px] font-semibold">All policy</h1>
         <div className="flex flex-row items-center gap-2">
+
+          
           <Link
             href={`/hr/announcements-&-policies/policies/edit?id=${policyId}`}
             className="bg-black text-[14px] text-white p-2 rounded px-4 flex flex-row items-center gap-3"

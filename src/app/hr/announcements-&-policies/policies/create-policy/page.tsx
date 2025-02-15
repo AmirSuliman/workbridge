@@ -10,7 +10,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { FaBox } from 'react-icons/fa';
 import { HiOutlineUpload } from 'react-icons/hi';
-import PreviewPolicy from '../components/PreviewPolicy';
+import PreviewPolicy from '../components/previewpolicyforcreate';
 import SendPolicyModal from '../components/SendPolicyModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
@@ -140,6 +140,7 @@ const CreatePolicy = () => {
         ...data,
         fileId: uploadedFileId,
         status: 'Draft',
+        uploadBy: myId,
       };
       await axiosInstance.post('/policy/', payload);
       toast.success('Draft saved successfully!');

@@ -24,11 +24,12 @@ const Evaluation = ({ evaluation, employeeId }) => {
             </p>
           </div>
           <Link
-            href={`/user/home/evaluation-form?survey=${(item.surveyId || item.surveyDepartment?.surveyId) ?? ''}&employee=${(item.employeeId || employeeId) ?? ''}&surveyType=${item.surveyType ?? ''}`}
-            className="text-white text-[11px] bg-black p-2 rounded mt-3"
-          >
-            Start Survey
-          </Link>
+  href={`/user/home/userevaulationform?survey=${item.surveyId || ''}&employee=${item.employeeId || employeeId || ''}`}
+  className="text-white text-[11px] bg-black p-2 rounded mt-3"
+>
+  View Survey
+</Link>
+
 
 
 

@@ -65,7 +65,7 @@ const Employeelist = () => {
                 />
               </div>
               <div className="text-[#00B87D] bg-[#D5F6DD] p-1 px-3 text-[12px] font-medium rounded">
-                Completed
+              {employee.surveyStatus?.[0]?.status || 'Pending'}
               </div>
             </button>
           ))

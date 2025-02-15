@@ -13,20 +13,10 @@ const PreviewPolicy = ({ previewData }) => {
       <div className="p-6 border rounded-[10px]">
         <h1 className="text-[32px] font-medium">{previewData.title}</h1>
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mt-4">
+          {/* this is when we preview a fetched policy from the backend */}
+          <p className="text-[13px] ">Posted by:</p>
+          <p className="text-[13px] font-semibold">{username}</p>
          
-          {previewData.users && (
-            <div className="flex flex-row items-center gap-1">
-              <Image
-                src={previewData.users.profilePictureUrl}
-                alt="img"
-                width={30}
-                height={30}
-                className="rounded-full"
-              />
-              <p className="text-[13px] ">Posted by:</p>
-              <p className="text-[13px] font-semibold">{`${previewData.users.firstName} ${previewData.users.lastName}`}</p>
-            </div>
-          )}
 
           <div className="flex flex-row items-center gap-1">
             <p className="text-[13px] ">Effective Date:</p>

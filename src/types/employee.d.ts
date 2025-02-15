@@ -45,6 +45,7 @@ export interface EmployeeData {
   departmentId: number;
   effectiveDate: string | null;
   reportingManagerId: number | null;
+  surveyStatus?: { status: string }[];
 }
 
 type question = {

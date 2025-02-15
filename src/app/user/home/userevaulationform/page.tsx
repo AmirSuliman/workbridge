@@ -1,17 +1,16 @@
 'use client';
 
 import Image from 'next/image';
-import { useSearchParams, useRouter } from 'next/navigation';
-import Response from './Response';
-import Employeelist from './EmployeeList';
-import DepartmentResponse from './departmentresponse';
+import { useRouter } from 'next/navigation';
+import Response from './response';
+import { useSearchParams } from 'next/navigation';
 
 const Evaluationform = () => {
   const router = useRouter();
-  const searchParams = useSearchParams(); // ✅ Correct way to get query params
-  const surveyType = searchParams.get('surveyType'); // Extract `surveyType`
+  const searchParams = useSearchParams();
+const employeeId = searchParams.get('employee');
 
-  console.log(surveyType, "surveyType");
+  console.log(employeeId, "employeeid");
 
   return (
     <main className="p-6">
@@ -31,7 +30,7 @@ const Evaluationform = () => {
         </button>
       </div>
       <div className="flex gap-4 flex-col lg:flex-row">
-        {surveyType === 'departmentSurvey' ? <DepartmentResponse /> : <Employeelist />}
+         <Response />
       </div>
     </main>
   );

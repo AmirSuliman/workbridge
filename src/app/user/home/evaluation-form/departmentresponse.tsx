@@ -6,25 +6,40 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
+import { useRouter } from 'next/navigation'; 
+import { useSearchParams } from 'next/navigation';
 
-const Response = ({ surveyId, employeeId, managerId}) => {
+
+const DepartmentResponse = () => {
   const [questions, setQuestions] = useState<any[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const { data: session } = useSession();
-
+  const [departmentId, setDepartmentId] = useState(null);
+  const [departmentHeadId, setDepartmentHeadId] = useState(null);
+  
+  const searchParams = useSearchParams();
+const surveyId = searchParams.get('survey');
+console.log(surveyId, 'survey department id');
   useEffect(() => {
+    if (!surveyId) return; 
+
     const getQuestions = async () => {
       try {
         const response = await axiosInstance.get(`/survey/${surveyId}`, {
           params: { associations: true },
         });
+        console.log(response,)
+        const departmentData = response.data.data.departments[0];
+      setDepartmentId(departmentData.id); // Set departmentId
+      setDepartmentHeadId(departmentData.department_head_data.id);
         setQuestions(response.data.data.questions);
+       
       } catch (error) {
         console.log(error);
       }
     };
     getQuestions();
-  }, [surveyId]);
+  }, [surveyId]); // Dependency on surveyId
 
   const {
     register,
@@ -35,8 +50,8 @@ const Response = ({ surveyId, employeeId, managerId}) => {
   const onSubmit = async (data) => {
     const payload = {
       surveyId,
-      managerId: managerId,
-      employeeId,
+      departmentId,
+     departmentHeadId,
       responses: questions.map((question, index) => ({
         questionId: question.id,
         responseText: data[`responseText_${index}`],
@@ -45,7 +60,7 @@ const Response = ({ surveyId, employeeId, managerId}) => {
     };
 
     try {
-      await axiosInstance.post(`/survey/response`, payload, {
+      await axiosInstance.post(`/survey/response/department`, payload, {
         headers: { Authorization: `Bearer ${session?.user?.accessToken}` },
       });
       toast.success('Evaluation successful!');
@@ -147,4 +162,4 @@ const Response = ({ surveyId, employeeId, managerId}) => {
   );
 };
 
-export default Response;
+export default DepartmentResponse;

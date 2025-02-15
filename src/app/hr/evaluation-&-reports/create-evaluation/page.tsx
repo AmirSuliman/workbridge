@@ -82,32 +82,32 @@ const CreateEvaluation = () => {
       ...question,
       responseType: question.responseType ? 'text' : 'Rating',
     }));
-
+  
     console.log('Selected Department IDs:', departmentIds);
     console.log('Selected Manager IDs:', managerIds);
-
+  
     const type = managerIds.length > 0 ? 'Manager' : 'Department';
-
+  
     const payload = {
       sendBy: employeeId?.employeeId || null,
       departmentIds: departmentIds,
       title: 'Survey Title',
       type: type,
-      isReportingEmployee: true,
+      isReportingEmployee: isEvaluativeReportingEmployee, // Dynamically set based on checkbox state
       status: status,
       questions: transformedQuestions,
       employeeId: data.reportingManagerId,
       managerIds: managerIds,
     };
-
+  
     try {
       setLoading(true);
       await axiosInstance.post('/survey/', payload);
-
+  
       if (status === 'In Progress') {
         await axiosInstance.post('/survey/send/', payload);
       }
-
+  
       setLoading(false);
       toast.success(
         `${status === 'Draft' ? 'Draft saved' : 'Survey sent'} successfully!`
@@ -122,7 +122,7 @@ const CreateEvaluation = () => {
       }
     }
   };
-
+  
   return (
     <form>
       <div className="flex flex-row items-center justify-between w-full">
@@ -175,12 +175,17 @@ const CreateEvaluation = () => {
     )}
 
     <label className="flex items-center gap-2 mt-auto mb-3">
-      <input
-        type="checkbox"
-        {...register('isReportingEmployee')}
-        className="appearance-none border-2 border-black checked:bg-black text-white size-4 rounded"
-        onChange={(e) => setIsEvaluativeReportingEmployee(e.target.checked)}
-      />
+    <input
+  type="checkbox"
+  {...register('isReportingEmployee')}
+  className="appearance-none border-2 border-black checked:bg-black text-white size-4 rounded"
+  onChange={(e) => {
+    const isChecked = e.target.checked;
+    setIsEvaluativeReportingEmployee(isChecked);
+    setValue('isReportingEmployee', isChecked);
+  }}
+/>
+
       Evaluative Reporting Employees
     </label>
         </div>

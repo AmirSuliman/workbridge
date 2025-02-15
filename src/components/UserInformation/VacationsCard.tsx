@@ -39,9 +39,14 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
   }, [startDate, endDate]);
 
   const formatDate = (date: string) => {
+    if (!date) return '';
     const parsedDate = new Date(date);
-    return parsedDate.toISOString().split('T')[0];
+    const day = String(parsedDate.getDate()).padStart(2, '0');
+    const month = String(parsedDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const year = parsedDate.getFullYear();
+    return `${day}/${month}/${year}`;
   };
+  
 
   const handleRequestVacation = async () => {
     const duration = calculateDuration();
@@ -89,6 +94,11 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
     const startDateObj = new Date(start);
     startDateObj.setDate(startDateObj.getDate() + days - 1);
     return startDateObj.toISOString().split('T')[0];
+  };
+  
+  const getMinDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
   };
 
  
@@ -143,26 +153,29 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">Leaving Date</span>
                 <input
-                 type="date"
-                 className="p-3 border rounded w-full"
-                 min={new Date().toISOString().split('T')[0]}
-                 max={getMaxDate(new Date().toISOString().split('T')[0], totalDays)}
-                 value={startDate ? formatDate(startDate) : ''}
-                 onChange={(e) => setStartDate(e.target.value)}
-               />
+  type="date"
+  className="p-3 border rounded w-full"
+  min={getMinDate()} 
+  max={getMaxDate(getMinDate(), totalDays)} 
+  value={startDate ? startDate : ''} 
+  onChange={(e) => setStartDate(e.target.value)}
+  placeholder="dd/mm/yyyy" 
+/>
+
               </label>
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">
                   Returning Date
                 </span>
                 <input
-                  type="date"
-                  className="p-3 border rounded w-full"
-                  min={startDate}
-                  max={getMaxDate(startDate, totalDays)}
-                  value={endDate ? formatDate(endDate) : ''}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
+  type="date"
+  className="p-3 border rounded w-full"
+  min={startDate || getMinDate()} // Ensure end date is after start date
+  max={getMaxDate(startDate, totalDays)}
+  value={endDate ? endDate : ''} // Ensures empty value when not selected
+  onChange={(e) => setEndDate(e.target.value)}
+  placeholder="dd/mm/yyyy"
+/>
               </label>
               <label className="flex flex-col w-full col-span-full">
                 <span className="text-gray-400 text-[12px]">Note</span>

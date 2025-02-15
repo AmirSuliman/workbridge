@@ -187,7 +187,7 @@ const Addnewpolicies = () => {
   const handleSaveDraft = async (data) => {
     try {
       setLoading(true);
-      let uploadedFileId = fileId; // Use existing fileId by default
+      let uploadedFileId = fileId || policyData.fileId; // Use existing fileId if available
   
       // Upload only if a new file is selected
       if (selectedFile) {
@@ -196,7 +196,7 @@ const Addnewpolicies = () => {
   
       const payload = {
         ...data,
-        fileId: uploadedFileId,
+        fileId: uploadedFileId, // Ensure correct fileId is sent
         status: 'Draft',
       };
   
@@ -215,7 +215,7 @@ const Addnewpolicies = () => {
   const handlePublish = async (data) => {
     try {
       setLoading(true);
-      let uploadedFileId = fileId; // Use existing fileId by default
+      let uploadedFileId = fileId || policyData.fileId; // Use existing fileId if available
   
       // Upload only if a new file is selected
       if (selectedFile) {
@@ -226,7 +226,7 @@ const Addnewpolicies = () => {
         ...data,
         status: 'Published',
         uploadBy: myId,
-        fileId: uploadedFileId,
+        fileId: uploadedFileId, // Ensure correct fileId is sent
       };
   
       const response = await axiosInstance.put(`/policy/${id}`, payload);
@@ -246,7 +246,6 @@ const Addnewpolicies = () => {
     }
   };
   
-
   const handlePreviewPost = () => {
     setIsPreview(true);
   };
