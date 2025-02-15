@@ -95,9 +95,7 @@ const OfferAndNegotiation = ({ jobApplication }) => {
           type="button"
           disabled={stage === 'Offer'}
           name={`${stage === 'Offer' ? 'Offer Sent!' : 'Generate Offer'}`}
-          className={`${
-            stage === 'Offer' ? 'bg-transparent !text-black' : 'Generate Offer'
-          }`}
+          className={`${stage === 'Offer' ? 'bg-transparent !text-black' : ''}`}
         />
       </div>
       {showOffer && (

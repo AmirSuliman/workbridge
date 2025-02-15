@@ -6,6 +6,8 @@ import { RxCross1 } from 'react-icons/rx';
 import Link from 'next/link';
 import Button from '../Button';
 import { AxiosError } from 'axios';
+import GenerateOffer from './GenerateOffer';
+import SeeOffer from './SeeOffer';
 
 interface OfferBy {
   firstName: string;
@@ -20,6 +22,7 @@ interface OfferData {
 const OfferApproval = ({ jobApplication, offerId, token }) => {
   const [offerData, setOfferData] = useState<OfferData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showOffer, setShowOffer] = useState(false);
 
   useEffect(() => {
     const fetchOffer = async () => {
@@ -129,22 +132,22 @@ const OfferApproval = ({ jobApplication, offerId, token }) => {
       <>
         <td className="p-1 lg:p-3">
           <Button
-            className="text-[10px]"
-            name="Accept Offer"
+            className="text-[10px] cursor-default"
+            name="Offer Accepted"
             bg="#00B87D"
             textColor="white"
             icon={<IoCheckmark />}
-            onClick={() => updateOfferStatus('accepted')}
+            // onClick={() => updateOfferStatus('accepted')}
           />
         </td>
         <td className="p-1 lg:p-3">
           <Button
-            className="text-[10px]"
-            name="Reject Offer"
+            className="text-[10px] cursor-default"
+            name="Rejected"
             bg="#F53649"
             textColor="white"
             icon={<RxCross1 />}
-            onClick={() => updateOfferStatus('rejected')}
+            // onClick={() => updateOfferStatus('rejected')}
           />
         </td>
       </>
@@ -158,45 +161,53 @@ const OfferApproval = ({ jobApplication, offerId, token }) => {
         Offer Approval
       </h2>
       <table className="w-full mt-4">
-  <thead>
-    <tr className="w-full border-b">
-      <th className="table-header wide-column opacity-35 font-medium text-sm">
-        Offer sent by
-      </th>
-      <th className="table-header narrow-column opacity-35 font-medium text-sm">
-        Date sent
-      </th>
-      <th className="table-header narrow-column opacity-35 font-medium text-sm">
-        Time sent
-      </th>
-      <th className="table-header narrow-column opacity-35 font-medium text-sm">
-        Offer
-      </th>
-      <th className="table-header narrow-column opacity-35 font-medium text-sm"></th>
-      <th className="table-header narrow-column opacity-35 font-medium text-sm"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr className="w-full">
-      <td className="table-cell wide-column font-medium text-sm">{sender}</td>
-      <td className="table-cell narrow-column font-medium text-sm">{dateSent}</td>
-      <td className="table-cell narrow-column font-medium text-sm">{timeSent}</td>
-      <td className="table-cell narrow-column">
-        <Link href="/HR/Home/All-Announcements">
-          <Button
-            className="text-[10px]"
-            name="See offer"
-            icon={<PiArrowUpRightThin size={18} />}
-            bg="transparent"
-            textColor="black"
-          />
-        </Link>
-      </td>
-      {renderActions()}
-    </tr>
-  </tbody>
-</table>
+        <thead>
+          <tr className="w-full border-b">
+            <th className="table-header wide-column opacity-35 font-medium text-sm">
+              Offer sent by
+            </th>
+            <th className="table-header narrow-column opacity-35 font-medium text-sm">
+              Date sent
+            </th>
+            <th className="table-header narrow-column opacity-35 font-medium text-sm">
+              Time sent
+            </th>
+            <th className="table-header narrow-column opacity-35 font-medium text-sm">
+              Offer
+            </th>
+            <th className="table-header narrow-column opacity-35 font-medium text-sm"></th>
+            <th className="table-header narrow-column opacity-35 font-medium text-sm"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="w-full">
+            <td className="table-cell wide-column font-medium text-sm">
+              {sender}
+            </td>
+            <td className="table-cell narrow-column font-medium text-sm">
+              {dateSent}
+            </td>
+            <td className="table-cell narrow-column font-medium text-sm">
+              {timeSent}
+            </td>
+            <td className="table-cell narrow-column">
+              <Button
+                onClick={() => setShowOffer(true)}
+                className="text-[10px]"
+                name="See offer"
+                icon={<PiArrowUpRightThin size={18} />}
+                bg="transparent"
+                textColor="black"
+              />
+            </td>
+            {renderActions()}
+          </tr>
+        </tbody>
+      </table>
 
+      {showOffer && (
+        <SeeOffer setShowOffer={setShowOffer} jobApplication={jobApplication} />
+      )}
     </section>
   );
 };

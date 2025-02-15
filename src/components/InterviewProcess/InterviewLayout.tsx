@@ -69,50 +69,6 @@ const InterviewLayout = ({ jobApplication }) => {
     }
   }, [jobData]);
 
-  const RenderCurrentInterviewComponent = () => {
-    if (currentStage === 'Applied') {
-      return (
-        <SendInvite
-          heading={
-            <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
-              <PiListChecksLight size={24} />
-              First Round
-            </h2>
-          }
-          jobApplication={jobApplication}
-        />
-      );
-    } else if (currentStage === 'First') {
-      return (
-        <InviteSent
-          jobApplication={jobApplication}
-          heading={
-            <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
-              <PiListChecksLight size={24} />
-              First Round
-            </h2>
-          }
-          buttonText="Continue to Technical Interview"
-        />
-      );
-    } else if (
-      currentStage === 'Technical' &&
-      jobData.reviews[0].stage === 'Technical'
-    ) {
-      return (
-        <SendInvite
-          heading={
-            <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
-              <PiListChecksLight size={24} />
-              Technical Interview
-            </h2>
-          }
-          jobApplication={jobApplication}
-        />
-      );
-    }
-  };
-
   return (
     <>
       <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4 space-y-2 my-4">
@@ -137,7 +93,7 @@ const InterviewLayout = ({ jobApplication }) => {
           />
         )}
 
-        {currentStage === 'First' && (
+        {currentStage === 'First' && jobData.isRating && (
           <InviteSent
             jobApplication={jobApplication}
             heading={
@@ -150,7 +106,7 @@ const InterviewLayout = ({ jobApplication }) => {
           />
         )}
 
-        {currentStage === 'Technical' && !(isToday || isFuture) && (
+        {currentStage === 'Technical' && !jobData.isRating && (
           <SendInvite
             heading={
               <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
@@ -162,7 +118,7 @@ const InterviewLayout = ({ jobApplication }) => {
           />
         )}
 
-        {currentStage === 'Technical' && (isFuture || isToday) && (
+        {currentStage === 'Technical' && jobData.isRating && (
           <InviteSent
             jobApplication={jobApplication}
             heading={
@@ -175,7 +131,7 @@ const InterviewLayout = ({ jobApplication }) => {
           />
         )}
 
-        {currentStage === 'Second' && !(isToday || isFuture) && (
+        {currentStage === 'Second' && !jobData.isRating && (
           <SendInvite
             heading={
               <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
@@ -187,7 +143,7 @@ const InterviewLayout = ({ jobApplication }) => {
           />
         )}
 
-        {currentStage === 'Second' && (isFuture || isToday) && (
+        {currentStage === 'Second' && jobData.isRating && (
           <InviteSent
             jobApplication={jobApplication}
             heading={
