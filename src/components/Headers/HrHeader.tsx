@@ -1,11 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { GoBell } from 'react-icons/go';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 // import { PiPlusCircleBold } from 'react-icons/pi';
 import BlackButton from '../Button';
 import UserProfileInfo from '../UserProfileInfo';
+import Notifications from '../Notifications/Notifications';
 
 const HrHeader = () => {
   // const pathname = usePathname();
@@ -31,9 +31,7 @@ const HrHeader = () => {
       // )}
       */}
 
-      <button className="border-[1px] border-[#E0E0E0] rounded-full size-8 flex items-center justify-center ml-auto ">
-        <GoBell size={18} />
-      </button>
+      <Notifications />
       <UserProfileInfo />
       {/* <Logout /> */}
     </nav>
