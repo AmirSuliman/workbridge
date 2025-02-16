@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 
-const Response = ({ surveyId, employeeId, managerId}) => {
+const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
   const [questions, setQuestions] = useState<any[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const { data: session } = useSession();
@@ -49,6 +49,7 @@ const Response = ({ surveyId, employeeId, managerId}) => {
         headers: { Authorization: `Bearer ${session?.user?.accessToken}` },
       });
       toast.success('Evaluation successful!');
+      onSurveyUpdate('Completed'); // Update employee's survey status
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         toast.error(error.response.data.message || 'Some error occurred');
@@ -58,91 +59,44 @@ const Response = ({ surveyId, employeeId, managerId}) => {
     }
   };
 
-  const handleNextQuestion = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
-  };
-
-  const handlePreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-  };
-
-  const currentQuestion = questions[currentQuestionIndex];
-
   return (
     <div className="mt-2 w-full">
-        <div className="w-full flex flex-row items-center justify-between">
-          <h1 className="text-[18px] font-medium">Yearly Evaluation Form</h1>
-          <h2 className="text-[18px] font-medium">
-            Question {currentQuestionIndex + 1} out of {questions.length}
-          </h2>
-        </div>
-
-        {currentQuestion && (
+      <h1 className="text-[18px] font-medium">Yearly Evaluation Form</h1>
+      {questions.length > 0 && (
+        <>
           <label className="mt-4 flex flex-col">
             <span className="text-[16px] text-gray-400 mb-1">Question</span>
             <div className="border p-3 rounded text-[18px]">
-              {currentQuestion.question}
+              {questions[currentQuestionIndex].question}
             </div>
           </label>
-        )}
 
-        <label className="mt-4 flex flex-col w-full">
-          <span className="text-[16px] text-gray-400 mb-1">Answers</span>
-          {currentQuestion && (
-            <div className="mt-2">
-              {currentQuestion.responseType === 'Text' && (
-                <input
-                  type="text"
-                  className="border p-2 rounded w-full"
-                  {...register(`responseText_${currentQuestionIndex}`)}
-                />
-              )}
-              {currentQuestion.responseType === 'Rating' && (
-                <select
-                  className="border p-2 rounded w-full"
-                  {...register(`rating_${currentQuestionIndex}`)}
-                >
-                  {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </div>
-          )}
-        </label>
-
-        <div className="flex flex-row items-center justify-end mt-32 gap-4">
-          <button
-            type="button"
-            className="text-[14px] p-2 border rounded px-4 bg-white"
-            onClick={handlePreviousQuestion}
-            disabled={currentQuestionIndex === 0}
-          >
-            Previous
-          </button>
-          <button
-            type="button"
-            className="text-[14px] p-2 border rounded px-4 bg-white"
-            onClick={handleNextQuestion}
-            disabled={currentQuestionIndex === questions.length - 1}
-          >
-            Next
-          </button>
-          {currentQuestionIndex + 1 === questions.length && (
-            <Button
-              disabled={isSubmitting}
-              onClick={handleSubmit(onSubmit)}
-              name={isSubmitting ? '' : 'Submit'}
-              icon={isSubmitting && <BiLoaderCircle className="h-5 w-5 animate-spin" />}
-            />
-          )}
-        </div>
+          <label className="mt-4 flex flex-col w-full">
+            <span className="text-[16px] text-gray-400 mb-1">Answers</span>
+            {questions[currentQuestionIndex].responseType === 'Text' && (
+              <input
+                type="text"
+                className="border p-2 rounded w-full"
+                {...register(`responseText_${currentQuestionIndex}`)}
+              />
+            )}
+            {questions[currentQuestionIndex].responseType === 'Rating' && (
+              <select className="border p-2 rounded w-full" {...register(`rating_${currentQuestionIndex}`)}>
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <option key={value} value={value}>{value}</option>
+                ))}
+              </select>
+            )}
+          </label>
+          
+          <Button
+            disabled={isSubmitting}
+            onClick={handleSubmit(onSubmit)}
+            name={isSubmitting ? '' : 'Submit'}
+            icon={isSubmitting && <BiLoaderCircle className="h-5 w-5 animate-spin" />}
+          />
+        </>
+      )}
     </div>
   );
 };
