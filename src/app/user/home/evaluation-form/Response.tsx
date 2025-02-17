@@ -47,7 +47,7 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
       });
       toast.success('Evaluation successful!');
       setIsSubmitted(true);
-      onSurveyUpdate('Completed'); // ✅ Update survey status after submission
+      onSurveyUpdate('Completed'); 
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         toast.error(error.response.data.message || 'Some error occurred');
