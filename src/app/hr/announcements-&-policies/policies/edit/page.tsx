@@ -138,11 +138,13 @@ const Addnewpolicies = () => {
         effectiveDate: policyData?.effectiveDate
           ? new Date(policyData?.effectiveDate).toISOString().split('T')[0]
           : '',
-        description: policyData?.description || '', // ensure this value is set
+        description: policyData?.description || '', 
         previewUrl: policyData?.previewUrl || previewUrl,
       });
     }
   }, [policyData, previewUrl, reset]);
+  
+  
   
   
     
@@ -483,19 +485,22 @@ const Addnewpolicies = () => {
                 onClick={(e) => e.preventDefault()}
                 className="border rounded "
               >
-          <Controller
+       <Controller
   name="description"
   control={control}
   defaultValue={policyData?.description || ''}
+  rules={{ required: 'Description is required' }}
   render={({ field }) => (
     <CustomTextEditor
-      // Force re-mount when policyData.description changes
-      key={`desc-${policyData?.description || 'default'}`}
-      setContent={field.onChange}
       body={field.value || ''}
+      setContent={field.onChange}
     />
   )}
 />
+
+
+
+
       
 
 

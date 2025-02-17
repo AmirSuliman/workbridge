@@ -10,6 +10,7 @@ import { BiLoaderCircle } from 'react-icons/bi';
 const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
   const [questions, setQuestions] = useState<any[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -26,16 +27,12 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
     getQuestions();
   }, [surveyId]);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm();
+  const { register, handleSubmit, formState: { isSubmitting } } = useForm();
 
   const onSubmit = async (data) => {
     const payload = {
       surveyId,
-      managerId: managerId,
+      managerId,
       employeeId,
       responses: questions.map((question, index) => ({
         questionId: question.id,
@@ -49,7 +46,8 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
         headers: { Authorization: `Bearer ${session?.user?.accessToken}` },
       });
       toast.success('Evaluation successful!');
-      onSurveyUpdate('Completed'); // Update employee's survey status
+      setIsSubmitted(true);
+      onSurveyUpdate('Completed'); // ✅ Update survey status after submission
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         toast.error(error.response.data.message || 'Some error occurred');
@@ -61,44 +59,87 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
 
   return (
     <div className="mt-2 w-full">
-      <h1 className="text-[18px] font-medium">Yearly Evaluation Form</h1>
-      {questions.length > 0 && (
+      {isSubmitted ? (
+        <div className="text-center p-6 border rounded-lg shadow-md">
+          <h2 className="text-lg font-semibold">Survey Submitted Successfully</h2>
+          <p className="text-gray-500">Thank you for completing the survey!</p>
+        </div>
+      ) : (
         <>
-          <label className="mt-4 flex flex-col">
-            <span className="text-[16px] text-gray-400 mb-1">Question</span>
-            <div className="border p-3 rounded text-[18px]">
-              {questions[currentQuestionIndex].question}
-            </div>
-          </label>
+          <div className="w-full flex flex-row items-center justify-between">
+            <h1 className="text-[18px] font-medium">Yearly Evaluation Form</h1>
+            <h2 className="text-[18px] font-medium">
+              Question {currentQuestionIndex + 1} out of {questions.length}
+            </h2>
+          </div>
 
-          <label className="mt-4 flex flex-col w-full">
-            <span className="text-[16px] text-gray-400 mb-1">Answers</span>
-            {questions[currentQuestionIndex].responseType === 'Text' && (
-              <input
-                type="text"
-                className="border p-2 rounded w-full"
-                {...register(`responseText_${currentQuestionIndex}`)}
+          {questions.length > 0 && (
+            <>
+              <label className="mt-4 flex flex-col">
+                <span className="text-[16px] text-gray-400 mb-1">Question</span>
+                <div className="border p-3 rounded text-[18px]">
+                  {questions[currentQuestionIndex].question}
+                </div>
+              </label>
+
+              <label className="mt-4 flex flex-col w-full">
+                <span className="text-[16px] text-gray-400 mb-1">Answers</span>
+                <div className="mt-2">
+                  {questions[currentQuestionIndex].responseType === 'Text' && (
+                    <input
+                      type="text"
+                      className="border p-2 rounded w-full"
+                      {...register(`responseText_${currentQuestionIndex}`)}
+                    />
+                  )}
+                  {questions[currentQuestionIndex].responseType === 'Rating' && (
+                    <select
+                      className="border p-2 rounded w-full"
+                      {...register(`rating_${currentQuestionIndex}`)}
+                    >
+                      {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((value) => (
+                        <option key={value} value={value}>
+                          {value}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+              </label>
+            </>
+          )}
+
+          <div className="flex flex-row items-center justify-end mt-32 gap-4">
+            <button
+              type="button"
+              className="text-[14px] p-2 border rounded px-4 bg-white"
+              onClick={() => setCurrentQuestionIndex((prev) => Math.max(0, prev - 1))}
+              disabled={currentQuestionIndex === 0}
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              className="text-[14px] p-2 border rounded px-4 bg-white"
+              onClick={() => setCurrentQuestionIndex((prev) => Math.min(questions.length - 1, prev + 1))}
+              disabled={currentQuestionIndex === questions.length - 1}
+            >
+              Next
+            </button>
+            {currentQuestionIndex + 1 === questions.length && (
+              <Button
+                disabled={isSubmitting}
+                onClick={handleSubmit(onSubmit)}
+                name={isSubmitting ? '' : 'Submit'}
+                icon={isSubmitting && <BiLoaderCircle className="h-5 w-5 animate-spin" />}
               />
             )}
-            {questions[currentQuestionIndex].responseType === 'Rating' && (
-              <select className="border p-2 rounded w-full" {...register(`rating_${currentQuestionIndex}`)}>
-                {[1, 2, 3, 4, 5].map((value) => (
-                  <option key={value} value={value}>{value}</option>
-                ))}
-              </select>
-            )}
-          </label>
-          
-          <Button
-            disabled={isSubmitting}
-            onClick={handleSubmit(onSubmit)}
-            name={isSubmitting ? '' : 'Submit'}
-            icon={isSubmitting && <BiLoaderCircle className="h-5 w-5 animate-spin" />}
-          />
+          </div>
         </>
       )}
     </div>
   );
 };
+
 
 export default Response;
