@@ -4,6 +4,9 @@ import axiosInstance from '@/lib/axios';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { addDays } from 'date-fns';
 
 interface VacationCardProps {
   onButtonClick?: () => void;
@@ -12,12 +15,14 @@ interface VacationCardProps {
 
 const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  
   const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
   const [vacationDaysUsed, setVacationDaysUsed] = useState(0);
-
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  
+  
   const calculateDuration = () => {
     if (startDate && endDate) {
       const start = new Date(startDate);
@@ -37,15 +42,15 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
     const duration = calculateDuration();
     setVacationDaysUsed(duration);
   }, [startDate, endDate]);
-
-  const formatDate = (date: string) => {
+  
+  const formatDate = (date) => {
     if (!date) return '';
-    const parsedDate = new Date(date);
-    const day = String(parsedDate.getDate()).padStart(2, '0');
-    const month = String(parsedDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-    const year = parsedDate.getFullYear();
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
+  
   
 
   const handleRequestVacation = async () => {
@@ -71,8 +76,9 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
       if (response.status === 200) {
         toast.success('Request timeoff made successfuly!');
         setIsModalOpen(false);
-        setStartDate('');
-        setEndDate('');
+        setStartDate(null);
+        setEndDate(null);
+
         setNote('');
       }
     } catch (error) {
@@ -89,17 +95,7 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
     setIsModalOpen(true);
   };
 
-  const getMaxDate = (start: string, days: number) => {
-    if (!start) return '';
-    const startDateObj = new Date(start);
-    startDateObj.setDate(startDateObj.getDate() + days - 1);
-    return startDateObj.toISOString().split('T')[0];
-  };
-  
-  const getMinDate = () => {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
-  };
+ 
 
  
   
@@ -152,30 +148,36 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
             <div className="grid grid-cols-2 gap-4 w-full mt-8">
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">Leaving Date</span>
-                <input
-  type="date"
-  className="p-3 border rounded w-full"
-  min={getMinDate()} 
-  max={getMaxDate(getMinDate(), totalDays)} 
-  value={startDate ? startDate : ''} 
-  onChange={(e) => setStartDate(e.target.value)}
-  placeholder="dd/mm/yyyy" 
-/>
+                <DatePicker
+    selected={startDate}
+    onChange={(date) => setStartDate(date)}
+    selectsStart
+    startDate={startDate}
+    endDate={endDate}
+    minDate={new Date()}
+   maxDate={addDays(new Date(), totalDays - 1)}
+    dateFormat="dd/MM/yyyy"
+    placeholderText="dd/mm/yyyy"
+    className="p-3 border rounded w-full"
+  />
 
               </label>
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">
                   Returning Date
                 </span>
-                <input
-  type="date"
-  className="p-3 border rounded w-full"
-  min={startDate || getMinDate()} // Ensure end date is after start date
-  max={getMaxDate(startDate, totalDays)}
-  value={endDate ? endDate : ''} // Ensures empty value when not selected
-  onChange={(e) => setEndDate(e.target.value)}
-  placeholder="dd/mm/yyyy"
-/>
+                <DatePicker
+    selected={endDate}
+    onChange={(date) => setEndDate(date)}
+    selectsEnd
+    startDate={startDate}
+    endDate={endDate}
+    minDate={startDate || new Date()}
+    maxDate={addDays(new Date(), totalDays - 1)}
+    dateFormat="dd/MM/yyyy"
+    placeholderText="dd/mm/yyyy"
+    className="p-3 border rounded w-full"
+  />
               </label>
               <label className="flex flex-col w-full col-span-full">
                 <span className="text-gray-400 text-[12px]">Note</span>
