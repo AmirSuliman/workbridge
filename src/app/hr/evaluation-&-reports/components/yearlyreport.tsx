@@ -254,7 +254,7 @@ const YearlyReport = () => {
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(Number(e.target.value))}
-              className="from-input border p-1"
+              className="form-input font-medium"
             >
               {years.map((year) => (
                 <option key={year} value={year}>

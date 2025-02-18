@@ -359,7 +359,7 @@ const WeeklyReport = () => {
             Date{' '}
             <input
               type="week"
-              className="p-2 text-[12px] border rounded text-gray-700"
+              className="form-input !font-medium"
               onChange={handleDateChange}
               value={
                 startDate

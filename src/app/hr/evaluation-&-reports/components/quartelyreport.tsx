@@ -266,7 +266,7 @@ const QuarterlyReport = () => {
           <div className="text-sm text-gray-400 flex flex-row items-center gap-2">
             Year:
             <select
-              className="border rounded p-2"
+              className="form-input font-medium"
               value={selectedYear}
               onChange={(e) => setSelectedYear(Number(e.target.value))}
             >
@@ -280,7 +280,7 @@ const QuarterlyReport = () => {
           <div className="text-sm text-gray-400 flex flex-row items-center gap-2">
             Quarter:
             <select
-              className="border rounded p-2"
+              className="form-input font-medium"
               value={selectedQuarter}
               onChange={(e) => setSelectedQuarter(e.target.value)}
             >
