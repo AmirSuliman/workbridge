@@ -112,6 +112,7 @@ const OrgChartPage: FC = () => {
         employees={employeesData}
         compact={compact}
         user={user}
+        search={search}
       />
     </div>
   );

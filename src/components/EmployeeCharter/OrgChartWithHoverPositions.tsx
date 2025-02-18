@@ -1,28 +1,62 @@
-import React, {
-  useLayoutEffect,
-  useRef,
-  useCallback,
-  useState,
-  useEffect,
-} from 'react';
 import { BTN_HOVER_OPEN_POSITIONS, BTN_SELECT } from '@/utils/const';
 import { checkForOpenPositions } from '@/utils/misc';
-import { OrgChart } from 'd3-org-chart';
-import { EmployeeData } from '@/types/employee';
 import * as d3 from 'd3';
+import { OrgChart } from 'd3-org-chart';
+import { debounce } from 'lodash';
 import { getSession } from 'next-auth/react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
 const OrgChartWithHoverPositions = ({
   onSelectedEmployees,
   employees,
   user,
   compact,
+  search,
 }) => {
-  // console.log('openPositions: ', employees[0].openPositions);
+  console.log('openPositions: ', employees[59]);
   const d3Container = useRef(null);
   const refOrgChart = useRef<OrgChart | null>(null);
   const [expandedEmployeeIds, setExpandedEmployeeIds] = useState(new Set());
 
+  function filterChart(value: string) {
+    // Clear previous higlighting
+    refOrgChart.current.clearHighlighting();
+
+    // Get chart nodes
+    const data = refOrgChart.current.data();
+
+    // Mark all previously expanded nodes for collapse
+    data?.forEach((d) => (d._expanded = false));
+
+    // Loop over data and check if input value matches any name
+    data?.forEach((d) => {
+      if (
+        value != '' &&
+        Object.values(d).join(' ').toLowerCase().includes(value.toLowerCase())
+      ) {
+        // If matches, mark node as highlighted
+        d._highlighted = true;
+        d._expanded = true;
+      }
+    });
+
+    // Update data and rerender graph
+    refOrgChart.current.data(data).render();
+  }
+
+  const processChange = debounce(() => filterChart(search), 1000);
+
+  useEffect(() => {
+    if (search.length > 0) {
+      processChange();
+    }
+  }, [processChange, search]);
   const [role, setRole] = useState<string>();
 
   useEffect(() => {
@@ -62,7 +96,7 @@ const OrgChartWithHoverPositions = ({
         ) {
           employee.openPositions.forEach((position, index) => {
             acc.push({
-              id: `${employee.id}-op-${index}`,
+              id: `${employee.id}-op-${[position.id]}`,
               parentId: employee.id,
               isOpenPosition: true,
               firstName: 'Open Position',
@@ -113,6 +147,8 @@ const OrgChartWithHoverPositions = ({
           }
         })
         .nodeContent((d) => {
+          // console.log('openPositions: ', d.data.openPositions);
+
           const isSelected = d.data.selectedEmployees?.includes(d.data.id);
           const color = isSelected
             ? '#230E37'
@@ -226,8 +262,10 @@ const OrgChartWithHoverPositions = ({
                 style="width: 100%; height: fit-content"
                 href=${
                   isUserPanel
-                    ? `https://dev.isaconsulting.com/job/${d.data.id}`
-                    : `/hr/hiring/job/${d.data.id}`
+                    ? `https://dev.isaconsulting.com/job/${
+                        d.data.id.split('-')[2]
+                      }`
+                    : `/hr/hiring/job/${d.data.id.split('-')[2]}`
                 }
               >
                 <button
