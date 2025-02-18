@@ -67,32 +67,6 @@ export const OrgChartComponent: FC<Props> = ({
   const [isTerminating, setIsTerminating] = useState<Record<number, boolean>>(
     {}
   );
-  const [expandedEmployees, setExpandedEmployees] = useState<
-    Record<number, boolean>
-  >({});
-
-  const toggleOpenPositions = (employeeId: number) => {
-    setExpandedEmployees((prev) => ({
-      ...prev,
-      [employeeId]: !prev[employeeId], // Toggle the state
-    }));
-  };
-  const updatedEmployees = employees.map((employee) => {
-    if (expandedEmployees[employee.id] && employee.openPositions?.length) {
-      return {
-        ...employee,
-        children: [
-          ...(employee.children || []),
-          ...employee.openPositions.map((pos) => ({
-            ...pos,
-            parentId: employee.id,
-            isOpenPosition: true, // Mark it as an open position node
-          })),
-        ],
-      };
-    }
-    return employee;
-  });
 
   function detectMultipleRoots(employees) {
     const rootNodes = employees.filter((emp) => emp.parentId === null);
@@ -206,23 +180,56 @@ export const OrgChartComponent: FC<Props> = ({
     }
   }, [processChange, search]);
 
-  useLayoutEffect(() => {
-    if (updatedEmployees && d3Container.current) {
-      refOrgChart.current.data(updatedEmployees).render();
-    }
-  }, [updatedEmployees]);
+  const [hoveredEmployeeId, setHoveredEmployeeId] = useState(null);
 
+  // Transform data based on hover state
+  const getTransformedData = useCallback(
+    (originalData) => {
+      return originalData.reduce((acc, employee) => {
+        // Always add the employee node
+        acc.push(employee);
+
+        // Only add open positions if this employee is being hovered
+        if (
+          hoveredEmployeeId === employee.id &&
+          employee.openPositions &&
+          Array.isArray(employee.openPositions)
+        ) {
+          employee.openPositions.forEach((position, index) => {
+            acc.push({
+              id: `${employee.id}-op-${index}`,
+              parentId: employee.id,
+              isOpenPosition: true,
+              firstName: position.title || 'Open Position',
+              lastName: '',
+              tittle: position.title,
+              department: {
+                name: position.department || employee.department?.name,
+              },
+              location: position.location || employee.location,
+              _directSubordinatesPaging: 0,
+              openPositions: [],
+            });
+          });
+        }
+
+        return acc;
+      }, []);
+    },
+    [hoveredEmployeeId]
+  );
+
+  // Handle hover events
+  const handleOpenPositionsHover = useCallback((employeeId, isEntering) => {
+    setHoveredEmployeeId(isEntering ? employeeId : null);
+  }, []);
   // We need to manipulate DOM
   useLayoutEffect(() => {
-    if (
-      updatedEmployees &&
-      d3Container.current &&
-      !hasMultiRoots &&
-      !hasCycle
-    ) {
+    if (employees && d3Container.current && !hasMultiRoots && !hasCycle) {
+      const transformedData = getTransformedData(employees);
       refOrgChart.current
         .container(d3Container.current)
-        .data(updatedEmployees)
+        .data(transformedData)
         .nodeHeight(() => 95)
         .nodeWidth(() => 300)
         .setActiveNodeCentered(false)
@@ -325,7 +332,8 @@ export const OrgChartComponent: FC<Props> = ({
             })
             .on('click', (e) => {
               e.stopPropagation();
-              toggleOpenPositions(node.data.id);
+              console.log('Toggling open positions for:', node.data.id);
+              handleOpenPositionsHover(node.data.id, true);
             });
 
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -344,6 +352,11 @@ export const OrgChartComponent: FC<Props> = ({
             .on('mouseout', (e) => {
               e.stopPropagation();
               // hideElement(openPositionsCnt.current);
+            })
+            .on('click', (e) => {
+              e.stopPropagation();
+              console.log('Toggling open positions for:', node.data.id);
+              handleOpenPositionsHover(node.data.id, false);
             });
 
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -389,6 +402,23 @@ export const OrgChartComponent: FC<Props> = ({
         .render();
     }
 
+    // Add event listeners for hover
+    const nodes = document.querySelectorAll(`.${BTN_HOVER_OPEN_POSITIONS}`);
+    nodes.forEach((node) => {
+      const employeeNode = node.closest('[class^="profile-"]');
+      const employeeId = employeeNode?.className.split('-')[1];
+
+      if (employeeId) {
+        node.addEventListener('mouseenter', () => {
+          handleOpenPositionsHover(parseInt(employeeId), true);
+        });
+
+        node.addEventListener('mouseleave', () => {
+          handleOpenPositionsHover(parseInt(employeeId), false);
+        });
+      }
+    });
+
     return () => {
       const nodes = document.querySelectorAll(`.${BTN_MODAL_CLASS_NAME}`);
       const btnHoverOpenPositions = document.querySelectorAll(
@@ -424,6 +454,8 @@ export const OrgChartComponent: FC<Props> = ({
     terminatedEmployees,
     onSelectedEmployees,
     showTerminatedEmployeesModal,
+    getTransformedData,
+    handleOpenPositionsHover,
   ]);
   // console.log('employees: ', employees);
   return (

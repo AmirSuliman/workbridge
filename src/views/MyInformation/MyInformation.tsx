@@ -57,7 +57,6 @@ const MyInformation = () => {
   }, []);
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
-  console.log('isUserPanel: ', isUserPanel);
 
   const {
     data: employeeData,

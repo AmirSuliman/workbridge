@@ -10,7 +10,7 @@ import { getCharter } from '@/services/getCharter';
 import { initialState, reducer } from '@/store/reducer';
 import { DataTypes } from '@/types/data';
 import { EmployeeData } from '@/types/employee';
-import OrgChartWithHoverPositions from '@/components/EmployeeCharter/OrgChartWithHoverPositions ';
+import OrgChartWithHoverPositions from '@/components/EmployeeCharter/OrgChartWithHoverPositions';
 
 const OrgChartPage: FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -93,7 +93,7 @@ const OrgChartPage: FC = () => {
           </button>
         </div>
       </div>
-      <OrgChartComponent
+      {/* <OrgChartComponent
         employees={employeesData}
         terminatedEmployees={state.terminatedEmployees}
         terminatedParents={state.terminatedParents}
@@ -105,13 +105,14 @@ const OrgChartPage: FC = () => {
         onSelectedEmployees={(id) =>
           dispatch({ type: 'TOGGLE_SELECTED_EMPLOYEES', payload: id })
         }
-      />
+      /> */}
 
-      {/* <OrgChartWithHoverPositions
+      <OrgChartWithHoverPositions
+        onSelectedEmployees={state.selectedEmployees}
         employees={employeesData}
         compact={compact}
         user={user}
-      /> */}
+      />
     </div>
   );
 };
