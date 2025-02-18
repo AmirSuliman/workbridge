@@ -1,5 +1,4 @@
-import MyInformation from '@/views/MyInformation/Userinformation';
-import React from 'react';
+import MyInformation from '@/views/MyInformation/MyInformation';
 
 const page = () => {
   return <MyInformation />;

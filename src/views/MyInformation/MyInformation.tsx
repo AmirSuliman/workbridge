@@ -27,6 +27,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { FieldErrors, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+// import { update } from 'next-auth/react';
 
 interface ErrorResponse {
   message: string;
@@ -39,11 +40,26 @@ const MyInformation = () => {
   const user = useSelector((state: RootState) => state.myInfo);
   const myId = user?.user?.employeeId; // This id is used to view the current logged in user's info
   const { empId } = useParams(); // This id is used to view any employee's info
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const [editEmployee, setEditEmployee] = useState<boolean>(false);
   const [schemaErrors, setSchemaErrors] = useState<FieldErrors | undefined>(
     undefined
   );
+
+  const [role, setRole] = useState<string>();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      // const session = await getSession();
+      setRole(session?.user?.role);
+    };
+
+    fetchSession();
+  }, []);
+
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
+  console.log('isUserPanel: ', isUserPanel);
+
   const {
     data: employeeData,
     error,
@@ -254,6 +270,19 @@ const MyInformation = () => {
         `/employee/${empId || myId}`,
         finalPayload
       );
+
+      // Update the session data
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          user: {
+            ...session?.user?.user,
+            profilePictureUrl: uploadResponse?.uploadedUrl,
+          },
+        },
+      });
+
       console.log('put emp response: ', response.data);
       toast.success('Employee information updated successfully!');
       setEditLoading(false);
@@ -303,16 +332,20 @@ const MyInformation = () => {
             name="Personal"
             href={`${
               empId
-                ? `/hr/employees/employee-info/${empId}?tab=0`
-                : '/hr/my-information?tab=0'
+                ? `/${
+                    isUserPanel ? 'user' : 'hr'
+                  }/employees/employee-info/${empId}?tab=0`
+                : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=0`
             }`}
           />
           <TabButton
             name="Employment"
             href={`${
               empId
-                ? `/hr/employees/employee-info/${empId}?tab=1`
-                : '/hr/my-information?tab=1'
+                ? `/${
+                    isUserPanel ? 'user' : 'hr'
+                  }/employees/employee-info/${empId}?tab=1`
+                : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=1`
             }`}
           />
 
@@ -322,40 +355,50 @@ const MyInformation = () => {
                 name="Time Off"
                 href={`${
                   empId
-                    ? `/hr/employees/employee-info/${empId}?tab=2`
-                    : '/hr/my-information?tab=2'
+                    ? `/${
+                        isUserPanel ? 'user' : 'hr'
+                      }/employees/employee-info/${empId}?tab=2`
+                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=2`
                 }`}
               />
               <TabButton
                 name="Documents"
                 href={`${
                   empId
-                    ? `/hr/employees/employee-info/${empId}?tab=3`
-                    : '/hr/my-information?tab=3'
+                    ? `/${
+                        isUserPanel ? 'user' : 'hr'
+                      }/employees/employee-info/${empId}?tab=3`
+                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=3`
                 }`}
               />
               <TabButton
                 name="Emergency"
                 href={`${
                   empId
-                    ? `/hr/employees/employee-info/${empId}?tab=4`
-                    : '/hr/my-information?tab=4'
+                    ? `/${
+                        isUserPanel ? 'user' : 'hr'
+                      }/employees/employee-info/${empId}?tab=4`
+                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=4`
                 }`}
               />
               <TabButton
                 name="Notes"
                 href={`${
                   empId
-                    ? `/hr/employees/employee-info/${empId}?tab=5`
-                    : '/hr/my-information?tab=5'
+                    ? `/${
+                        isUserPanel ? 'user' : 'hr'
+                      }/employees/employee-info/${empId}?tab=5`
+                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=5`
                 }`}
               />
               <TabButton
                 name="Payments"
                 href={`${
                   empId
-                    ? `/hr/employees/employee-info/${empId}?tab=6`
-                    : '/hr/my-information?tab=6'
+                    ? `/${
+                        isUserPanel ? 'user' : 'hr'
+                      }/employees/employee-info/${empId}?tab=6`
+                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=6`
                 }`}
               />
             </>

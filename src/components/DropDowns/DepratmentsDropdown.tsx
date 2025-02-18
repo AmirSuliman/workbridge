@@ -39,8 +39,8 @@ const DepartmentDropdown = ({ departmentId, resetField, register, errors }) => {
           </option>
         ))}
       </select>
-      {errors.departmentId && (
-        <p className="form-error">{errors.departmentId.message}</p>
+      {errors?.departmentId && (
+        <p className="form-error">{errors?.departmentId.message}</p>
       )}
     </>
   );

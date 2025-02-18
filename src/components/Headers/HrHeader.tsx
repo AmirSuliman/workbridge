@@ -22,14 +22,6 @@ const HrHeader = () => {
         bg="black"
         onClick={() => router.back()} // Navigate back
       />
-      {/* ) : (
-      //   <BlackButton
-      //     name="Create New"
-      //     icon={<PiPlusCircleBold size={18} />}
-      //     bg="black"
-      //   />
-      // )}
-      */}
 
       <Notifications />
       <UserProfileInfo />

@@ -1,16 +1,22 @@
 import Logout from '@/app/user/home/Logout';
 import { IMAGES } from '@/constants/images';
+import { RootState } from '@/store/store';
 import { getSession, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaAngleDown, FaUser } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 
 const UserProfileInfo: React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement>
 > = ({ ...props }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [role, setRole] = useState<string>();
+
+  const { data: employeeData } = useSelector(
+    (state: RootState) => state.employee
+  );
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -37,7 +43,7 @@ const UserProfileInfo: React.FC<
       }`}
     >
       <Image
-        src={session?.user?.user?.profilePictureUrl || IMAGES.placeholderAvatar}
+        src={employeeData?.profilePictureUrl || IMAGES.placeholderAvatar}
         alt="user avatar"
         height={2000}
         width={2000}
@@ -45,8 +51,8 @@ const UserProfileInfo: React.FC<
       />
       <div>
         <h4 className="text-lg font-medium">{`${
-          session?.user?.user?.firstName || ''
-        } ${session?.user?.user?.lastName || ''}`}</h4>
+          employeeData?.firstName || ''
+        } ${employeeData?.lastName || ''}`}</h4>
         <p className="text-xs opacity-60 text-left">
           {session?.user?.user?.role || ''}
         </p>
