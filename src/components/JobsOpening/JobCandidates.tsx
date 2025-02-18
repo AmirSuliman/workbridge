@@ -52,7 +52,12 @@ export const JobCandidates = () => {
           Candidates ({data?.items.length})
         </div>
         <div className="flex flex-row items-center gap-2">
-          <AIReviewButton jobId={jobId} />
+          {jobId && (
+            <AIReviewButton
+              jobId={jobId}
+              onClear={() => console.log('onClear')}
+            />
+          )}
 
           <p className="text-sm text-gray-600 font-medium">Sort</p>
           <select
