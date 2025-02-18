@@ -15,11 +15,18 @@ import { PiArrowUpRightThin } from 'react-icons/pi';
 
 const page = () => {
   return (
-    <main className="grid grid-cols-1 lg:grid-cols-2 gap-4 ">
+    <main className="flex flex-col sm:flex-row items-start gap-4 w-full">
+      <div className='flex flex-col gap-4 w-full sm:w-[45%]'>
       <WhosOut />
+      <Celebrations />
+      <Training />
+      <Companyinfo />
+
+      </div>
+      <div className='flex flex-col gap-4 flex-1'>
       <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
         <header className="px-4 flex items-center gap-4 justify-between">
-          <h1 className="flex items-center gap-4 font-semibold text-xl mb-4">
+          <h1 className="flex items-center gap-4 font-medium text-[18px] mb-4">
             <HiSpeakerphone />
             Announcements
           </h1>
@@ -29,17 +36,19 @@ const page = () => {
               icon={<PiArrowUpRightThin size={18} />}
               bg="transparent"
               textColor="black"
+              className="!text-[10px]"
             />
           </Link>
         </header>
         <SingleAnnouncement />
       </section>
-      <Celebrations />
       <LeaveRequests />
-      <Training />
       <NewEmployees />
-      <Companyinfo />
+
       <Employeementreport />
+
+      </div>
+     
     </main>
   );
 };

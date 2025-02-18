@@ -26,7 +26,7 @@ const Button: React.FC<ButtonProps> = ({
         color: textColor || undefined,
       }}
       className={cn(
-        'px-4 py-2 bg-black text-white rounded flex gap-2 items-center justify-center text-sm border-[1px] border-[#E8E8E8] whitespace-normal md:whitespace-nowrap',
+        'px-4 py-2 bg-[#0F172A] text-white  rounded flex gap-2 items-center justify-center text-sm border-[1px] border-[#E8E8E8] whitespace-normal md:whitespace-nowrap',
         className
       )}
       {...props} // Spread all other button props

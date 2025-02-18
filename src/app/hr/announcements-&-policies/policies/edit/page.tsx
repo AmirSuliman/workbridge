@@ -120,6 +120,7 @@ const Addnewpolicies = () => {
   };
   
   
+  
   const {
     control,
     handleSubmit,
@@ -138,17 +139,13 @@ const Addnewpolicies = () => {
         effectiveDate: policyData?.effectiveDate
           ? new Date(policyData?.effectiveDate).toISOString().split('T')[0]
           : '',
-        description: policyData?.description || '', 
+        description: policyData?.description || '', // Ensure this is set correctly
         previewUrl: policyData?.previewUrl || previewUrl,
       });
     }
   }, [policyData, previewUrl, reset]);
   
   
-  
-  
-    
-    
   useEffect(() => {
     console.log('Fetched Policy Description:', policyData.description);
   }, [policyData.description]);
@@ -485,23 +482,20 @@ const Addnewpolicies = () => {
                 onClick={(e) => e.preventDefault()}
                 className="border rounded "
               >
-       <Controller
+  <Controller
   name="description"
   control={control}
-  defaultValue={policyData?.description || ''}
-  rules={{ required: 'Description is required' }}
+  defaultValue={policyData?.description || ''} 
   render={({ field }) => (
     <CustomTextEditor
-      body={field.value || ''}
-      setContent={field.onChange}
+      setContent={field.onChange}  // Pass `field.onChange` for updating form state
+      body={field.value || ''}  // Pass the current content as `body`
     />
   )}
 />
 
 
-
-
-      
+     
 
 
                 {errors.description && (

@@ -90,7 +90,7 @@ const WhosOut = () => {
         <LeaveAndVacationCard
           title="Vacation"
           bgColor="#25A244"
-          icon={<PiUmbrellaLight />}
+          icon={<img src="/vacation.svg" alt="Vacation Icon" className="w-4 h-4" />}
           description="Requests need to be made at least 48 hours prior."
           daysNum="32"
           name="Request Vacation"
@@ -98,7 +98,7 @@ const WhosOut = () => {
         <LeaveAndVacationCard
           title="Sick leave"
           bgColor="#F53649"
-          icon={<MdOutlineSick />}
+          icon={<img src="/sickicon.svg" alt="Vacation Icon" className="w-5 h-5" />}
           description=""
           daysNum="11"
           name="Request Sick Leave"
@@ -109,17 +109,17 @@ const WhosOut = () => {
       <h6 className="text-sm opacity-50 my-1 px-4">
         Today ({todayTimeoffs.length})
       </h6>
-      <div className="border-[0.5px] border-[#E8E8E8] bg-[#F5F6FA] rounded m-4">
+      <div className="border-[0.5px] border-[#E8E8E8] bg-[#F5F6FA] rounded m-4 mb-3">
         <table className="w-full">
-          <thead>
+          <thead className='mb-4'>
             <tr>
-              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">
+              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4 pb-4">
                 Employee
               </th>
-              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">
+              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4 pb-4">
                 Leaving
               </th>
-              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">
+              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4 pb-4">
                 Returning
               </th>
             </tr>
@@ -149,17 +149,17 @@ const WhosOut = () => {
       <h6 className="text-sm opacity-50 pt-4 mb-1 px-4">
         Upcoming Week ({upcomingWeekTimeoffs.length})
       </h6>
-      <div className="border-[0.5px] border-[#E8E8E8] bg-[#F5F6FA] rounded m-4">
+      <div className="border-[0.5px] border-[#E8E8E8] bg-[#F5F6FA] rounded m-4 ">
         <table className="w-full">
-          <thead>
-            <tr>
-              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">
+          <thead className=''>
+            <tr >
+              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4 pb-4">
                 Employee
               </th>
-              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">
+              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4 pb-4">
                 Leaving
               </th>
-              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4">
+              <th className="text-xs opacity-50 font-normal text-start px-4 pt-4 pb-4">
                 Returning
               </th>
             </tr>

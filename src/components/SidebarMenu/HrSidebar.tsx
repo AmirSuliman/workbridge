@@ -9,7 +9,7 @@ import { IoIosFolderOpen } from 'react-icons/io';
 import { IoCalendarOutline } from 'react-icons/io5';
 import { PiHandshakeFill } from 'react-icons/pi';
 import SidebarNavItem from './SidebarNavItem';
-
+import Image from 'next/image';
 const HrSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [role, setRole] = useState<string>();
@@ -45,8 +45,8 @@ const HrSidebar = () => {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
-        <h1 className="text-center px-8 wull text-2xl py-8">
-          <b>work</b>Bridge
+        <h1 className="text-center px-8 text-2xl py-8">
+          <Image src="/logo.svg" alt='logo' width={150} height={150}/>
         </h1>
         <>
           <SidebarNavItem
@@ -85,18 +85,19 @@ const HrSidebar = () => {
             href="/hr/files"
           />
           {/* Conditionally render Admins */}
-          {isSuperAdmin && (
+         
+          <SidebarNavItem
+            name="Reports"
+            icon={<FiTrendingUp size={22} />}
+            href="/hr/evaluation-&-reports"
+          />
+           {isSuperAdmin && (
             <SidebarNavItem
               name="Admins"
               icon={<FaUsers size={22} />}
               href="/hr/admins"
             />
           )}
-          <SidebarNavItem
-            name="Evaluation & Reports"
-            icon={<FiTrendingUp size={22} />}
-            href="/hr/evaluation-&-reports"
-          />
         </>
       </main>
     </>

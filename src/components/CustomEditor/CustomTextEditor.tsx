@@ -34,12 +34,13 @@ const CustomTextEditor = ({
     ],
     content: body,
     onUpdate: ({ editor }) => {
-      setContent(editor.getHTML()); // Pass updated content to the parent component
-    },
+      setContent(editor.getHTML()); 
+    }
+    
   });
 
   if (!editor) {
-    return null; // Return null if editor is not initialized yet
+    return null; 
   }
 
   return (

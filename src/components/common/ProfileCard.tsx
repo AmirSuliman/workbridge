@@ -94,9 +94,9 @@ const ProfileCard = ({
           <Image
             src={imgSrc}
             alt="Avatar"
-            width={500}
-            height={500}
-            className="size-16 shrink-0 grow-0 rounded-full"
+            width={700}
+            height={700}
+            className=" w-32 h-28 shrink-0 grow-0 rounded-full object-cover"
             onError={() => {
               setImgSrc(IMAGES.placeholderAvatar);
             }}
@@ -135,10 +135,10 @@ const ProfileCard = ({
         <div className="flex flex-col w-full">
           <div className="flex justify-between flex-wrap">
             <div className="flex flex-col">
-              <h1 className={`text-lg`}>{`${employeeData?.firstName || ''} ${
+              <h1 className={`text-[24px]`}>{`${employeeData?.firstName || ''} ${
                 employeeData?.lastName || ''
               }`}</h1>
-              <p className="text-xs text-gray-500">
+              <p className="text-[16px] text-gray-500">
                 {employeeData?.tittle || 'N/A'}
               </p>
             </div>
@@ -188,7 +188,7 @@ const ProfileCard = ({
               </div>
             )}
           </div>
-          <div className="flex mt-3 gap-4 flex-wrap">
+          <div className="flex mt-3 gap-8 flex-wrap">
             <ProfileInfoItem
               icon={CiMobile3}
               text={employeeData?.phoneNumber || 'N/A'}
@@ -205,7 +205,7 @@ const ProfileCard = ({
               title="Email"
             />
           </div>
-          <div className="flex mt-3 gap-4 flex-wrap">
+          <div className="flex mt-4 gap-8 flex-wrap">
             <ProfileInfoItem
               icon={HiOutlineHashtag}
               text={employeeData?.userId?.toString() || 'N/A'}
