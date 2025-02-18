@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { BiChevronRight } from 'react-icons/bi';
 import { FaUsers } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
+import AIReviewButton from './AIReviewButton';
 
 export const JobCandidates = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -51,6 +52,8 @@ export const JobCandidates = () => {
           Candidates ({data?.items.length})
         </div>
         <div className="flex flex-row items-center gap-2">
+          <AIReviewButton jobId={jobId} />
+
           <p className="text-sm text-gray-600 font-medium">Sort</p>
           <select
             value={sortOption}
