@@ -3,7 +3,7 @@ import UserCelebrationInfo from './UserCelebrationInfo';
 const Celebrations = () => {
   return (
     <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4">
-      <h1 className="flex items-center gap-4 font-semibold text-xl mb-4">
+      <h1 className="flex items-center gap-4 font-medium text-[18px] mb-4">
         <svg
           width="21"
           height="21"

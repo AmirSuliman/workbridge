@@ -1,41 +1,32 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { GoBell } from 'react-icons/go';
 import { IoIosArrowRoundBack } from 'react-icons/io';
-// import { PiPlusCircleBold } from 'react-icons/pi';
 import BlackButton from '../Button';
 import UserProfileInfo from '../UserProfileInfo';
+import { PiPlusCircleBold } from 'react-icons/pi';
 
 const HrHeader = () => {
-  // const pathname = usePathname();
   const router = useRouter();
-  // const isHomePage = pathname?.startsWith('/hr/home');
+  const pathname = usePathname();
+  const isHomePage = pathname?.startsWith('/hr/home');
 
   return (
-    <nav className="relative flex items-center gap-4 bg-white px-8 py-4 border-b-[1px] border-[#E8E8E8] 1700px:w-[calc(1700px-270px)] 1700px:mr-0 1700px:ml-auto">
-      {/* {!isHomePage ? ( */}
-      <BlackButton
-        name="Back"
-        icon={<IoIosArrowRoundBack size={25} />}
-        className="flex-row-reverse"
-        bg="black"
-        onClick={() => router.back()} // Navigate back
-      />
-      {/* ) : (
-      //   <BlackButton
-      //     name="Create New"
-      //     icon={<PiPlusCircleBold size={18} />}
-      //     bg="black"
-      //   />
-      // )}
-      */}
+    <nav className="relative flex items-center gap-4 bg-white px-8 py-4 border-b border-[#E8E8E8] w-full">
+      {/* Back Button (Only visible when not on the home page) */}
+      {isHomePage && (
+        <button className='bg-[#0F172A] text-[14px] py-3 flex flex-row gap-2 px-4 rounded-[5px] text-white'>Create New <PiPlusCircleBold size={20} /></button>
+        
+      )}
 
-      <button className="border-[1px] border-[#E0E0E0] rounded-full size-8 flex items-center justify-center ml-auto ">
+      {/* Notification Button */}
+      <button className="border border-[#E0E0E0] rounded-full size-8 flex items-center justify-center ml-auto">
         <GoBell size={18} />
       </button>
+
+      {/* User Profile */}
       <UserProfileInfo />
-      {/* <Logout /> */}
     </nav>
   );
 };
