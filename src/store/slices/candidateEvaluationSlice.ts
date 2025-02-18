@@ -14,7 +14,7 @@ export const fetchAiReviewData = createAsyncThunk<
       const response = await axiosInstance.get(
         `/aireviews/jobappliation/${jobId}`
       );
-      return response.data as CandidateEvaluation[];
+      return response.data.data as CandidateEvaluation[];
     } catch (error) {
       if (isAxiosError(error)) {
         return rejectWithValue(error.response?.data || error.message);
