@@ -13,7 +13,6 @@ import React, {
   useState,
 } from 'react';
 
-// import Modal from '@/components/NewModal';
 import { useModal } from '@/hooks/use-modal';
 import { DataTypes } from '@/types/data';
 import {
@@ -28,22 +27,17 @@ import {
   checkForTerminatedEmployees,
   updateElementPosition,
 } from '@/utils/misc';
-// import orgChartProfile from '@/views/Companies/orgChartProfile';
-// import OrgChartOpenPositionProfile from '@/views/OrgChart/Profiles/OrgChartOpenPositionProfile';
 import { EmployeeData } from '@/types/employee';
-// import { OrgChartTerminatedEmployees } from './OrgChartTerminatedEmployees';
 import OrgChartOpenPositionProfile from './Profiles/OrgChartOpenPositionProfile';
 import orgChartProfile from './orgChartProfile';
 import Button from '../Button';
 
 type Props = {
   terminatedEmployees: EmployeeData[];
-  onTerminate: (employee: EmployeeData, node: any) => void;
   employees: EmployeeData[];
   onSelectedEmployees: (selectedEmployees: number) => void;
   selectedEmployees: number[];
   search: string;
-  refOrgChart2: any;
   compact: boolean;
   terminatedParents: number[];
   totalTerminated: Record<number, number>;
@@ -52,7 +46,6 @@ type Props = {
 
 export const OrgChartComponent: FC<Props> = ({
   terminatedEmployees,
-  onTerminate,
   search,
   employees,
   compact,
@@ -60,7 +53,6 @@ export const OrgChartComponent: FC<Props> = ({
   onSelectedEmployees,
   selectedEmployees,
   totalTerminated,
-  refOrgChart2,
   user,
 }) => {
   const d3Container = useRef(null);
@@ -75,6 +67,33 @@ export const OrgChartComponent: FC<Props> = ({
   const [isTerminating, setIsTerminating] = useState<Record<number, boolean>>(
     {}
   );
+  const [expandedEmployees, setExpandedEmployees] = useState<
+    Record<number, boolean>
+  >({});
+
+  const toggleOpenPositions = (employeeId: number) => {
+    setExpandedEmployees((prev) => ({
+      ...prev,
+      [employeeId]: !prev[employeeId], // Toggle the state
+    }));
+  };
+  const updatedEmployees = employees.map((employee) => {
+    if (expandedEmployees[employee.id] && employee.openPositions?.length) {
+      return {
+        ...employee,
+        children: [
+          ...(employee.children || []),
+          ...employee.openPositions.map((pos) => ({
+            ...pos,
+            parentId: employee.id,
+            isOpenPosition: true, // Mark it as an open position node
+          })),
+        ],
+      };
+    }
+    return employee;
+  });
+
   function detectMultipleRoots(employees) {
     const rootNodes = employees.filter((emp) => emp.parentId === null);
 
@@ -187,13 +206,23 @@ export const OrgChartComponent: FC<Props> = ({
     }
   }, [processChange, search]);
 
+  useLayoutEffect(() => {
+    if (updatedEmployees && d3Container.current) {
+      refOrgChart.current.data(updatedEmployees).render();
+    }
+  }, [updatedEmployees]);
+
   // We need to manipulate DOM
   useLayoutEffect(() => {
-    if (employees && d3Container.current && !hasMultiRoots && !hasCycle) {
-      refOrgChart2.current = refOrgChart.current;
+    if (
+      updatedEmployees &&
+      d3Container.current &&
+      !hasMultiRoots &&
+      !hasCycle
+    ) {
       refOrgChart.current
         .container(d3Container.current)
-        .data(employees)
+        .data(updatedEmployees)
         .nodeHeight(() => 95)
         .nodeWidth(() => 300)
         .setActiveNodeCentered(false)
@@ -293,6 +322,10 @@ export const OrgChartComponent: FC<Props> = ({
             .on('mouseover', (e) => {
               e.stopPropagation();
               updateElementPosition(e, openPositionsCnt.current);
+            })
+            .on('click', (e) => {
+              e.stopPropagation();
+              toggleOpenPositions(node.data.id);
             });
 
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -381,7 +414,6 @@ export const OrgChartComponent: FC<Props> = ({
     employees,
     user?.role,
     refOrgChart,
-    refOrgChart2,
     isTerminating,
     handleTerminate,
     handleClickNode,
@@ -512,42 +544,6 @@ export const OrgChartComponent: FC<Props> = ({
         </div>
       </div>
       <div ref={d3Container} />
-      {/* <Modal
-        contentClassName="w-96"
-        showDialog={modal.showDialog}
-        onDismiss={modal.closeModal}
-      >
-        <div className="flex flex-col px-8 pb-2 text-230E37 text-sm">
-          <Link target="_blank" href={`/employees/${employee?.id}`}>
-            <button className="flex items-center space-x-2">
-              <UserIcon className="w-6 h-6" />
-              <span>Go to employee</span>
-            </button>
-          </Link>
-          <button className="flex items-center space-x-2 mt-4">
-            <ArrowPathIcon className="w-6 h-6" />
-            <span>Change Reporting Manager</span>
-          </button>
-          <button className="flex items-center space-x-2 mt-12">
-            <TrashIcon className="w-6 h-6 text-red-600" />
-            <span>Terminate Employee</span>
-          </button>
-        </div>
-      </Modal>
-      <Modal
-        size="large"
-        contentClassName="overflow-y-auto"
-        title="Terminated Employees"
-        showDialog={showTerminatedEmployeesModal.showDialog}
-        onDismiss={showTerminatedEmployeesModal.closeModal}
-      >
-        <OrgChartTerminatedEmployees
-          node={selectedNode}
-          shouldShowSalary={
-            !!user && user?.role === DataTypes.EUserRoles.SUPER_ADMIN
-          }
-        />
-      </Modal> */}
     </div>
   );
 };
