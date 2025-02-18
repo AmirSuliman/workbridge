@@ -27,7 +27,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { FieldErrors, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-// import { update } from 'next-auth/react';
 
 interface ErrorResponse {
   message: string;
@@ -40,7 +39,7 @@ const MyInformation = () => {
   const user = useSelector((state: RootState) => state.myInfo);
   const myId = user?.user?.employeeId; // This id is used to view the current logged in user's info
   const { empId } = useParams(); // This id is used to view any employee's info
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
   const [editEmployee, setEditEmployee] = useState<boolean>(false);
   const [schemaErrors, setSchemaErrors] = useState<FieldErrors | undefined>(
     undefined
@@ -270,18 +269,6 @@ const MyInformation = () => {
         `/employee/${empId || myId}`,
         finalPayload
       );
-
-      // Update the session data
-      await update({
-        ...session,
-        user: {
-          ...session?.user,
-          user: {
-            ...session?.user?.user,
-            profilePictureUrl: uploadResponse?.uploadedUrl,
-          },
-        },
-      });
 
       console.log('put emp response: ', response.data);
       toast.success('Employee information updated successfully!');

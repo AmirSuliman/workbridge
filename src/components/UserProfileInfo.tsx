@@ -1,22 +1,46 @@
 import Logout from '@/app/user/home/Logout';
 import { IMAGES } from '@/constants/images';
-import { RootState } from '@/store/store';
+import {
+  clearEmployeeData,
+  fetchEmployeeData,
+} from '@/store/slices/employeeInfoSlice';
+import { AppDispatch, RootState } from '@/store/store';
 import { getSession, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaAngleDown, FaUser } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const UserProfileInfo: React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement>
 > = ({ ...props }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [role, setRole] = useState<string>();
+  const { data: session } = useSession();
+  const dispatch = useDispatch<AppDispatch>();
 
   const { data: employeeData } = useSelector(
     (state: RootState) => state.employee
   );
+
+  useEffect(() => {
+    // Fetch employee data if session and empId are valid
+    if (session?.user.accessToken && session?.user.userId) {
+      dispatch(
+        fetchEmployeeData({
+          accessToken: session.user.accessToken,
+          userId: Number(session?.user.userId),
+        })
+      );
+    } else {
+      console.log('Invalid session or user ID');
+    }
+
+    return () => {
+      dispatch(clearEmployeeData());
+    };
+  }, [dispatch, session?.user.accessToken, session?.user.userId]);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -27,13 +51,11 @@ const UserProfileInfo: React.FC<
     fetchSession();
   }, []);
 
-  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
-
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
-  const { data: session } = useSession();
 
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
   return (
     <button
       onClick={toggleDropdown}
