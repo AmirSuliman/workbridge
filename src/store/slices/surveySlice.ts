@@ -3,11 +3,17 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 export const fetchSurveys = createAsyncThunk(
   'surveys/fetchSurveys',
-  async () => {
+  async ({
+    currentPage,
+    pageSize,
+  }: {
+    currentPage: number;
+    pageSize: number;
+  }) => {
     const response = await axiosInstance.get('/surveys', {
       params: {
-        page: 1,
-        size: 1000000,
+        page: currentPage,
+        size: pageSize,
         associations: true,
       },
     });

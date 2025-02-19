@@ -48,8 +48,14 @@ const ConfirmLeave = ({ timeOffRequestId, onConfirm, onClose }) => {
         onClose();
         onConfirm();
       } catch (error) {
-        console.error('Error confirming leave request:', error);
-        setError('Failed to confirm leave request. Please try again later.');
+        if (isAxiosError(error) && error.response) {
+          setError(
+            error.response.data.message ||
+              'Failed to confirm leave request. Please try again later.'
+          );
+        } else {
+          setError('Failed to confirm leave request. Please try again later.');
+        }
       }
     } else {
       console.error(

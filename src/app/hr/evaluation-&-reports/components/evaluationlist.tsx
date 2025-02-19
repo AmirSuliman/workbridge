@@ -1,10 +1,11 @@
+import { Pagination } from '@/components/common/Pagination';
 import ScreenLoader from '@/components/common/ScreenLoader';
 import { fetchSurveys } from '@/store/slices/surveySlice';
 import { AppDispatch, RootState } from '@/store/store';
 import { SurveyProps } from '@/types/common';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiChevronRight } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -15,18 +16,23 @@ const Evaluationlist = () => {
     (
       state: RootState
     ): {
-      data: { items: SurveyProps[] } | null;
+      data: { items: SurveyProps[]; totalItems: number } | null;
       loading: boolean;
       error: string | null;
     } => state.surveys
   );
+  console.log('survey data: ', data);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const pageSize = 10;
 
   useEffect(() => {
-    dispatch(fetchSurveys());
-  }, [dispatch]);
+    dispatch(fetchSurveys({ currentPage, pageSize }));
+  }, [currentPage, dispatch]);
 
-  // if (loading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error}</div>;
+  // Handle page change for pagination
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className="bg-white p-6 rounded-[10px] border">
@@ -140,6 +146,14 @@ const Evaluationlist = () => {
             </tbody>
           )}
         </table>
+        <Pagination
+          styles={{ container: 'pt-4 pr-4 gap-x-2 !justify-end' }}
+          totalItems={data?.totalItems || 0}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          maxPagesToShow={3}
+          setCurrentPage={handlePageChange}
+        />
       </div>
     </div>
   );

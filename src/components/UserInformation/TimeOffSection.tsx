@@ -12,6 +12,7 @@ import InfoGrid from './InfoGrid';
 import SickCard from './sickCard';
 import VacationsCard from './VacationsCard';
 import { FaEdit } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 interface Employee {
   firstName: string;
@@ -134,9 +135,10 @@ const TimeOffSection = ({ employeeData }) => {
 
     try {
       await axiosInstance.put(`/timeoff/${selectedTimeOff.id}`, payload);
-      closeModal();
       // Refresh data after update
       const response = await axiosInstance.get('/timeoffs/my');
+      toast.success('Time off updated successfully');
+      closeModal();
       setTimeOffData(response.data.data.items);
     } catch (err) {
       console.error('Error updating time off:', err);
@@ -171,22 +173,22 @@ const TimeOffSection = ({ employeeData }) => {
     >
       {item.status === 'Pending' ? 'Waiting for Approval' : item.status}
     </span>,
-    item.status === 'Pending' ? (
-      <div key={`edit-${index}`} className="flex justify-end">
-        <FaEdit
-          className="text-dark-navy w-5 cursor-pointer"
-          onClick={() => handleEditClick(item)}
-          title="Edit time-off request"
-        />
-      </div>
-    ) : (
-      <div key={`edit-${index}`} className="flex justify-end">
-        <span
-          className="text-gray-400"
-          title="Cannot edit confirmed requests"
-        ></span>
-      </div>
-    ),
+    // item.status === 'Pending' ? (
+    //   <div key={`edit-${index}`} className="flex justify-end">
+    //     <FaEdit
+    //       className="text-dark-navy w-5 cursor-pointer"
+    //       onClick={() => handleEditClick(item)}
+    //       title="Edit time-off request"
+    //     />
+    //   </div>
+    // ) : (
+    //   <div key={`edit-${index}`} className="flex justify-end">
+    //     <span
+    //       className="text-gray-400"
+    //       title="Cannot edit confirmed requests"
+    //     ></span>
+    //   </div>
+    // ),
   ]);
 
   return (

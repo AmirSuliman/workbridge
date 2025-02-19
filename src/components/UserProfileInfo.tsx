@@ -15,7 +15,6 @@ const UserProfileInfo: React.FC<
   const [showDropdown, setShowDropdown] = useState(false);
   const [role, setRole] = useState<string>();
   const { data: session } = useSession();
-  console.log(session);
   const dispatch = useDispatch<AppDispatch>();
 
   const { data: employeeData } = useSelector(

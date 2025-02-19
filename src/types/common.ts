@@ -10,6 +10,16 @@ export interface SidebarNavItemProps {
   href: string;
 }
 
+export interface Announcement {
+  id: number;
+  description: string;
+  icon: JSX.Element;
+  bgColor: string;
+  createdAt: string;
+  title: string;
+  status: 'Published' | 'Draft';
+}
+
 export interface SurveyProps {
   createdAt: string;
   status: string;

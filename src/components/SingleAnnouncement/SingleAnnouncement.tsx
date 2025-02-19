@@ -5,15 +5,7 @@ import { IoCalendarOutline } from 'react-icons/io5';
 import { useRouter } from 'next/navigation';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { getSession } from 'next-auth/react';
-
-interface Announcement {
-  id: number;
-  description: string;
-  icon: JSX.Element;
-  bgColor: string;
-  createdAt: string;
-  title: string;
-}
+import { Announcement } from '@/types/common';
 
 const SingleAnnouncement = () => {
   const router = useRouter();
@@ -39,7 +31,6 @@ const SingleAnnouncement = () => {
       try {
         const response = await axiosInstance.get('/announcements');
         const data = response.data?.data?.items || [];
-        console.log(response, 'res');
 
         if (Array.isArray(data)) {
           const formattedData = data.map((item: any) => ({
@@ -54,7 +45,8 @@ const SingleAnnouncement = () => {
           const sortedData = formattedData
             .sort(
               (a, b) =>
-                new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
             )
             .slice(0, 8);
 
@@ -110,7 +102,9 @@ const SingleAnnouncement = () => {
                 </p>
               </div>
             </article>
-            {index !== announcements.length - 1 && <hr className="border-gray-300" />}
+            {index !== announcements.length - 1 && (
+              <hr className="border-gray-300" />
+            )}
           </div>
         ))
       ) : (
