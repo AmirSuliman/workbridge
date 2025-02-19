@@ -40,6 +40,7 @@ const SingleAnnouncement = () => {
             createdAt: item.createdAt || new Date().toISOString(),
             title: item.title,
             bgColor: '#00B87D', // Added default bgColor
+            status: item.status || 'Draft', // Added status property
           }));
 
           const sortedData = formattedData
