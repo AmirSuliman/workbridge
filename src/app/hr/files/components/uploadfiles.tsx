@@ -2,7 +2,7 @@
 
 import axiosInstance from '@/lib/axios';
 import { useEffect, useState } from 'react';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes, FaUpload } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
 
 interface Folder {
@@ -118,11 +118,15 @@ const UploadFiles = ({ setIsModalOpen1 }) => {
 
       {/* File Select */}
       <label className="text-gray-400 block text-sm mb-2 mt-8">Upload file</label>
-      <input
-        type="file"
-        onChange={handleFileSelect}
-        className="border-dashed border-2 border-gray-300 rounded-lg h-32 w-full flex items-center justify-center cursor-pointer hover:bg-gray-50 transition"
-      />
+      <label className="border-dashed border-2 border-gray-300 rounded-lg h-32 w-full flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition text-gray-400">
+  <span className="text-black flex flex-row items-center gap-2 mt-2">Choose a file <FaUpload/></span>
+  <input
+    type="file"
+    onChange={handleFileSelect}
+    className="hidden"
+  />
+</label>
+
 
       <div className="w-full mt-2">
         <div className="h-2 bg-gray-200 rounded">

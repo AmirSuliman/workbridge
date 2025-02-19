@@ -177,6 +177,7 @@ const ProfileCard = ({
                 {editEmployee && (
                   <button
                     type="button"
+                    className='text-[12px]'
                     onClick={(e) => {
                       e.preventDefault();
                       setEditEmployee(false);

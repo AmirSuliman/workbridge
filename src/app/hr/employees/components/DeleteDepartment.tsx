@@ -35,15 +35,15 @@ const DeleteDepartment = ({ onClose }) => {
   };
   return (
     <Modal onClose={onClose}>
-      <section className="p-8 min-h-80 flex flex-col">
-        <h1 className="font-semibold text-xl my-4">Delete</h1>
-        <p className="text-xl text-center">
+      <section className="px-8 p-4 min-h-80 flex flex-col">
+        <h1 className="font-semibold text-xl ">Delete</h1>
+        <p className="text-xl text-center mt-2 p-4">
           Are you sure you want to delete this department?
         </p>
         <p className="font-bold text-base text-center mb-auto">
           All employees will no longer have any departments assigned.
         </p>
-        <div className="flex items-center gap-4 justify-center mt-4 mb-0">
+        <div className="flex items-center gap-4 justify-center mt-4 p-4 mb-0">
           <Button
             disabled={loading}
             onClick={handleSubmit}

@@ -6,7 +6,7 @@ import Modal from '@/components/modal';
 import axiosInstance from '@/lib/axios';
 import SendHolidayNotification from './sendholidaynotification';
 import toast from 'react-hot-toast';
-
+import Image from 'next/image';
 interface User {
   id: number;
   firstName: string;
@@ -273,14 +273,12 @@ const VacationPolicies = () => {
   {holiday.user ? `${holiday.user.firstName} ${holiday.user.lastName}` : ''}
 </td>
                 <td className="p-4 text-center flex justify-center space-x-2">
-                  <BiTrash
-                    size={18}
+                  <Image src="/delete.svg" alt='delete' width={13} height={13}
                     className="cursor-pointer"
                     title="Delete"
                     onClick={() => deleteModal(holiday.id)}
                   />
-                  <BiEdit
-                    size={18}
+                  <Image src="/edit.svg" alt='edit' width={13} height={13}
                     className="cursor-pointer"
                     title="Edit"
                     onClick={() => openEditModal(holiday)}

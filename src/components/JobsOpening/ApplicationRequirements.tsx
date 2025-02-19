@@ -7,11 +7,11 @@ export const ApplicationRequirements = ({
     <div className="flex flex-wrap gap-5">
       {/* First Item */}
       <div className="border rounded-lg w-[200px] flex flex-col">
-        <div className="p-4 items-center flex font-medium">
+        <div className="p-4 text-[14px] items-center flex font-medium">
           <input
             type="checkbox"
             value="Resume"
-            className="form-checkbox h-5 w-5 text-blue-600 cursor-pointer mr-3"
+            className="form-checkbox h-5 w-5  accent-black cursor-pointer mr-3"
             {...register('Resume')}
           />
           Resume
@@ -31,17 +31,17 @@ export const ApplicationRequirements = ({
               }`}
             />
           </button>
-          <span className="text-gray-700 text-sm">Required</span>
+          <span className="text-gray-700 text-[12px]">Required</span>
         </div>
       </div>
 
       {/* Second Item */}
       <div className="border rounded-lg w-[200px] flex flex-col">
-        <div className="p-4 items-center flex font-medium">
+        <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
             value="Portfolio"
-            className="form-checkbox h-5 w-5 text-blue-600 cursor-pointer mr-3"
+            className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Portfolio')}
           />
           Portfolio
@@ -61,16 +61,16 @@ export const ApplicationRequirements = ({
               }`}
             />
           </button>
-          <span className="text-gray-700 text-sm">Required</span>
+          <span className="text-gray-700 text-[12px]">Required</span>
         </div>
       </div>
       {/* 3rd Item */}
       <div className="border rounded-lg w-[200px] flex flex-col">
-        <div className="p-4 items-center flex font-medium">
+        <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
             value="CoverLetter"
-            className="form-checkbox h-5 w-5 text-blue-600 cursor-pointer mr-3"
+            className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('CoverLetter')}
           />
           Cover Letter
@@ -90,16 +90,16 @@ export const ApplicationRequirements = ({
               }`}
             />
           </button>
-          <span className="text-gray-700 text-sm">Required</span>
+          <span className="text-gray-700 text-[12px]">Required</span>
         </div>
       </div>
       {/* 4th Item */}
       <div className="border rounded-lg w-[200px] flex flex-col">
-        <div className="p-4 items-center flex font-medium">
+        <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
             value="Address"
-            className="form-checkbox h-5 w-5 text-blue-600 cursor-pointer mr-3"
+            className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Address')}
           />
           Address
@@ -119,16 +119,16 @@ export const ApplicationRequirements = ({
               }`}
             />
           </button>
-          <span className="text-gray-700 text-sm">Required</span>
+          <span className="text-gray-700 text-[12px]">Required</span>
         </div>
       </div>
       {/* 5th Item */}
       <div className="border rounded-lg w-[200px] flex flex-col">
-        <div className="p-4 items-center flex font-medium">
+        <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
             value="DesiredSalary"
-            className="form-checkbox h-5 w-5 text-blue-600 cursor-pointer mr-3"
+            className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('DesiredSalary')}
           />
           Desired Salary
@@ -148,16 +148,16 @@ export const ApplicationRequirements = ({
               }`}
             />
           </button>
-          <span className="text-gray-700 text-sm">Required</span>
+          <span className="text-gray-700 text-[12px]">Required</span>
         </div>
       </div>
       {/* 6th Item */}
       <div className="border rounded-lg w-[200px] flex flex-col">
-        <div className="p-4 items-center flex font-medium">
+        <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
             value="Education"
-            className="form-checkbox h-5 w-5 text-blue-600 cursor-pointer mr-3"
+            className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Education')}
           />
           Education
@@ -177,16 +177,16 @@ export const ApplicationRequirements = ({
               }`}
             />
           </button>
-          <span className="text-gray-700 text-sm">Required</span>
+          <span className="text-gray-700 text-[12px]">Required</span>
         </div>
       </div>
       {/* 7th Item */}
       <div className="border rounded-lg w-[200px] flex flex-col">
-        <div className="p-4 items-center flex font-medium">
+        <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
             value="LinkedInProfile"
-            className="form-checkbox h-5 w-5 text-blue-600 cursor-pointer mr-3"
+            className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('LinkedInProfile')}
           />
           LinkedIn Profile
@@ -206,16 +206,16 @@ export const ApplicationRequirements = ({
               }`}
             />
           </button>
-          <span className="text-gray-700 text-sm">Required</span>
+          <span className="text-gray-700 text-[12px]">Required</span>
         </div>
       </div>
       {/* 8th Item */}
       <div className="border rounded-lg w-[200px] flex flex-col">
-        <div className="p-4 items-center flex font-medium">
+        <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
             value="Website"
-            className="form-checkbox h-5 w-5 text-blue-600 cursor-pointer mr-3"
+            className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Website')}
           />
           Website
@@ -235,16 +235,16 @@ export const ApplicationRequirements = ({
               }`}
             />
           </button>
-          <span className="text-gray-700 text-sm">Required</span>
+          <span className="text-gray-700 text-[12px]">Required</span>
         </div>
       </div>
       {/* 9th Item */}
       <div className="border rounded-lg w-[200px] flex flex-col">
-        <div className="p-4 items-center flex font-medium">
+        <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
             value="Referral"
-            className="form-checkbox h-5 w-5 text-blue-600 cursor-pointer mr-3"
+            className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Referral')}
           />
           Referral
@@ -264,7 +264,7 @@ export const ApplicationRequirements = ({
               }`}
             />
           </button>
-          <span className="text-gray-700 text-sm">Required</span>
+          <span className="text-gray-700 text-[12px]">Required</span>
         </div>
       </div>
     </div>

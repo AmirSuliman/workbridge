@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { MdStickyNote2 } from 'react-icons/md';
 import FormHeading from './FormHeading';
-
+import Image from 'next/image';
 import {
   closeModals,
   deleteNote,
@@ -124,7 +124,7 @@ const NotesSection = ({ employeeId }) => {
     <div className="p-1 rounded-md w-full h-full">
       <div className="p-3 md:p-6 rounded-[10px] border-gray-border border-b border-[1px] bg-white mb-5">
         <div className="mb-6 flex justify-between flex-wrap gap-4">
-          <FormHeading icon={<MdStickyNote2 className="w-4" />} text="Notes" />
+          <FormHeading icon={<Image src="/document.svg" alt='img' width={13} height={13} />} text="Notes" />
           <Button
             onClick={(e) => {
               e.preventDefault();
@@ -184,7 +184,7 @@ const NotesSection = ({ employeeId }) => {
                             handleEditClick(note);
                           }}
                         >
-                          <FaEdit />
+                          <Image src="/edit.svg" alt='img' width={10} height={10}/>
                         </button>
                         <button
                           type="button"
@@ -195,8 +195,8 @@ const NotesSection = ({ employeeId }) => {
                             setDeleteNoteModal(true);
                           }}
                         >
-                          <FaTrash />
-                        </button>
+                          <Image src="/delete.svg" alt='img' width={10} height={10}/>
+                          </button>
                       </div>
                     </td>
                   </tr>

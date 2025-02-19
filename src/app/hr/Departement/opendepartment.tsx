@@ -186,7 +186,7 @@ const OpendepartmentTable: React.FC = () => {
           <button
             onClick={() => setMoreOptions(!moreOptions)}
             type="button"
-            className="flex items-center justify-center gap-2 p-2 px-4 bg-black text-white rounded text-[12px] border min-w-44"
+            className="flex items-center justify-center gap-2 p-2 px-4 bg-[#0F172A] text-white rounded text-[12px] border min-w-44"
           >
             More Options{' '}
             <FaAngleDown className={`${moreOptions ? 'rotate-180' : ''}`} />
@@ -200,20 +200,21 @@ const OpendepartmentTable: React.FC = () => {
             >
               <button
                 type="button"
-                onClick={() => setIsDeleteModalOpen(true)}
-                className="flex items-center gap-2 p-2 px-4 text-red-500 text-sm whitespace-nowrap"
-              >
-                <FaTrash size={14} />
-                Delete Department
-              </button>
-              <button
-                type="button"
                 onClick={() => setIsModalOpen1(true)}
                 className="flex items-center gap-2 p-2 px-4 text-black text-sm whitespace-nowrap"
               >
                 <FaEdit size={14} />
                 Edit Department
               </button>
+              <button
+                type="button"
+                onClick={() => setIsDeleteModalOpen(true)}
+                className="flex items-center gap-2 p-2 px-4 text-red-500 text-sm whitespace-nowrap"
+              >
+                <FaTrash size={14} />
+                Delete Department
+              </button>
+              
             </div>
           )}
         </nav>
@@ -257,6 +258,7 @@ const OpendepartmentTable: React.FC = () => {
               name="Add new Employee"
               icon={<CiCirclePlus />}
               onClick={() => setIsModalOpen(true)}
+              className='!text-[12px]'
             />
           </div>
           <div className="overflow-x-auto">

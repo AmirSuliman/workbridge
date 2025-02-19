@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
+import UmbrellaIcon from '../icons/umbrella-icon';
 
 interface VacationCardProps {
   onButtonClick?: () => void;
@@ -105,9 +106,9 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
         <div className="flex flex-col justify-between gap-[2rem] h-full">
           <div>
             <div className="flex gap-2 items-center mb-2">
-              <div className="flex items-center justify-center rounded-full p-1">
-                <Image src="/vaction.png" alt="img" width={25} height={25} />
-              </div>
+              <div className="flex items-center justify-center rounded-full p-1 bg-[#00B87D]">
+                 <UmbrellaIcon classNames="w-4 h-4 text-white" />              
+                 </div>
               <h3 className="text-dark-navy font-[500] text-sm">
                 Request Vacation
               </h3>
@@ -119,7 +120,7 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
           <button
             type="button"
             onClick={handleButtonClick}
-            className={`text-white bg-dark-navy py-1 w-[13rem] rounded-[4px] font-[200] text-sm ${
+            className={`text-white bg-dark-navy py-2 w-[15rem] rounded-[4px] font-[400] text-sm ${
               totalDays === 0 ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             disabled={totalDays === 0}

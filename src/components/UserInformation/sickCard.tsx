@@ -110,7 +110,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
           <button
   type="button"
   onClick={handleButtonClick}
-  className={`text-white bg-dark-navy py-1 w-[13rem] rounded-[4px] font-[200] text-sm ${
+  className={`text-white bg-dark-navy py-2 w-[15rem] rounded-[4px] font-[400] text-sm ${
     totalDays === 0 ? 'opacity-50 cursor-not-allowed' : ''
   }`}
   disabled={totalDays === 0}

@@ -170,9 +170,9 @@ const DepartmentTable = () => {
             <table className="min-w-full table-auto border-collapse">
               <thead>
                 <tr className="border-b text-gray-400 text-[14px]">
-                  <th className="px-4 py-3 text-left">Department</th>
-                  <th className="px-4 py-3 text-left">Employees</th>
-                  <th className="px-4 py-3 text-left">Dept. Head</th>
+                  <th className="px-4 py-3 text-left fon-medium">Department</th>
+                  <th className="px-4 py-3 text-left fon-medium">Employees</th>
+                  <th className="px-4 py-3 text-left fon-medium">Dept. Head</th>
                   <th className="px-4 py-3"></th>
                 </tr>
               </thead>
@@ -182,7 +182,7 @@ const DepartmentTable = () => {
                     <tr key={dept.id} className="border-b">
                       <td className="px-4 py-3">{dept.name}</td>
                       <td className="px-4 py-3 flex items-center gap-2">
-                        <EmployeesIcon /> {dept.employeeCount}
+                        <EmployeesIcon classNames='w-4 ' /> {dept.employeeCount}
                       </td>
                       <td className="px-4 py-3">
                         {dept.department_head_data

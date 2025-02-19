@@ -143,7 +143,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
           name="Back"
           bg="white"
           textColor="black"
-          className="px-16"
+          className=" !px-16 !w-[200px] !text-[14px] !p-2"
           onClick={() => setActiveTab(activeTab - 1)}
         />
         <Button
@@ -151,10 +151,10 @@ const Employment = ({ loader }: { loader: boolean }) => {
           type="submit"
           name={loader ? '' : 'Finish'}
           disabled={loader}
-          className="px-16"
+          className="!px-16 !w-[200px] !text-[14px] !p-2"
           icon={
             loader && (
-              <BiLoaderCircle className="h-8 w-8 duration-100 animate-spin" />
+              <BiLoaderCircle className="h-8 w-24 duration-100 animate-spin" />
             )
           }
           // onClick={() => setActiveTab(activeTab + 1)}

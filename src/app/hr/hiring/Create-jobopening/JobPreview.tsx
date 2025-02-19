@@ -3,7 +3,7 @@ import React from 'react';
 
 const JobPreview = ({ jobData }: { jobData: JobPreviewData }) => {
   return (
-    <div className=" p-4 border border-gray-300 rounded shadow-md">
+    <div className=" p-4 border border-gray-300 rounded shadow-md w-full sm:w-[700px] overflow-y-auto" >
       <div>
         {/* <p>
         <strong>Hiring Lead:</strong> {jobData.hiringLead}

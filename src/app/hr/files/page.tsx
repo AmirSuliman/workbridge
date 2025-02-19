@@ -18,7 +18,7 @@ import Deletedocument from './components/deletedocumnet';
 import axiosInstance from '@/lib/axios';
 import AddSubFolder from './components/addSubFolder';
 import { formatFileSize } from '@/utils/formatFileSize';
-
+import Image from 'next/image';
 interface Folder {
   id: string;
   parentId: number | null;
@@ -76,14 +76,15 @@ const Page = () => {
       setLoading(true);
       setError(null);
       try {
-        // Fetch both folders and files in parallel
         const [foldersResponse, filesResponse] = await Promise.all([
           axiosInstance.get('/folders'),
-          axiosInstance.get(`/files/`),
+          axiosInstance.get('/files'),
         ]);
-
+  
         setFolders(foldersResponse.data.data.items);
         setAllFiles(filesResponse.data.data.items);
+        setIsAllFilesActive(true); // Ensure "All Files" is selected by default
+        setActiveFolder(null); // No specific folder should be active
       } catch (err) {
         setError('Failed to load data.');
         console.error(err);
@@ -91,9 +92,10 @@ const Page = () => {
         setLoading(false);
       }
     };
-
+  
     fetchInitialData();
   }, []);
+  
 
   const handleEditdocument = (file: File) => {
     setDocumentId(file.id);
@@ -226,8 +228,8 @@ const Page = () => {
         onClick={() => handleFolderClick(folder)}
         className={`flex flex-row items-center justify-between mb-1 p-3 cursor-pointer ${
           activeFolder?.id === folder.id
-            ? 'bg-black text-white'
-            : 'hover:bg-black hover:text-white'
+            ? 'bg-[#0F172A] text-white'
+            : 'hover:bg-[#0F172A] hover:text-white'
         }`}
         style={{ paddingLeft: `${level * 10}px` }}
       >
@@ -259,7 +261,7 @@ const Page = () => {
     <div>
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-2">
-          <FaFolder size={24} />
+         <Image src="/folder.svg" alt='img' width={25} height={25}/>
           <h1 className="font-semibold text-[22px]">Files</h1>
         </div>
         <div className="flex flex-row items-center gap-4">
@@ -281,7 +283,7 @@ const Page = () => {
           </button>
           <button
             onClick={handleUploadfiles}
-            className="flex flex-row items-center p-3 gap-2 px-4 bg-black text-white border rounded text-[12px]"
+            className="flex flex-row items-center p-3 gap-2 px-4 bg-[#0F172A] text-white border rounded text-[12px]"
           >
             Upload Files <FaUpload />
           </button>
@@ -297,8 +299,8 @@ const Page = () => {
             onClick={handleAllFilesClick}
             className={`flex flex-row items-center justify-between p-3 cursor-pointer ${
               isAllFilesActive
-                ? 'bg-black text-white'
-                : 'hover:bg-black hover:text-white'
+                ? 'bg-[#0F172A] text-white'
+                : 'hover:bg-[#0F172A] hover:text-white'
             }`}
           >
             <div className="flex flex-row items-center gap-2  font-medium">
@@ -327,8 +329,8 @@ const Page = () => {
         <div className="flex flex-col bg-white border rounded-[10px] p-5 w-full overflow-x-auto">
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-2">
-              <FaFolder size={20} />
-              <h1 className="font-medium text-[18px]">
+            <Image src="/folder.svg" alt='img' width={20} height={20}/>
+            <h1 className="font-medium text-[18px]">
                 {isAllFilesActive
                   ? 'All Files'
                   : activeFolder
@@ -352,7 +354,7 @@ const Page = () => {
               </label>
               <button
                 onClick={handleEditfolder}
-                className="flex flex-row items-center p-2 gap-2 px-4 bg-black text-white border rounded text-[12px]"
+                className="flex flex-row items-center p-2 gap-2 px-4 bg-[#0F172A] text-white border rounded text-[12px]"
                 disabled={!activeFolder}
               >
                 Edit Folder <FaEdit />
@@ -364,11 +366,11 @@ const Page = () => {
             <table className="w-full">
               <thead className="text-gray-400 text-[14px] font-medium">
                 <tr className="border-b">
-                  <th className="p-4 text-left">Document Name</th>
-                  <th className="p-4 text-left">Date Uploaded</th>
-                  <th className="p-4 text-left">Size</th>
-                  <th className="p-4 text-left">Filetype</th>
-                  <th className="p-4 text-center">Actions</th>
+                  <th className="p-4 font-medium text-left">Document Name</th>
+                  <th className="p-4 font-medium text-left">Date Uploaded</th>
+                  <th className="p-4 font-medium text-left">Size</th>
+                  <th className="p-4 font-medium text-left">Filetype</th>
+                  <th className="p-4 font-medium text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -396,11 +398,11 @@ const Page = () => {
                             : ''}
                         </td>
                         <td className="flex flex-row gap-3 justify-center items-center">
-                          <FaEdit
+                          <Image src="/edit.svg" alt='edit' width={10} height={10}
                             onClick={() => handleEditdocument(file)}
                             className="cursor-pointer"
                           />
-                          <FaTrash
+                          <Image src="/delete.svg" alt='del' width={10} height={10}
                             onClick={() => handleDeletedocument(file.id)}
                             className="cursor-pointer"
                           />
@@ -429,11 +431,11 @@ const Page = () => {
                         <td className="p-4">{file.size}</td>
                         <td className="p-4">{file.fileType}</td>
                         <td className="flex flex-row gap-3 justify-center items-center">
-                          <FaEdit
+                          <Image src="/edit.svg" alt='edit' width={10} height={10}
                             onClick={() => handleEditdocument(file)}
                             className="cursor-pointer"
                           />
-                          <FaTrash
+                          <Image src="/delete.svg" alt='del' width={10} height={10}
                             onClick={() => handleDeletedocument(file.id)}
                             className="cursor-pointer"
                           />

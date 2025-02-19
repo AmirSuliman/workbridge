@@ -6,7 +6,7 @@ import { AppDispatch, RootState } from '@/store/store';
 import Link from 'next/link';
 import ScreenLoader from '../common/ScreenLoader';
 import { useRouter } from 'next/navigation';
-
+import { FaDownload } from 'react-icons/fa';
 export const AllJobsTable = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -69,15 +69,7 @@ export const AllJobsTable = () => {
   return (
     <div className="p-4 bg-white flex flex-col rounded-lg border mt-4">
       <div className="flex flex-col gap-2 sm:flex-row items-start sm:items-center justify-between w-full">
-        <Link
-          href="hiring/Create-jobopening"
-          className="p-3 px-4 rounded-lg bg-[#0F172A] text-white flex items-center gap-2"
-        >
-          Add Job Opening
-          <div className="p-1 rounded-full border border-white">
-            <FaPlus size={12} />
-          </div>
-        </Link>
+       
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
           {/* Sort Dropdown */}
           <div>
@@ -142,19 +134,34 @@ export const AllJobsTable = () => {
             </select>
           </div>
         </div>
+
+        <Link
+          href="hiring/Create-jobopening"
+          className="p-3 px-4 rounded-lg bg-[#0F172A] text-white text-[14px] flex items-center gap-2"
+        >
+          Add Job Opening
+          <div className="p-1 rounded-full border border-white">
+            <FaPlus size={12} />
+          </div>
+        </Link>
       </div>
 
       <div className="mt-12 overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="text-sm text-gray-500">
-              <th className="py-3 px-4 border-b">Candidates</th>
-              <th className="py-3 px-4 border-b">Job Opening</th>
-              <th className="py-3 px-4 border-b">Type</th>
-              <th className="py-3 px-4 border-b">Hiring Lead</th>
-              <th className="py-3 px-4 border-b">Created on</th>
-              <th className="py-3 px-4 border-b">Status</th>
-              <th className="py-3 px-4 border-b">Download</th>
+              <th className="py-3 px-4 border-b font-medium">Candidates</th>
+              <th className="py-3 px-4 border-b font-medium">Job Opening</th>
+              <th className="py-3 px-4 border-b font-medium">Type</th>
+              <th className="py-3 px-4 border-b font-medium">Hiring Lead</th>
+              <th className="py-3 px-4 border-b font-medium">Created on</th>
+              <th className="py-3 px-4 border-b font-medium">Status</th>
+              <th className="py-3 px-4 border-b font-medium">
+                <span className='bg-gray-200text-gray-400 p-1 rounded flex flex-row gap-2'>
+                  <FaDownload/>
+                  Download
+                </span>
+                </th>
             </tr>
           </thead>
           <tbody>

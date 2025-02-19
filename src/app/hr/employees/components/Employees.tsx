@@ -1,6 +1,6 @@
 'use client';
 
-import TabButton from '@/components/common/TabsComponent/TabButton';
+import TabButton from '@/components/common/TabsComponent/button';
 import TabComponent from '@/components/common/TabsComponent/TabComponent';
 import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
 import { AllEmployees } from './AllEmployees';
