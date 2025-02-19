@@ -1,9 +1,6 @@
 import Logout from '@/app/user/home/Logout';
 import { IMAGES } from '@/constants/images';
-import {
-  clearEmployeeData,
-  fetchEmployeeData,
-} from '@/store/slices/employeeInfoSlice';
+import { fetchEmployeeData } from '@/store/slices/employeeInfoSlice';
 import { AppDispatch, RootState } from '@/store/store';
 import { getSession, useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -18,6 +15,7 @@ const UserProfileInfo: React.FC<
   const [showDropdown, setShowDropdown] = useState(false);
   const [role, setRole] = useState<string>();
   const { data: session } = useSession();
+  console.log(session);
   const dispatch = useDispatch<AppDispatch>();
 
   const { data: employeeData } = useSelector(
@@ -25,22 +23,27 @@ const UserProfileInfo: React.FC<
   );
 
   useEffect(() => {
-    // Fetch employee data if session and empId are valid
-    if (session?.user.accessToken && session?.user.userId) {
+    // Only fetch if we don't already have the data
+    if (
+      session?.user.accessToken &&
+      session?.user.employeeId &&
+      (!employeeData || !employeeData.firstName)
+    ) {
       dispatch(
         fetchEmployeeData({
           accessToken: session.user.accessToken,
-          userId: Number(session?.user.userId),
+          userId: Number(session?.user.employeeId),
         })
       );
-    } else {
+    } else if (!session?.user.accessToken || !session?.user.employeeId) {
       console.log('Invalid session or user ID');
     }
-
-    return () => {
-      dispatch(clearEmployeeData());
-    };
-  }, [dispatch, session?.user.accessToken, session?.user.userId]);
+  }, [
+    dispatch,
+    session?.user.accessToken,
+    session?.user.employeeId,
+    employeeData,
+  ]);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -73,8 +76,8 @@ const UserProfileInfo: React.FC<
       />
       <div>
         <h4 className="text-lg font-medium">{`${
-          employeeData?.firstName || ''
-        } ${employeeData?.lastName || ''}`}</h4>
+          session?.user.user.firstName || ''
+        } ${session?.user.user.lastName || ''}`}</h4>
         <p className="text-xs opacity-60 text-left">
           {session?.user?.user?.role || ''}
         </p>

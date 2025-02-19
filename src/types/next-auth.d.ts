@@ -27,6 +27,7 @@ declare module 'next-auth' {
       role: string;
       roleId: number;
       userId: string;
+      employeeId: number;
       accessToken: string;
       user: InnerUser;
     };
