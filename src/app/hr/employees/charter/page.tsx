@@ -5,12 +5,12 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FC, useEffect, useReducer, useState } from 'react';
 
-import { OrgChartComponent } from '@/components/EmployeeCharter/OrgChartComponent';
+import OrgChartWithHoverPositions from '@/components/EmployeeCharter/OrgChartWithHoverPositions';
 import { getCharter } from '@/services/getCharter';
 import { initialState, reducer } from '@/store/reducer';
 import { DataTypes } from '@/types/data';
 import { EmployeeData } from '@/types/employee';
-import OrgChartWithHoverPositions from '@/components/EmployeeCharter/OrgChartWithHoverPositions';
+import { FaBackspace, FaCross } from 'react-icons/fa';
 
 const OrgChartPage: FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -18,9 +18,6 @@ const OrgChartPage: FC = () => {
   const [search, setSearch] = useState('');
   const [employeesData, setEmployeesData] = useState<EmployeeData[]>([]);
   const router = useRouter();
-
-  const { data: session } = useSession();
-  const user = session?.user as unknown as DataTypes.User;
 
   useEffect(() => {
     const fetchCharter = async () => {
@@ -68,7 +65,7 @@ const OrgChartPage: FC = () => {
               className="absolute top-3 right-2"
               onClick={() => setSearch('')}
             >
-              {/* <XMarkIcon className="w-4 h-4" /> */}
+              <FaBackspace className="w-4 h-4" />
             </button>
           )}
         </div>
@@ -93,25 +90,10 @@ const OrgChartPage: FC = () => {
           </button>
         </div>
       </div>
-      {/* <OrgChartComponent
-        employees={employeesData}
-        terminatedEmployees={state.terminatedEmployees}
-        terminatedParents={state.terminatedParents}
-        totalTerminated={state.totalTerminated}
-        selectedEmployees={state.selectedEmployees}
-        compact={compact}
-        search={search}
-        user={user}
-        onSelectedEmployees={(id) =>
-          dispatch({ type: 'TOGGLE_SELECTED_EMPLOYEES', payload: id })
-        }
-      /> */}
-
       <OrgChartWithHoverPositions
         onSelectedEmployees={state.selectedEmployees}
         employees={employeesData}
         compact={compact}
-        user={user}
         search={search}
       />
     </div>

@@ -15,7 +15,6 @@ import {
 const OrgChartWithHoverPositions = ({
   onSelectedEmployees,
   employees,
-  user,
   compact,
   search,
 }) => {
