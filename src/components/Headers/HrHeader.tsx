@@ -1,28 +1,77 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
-import { IoIosArrowRoundBack } from 'react-icons/io';
-import BlackButton from '../Button';
+import { useRouter, usePathname } from 'next/navigation';
+import { GoBell } from 'react-icons/go';
+import { PiPlusCircleBold } from 'react-icons/pi';
+import { useState } from 'react';
 import UserProfileInfo from '../UserProfileInfo';
-import Notifications from '../Notifications/Notifications';
-
+import Image from 'next/image';
+import { HiUsers } from 'react-icons/hi';
 const HrHeader = () => {
   const router = useRouter();
   const pathname = usePathname();
   const isHomePage = pathname?.startsWith('/hr/home');
+  const [showDropdown, setShowDropdown] = useState(false);
 
   return (
-    <nav className="relative flex items-center gap-4 bg-white px-8 py-4 border-b-[1px] border-[#E8E8E8] 1700px:w-[calc(1700px-270px)] 1700px:mr-0 1700px:ml-auto">
-      {/* {!isHomePage ? ( */}
-      <BlackButton
-        name="Back"
-        icon={<IoIosArrowRoundBack size={25} />}
-        className="flex-row-reverse"
-        bg="black"
-        onClick={() => router.back()} // Navigate back
-      />
+    <nav className="relative flex items-center gap-4 bg-white px-8 py-4 border-b border-[#E8E8E8] w-full">
+      {/* Create New Button with Dropdown */}
+      {isHomePage && (
+        <div className="relative">
+          <button
+            onClick={() => setShowDropdown((prev) => !prev)}
+            className="bg-[#0F172A] text-[14px] py-3 flex flex-row gap-2 px-4 rounded-[5px] text-white"
+          >
+            Create New <PiPlusCircleBold size={20} />
+          </button>
 
-      <Notifications />
+          {/* Dropdown Menu */}
+          {showDropdown && (
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white shadow-lg rounded-md border border-gray-200 z-50">
+              <ul className="py-2">
+                <li
+                  onClick={() => {
+                    setShowDropdown(false);
+                    router.push('/hr/announcements-&-policies/announcements/create-announcment');
+                  }}
+                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex flex-row items-center gap-2 "
+                >
+                 <Image src="/announcment.svg" alt='img' width={13} height={13}/>
+                  Announcement
+                </li>
+                <li
+                  onClick={() => {
+                    setShowDropdown(false);
+                    router.push('/hr/hiring/Create-jobopening');
+                  }}
+                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex flex-row items-center gap-2"
+                >
+                 <Image src="/job.svg" alt='img' width={13} height={13}/>
+
+                  Job Posting
+                </li>
+                <li
+                  onClick={() => {
+                    setShowDropdown(false);
+                    router.push('/hr/employees/create-employee');
+                  }}
+                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex flex-row items-center gap-2"
+                >
+                  <HiUsers size={16} />
+                  Employee
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Notification Button */}
+      <button className="border border-[#E0E0E0] rounded-full size-8 flex items-center justify-center ml-auto">
+        <GoBell size={18} />
+      </button>
+
+      {/* User Profile */}
       <UserProfileInfo />
     </nav>
   );

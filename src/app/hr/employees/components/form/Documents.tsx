@@ -102,7 +102,7 @@ const Documents = () => {
           name="Back"
           bg="white"
           textColor="black"
-          className="px-16"
+          className="!px-16 !w-[200px] !text-[14px] !p-2"
           onClick={() => setActiveTab(activeTab - 1)}
         />
         <Button name="Finish" className="px-16" type="submit" />

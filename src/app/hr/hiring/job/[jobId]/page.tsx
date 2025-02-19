@@ -72,10 +72,10 @@ const SingleJob = () => {
       <div className="flex flex-row items-start justify-between gap-6 w-full">
         <div className="flex flex-col gap-2 p-4 border bg-white w-[70%] rounded-lg">
           <p className="text-[12px] text-gray-400">Description</p>
-          <h1 className="text-[#0F172A] text-[16px]">
+          <h1 className="text-[#0F172A] text-[16px] mb-6">
             {singleJobData?.data.description || 'N/A'}
           </h1>
-          <div className="w-full h-[2px] bg-gray-300 mt-5" />
+          <hr/>
           <div className="flex flex-row items-center justify-between mt-6">
             <div className="flex flex-row gap-10 items-center">
               <div className="flex flex-col ">
@@ -100,7 +100,7 @@ const SingleJob = () => {
           </div>
         </div>
 
-        <div className="flex flex-col p-4 border bg-white w-[30%] rounded-lg ">
+        <div className="flex flex-col p-4 border bg-white w-[30%] h-auto rounded-lg h-[27vh]">
           <div className="flex flex-row gap-3 items-center mb-4">
             <Image
               src={

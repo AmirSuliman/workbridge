@@ -10,7 +10,7 @@ import UploadDocumentModal from './UploadDocumentModal';
 import DeleteDocumentModal from './DeleteDocumentModal';
 import { Document, Page, pdfjs } from 'react-pdf';
 import mammoth from 'mammoth';
-
+import Image from 'next/image';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 
@@ -155,11 +155,12 @@ const DocumentSection = ({ employeeData }: { employeeData?: EmployeeDataType }) 
     }
   };
   
-  documents.sort((a, b) => {
+  const sortedDocuments = [...documents].sort((a, b) => {
     const dateA = a.EmployeeDocument?.createdAt ? new Date(a.EmployeeDocument.createdAt).getTime() : 0;
     const dateB = b.EmployeeDocument?.createdAt ? new Date(b.EmployeeDocument.createdAt).getTime() : 0;
     return dateA - dateB;
   });
+  
   
   
 
@@ -176,29 +177,33 @@ const DocumentSection = ({ employeeData }: { employeeData?: EmployeeDataType }) 
       document?.EmployeeDocument?.createdAt ? document.EmployeeDocument.createdAt.split('T')[0] : 'N/A',
       formattedSize,
       document.fileType ? getFileExtension(document.fileType) : '',
-      <FaTrash
-        onClick={() => {
-          setDocumentId(document.id);
-          setOpenDeleteModal(true);
-        }}
-        key={1}
-        className="text-dark-navy w-5"
-      />,
+      <Image
+    src="/delete.svg" 
+    alt="Delete"
+    width={12}
+    height={12}
+    onClick={() => {
+      setDocumentId(document.id);
+      setOpenDeleteModal(true);
+    }}
+    key={1}
+    className=" cursor-pointer"
+  />,
     ];
   });
 
   return (
     <div className="p-2 md:p-5 rounded-md h-full bg-white border-gray-border">
       <div className="flex flex-col md:flex-row gap-2 md:gap-0 md:items-center md:justify-between mb-5">
-        <FormHeading icon={<FileIcon classNames="w-5 h-5" />} text="Documents" />
+        <FormHeading icon={<Image src="/document.svg" alt='img' width={15} height={15} />} text="Documents" />
         <div className="flex items-center gap-4">
-          <label className="flex gap-2 items-center text-dark-navy ms-2 ">
-            <span className="text-xs ">Sort</span>{' '}
+          <label className="flex gap-3 items-center text-dark-navy ms-2 ">
+            <span className="text-[14px] text-gray-400">Sort</span>{' '}
             <select
               value={sortOption}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
                 setSortOption(e.target.value as 'size' | 'date')}
-                            className="outline-none text-xs"
+                            className="outline-none text-xs p-2 border w-[150px] rounded-md"
             >
               <option value="size">Size</option>
               <option value="date">Date</option>
@@ -207,7 +212,7 @@ const DocumentSection = ({ employeeData }: { employeeData?: EmployeeDataType }) 
           <button
             onClick={() => setOpenModal(true)}
             type="button"
-            className="flex items-center p-1 rounded-[4px] w-[6rem] gap-2 text-white bg-dark-navy text-xs"
+            className="flex items-center p-2 rounded-[4px] w-[6rem] gap-2 text-white bg-dark-navy text-xs"
           >
             <GoPlusCircle className="w-4" />
             Upload

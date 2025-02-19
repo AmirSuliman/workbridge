@@ -18,7 +18,7 @@ const TabButton = ({
   return (
     <button
       type="button"
-      className={`px-[4%] text-xs  py-3 text-dark-navy  whitespace-nowrap  ${
+      className={`px-[4%] text-[16px]  py-3 text-dark-navy  whitespace-nowrap  ${
         isRootTab
           ? !tab || tab === index
             ? 'font-semibold border-b-2 !border-dark-navy'

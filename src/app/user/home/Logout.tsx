@@ -13,7 +13,7 @@ const Logout = () => {
 
   return (
     <div
-      className="flex gap-2 items-center text-xs px-4 py-2 bg-white hover:bg-opacity-50"
+      className="flex gap-4 items-center text-xs px-4 py-2 bg-white hover:bg-opacity-50"
       onClick={onLogout}
     >
       <CiLogout /> Logout

@@ -143,12 +143,7 @@ const Page = () => {
                 Announcements
               </h1>
               <Link href="/hr/announcements-&-policies/announcements/create-announcment">
-                <Button
-                  name="Create Announcement"
-                  icon={<PiPlusCircleBold size={18} />}
-                  bg="black"
-                  textColor="white"
-                />
+              <button className='flex flex-row items-center gap-3 bg-[#0F172A] text-white text-[12px] p-3 px-4 rounded-md'>Create Announcement <PiPlusCircleBold size={18} /></button>
               </Link>
             </header>
             <h6 className="my-2 opacity-35 font-medium text-sm px-4">

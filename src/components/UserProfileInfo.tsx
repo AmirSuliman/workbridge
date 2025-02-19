@@ -88,12 +88,12 @@ const UserProfileInfo: React.FC<
         }`}
       />
       {showDropdown && (
-        <nav className="absolute right-0 top-[100%] z-10 flex flex-col py-4 rounded-md divide-y shadow-md bg-white">
+        <nav className="absolute right-0 mt-4 top-[100%] w-[150px] z-10 flex flex-col py-4 rounded-md  shadow-md bg-white">
           <Link
             href={`${
               isUserPanel ? '/user/my-information' : '/hr/my-information'
             }`}
-            className="flex gap-2 items-center text-xs px-4 py-2 bg-white/100 hover:bg-white/50"
+            className="flex gap-4 items-center text-xs px-4 py-2 bg-white/100 hover:bg-white/50"
           >
             <FaUser />
             Profile

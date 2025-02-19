@@ -12,7 +12,7 @@ import { AllEmployeeData } from '@/types/employee';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { CiCirclePlus } from 'react-icons/ci';
-import { FaChevronRight } from 'react-icons/fa';
+import { FaChevronRight, FaDownload } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import Link from 'next/link';
@@ -225,12 +225,17 @@ export const AllEmployees = () => {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="text-sm text-gray-500">
-                <th className="py-3 px-4 border-b">Employee Name</th>
-                <th className="py-3 px-4 border-b">Job Title</th>
-                <th className="py-3 px-4 border-b">Department</th>
-                <th className="py-3 px-4 border-b">Email</th>
-                <th className="py-3 px-4 border-b">Hire Date</th>
-                <th className="py-3 px-4 border-b">Download</th>
+                <th className="py-3 px-4 font-medium border-b">Employee Name</th>
+                <th className="py-3 px-4 font-medium border-b">Job Title</th>
+                <th className="py-3 px-4 font-medium border-b">Department</th>
+                <th className="py-3 px-4 font-medium border-b">Email</th>
+                <th className="py-3 px-4 font-medium border-b">Hire Date</th>
+                <th className="py-3 px-4 font-medium border-b">
+                  <span className='border bg-gray-200 text-gray-400 p-2 text-[12px] flex flex-row items-center gap-2 rounded-sm'>
+                    <FaDownload/>
+                  Download
+                  </span>
+                  </th>
               </tr>
             </thead>
             {!loading ? (
@@ -291,7 +296,7 @@ export const AllEmployees = () => {
                       </td>
                       <td className="py-3 px-4 border-b">
                         <a
-                          className="text-blue-700"
+                          className="text-blue-700 underline"
                           href={`mailto:${employee.email}`}
                         >
                           {employee.email}

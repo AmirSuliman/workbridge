@@ -92,7 +92,7 @@ const CreateAnnouncement = () => {
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-2">
           <button
-            className="bg-[#0F172A] rounded-lg p-3 text-white text-[14px]"
+            className="bg-[#0F172A] rounded-md px-3 p-2 text-white text-[12px]"
             onClick={handleSaveDraft}
           >
             {loading ? (
@@ -102,13 +102,13 @@ const CreateAnnouncement = () => {
             )}
           </button>
           <button
-            className="bg-white rounded-lg p-3 text-[#0F172A] border text-[14px]"
+            className="bg-white rounded-md p-2 px-3 text-[#0F172A] border text-[12px]"
             onClick={handlePreviewPost}
           >
             Preview Post
           </button>
           <button
-            className="bg-gray-200 rounded-lg p-3 text-red-500 text-[14px]"
+            className="bg-gray-200 rounded-md p-2 px-3 text-red-500 text-[12px]"
             onClick={handleCancel}
           >
             Cancel

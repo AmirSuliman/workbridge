@@ -43,7 +43,7 @@ const UserInfoSection = ({
             <span className="form-label">Is Manager?</span>
           </label>
         )}
-        <div className="grid sm:grid-cols-3 gap-4 my-5">
+        <div className="grid sm:grid-cols-3 gap-4 my-5 mt-12 mb-6">
           <div className="flex flex-col">
             <h6 className="form-label">First Name*</h6>
             <input
@@ -149,12 +149,12 @@ const UserInfoSection = ({
         </div>
       </div>
       <hr className="text-white" />
-      <div className="my-5">
+      <div className="mb-8 mt-4 ">
         <FormHeading
           icon={<HiMiniHomeModern className="w-4" />}
           text="Address"
         />
-        <div className="grid sm:grid-cols-3 gap-4 mt-5">
+        <div className="grid sm:grid-cols-3 gap-4 mt-10 mb-8">
           <label className="form-label">
             Street 1*
             <input
@@ -232,7 +232,7 @@ const UserInfoSection = ({
       <hr />
       <div className="my-5">
         <FormHeading icon={<FaPhoneAlt className="w-4" />} text="Contact" />
-        <div className="grid sm:grid-cols-3 gap-4 mt-5">
+        <div className="grid sm:grid-cols-3 gap-4 mt-10 mb-8">
           <label className="form-label">
             Phone*
             <input
@@ -265,7 +265,7 @@ const UserInfoSection = ({
           icon={<HiMiniGlobeAmericas className="w-4" />}
           text="Social Links"
         />
-        <div className="grid sm:grid-cols-3 gap-4 mt-5">
+        <div className="grid sm:grid-cols-3 gap-4 mt-10 mb-8">
           <label className="form-label">
             LinkedIn
             <input

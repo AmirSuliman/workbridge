@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import { setEmergencyContact } from '@/store/slices/emergencyContactSlice';
 import Modal from '../modal';
-
+import Image from 'next/image';
 interface PaymentProps {
   id: number;
   note: string;
@@ -142,8 +142,8 @@ const EmergencySection = ({ employeeData }) => {
       <div className="p-3 sm:p-6 rounded-[10px] border-gray-border border-[1px] bg-white my-5">
         <div className="mb-5 flex justify-between flex-wrap gap-4">
           <FormHeading
-            icon={<HiMiniBriefcase className="w-4" />}
-            text="Payment"
+            icon={<Image src="/contact.svg" alt='img' width={17} height={17} />}
+            text="Emergency Contact"
           />
 
           {!addeNew && !isEditPayment && (
@@ -154,7 +154,7 @@ const EmergencySection = ({ employeeData }) => {
               }}
               name={'Add New Contact'}
               icon={<GoPlusCircle />}
-              className="flex-row-reverse"
+              className="flex-row-reverse !text-[14px]"
             />
           )}
         </div>
@@ -183,7 +183,10 @@ const EmergencySection = ({ employeeData }) => {
                     } ${payment.location?.city || ''} ${
                       payment.location?.state || ''
                     } ${payment.location?.country || ''}`,
-                    <FaTrash
+                    <Image src="/delete.svg"
+                    width={10}
+                    height={10}
+                    alt='delete'
                       className="cursor-pointer"
                       key={payment.id}
                       onClick={(e) => {
@@ -193,7 +196,10 @@ const EmergencySection = ({ employeeData }) => {
                         setPaymentId(payment.id);
                       }}
                     />,
-                    <FaEdit
+                    <Image src="/edit.svg"
+                    width={10}
+                    height={10}
+                    alt='edit'
                       className="cursor-pointer"
                       key={payment.id}
                       onClick={(e) => {

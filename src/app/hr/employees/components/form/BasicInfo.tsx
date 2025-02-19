@@ -340,13 +340,13 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
           name="Cancel"
           bg="white"
           textColor="black"
-          className="px-16"
+          className=" !px-16 !w-[200px] !text-[14px] !p-2"
           onClick={() => router.push('/hr/employees')}
         />
         <Button
           type="button"
           name="Next"
-          className="px-16"
+          className="!px-16 !w-[200px] !text-[14px] !p-2"
           onClick={handleNext}
         />
       </article>
