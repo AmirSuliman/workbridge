@@ -118,7 +118,7 @@ const OpendepartmentTable: React.FC = () => {
       user: {
         email: employee.email || 'N/A',
       },
-      hireDate: employee.hireDate.split('T')[0] || 'N/A',
+      hireDate: employee.hireDate?.split('T')[0] || 'N/A',
       jobTitle: employee.tittle || 'N/A',
     }));
 
@@ -214,7 +214,6 @@ const OpendepartmentTable: React.FC = () => {
                 <FaTrash size={14} />
                 Delete Department
               </button>
-              
             </div>
           )}
         </nav>
@@ -258,7 +257,7 @@ const OpendepartmentTable: React.FC = () => {
               name="Add new Employee"
               icon={<CiCirclePlus />}
               onClick={() => setIsModalOpen(true)}
-              className='!text-[12px]'
+              className="!text-[12px]"
             />
           </div>
           <div className="overflow-x-auto">

@@ -1,13 +1,13 @@
 'use client';
 
-import { useRouter, usePathname } from 'next/navigation';
-import { GoBell } from 'react-icons/go';
-import { PiPlusCircleBold } from 'react-icons/pi';
-import { useState } from 'react';
-import UserProfileInfo from '../UserProfileInfo';
 import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { HiUsers } from 'react-icons/hi';
+import { PiPlusCircleBold } from 'react-icons/pi';
 import Notifications from '../Notifications/Notifications';
+import UserProfileInfo from '../UserProfileInfo';
+
 const HrHeader = () => {
   const router = useRouter();
   const pathname = usePathname();
