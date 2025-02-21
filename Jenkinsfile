@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     options {
-        disableConcurrentBuilds()  // Prevents multiple concurrent builds
+        disableConcurrentBuilds()  // Prevents multiple concurrent builds.
     }
 
     environment {
@@ -25,7 +25,7 @@ pipeline {
                     } else if (env.BRANCH_NAME == 'prod') {
                         env.NODE_LABEL = 'production'
                         env.SERVER_USER = 'jenkins'
-                        env.SERVER_IP = '13.48.115.146'  // Replace with actual production IP
+                        env.SERVER_IP = '13.48.115.146'  // Replace with actual production IP.
                         // env.NODE_ENV = 'production'
                         env.ENV_PATH = '/home/jenkins/envFiles/workbridgeFrontendEnv/.env'
                         env.APP_DIR = '/var/www/workbridge-frontend'
