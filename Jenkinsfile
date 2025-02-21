@@ -7,8 +7,8 @@ pipeline {
 
     environment {
         REPO_URL = 'https://github.com/ISA-Consulting/ISAWorkBridge-Frontend.git'
-        APP_NAME = 'isa-next-app'  // Name of the PM2 process.
-        APP_PORT = '4000'  // Change to port 4000
+        APP_NAME = 'isa-next-app'  // PM2 process name
+        APP_PORT = '4000'  // Port Next.js will run on
     }
 
     stages {
@@ -45,6 +45,7 @@ pipeline {
                         echo "Setting up deployment directory..."
                         sudo mkdir -p ${env.APP_DIR}
                         sudo chown -R jenkins:jenkins ${env.APP_DIR}
+                        sudo chmod -R 775 ${env.APP_DIR}
                         sudo rm -rf ${env.APP_DIR}/*  # Clean old files before copying new ones
                         cp -r ${WORKSPACE}/* ${env.APP_DIR}/  # Copy code from workspace
                         echo "Workspace copied to deployment directory."
@@ -72,7 +73,7 @@ pipeline {
                 script {
                     sh """
                         cd ${env.APP_DIR}
-                        npm install
+                        npm ci
                     """
                 }
             }
@@ -84,13 +85,13 @@ pipeline {
                 script {
                     sh """
                         cd ${env.APP_DIR}
-                        npm run build
+                        npm run build  # Creates a Next.js production build
                     """
                 }
             }
         }
 
-        stage('Setup PM2 Ecosystem & Start App') {
+        stage('Setup PM2 & Run Next.js from Build') {
             agent { label "${env.NODE_LABEL}" }
             steps {
                 script {
@@ -102,8 +103,9 @@ pipeline {
                             apps: [
                                 {
                                     name: "${APP_NAME}",
-                                    script: "npm",
+                                    script: "node_modules/.bin/next",
                                     args: "start",
+                                    cwd: "${env.APP_DIR}",
                                     env: {
                                         NODE_ENV: "${env.NODE_ENV}",
                                         PORT: ${env.APP_PORT}
