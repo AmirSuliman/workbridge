@@ -45,14 +45,6 @@ pipeline {
                         echo "Cloning repository..."
                         sudo mkdir -p ${env.APP_DIR}
                         sudo chown -R jenkins:jenkins ${env.APP_DIR}
-                        cd ${env.APP_DIR}
-                        if [ -d ".git" ]; then
-                            git reset --hard
-                            git pull origin ${env.BRANCH_NAME}
-                        else
-                            git clone -b ${env.BRANCH_NAME} ${env.REPO_URL} ${env.APP_DIR}
-                        fi
-                        echo "Repository cloned successfully."
                     """
                 }
             }
