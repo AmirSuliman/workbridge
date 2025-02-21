@@ -32,11 +32,18 @@ const HrHeader = () => {
                 <li
                   onClick={() => {
                     setShowDropdown(false);
-                    router.push('/hr/announcements-&-policies/announcements/create-announcment');
+                    router.push(
+                      '/hr/announcements-&-policies/announcements/create-announcment'
+                    );
                   }}
                   className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex flex-row items-center gap-2 "
                 >
-                 <Image src="/announcment.svg" alt='img' width={13} height={13}/>
+                  <Image
+                    src="/announcment.svg"
+                    alt="img"
+                    width={13}
+                    height={13}
+                  />
                   Announcement
                 </li>
                 <li
@@ -46,8 +53,7 @@ const HrHeader = () => {
                   }}
                   className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex flex-row items-center gap-2"
                 >
-                 <Image src="/job.svg" alt='img' width={13} height={13}/>
-
+                  <Image src="/job.svg" alt="img" width={13} height={13} />
                   Job Posting
                 </li>
                 <li

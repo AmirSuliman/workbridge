@@ -1,4 +1,4 @@
-// pages/api/auth/[...nextauth].ts
+// api/auth/[...nextauth]/auth-options.ts
 import axiosInstance from '@/lib/axios';
 import { jwtDecode } from 'jwt-decode';
 import { NextAuthOptions, User } from 'next-auth';
