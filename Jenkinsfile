@@ -19,7 +19,7 @@ pipeline {
                         env.NODE_LABEL = 'master'
                         env.SERVER_USER = 'jenkins'
                         env.SERVER_IP = '13.48.115.146'
-                        // env.NODE_ENV = 'development'
+                        env.NODE_ENV = 'development'
                         env.ENV_PATH = '/var/lib/jenkins/envFiles/workbridgeFrontendEnv/.env'
                         env.APP_DIR = '/var/www/workbridge-frontend-dev'
                     } else if (env.BRANCH_NAME == 'prod') {
@@ -46,10 +46,10 @@ pipeline {
                         sudo mkdir -p ${env.APP_DIR} || exit 1
                         sudo chown -R jenkins:jenkins ${env.APP_DIR} || exit 1
                         sudo chmod -R 775 ${env.APP_DIR} || exit 1
-                        
+
                         echo "🗑️ Cleaning old files..."
                         sudo rm -rf ${env.APP_DIR}/* || exit 1
-                        
+
                         if [ -d "${WORKSPACE}" ]; then
                             echo "📂 Copying workspace files..."
                             cp -r ${WORKSPACE}/* ${env.APP_DIR}/ || exit 1
@@ -118,22 +118,24 @@ pipeline {
                     sh """
                         cd ${env.APP_DIR} || exit 1
                         echo "⚙️ Creating PM2 ecosystem.config.js file..."
-                        cat > ecosystem.config.js <<EOL
-                        module.exports = {
-                            apps: [
-                                {
-                                    name: "${APP_NAME}",
-                                    script: "node_modules/.bin/next",
-                                    args: "start",
-                                    cwd: "${env.APP_DIR}",
-                                    env: {
-                                        NODE_ENV: "${env.NODE_ENV}",
-                                        PORT: ${env.APP_PORT}
-                                    }
-                                }
-                            ]
-                        };
-                        EOL
+
+                        # Generate ecosystem.config.js properly
+                        cat <<EOF > ecosystem.config.js
+module.exports = {
+    apps: [
+        {
+            name: "${APP_NAME}",
+            script: "node_modules/next/dist/bin/next",
+            args: "start",
+            cwd: "${env.APP_DIR}",
+            env: {
+                NODE_ENV: "${env.NODE_ENV}",
+                PORT: ${env.APP_PORT}
+            }
+        }
+    ]
+};
+EOF
 
                         echo "🔄 Restarting Next.js application with PM2..."
                         pm2 delete ${APP_NAME} || true  # Stop existing app if running
