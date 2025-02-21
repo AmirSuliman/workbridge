@@ -9,30 +9,33 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       id: 'credentials',
       name: 'credentials',
-      credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" }
-      },
-      async authorize(credentials) {
+      credentials: {},
+      async authorize(credentials: any) {
         try {
+          console.log("🔹 Logging in user:", credentials);
+          
           const res = await axiosInstance.post('/user/login', {
-            email: credentials?.email,
-            password: credentials?.password,
+            email: credentials.email,
+            password: credentials.password,
           });
+
+          console.log("✅ API Response:", res.data);
           
           let accessToken = res.data?.data?.accessToken?.accessToken;
           if (accessToken?.startsWith('Bearer ')) {
             accessToken = accessToken.replace('Bearer ', '');
           }
-          
+
           if (accessToken) {
             const user = jwtDecode(accessToken.trim()) as User;
+            console.log("🔹 Decoded User:", user);
             return { ...user, accessToken };
           }
-          return null;
+
+          throw new Error('Invalid credentials');
         } catch (error) {
-          console.error("Authentication error:", error);
-          return null;
+          console.error("❌ Login failed:", error);
+          throw new Error('Authentication failed');
         }
       },
     }),
@@ -49,11 +52,12 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
+      const nToken = token as any;
       return {
         ...session,
         user: token.user,
-        accessToken: (token.user as any)?.accessToken,
-      };
+        accessToken: nToken.user?.accessToken,
+      } as any;
     },
     async redirect({ url, baseUrl }) {
       const parsedUrl = new URL(url, baseUrl);
