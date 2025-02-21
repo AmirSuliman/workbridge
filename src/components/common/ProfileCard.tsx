@@ -41,7 +41,6 @@ const ProfileCard = ({
   useSelector((state: RootState) => state.myInfo);
   // const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
   const logedInUser = useSelector((state: RootState) => state.myInfo?.user);
-  console.log('logedInUser: ', logedInUser);
   const userRole = logedInUser?.role;
   const logedInUserId = logedInUser?.employeeId;
 
@@ -135,9 +134,9 @@ const ProfileCard = ({
         <div className="flex flex-col w-full">
           <div className="flex justify-between flex-wrap">
             <div className="flex flex-col">
-              <h1 className={`text-[24px]`}>{`${employeeData?.firstName || ''} ${
-                employeeData?.lastName || ''
-              }`}</h1>
+              <h1 className={`text-[24px]`}>{`${
+                employeeData?.firstName || ''
+              } ${employeeData?.lastName || ''}`}</h1>
               <p className="text-[16px] text-gray-500">
                 {employeeData?.tittle || 'N/A'}
               </p>
@@ -177,7 +176,7 @@ const ProfileCard = ({
                 {editEmployee && (
                   <button
                     type="button"
-                    className='text-[12px]'
+                    className="text-[12px]"
                     onClick={(e) => {
                       e.preventDefault();
                       setEditEmployee(false);

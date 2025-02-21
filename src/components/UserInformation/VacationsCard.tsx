@@ -2,12 +2,13 @@
 import Modal from '@/components/modal/Modal';
 import axiosInstance from '@/lib/axios';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import UmbrellaIcon from '../icons/umbrella-icon';
+import { isAxiosError } from 'axios';
 
 interface VacationCardProps {
   onButtonClick?: () => void;
@@ -23,33 +24,47 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
-  const calculateDuration = () => {
+  const calculateDuration = useCallback(() => {
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
       if (start > end) {
         return 0;
       }
-      const duration =
-        Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) +
-        1;
-      return duration > 0 ? duration : 0;
+
+      let count = 0;
+      const current = new Date(start);
+
+      // Loop through each day and only count weekdays
+      while (current <= end) {
+        // getDay() returns 0 for Sunday and 6 for Saturday
+        const dayOfWeek = current.getDay();
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+          count++;
+        }
+
+        // Move to the next day
+        current.setDate(current.getDate() + 1);
+      }
+
+      return count > 0 ? count : 0;
     }
     return 0;
-  };
+  }, [endDate, startDate]);
 
   useEffect(() => {
     const duration = calculateDuration();
     setVacationDaysUsed(duration);
-  }, [startDate, endDate]);
+  }, [startDate, endDate, calculateDuration]);
 
   const formatDate = (date) => {
     if (!date) return '';
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    return `${year}-${month}-${day}`;
   };
+  // "2024-11-18"
 
   const handleRequestVacation = async () => {
     const duration = calculateDuration();
@@ -76,11 +91,19 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
         setIsModalOpen(false);
         setStartDate(null);
         setEndDate(null);
-
         setNote('');
       }
     } catch (error) {
       console.error('Error:', error);
+      if (isAxiosError(error) && error.response) {
+        toast.error(
+          error.response.data.message?.conflict ||
+            error.response.data.message ||
+            'Unknown error occurred'
+        );
+      } else {
+        toast.error('Unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }

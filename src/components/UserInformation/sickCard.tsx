@@ -2,11 +2,12 @@
 import Modal from '@/components/modal/Modal';
 import axiosInstance from '@/lib/axios';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
+import { isAxiosError } from 'axios';
 interface SickCardProps {
   onButtonClick?: () => void;
   totalDays: number;
@@ -14,40 +15,52 @@ interface SickCardProps {
 
 const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-   const [note, setNote] = useState('');
+  const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
   const [vacationDaysUsed, setVacationDaysUsed] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
-  const calculateDuration = () => {
+  const calculateDuration = useCallback(() => {
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
       if (start > end) {
         return 0;
       }
-      const duration =
-        Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) +
-        1;
-      return duration > 0 ? duration : 0;
+
+      let count = 0;
+      const current = new Date(start);
+
+      // Loop through each day and only count weekdays
+      while (current <= end) {
+        // getDay() returns 0 for Sunday and 6 for Saturday
+        const dayOfWeek = current.getDay();
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+          count++;
+        }
+
+        // Move to the next day
+        current.setDate(current.getDate() + 1);
+      }
+      return count > 0 ? count : 0;
     }
     return 0;
-  };
+  }, [endDate, startDate]);
 
   useEffect(() => {
     const duration = calculateDuration();
     setVacationDaysUsed(duration);
-  }, [startDate, endDate]);
+  }, [startDate, endDate, calculateDuration]);
 
   const formatDate = (date) => {
     if (!date) return '';
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    return `${year}-${month}-${day}`;
   };
-  
+
   const handleRequestVacation = async () => {
     const duration = calculateDuration();
     if (!startDate || !endDate || duration <= 0) {
@@ -77,6 +90,15 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
       }
     } catch (error) {
       console.error('Error:', error);
+      if (isAxiosError(error) && error.response) {
+        toast.error(
+          error.response.data.message?.conflict ||
+            error.response.data.message ||
+            'Unknown error occurred'
+        );
+      } else {
+        toast.error('Unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }
@@ -88,10 +110,6 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
     }
     setIsModalOpen(true);
   };
-
- 
- 
-  
 
   return (
     <>
@@ -108,15 +126,15 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
             </div>
           </div>
           <button
-  type="button"
-  onClick={handleButtonClick}
-  className={`text-white bg-dark-navy py-2 w-[15rem] rounded-[4px] font-[400] text-sm ${
-    totalDays === 0 ? 'opacity-50 cursor-not-allowed' : ''
-  }`}
-  disabled={totalDays === 0}
->
-  Request Sick leave
-</button>
+            type="button"
+            onClick={handleButtonClick}
+            className={`text-white bg-dark-navy py-2 w-[15rem] rounded-[4px] font-[400] text-sm ${
+              totalDays === 0 ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+            disabled={totalDays === 0}
+          >
+            Request Sick leave
+          </button>
         </div>
 
         <div className="flex flex-col border border-gray-border items-center justify-center rounded-[7px] h-full px-4">
@@ -138,35 +156,35 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
             <div className="grid grid-cols-2 gap-4 w-full mt-8">
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">Leaving Date</span>
-               <DatePicker
-                   selected={startDate}
-                   onChange={(date) => setStartDate(date)}
-                   selectsStart
-                   startDate={startDate}
-                   endDate={endDate}
-                   minDate={new Date()}
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  selectsStart
+                  startDate={startDate}
+                  endDate={endDate}
+                  minDate={new Date()}
                   maxDate={addDays(new Date(), totalDays - 1)}
-                   dateFormat="dd/MM/yyyy"
-                   placeholderText="dd/mm/yyyy"
-                   className="p-3 border rounded w-full"
-                 />
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyyy"
+                  className="p-3 border rounded w-full"
+                />
               </label>
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">
                   Returning Date
                 </span>
-               <DatePicker
-                   selected={endDate}
-                   onChange={(date) => setEndDate(date)}
-                   selectsEnd
-                   startDate={startDate}
-                   endDate={endDate}
-                   minDate={startDate || new Date()}
-                   maxDate={addDays(new Date(), totalDays - 1)}
-                   dateFormat="dd/MM/yyyy"
-                   placeholderText="dd/mm/yyyy"
-                   className="p-3 border rounded w-full"
-                 />
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  minDate={startDate || new Date()}
+                  maxDate={addDays(new Date(), totalDays - 1)}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyyy"
+                  className="p-3 border rounded w-full"
+                />
               </label>
               <label className="flex flex-col w-full col-span-full">
                 <span className="text-gray-400 text-[12px]">Note</span>
