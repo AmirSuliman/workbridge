@@ -16,14 +16,13 @@ interface VacationCardProps {
 
 const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
   const [vacationDaysUsed, setVacationDaysUsed] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  
-  
+
   const calculateDuration = () => {
     if (startDate && endDate) {
       const start = new Date(startDate);
@@ -43,7 +42,7 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
     const duration = calculateDuration();
     setVacationDaysUsed(duration);
   }, [startDate, endDate]);
-  
+
   const formatDate = (date) => {
     if (!date) return '';
     const day = String(date.getDate()).padStart(2, '0');
@@ -51,8 +50,6 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-  
-  
 
   const handleRequestVacation = async () => {
     const duration = calculateDuration();
@@ -96,10 +93,6 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
     setIsModalOpen(true);
   };
 
- 
-
- 
-  
   return (
     <>
       <div className="flex items-center justify-between border border-gray-border rounded-[10px] bg-white p-3 md:p-6 md:gap-[3.3rem] w-full">
@@ -107,8 +100,8 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
           <div>
             <div className="flex gap-2 items-center mb-2">
               <div className="flex items-center justify-center rounded-full p-1 bg-[#00B87D]">
-                 <UmbrellaIcon classNames="w-4 h-4 text-white" />              
-                 </div>
+                <UmbrellaIcon classNames="w-4 h-4 text-white" />
+              </div>
               <h3 className="text-dark-navy font-[500] text-sm">
                 Request Vacation
               </h3>
@@ -127,7 +120,6 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
           >
             Request Vacation
           </button>
-
         </div>
 
         <div className="flex flex-col border border-gray-border items-center justify-center rounded-[7px] h-full px-4">
@@ -150,35 +142,34 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">Leaving Date</span>
                 <DatePicker
-    selected={startDate}
-    onChange={(date) => setStartDate(date)}
-    selectsStart
-    startDate={startDate}
-    endDate={endDate}
-    minDate={new Date()}
-   maxDate={addDays(new Date(), totalDays - 1)}
-    dateFormat="dd/MM/yyyy"
-    placeholderText="dd/mm/yyyy"
-    className="p-3 border rounded w-full"
-  />
-
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  selectsStart
+                  startDate={startDate}
+                  endDate={endDate}
+                  minDate={new Date()}
+                  maxDate={addDays(new Date(), totalDays - 1)}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyyy"
+                  className="p-3 border rounded w-full"
+                />
               </label>
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">
                   Returning Date
                 </span>
                 <DatePicker
-    selected={endDate}
-    onChange={(date) => setEndDate(date)}
-    selectsEnd
-    startDate={startDate}
-    endDate={endDate}
-    minDate={startDate || new Date()}
-    maxDate={addDays(new Date(), totalDays - 1)}
-    dateFormat="dd/MM/yyyy"
-    placeholderText="dd/mm/yyyy"
-    className="p-3 border rounded w-full"
-  />
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  minDate={startDate || new Date()}
+                  maxDate={addDays(new Date(), totalDays - 1)}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyyy"
+                  className="p-3 border rounded w-full"
+                />
               </label>
               <label className="flex flex-col w-full col-span-full">
                 <span className="text-gray-400 text-[12px]">Note</span>

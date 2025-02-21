@@ -226,7 +226,6 @@ export const AllEmployees = () => {
                 <th className="py-3 px-4 border-b">Department</th>
                 <th className="py-3 px-4 border-b">Email</th>
                 <th className="py-3 px-4 border-b">Hire Date</th>
-                <th className="py-3 px-4 border-b">Download</th>
               </tr>
             </thead>
             <tbody>

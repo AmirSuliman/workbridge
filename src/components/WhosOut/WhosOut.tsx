@@ -2,8 +2,6 @@
 import axiosInstance from '@/lib/axios';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { MdOutlineSick } from 'react-icons/md';
-import { PiUmbrellaLight } from 'react-icons/pi';
 import LeaveAndVacationCard from '../LeaveAndVacationCard/LeaveAndVacationCard';
 
 interface Timeoff {
@@ -90,7 +88,9 @@ const WhosOut = () => {
         <LeaveAndVacationCard
           title="Vacation"
           bgColor="#25A244"
-          icon={<img src="/vacation.svg" alt="Vacation Icon" className="w-4 h-4" />}
+          icon={
+            <img src="/vacation.svg" alt="Vacation Icon" className="w-4 h-4" />
+          }
           description="Requests need to be made at least 48 hours prior."
           daysNum="32"
           name="Request Vacation"
@@ -98,7 +98,9 @@ const WhosOut = () => {
         <LeaveAndVacationCard
           title="Sick leave"
           bgColor="#F53649"
-          icon={<img src="/sickicon.svg" alt="Vacation Icon" className="w-5 h-5" />}
+          icon={
+            <img src="/sickicon.svg" alt="Vacation Icon" className="w-5 h-5" />
+          }
           description=""
           daysNum="11"
           name="Request Sick Leave"
@@ -111,7 +113,7 @@ const WhosOut = () => {
       </h6>
       <div className="border-[0.5px] border-[#E8E8E8] bg-[#F5F6FA] rounded m-4 mb-3">
         <table className="w-full">
-          <thead className='mb-4'>
+          <thead className="mb-4">
             <tr>
               <th className="text-xs opacity-50 font-normal text-start px-4 pt-4 pb-4">
                 Employee
@@ -151,8 +153,8 @@ const WhosOut = () => {
       </h6>
       <div className="border-[0.5px] border-[#E8E8E8] bg-[#F5F6FA] rounded m-4 ">
         <table className="w-full">
-          <thead className=''>
-            <tr >
+          <thead className="">
+            <tr>
               <th className="text-xs opacity-50 font-normal text-start px-4 pt-4 pb-4">
                 Employee
               </th>

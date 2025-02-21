@@ -111,10 +111,11 @@ const OpendepartmentTable: React.FC = () => {
       user: {
         email: employee.email || 'N/A',
       },
-      hireDate: employee.hireDate && employee.hireDate.includes('T')
-      ? employee.hireDate.split('T')[0]
-      : 'N/A',
-          jobTitle: employee.tittle || 'N/A',
+      hireDate:
+        employee.hireDate && employee.hireDate.includes('T')
+          ? employee.hireDate.split('T')[0]
+          : 'N/A',
+      jobTitle: employee.tittle || 'N/A',
     }));
 
   const headers = [
@@ -177,7 +178,6 @@ const OpendepartmentTable: React.FC = () => {
           icon={<EmployeesIcon classNames="w-6" />}
           text={departmentData?.name || 'Department Name'}
         />
-        
       </div>
 
       {isLoading ? (
@@ -214,11 +214,6 @@ const OpendepartmentTable: React.FC = () => {
                 </select>
               </div>
             </div>
-            <Button
-              name="Add new Employee"
-              icon={<CiCirclePlus />}
-              onClick={() => setIsModalOpen(true)}
-            />
           </div>
           <div className="overflow-x-auto">
             <Table
@@ -272,9 +267,6 @@ const OpendepartmentTable: React.FC = () => {
           <Addemployee setIsModalOpen={setIsModalOpen} />
         </Modal>
       )}
-     
-
-      
     </div>
   );
 };
