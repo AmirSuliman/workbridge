@@ -26,13 +26,13 @@ pipeline {
                         env.NODE_LABEL = 'production'
                         env.SERVER_USER = 'jenkins'
                         env.SERVER_IP = '13.48.115.146'  // Replace with actual production IP
-                        env.NODE_ENV = 'production'
+                        // env.NODE_ENV = 'production'
                         env.ENV_PATH = '/home/jenkins/envFiles/workbridgeFrontendEnv/.env'
                         env.APP_DIR = '/var/www/workbridge-frontend'
                     } else {
                         error "Unsupported branch: ${env.BRANCH_NAME}"
                     }
-                    echo "🚀 Deploying ${APP_NAME} to ${env.NODE_ENV} at ${env.APP_DIR}"
+                    // echo "🚀 Deploying ${APP_NAME} to ${env.NODE_ENV} at ${env.APP_DIR}"
                 }
             }
         }
