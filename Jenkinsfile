@@ -19,7 +19,7 @@ pipeline {
                         env.NODE_LABEL = 'master'
                         env.SERVER_USER = 'jenkins'
                         env.SERVER_IP = '13.48.115.146'
-                        env.NODE_ENV = 'production'
+                        // env.NODE_ENV = 'production'
                         env.ENV_PATH = '/var/lib/jenkins/envFiles/workbridgeFrontendEnv/.env'
                         env.APP_DIR = '/var/www/workbridge-frontend-dev'
                     } else if (env.BRANCH_NAME == 'prod') {
@@ -90,7 +90,7 @@ pipeline {
                     sh """
                         cd ${env.APP_DIR} || exit 1
                         echo "📦 Installing dependencies..."
-                        npm ci || exit 1  # Ensures clean install with exact versions
+                        npm i || exit 1  # Ensures clean install with exact versions
                         echo "✅ Dependencies installed successfully."
                     """
                 }
@@ -129,7 +129,7 @@ module.exports = {
             args: "start",
             cwd: "${env.APP_DIR}",
             env: {
-                NODE_ENV: "${env.NODE_ENV}",
+
                 PORT: ${env.APP_PORT}
             }
         }
