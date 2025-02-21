@@ -7,6 +7,7 @@ import { useState } from 'react';
 import UserProfileInfo from '../UserProfileInfo';
 import Image from 'next/image';
 import { HiUsers } from 'react-icons/hi';
+import Notifications from '../Notifications/Notifications';
 const HrHeader = () => {
   const router = useRouter();
   const pathname = usePathname();
@@ -72,12 +73,7 @@ const HrHeader = () => {
         </div>
       )}
 
-      {/* Notification Button */}
-      <button className="border border-[#E0E0E0] rounded-full size-8 flex items-center justify-center ml-auto">
-        <GoBell size={18} />
-      </button>
-
-      {/* User Profile */}
+      <Notifications />
       <UserProfileInfo />
     </nav>
   );

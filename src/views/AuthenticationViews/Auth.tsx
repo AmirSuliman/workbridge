@@ -6,19 +6,17 @@ import { setUser } from '@/store/slices/myInfoSlice';
 import { authSchema } from '@/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getSession, signIn } from 'next-auth/react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { useDispatch } from 'react-redux';
 import { z } from 'zod';
-import Image from 'next/image';
-import Navbar from './nav';
 import Footer from './footer';
-import { BASE_URL } from '@/constants/apiRoutes';
-import axiosInstance from '@/lib/axios';
+import Navbar from './nav';
 
 type AuthFormInputs = z.infer<typeof authSchema>;
 
