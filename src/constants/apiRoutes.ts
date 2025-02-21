@@ -1,7 +1,9 @@
-export const BASE_URL = 'https://devbackend.isaworkbridge.com/';
+// export const BASE_URL = 'https://devbackend.isaworkbridge.com/'; // for development
+export const BASE_URL = 'https://backend.app.isaworkbridge.com/'; // for production
 
 export const API_ROUTES = {
-  WEBSOCKET_URL: 'wss://devbackend.isaworkbridge.com',
+  // WEBSOCKET_URL: 'wss://devbackend.isaworkbridge.com', // for development
+  WEBSOCKET_URL: 'wss://backend.app.isaworkbridge.com', // for production
   FORGOT_PASSWORD: `user/resetPassword`,
   CONFIRM_RESET_PASSWORD: `user/confirmResetPassword`,
   GET_USERS: `users`,
