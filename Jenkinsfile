@@ -37,14 +37,17 @@ pipeline {
             }
         }
 
-        stage('Clone Repository') {
+        stage('Prepare Deployment Directory') {
             agent { label "${env.NODE_LABEL}" }
             steps {
                 script {
                     sh """
-                        echo "Cloning repository..."
+                        echo "Setting up deployment directory..."
                         sudo mkdir -p ${env.APP_DIR}
                         sudo chown -R jenkins:jenkins ${env.APP_DIR}
+                        sudo rm -rf ${env.APP_DIR}/*  # Clean old files before copying new ones
+                        cp -r ${WORKSPACE}/* ${env.APP_DIR}/  # Copy code from workspace
+                        echo "Workspace copied to deployment directory."
                     """
                 }
             }
