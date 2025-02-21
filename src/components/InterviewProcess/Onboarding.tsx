@@ -1,7 +1,8 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { PiListChecksLight } from 'react-icons/pi';
 import axiosInstance from '@/lib/axios';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { PiListChecksLight } from 'react-icons/pi';
 
 interface OnboardingProps {
   id: number;
@@ -13,7 +14,13 @@ interface FileOption {
   id: number | string;
   label: string;
 }
-const Onboarding = ({ jobId, candidateId }) => {
+const Onboarding = ({ jobApplication }) => {
+  const searchParams = useSearchParams();
+  const candidateId = searchParams.get('candidate');
+
+  const jobId = jobApplication?.data?.items[0].id;
+  const stage = jobApplication?.data?.items[0].stage;
+
   const [isOpenOnboarding, setIsOpenOnboarding] = useState(false);
   const [isOpenPolicies, setIsOpenPolicies] = useState(false);
   const [selectedOnboardingFiles, setSelectedOnboardingFiles] = useState<
@@ -27,7 +34,6 @@ const Onboarding = ({ jobId, candidateId }) => {
   >([]);
   const [policyOptions, setPolicyOptions] = useState<FileOption[]>([]);
   const [loading, setLoading] = useState(false);
-  console.log(jobId, 'jobid');
   useEffect(() => {
     const fetchOnboardingFiles = async () => {
       try {
@@ -50,7 +56,10 @@ const Onboarding = ({ jobId, candidateId }) => {
     const fetchPolicyFiles = async () => {
       try {
         const response = await axiosInstance.get('/policies');
-        if (response.data?.data.items && Array.isArray(response.data.data.items)) {
+        if (
+          response.data?.data.items &&
+          Array.isArray(response.data.data.items)
+        ) {
           const options = response.data.data.items.map((file) => ({
             id: file.id,
             label: file.title,
@@ -226,8 +235,8 @@ const Onboarding = ({ jobId, candidateId }) => {
       <div className="flex items-center justify-center w-full mt-12">
         <button
           type="submit"
-          className="p-3 w-[500px] text-center bg-black text-white"
-          disabled={loading}
+          className="p-3 w-[500px] text-center bg-black text-white disabled:opacity-60 disabled:cursor-not-allowed"
+          disabled={loading || stage === 'Onboarding'}
         >
           {loading ? 'Finalizing...' : 'Finalize Onboarding'}
         </button>

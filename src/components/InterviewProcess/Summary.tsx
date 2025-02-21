@@ -1,13 +1,24 @@
 'use client';
 
+import { useState } from 'react';
 import { FaAngleDown, FaUserFriends } from 'react-icons/fa';
 import { MdOutlineFileDownload } from 'react-icons/md';
 import { PiListChecksLight } from 'react-icons/pi';
 import Button from '../Button';
-import { useState } from 'react';
+import SeeOffer from './SeeOffer';
 
-const Summary = () => {
+const Summary = ({ jobApplication }) => {
+  console.log('summery: ', jobApplication);
+  const reviews = jobApplication?.data.items[0].reviews;
+  const offer = jobApplication?.data.items[0].offer;
   const [openDropdown, setOpenDropdown] = useState<number>(0);
+  const [showOffer, setShowOffer] = useState(false);
+
+  const handlePopup = (event) => {
+    event.preventDefault();
+    setShowOffer(!showOffer);
+  };
+
   const handleDownloadPDF = () => {
     window.print();
   };
@@ -56,7 +67,7 @@ const Summary = () => {
                 type="text"
                 name="invite"
                 readOnly
-                value="google meet"
+                value=""
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
@@ -66,7 +77,9 @@ const Summary = () => {
                 type="text"
                 name="date"
                 readOnly
-                value="24.01.2023"
+                value={
+                  new Date(reviews[0].createdAt).toLocaleDateString() || ''
+                }
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
@@ -76,7 +89,9 @@ const Summary = () => {
                 type="text"
                 name="time"
                 readOnly
-                value="13:45"
+                value={
+                  new Date(reviews[0].createdAt).toLocaleTimeString() || ''
+                }
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
@@ -86,7 +101,7 @@ const Summary = () => {
               <input
                 type="text"
                 name="rating"
-                value="8"
+                value={reviews[0].ratingScore || ''}
                 readOnly
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
@@ -102,12 +117,8 @@ const Summary = () => {
                 rows={5}
                 readOnly
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full resize-none"
-                // value=""
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercita
-              </textarea>
+                defaultValue={reviews[0].notes || ''}
+              ></textarea>
             </label>
             {/* this div is for UI purposes */}
             <div className="hidden lg:block"></div>
@@ -140,7 +151,7 @@ const Summary = () => {
                 type="text"
                 name="invite"
                 readOnly
-                value="google meet"
+                value=""
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
@@ -150,7 +161,9 @@ const Summary = () => {
                 type="text"
                 name="date"
                 readOnly
-                value="24.01.2023"
+                value={
+                  new Date(reviews[1]?.createdAt).toLocaleDateString() || ''
+                }
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
@@ -160,7 +173,9 @@ const Summary = () => {
                 type="text"
                 name="time"
                 readOnly
-                value="13:45"
+                value={
+                  new Date(reviews[1]?.createdAt).toLocaleTimeString() || ''
+                }
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
@@ -170,7 +185,7 @@ const Summary = () => {
               <input
                 type="text"
                 name="rating"
-                value="8"
+                value={reviews[1]?.ratingScore || ''}
                 readOnly
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
@@ -186,12 +201,8 @@ const Summary = () => {
                 rows={5}
                 readOnly
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full resize-none"
-                // value=""
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercita
-              </textarea>
+                defaultValue={reviews[1]?.notes || ''}
+              ></textarea>
             </label>
             {/* this div is for UI purposes */}
             <div className="hidden lg:block"></div>
@@ -234,7 +245,9 @@ const Summary = () => {
                 type="text"
                 name="date"
                 readOnly
-                value="24.01.2023"
+                value={
+                  new Date(reviews[2]?.createdAt).toLocaleDateString() || ''
+                }
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
@@ -244,7 +257,9 @@ const Summary = () => {
                 type="text"
                 name="time"
                 readOnly
-                value="13:45"
+                value={
+                  new Date(reviews[2]?.createdAt).toLocaleTimeString() || ''
+                }
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
@@ -254,7 +269,7 @@ const Summary = () => {
               <input
                 type="text"
                 name="rating"
-                value="8"
+                value={reviews[2]?.ratingScore || ''}
                 readOnly
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
@@ -270,11 +285,8 @@ const Summary = () => {
                 rows={5}
                 readOnly
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full resize-none"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercita
-              </textarea>
+                defaultValue={reviews[2]?.notes || ''}
+              ></textarea>
             </label>
             {/* this div is for UI purposes */}
             <div className="hidden lg:block"></div>
@@ -307,7 +319,7 @@ const Summary = () => {
                 type="text"
                 name="startDate"
                 readOnly
-                value="24.02.2025"
+                value={new Date(offer.startDate).toLocaleDateString() || ''}
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
@@ -317,12 +329,12 @@ const Summary = () => {
                 type="text"
                 name="Compensation"
                 readOnly
-                value="$98,000"
+                value={`$ ${offer.compensation}` || ''}
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
             <div className="w-fit h-fit mt-auto mb-0">
-              <Button name="View Offer" />
+              <Button onClick={handlePopup} name="View Offer" />
             </div>
             <label className="font-medium text-sm flex flex-col">
               <span className="opacity-35">Offer Sent on</span>
@@ -330,11 +342,17 @@ const Summary = () => {
                 type="text"
                 name="offerSentOn"
                 readOnly
-                value="24.01.2023"
+                value={new Date(offer.createdAt).toLocaleDateString() || ''}
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
           </div>
+        )}
+        {showOffer && (
+          <SeeOffer
+            setShowOffer={setShowOffer}
+            jobApplication={jobApplication}
+          />
         )}
       </section>
     </main>

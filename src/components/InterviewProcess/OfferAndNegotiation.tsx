@@ -2,13 +2,13 @@
 
 import { API_ROUTES } from '@/constants/apiRoutes';
 import axiosInstance from '@/lib/axios';
+import axios from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { PiListChecksLight } from 'react-icons/pi';
 import Button from '../Button';
 import GenerateOffer from './GenerateOffer';
-import axios, { AxiosError } from 'axios';
-import toast from 'react-hot-toast';
 
 const OfferAndNegotiation = ({ jobApplication }) => {
   const stage = jobApplication?.data?.items?.[0]?.stage || 'Applied';
@@ -21,11 +21,23 @@ const OfferAndNegotiation = ({ jobApplication }) => {
   };
 
   const {
+    watch,
+    trigger,
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const handleGenerateOfferClick = async (e) => {
+    e.preventDefault();
+    const isValid = await trigger();
 
+    // Only open the modal if there are no errors
+    if (isValid) {
+      handlePopup(e);
+    } else {
+      console.log('Form has errors, modal will not open.');
+    }
+  };
   const onSubmit = async (data) => {
     const payload = {
       startDate: data.startDate,
@@ -50,6 +62,8 @@ const OfferAndNegotiation = ({ jobApplication }) => {
       }
     }
   };
+  const startDate = watch('startDate');
+  const compensation = watch('compensation');
 
   return (
     <form
@@ -90,16 +104,20 @@ const OfferAndNegotiation = ({ jobApplication }) => {
           </p>
         )}
       </label>
-      <div className="w-fit h-fit mt-auto mb-0" onClick={handlePopup}>
-        <Button
-          type="button"
-          disabled={stage === 'Offer'}
-          name={`${stage === 'Offer' ? 'Offer Sent!' : 'Generate Offer'}`}
-          className={`${stage === 'Offer' ? 'bg-transparent !text-black' : ''}`}
-        />
-      </div>
+
+      <Button
+        onClick={handleGenerateOfferClick}
+        type="button"
+        disabled={stage === 'Offer'}
+        name={`${stage === 'Offer' ? 'Offer Sent!' : 'Generate Offer'}`}
+        className={`my-auto ${
+          stage === 'Offer' ? 'bg-transparent !text-black' : ''
+        }`}
+      />
+
       {showOffer && (
         <GenerateOffer
+          compensation={compensation}
           setShowOffer={setShowOffer}
           jobApplication={jobApplication}
         />

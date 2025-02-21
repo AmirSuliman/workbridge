@@ -3,21 +3,20 @@ import Button from '../Button';
 import { useEffect } from 'react';
 import { getJobApplicationById } from '@/services/getJobApplicationById';
 
-const GenerateOffer = ({ setShowOffer, jobApplication }) => {
+const GenerateOffer = ({ compensation, setShowOffer, jobApplication }) => {
   const jobData = jobApplication?.data?.items[0]?.job;
   const jobApplicationId = jobApplication?.data?.items[0]?.id;
-
-  useEffect(() => {
-    const getJobApplication = async () => {
-      try {
-        const response = await getJobApplicationById(jobApplicationId);
-        console.log('response', response?.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getJobApplication();
-  }, [jobApplicationId]);
+  // useEffect(() => {
+  //   const getJobApplication = async () => {
+  //     try {
+  //       const response = await getJobApplicationById(jobApplicationId);
+  //       console.log('response', response?.data);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   getJobApplication();
+  // }, [jobApplicationId]);
 
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 bg-[#000000]/50 flex items-center justify-center overflow-y-auto z-50">
@@ -50,7 +49,7 @@ const GenerateOffer = ({ setShowOffer, jobApplication }) => {
             </div>
             <div>
               <h6 className="font-medium text-xs opacity-50">Min. Exp.</h6>
-              <h4 className="font-medium text-base">3+ Years</h4>
+              <h4 className="font-medium text-base">5+ Years</h4>
             </div>
           </div>
           <h6 className="font-medium text-xs opacity-50">Description</h6>
@@ -58,7 +57,7 @@ const GenerateOffer = ({ setShowOffer, jobApplication }) => {
             {jobData?.description || 'No description provided'}
           </p>
           <h6 className="font-medium text-xs opacity-50 mt-4">Compensation</h6>
-          <h4 className="font-medium text-base">$150,000 - $200,000</h4>
+          <h4 className="font-medium text-base">${compensation}</h4>
         </main>
         <footer className="">
           <hr />

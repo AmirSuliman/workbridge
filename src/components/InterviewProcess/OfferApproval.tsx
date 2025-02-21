@@ -1,12 +1,10 @@
-import { useEffect, useState } from 'react';
 import axiosInstance from '@/lib/axios';
-import { PiArrowUpRightThin, PiListChecksLight } from 'react-icons/pi';
-import { IoCheckmark } from 'react-icons/io5';
-import { RxCross1 } from 'react-icons/rx';
-import Link from 'next/link';
-import Button from '../Button';
 import { AxiosError } from 'axios';
-import GenerateOffer from './GenerateOffer';
+import { useEffect, useState } from 'react';
+import { IoCheckmark } from 'react-icons/io5';
+import { PiArrowUpRightThin, PiListChecksLight } from 'react-icons/pi';
+import { RxCross1 } from 'react-icons/rx';
+import Button from '../Button';
 import SeeOffer from './SeeOffer';
 
 interface OfferBy {

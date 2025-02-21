@@ -14,7 +14,6 @@ export const AllJobsTable = () => {
   const { items, loading, error } = useSelector(
     (state: RootState) => state.jobs
   );
-  console.log('Jobs: ', items);
   const [sortCriteria, setSortCriteria] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [typeFilter, setTypeFilter] = useState<string>('');
@@ -69,7 +68,6 @@ export const AllJobsTable = () => {
   return (
     <div className="p-4 bg-white flex flex-col rounded-lg border mt-4">
       <div className="flex flex-col gap-2 sm:flex-row items-start sm:items-center justify-between w-full">
-       
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
           {/* Sort Dropdown */}
           <div>
@@ -157,11 +155,11 @@ export const AllJobsTable = () => {
               <th className="py-3 px-4 border-b font-medium">Created on</th>
               <th className="py-3 px-4 border-b font-medium">Status</th>
               <th className="py-3 px-4 border-b font-medium">
-                <span className='bg-gray-200text-gray-400 p-1 rounded flex flex-row gap-2'>
-                  <FaDownload/>
+                <span className="bg-gray-200text-gray-400 p-1 rounded flex flex-row gap-2">
+                  <FaDownload />
                   Download
                 </span>
-                </th>
+              </th>
             </tr>
           </thead>
           <tbody>

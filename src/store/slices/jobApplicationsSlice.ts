@@ -7,8 +7,8 @@ import { AxiosError } from 'axios';
 interface FetchParams {
   stage?: string;
   sort?: string;
-  page: number;
-  size: number;
+  page?: number;
+  size?: number;
   candidateId?: string | string[] | undefined;
   jobId?: string | string[] | undefined;
 }

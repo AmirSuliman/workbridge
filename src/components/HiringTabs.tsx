@@ -12,13 +12,13 @@ export const HiringTabs = ({
   const stage = jobApplication.data?.items[0]?.stage || 'Applied';
   return (
     <nav className="relative flex items-center gap-8 border-b border-gray-300">
-      {stage === 'Interview Summary' && (
+      {stage === 'Onboarding' && (
         <button
           onClick={() => {
-            setActiveTab('Interview Summary');
+            setActiveTab('Onboarding');
           }}
           className={`py-2 px-4 ${
-            activeTab === 'Interview Summary'
+            activeTab === 'Onboarding'
               ? 'text-black font-semibold border-b-2 border-black'
               : 'text-gray-600'
           }`}

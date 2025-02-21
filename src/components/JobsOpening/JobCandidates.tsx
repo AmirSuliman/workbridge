@@ -169,8 +169,9 @@ export const JobCandidates = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {sortedItems.map((item) => (
-            <tr key={item.candidate.id}>
+          {sortedItems.map((item, index) => (
+            // don't use item.candidate.id as a key here, it cause duplicate key error
+            <tr key={index}>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {`${item.candidate.firstName} ${item.candidate.lastName}`}
               </td>

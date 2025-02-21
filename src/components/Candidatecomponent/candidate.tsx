@@ -21,10 +21,10 @@ const Candidatecomponent = ({ data, jobTitle }) => {
     (state: RootState) => state.jobApplications
   );
 
-  console.log('candidate component: ', jobApplication);
   const jobApplicationId = jobApplication?.data?.items[0]?.id;
   const stage = jobApplication?.data?.items[0]?.stage;
-  const stages = ['Technical', 'Second', 'Negotiation', 'Offer', 'Onboarding'];
+  // const stages = ['Technical', 'Second', 'Negotiation', 'Offer', 'Onboarding'];
+  const stages = ['Technical', 'Second', 'Negotiation'];
 
   return (
     <section className="p-6 bg-white border rounded-lg mt-8">

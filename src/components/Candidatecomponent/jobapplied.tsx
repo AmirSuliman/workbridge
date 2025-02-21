@@ -11,9 +11,10 @@ const Jobapplied = ({ candidateId }) => {
   const { data } = useSelector((state: RootState) => state.jobApplications);
   useEffect(() => {
     const params = {
-      page: 1,
-      size: 10000,
+      // page: 1,
+      // size: 10000,
       candidateId: candidateId,
+      // associations: true,
     };
     dispatch(fetchJobApplications(params));
   }, [dispatch, candidateId]);

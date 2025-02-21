@@ -27,12 +27,6 @@ const InterviewLayout = ({ jobApplication }) => {
   console.log('jobData interview layout: ', jobData);
   const initialStage = jobData?.stage || 'Applied';
   const jobApplicationId = jobData?.id;
-  const searchParams = useSearchParams();
-  const candidateId = searchParams.get('candidate');
-  const meetingDate = new Date(jobData?.meetingDate);
-  const currentDate = new Date();
-  const isToday = meetingDate.toDateString() === currentDate.toDateString();
-  const isFuture = meetingDate > currentDate;
 
   const [apiData, setApiData] = useState<ApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -168,7 +162,7 @@ const InterviewLayout = ({ jobApplication }) => {
           />
         )}
         {['Onboarding'].includes(currentStage) && (
-          <Onboarding jobId={jobApplicationId} candidateId={candidateId} />
+          <Onboarding jobApplication={jobApplication} />
         )}
       </section>
     </>

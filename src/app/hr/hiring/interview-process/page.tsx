@@ -29,8 +29,6 @@ const InterviewProcess = () => {
     (state: RootState) => state.jobApplications
   );
 
-  console.log('interview- Job application: ', jobApplication);
-
   useEffect(() => {
     const fetchSingleJob = async () => {
       try {
@@ -55,8 +53,8 @@ const InterviewProcess = () => {
 
   useEffect(() => {
     const params = {
-      page: 1,
-      size: 100000,
+      // page: 1,
+      // size: 100000,
       candidateId: candidateId || undefined,
       jobId: jobId || undefined,
     };
@@ -88,7 +86,9 @@ const InterviewProcess = () => {
       {activeTab === 'jobOpenings' && (
         <InterviewLayout jobApplication={jobApplication} />
       )}
-      {activeTab === 'Interview Summary' && <Summary />}
+      {activeTab === 'Onboarding' && (
+        <Summary jobApplication={jobApplication} />
+      )}
       {activeTab === 'candidates' && (
         <div className="pt-6">
           <div className="p-6 bg-white rounded-lg border">

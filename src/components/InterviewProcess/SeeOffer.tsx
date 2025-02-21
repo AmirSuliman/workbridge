@@ -1,5 +1,4 @@
 import { RxCross2 } from 'react-icons/rx';
-import Button from '../Button';
 
 const SeeOffer = ({ setShowOffer, jobApplication }) => {
   console.log('jobApplication generate offer: ', jobApplication);

@@ -28,7 +28,6 @@ const SingleJob = () => {
             associations: true,
           },
         });
-        console.log('job res: ', data);
         setSingleJobData(data);
         setLoading(false);
       } catch (error) {
@@ -75,7 +74,7 @@ const SingleJob = () => {
           <h1 className="text-[#0F172A] text-[16px] mb-6">
             {singleJobData?.data.description || 'N/A'}
           </h1>
-          <hr/>
+          <hr />
           <div className="flex flex-row items-center justify-between mt-6">
             <div className="flex flex-row gap-10 items-center">
               <div className="flex flex-col ">
