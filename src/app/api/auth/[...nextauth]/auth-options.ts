@@ -9,21 +9,31 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       id: 'credentials',
       name: 'credentials',
-      credentials: {},
-      authorize: async (credentials: any) => {
-        const res = await axiosInstance.post('/user/login', {
-          email: credentials.email,
-          password: credentials.password,
-        });
-        let accessToken = res.data?.data?.accessToken?.accessToken;
-        if (accessToken?.startsWith('Bearer ')) {
-          accessToken = accessToken.replace('Bearer ', '');
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        try {
+          const res = await axiosInstance.post('/user/login', {
+            email: credentials?.email,
+            password: credentials?.password,
+          });
+          
+          let accessToken = res.data?.data?.accessToken?.accessToken;
+          if (accessToken?.startsWith('Bearer ')) {
+            accessToken = accessToken.replace('Bearer ', '');
+          }
+          
+          if (accessToken) {
+            const user = jwtDecode(accessToken.trim()) as User;
+            return { ...user, accessToken };
+          }
+          return null;
+        } catch (error) {
+          console.error("Authentication error:", error);
+          return null;
         }
-        if (accessToken) {
-          const user = jwtDecode(accessToken.trim()) as User;
-          return { ...user, accessToken };
-        }
-        return null;
       },
     }),
   ],
@@ -31,8 +41,6 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
     maxAge: 60 * 10 * 6, // 1 hour
   },
-  
-  
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -41,12 +49,11 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      const nToken = token as any;
       return {
         ...session,
         user: token.user,
-        accessToken: nToken.user?.accessToken,
-      } as any;
+        accessToken: (token.user as any)?.accessToken,
+      };
     },
     async redirect({ url, baseUrl }) {
       const parsedUrl = new URL(url, baseUrl);
@@ -62,5 +69,4 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: '/sign-in',
   },
-  
 };
