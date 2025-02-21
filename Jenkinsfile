@@ -19,7 +19,7 @@ pipeline {
                         env.NODE_LABEL = 'master'
                         env.SERVER_USER = 'jenkins'
                         env.SERVER_IP = '13.48.115.146'
-                        env.NODE_ENV = 'development'
+                        // env.NODE_ENV = 'development'
                         env.ENV_PATH = '/var/lib/jenkins/envFiles/workbridgeFrontendEnv/.env'
                         env.APP_DIR = '/var/www/workbridge-frontend-dev'
                     } else if (env.BRANCH_NAME == 'prod') {
