@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     options {
-        disableConcurrentBuilds()  // Prevents multiple concurrent builds.
+        disableConcurrentBuilds()  // Prevents multiple concurrent builds
     }
 
     environment {
         REPO_URL = 'https://github.com/ISA-Consulting/ISAWorkBridge-Frontend.git'
-        APP_NAME = 'isa-next-app'  // Name of the PM2 process.
-        APP_PORT = '4000'  // Change to port 4000
+        APP_NAME = 'isa-next-app'  // PM2 process name
+        APP_PORT = '4000'  // Port Next.js will run on
     }
 
     stages {
@@ -18,21 +18,21 @@ pipeline {
                     if (env.BRANCH_NAME == 'development') {
                         env.NODE_LABEL = 'master'
                         env.SERVER_USER = 'jenkins'
-                        env.SERVER_IP = 'localhost'
-                        env.NODE_ENV = 'development'
+                        env.SERVER_IP = '13.48.115.146'
+                        // env.NODE_ENV = 'production'
                         env.ENV_PATH = '/var/lib/jenkins/envFiles/workbridgeFrontendEnv/.env'
                         env.APP_DIR = '/var/www/workbridge-frontend-dev'
                     } else if (env.BRANCH_NAME == 'prod') {
                         env.NODE_LABEL = 'production'
                         env.SERVER_USER = 'jenkins'
                         env.SERVER_IP = '13.48.115.146'  // Replace with actual production IP
-                        env.NODE_ENV = 'production'
+                        // env.NODE_ENV = 'production'
                         env.ENV_PATH = '/home/jenkins/envFiles/workbridgeFrontendEnv/.env'
                         env.APP_DIR = '/var/www/workbridge-frontend'
                     } else {
                         error "Unsupported branch: ${env.BRANCH_NAME}"
                     }
-                    echo "Deploying ${APP_NAME} to ${env.NODE_ENV} environment at ${env.APP_DIR}"
+                    // echo "🚀 Deploying ${APP_NAME} to ${env.NODE_ENV} at ${env.APP_DIR}"
                 }
             }
         }
@@ -42,12 +42,23 @@ pipeline {
             steps {
                 script {
                     sh """
-                        echo "Setting up deployment directory..."
-                        sudo mkdir -p ${env.APP_DIR}
-                        sudo chown -R jenkins:jenkins ${env.APP_DIR}
-                        sudo rm -rf ${env.APP_DIR}/*  # Clean old files before copying new ones
-                        cp -r ${WORKSPACE}/* ${env.APP_DIR}/  # Copy code from workspace
-                        echo "Workspace copied to deployment directory."
+                        echo "🔧 Ensuring deployment directory exists..."
+                        sudo mkdir -p ${env.APP_DIR} || exit 1
+                        sudo chown -R jenkins:jenkins ${env.APP_DIR} || exit 1
+                        sudo chmod -R 775 ${env.APP_DIR} || exit 1
+
+                        echo "🗑️ Cleaning old files..."
+                        sudo rm -rf ${env.APP_DIR}/* || exit 1
+
+                        if [ -d "${WORKSPACE}" ]; then
+                            echo "📂 Copying workspace files..."
+                            cp -r ${WORKSPACE}/* ${env.APP_DIR}/ || exit 1
+                        else
+                            echo "❌ Workspace directory is missing!"
+                            exit 1
+                        fi
+
+                        echo "✅ Workspace copied successfully."
                     """
                 }
             }
@@ -58,9 +69,15 @@ pipeline {
             steps {
                 script {
                     sh """
-                        echo "Copying environment file..."
-                        cp ${env.ENV_PATH} ${env.APP_DIR}/.env.local
-                        echo "Environment file copied."
+                        echo "🔑 Checking environment file..."
+                        if [ -f "${env.ENV_PATH}" ]; then
+                            echo "📄 Copying environment file..."
+                            cp ${env.ENV_PATH} ${env.APP_DIR}/.env.local || exit 1
+                            echo "✅ Environment file copied."
+                        else
+                            echo "❌ Environment file not found: ${env.ENV_PATH}"
+                            exit 1
+                        fi
                     """
                 }
             }
@@ -71,8 +88,10 @@ pipeline {
             steps {
                 script {
                     sh """
-                        cd ${env.APP_DIR}
-                        npm install
+                        cd ${env.APP_DIR} || exit 1
+                        echo "📦 Installing dependencies..."
+                        npm i || exit 1  # Ensures clean install with exact versions
+                        echo "✅ Dependencies installed successfully."
                     """
                 }
             }
@@ -83,42 +102,47 @@ pipeline {
             steps {
                 script {
                     sh """
-                        cd ${env.APP_DIR}
-                        npm run build
+                        cd ${env.APP_DIR} || exit 1
+                        echo "🏗️ Building Next.js application..."
+                        npm run build || exit 1
+                        echo "✅ Build completed successfully."
                     """
                 }
             }
         }
 
-        stage('Setup PM2 Ecosystem & Start App') {
+        stage('Setup PM2 & Run Next.js from Build') {
             agent { label "${env.NODE_LABEL}" }
             steps {
                 script {
                     sh """
-                        cd ${env.APP_DIR}
-                        echo "Creating PM2 ecosystem.config.js file..."
-                        cat > ecosystem.config.js <<EOL
-                        module.exports = {
-                            apps: [
-                                {
-                                    name: "${APP_NAME}",
-                                    script: "npm",
-                                    args: "start",
-                                    env: {
-                                        NODE_ENV: "${env.NODE_ENV}",
-                                        PORT: ${env.APP_PORT}
-                                    }
-                                }
-                            ]
-                        };
-                        EOL
+                        cd ${env.APP_DIR} || exit 1
+                        echo "⚙️ Creating PM2 ecosystem.config.js file..."
 
-                        echo "Restarting Next.js application with PM2..."
+                        # Generate ecosystem.config.js properly
+                        cat <<EOF > ecosystem.config.js
+module.exports = {
+    apps: [
+        {
+            name: "${APP_NAME}",
+            script: "node_modules/next/dist/bin/next",
+            args: "start",
+            cwd: "${env.APP_DIR}",
+            env: {
+
+                PORT: ${env.APP_PORT}
+            }
+        }
+    ]
+};
+EOF
+
+                        echo "🔄 Restarting Next.js application with PM2..."
                         pm2 delete ${APP_NAME} || true  # Stop existing app if running
-                        pm2 start ecosystem.config.js
-                        pm2 save
-                        pm2 restart ${APP_NAME}
-                        echo "Next.js application is now running on port ${APP_PORT}"
+                        pm2 start ecosystem.config.js || exit 1
+                        pm2 save || exit 1
+                        pm2 restart ${APP_NAME} || exit 1
+                        echo "✅ Next.js is now running on port ${APP_PORT}"
                     """
                 }
             }
