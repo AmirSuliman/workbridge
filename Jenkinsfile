@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         REPO_URL = 'https://github.com/ISA-Consulting/ISAWorkBridge-Frontend.git'
-        APP_NAME = 'isa-next-app'  // Name of the PM2 process
+        APP_NAME = 'isa-next-app'  // Name of the PM2 process.
         APP_PORT = '4000'  // Change to port 4000
     }
 
