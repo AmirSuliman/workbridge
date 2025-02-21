@@ -1,18 +1,21 @@
 import type { Config } from 'tailwindcss';
 
-const config: Config = {
+export default {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/Layouts/**/*.{js,ts,jsx,tsx,mdx}',
     './src/views/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/Layouts/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
+      screens: {
+        '1700px': '1700px',
+      },
       colors: {
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
+        background: '#F5F6FA',
+        foreground: '#000',
         'dark-gray': '#282828',
         'light-gray': '#D9D9D9',
         'super-light-gray': '#0000009E',
@@ -27,5 +30,4 @@ const config: Config = {
     },
   },
   plugins: [],
-};
-export default config;
+} satisfies Config;

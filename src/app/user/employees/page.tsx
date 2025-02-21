@@ -1,9 +1,8 @@
-import React from 'react'
+import React from 'react';
+import Employees from './components/Employees';
 
 const page = () => {
-  return (
-    <div>Employees</div>
-  )
-}
+  return <Employees />;
+};
 
-export default page
+export default page;

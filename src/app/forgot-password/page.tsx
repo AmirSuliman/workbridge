@@ -1,9 +1,9 @@
-import ForgotPassword from '@/src/views/AuthenticationViews/ForgotPassword';
+import ForgotPassword from '@/views/AuthenticationViews/ForgotPassword';
 import React from 'react';
 
 const page = () => {
   return (
-    <div className="h-full flex flex-col item-center justify-center bg-gray-100">
+    <div className="h-full flex flex-col item-start justify-start bg-gray-100">
       <ForgotPassword />
     </div>
   );

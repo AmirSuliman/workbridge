@@ -1,3 +1,6 @@
+import Auth from '../views/AuthenticationViews/Auth';
+
 export default function Home() {
-  return <div className="text-green-500">Hello WorkBridge</div>;
+  // return <Auth/>;
+  return <Auth />;
 }
