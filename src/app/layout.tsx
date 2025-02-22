@@ -7,6 +7,7 @@ import { authOptions } from './api/auth/[...nextauth]/auth-options';
 export const metadata: Metadata = {
   title: 'ISA WorkBridge',
   description: 'Some des',
+  icons: '/favicon.ico',
 };
 
 export default async function RootLayout({
