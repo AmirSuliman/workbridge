@@ -32,7 +32,7 @@ declare module 'next-auth' {
       user: InnerUser;
     };
     accessToken: string; // Move accessToken to the root
-    expires: string; // Expiration date of the session
+    expires: string;
   }
 }
 
