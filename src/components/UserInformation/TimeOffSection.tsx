@@ -11,7 +11,6 @@ import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import SickCard from './sickCard';
 import VacationsCard from './VacationsCard';
-import { FaEdit } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
 interface Employee {
@@ -28,7 +27,6 @@ interface TimeOffItem {
 }
 
 const TimeOffSection = ({ employeeData }) => {
-  console.log('counter: ', employeeData.vacationLeaveCounter);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
