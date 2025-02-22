@@ -45,7 +45,9 @@ const GenerateOffer = ({ compensation, setShowOffer, jobApplication }) => {
               <h6 className="font-medium text-xs opacity-50">
                 Employment Type
               </h6>
-              <h4 className="font-medium text-base">Full-Time</h4>
+              <h4 className="font-medium text-base">
+                {jobData?.employmentType}
+              </h4>
             </div>
             <div>
               <h6 className="font-medium text-xs opacity-50">Min. Exp.</h6>

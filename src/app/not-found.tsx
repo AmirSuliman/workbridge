@@ -16,7 +16,6 @@ export default function NotFound() {
         </p>
         <Button
           onClick={() => router.back()}
-          icon={''}
           name="Go back"
           className="mx-auto"
         />

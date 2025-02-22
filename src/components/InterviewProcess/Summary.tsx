@@ -8,7 +8,7 @@ import Button from '../Button';
 import SeeOffer from './SeeOffer';
 
 const Summary = ({ jobApplication }) => {
-  console.log('summery: ', jobApplication);
+  // console.log('summery: ', jobApplication);
   const reviews = jobApplication?.data.items[0].reviews;
   const offer = jobApplication?.data.items[0].offer;
   const [openDropdown, setOpenDropdown] = useState<number>(0);
@@ -67,7 +67,7 @@ const Summary = ({ jobApplication }) => {
                 type="text"
                 name="invite"
                 readOnly
-                value=""
+                value={reviews[0]?.meetingType}
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
@@ -78,7 +78,7 @@ const Summary = ({ jobApplication }) => {
                 name="date"
                 readOnly
                 value={
-                  new Date(reviews[0].createdAt).toLocaleDateString() || ''
+                  new Date(reviews[0].meetingDate).toLocaleDateString() || ''
                 }
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
@@ -90,7 +90,7 @@ const Summary = ({ jobApplication }) => {
                 name="time"
                 readOnly
                 value={
-                  new Date(reviews[0].createdAt).toLocaleTimeString() || ''
+                  new Date(reviews[0].meetingDate).toLocaleTimeString() || ''
                 }
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
@@ -151,7 +151,7 @@ const Summary = ({ jobApplication }) => {
                 type="text"
                 name="invite"
                 readOnly
-                value=""
+                value={reviews[1]?.meetingType}
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
@@ -162,7 +162,7 @@ const Summary = ({ jobApplication }) => {
                 name="date"
                 readOnly
                 value={
-                  new Date(reviews[1]?.createdAt).toLocaleDateString() || ''
+                  new Date(reviews[1]?.meetingDate).toLocaleDateString() || ''
                 }
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
@@ -174,7 +174,7 @@ const Summary = ({ jobApplication }) => {
                 name="time"
                 readOnly
                 value={
-                  new Date(reviews[1]?.createdAt).toLocaleTimeString() || ''
+                  new Date(reviews[1]?.meetingDate).toLocaleTimeString() || ''
                 }
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
@@ -235,7 +235,7 @@ const Summary = ({ jobApplication }) => {
                 type="text"
                 name="invite"
                 readOnly
-                value="google meet"
+                value={reviews[2]?.meetingType}
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
             </label>
@@ -246,7 +246,7 @@ const Summary = ({ jobApplication }) => {
                 name="date"
                 readOnly
                 value={
-                  new Date(reviews[2]?.createdAt).toLocaleDateString() || ''
+                  new Date(reviews[2]?.meetingDate).toLocaleDateString() || ''
                 }
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />
@@ -258,7 +258,7 @@ const Summary = ({ jobApplication }) => {
                 name="time"
                 readOnly
                 value={
-                  new Date(reviews[2]?.createdAt).toLocaleTimeString() || ''
+                  new Date(reviews[2]?.meetingDate).toLocaleTimeString() || ''
                 }
                 className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
               />

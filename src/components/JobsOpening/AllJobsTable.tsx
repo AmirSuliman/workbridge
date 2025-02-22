@@ -134,7 +134,7 @@ export const AllJobsTable = () => {
         </div>
 
         <Link
-          href="hiring/Create-jobopening"
+          href="hiring/create-job"
           className="p-3 px-4 rounded-lg bg-[#0F172A] text-white text-[14px] flex items-center gap-2"
         >
           Add Job Opening

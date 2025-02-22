@@ -6,6 +6,7 @@ import { setUser } from '@/store/slices/myInfoSlice';
 import { authSchema } from '@/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getSession, signIn } from 'next-auth/react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -14,9 +15,9 @@ import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { useDispatch } from 'react-redux';
 import { z } from 'zod';
-import Image from 'next/image';
-import Navbar from './nav';
 import Footer from './footer';
+import Navbar from './nav';
+
 type AuthFormInputs = z.infer<typeof authSchema>;
 
 const Auth = () => {
@@ -45,6 +46,13 @@ const Auth = () => {
         password: data.password,
         redirect: false,
       });
+
+      // const res = await signIn('credentials', {
+      //   email: data.email,
+      //   password: data.password,
+      //   redirect: false,
+      //   callbackUrl: BASE_URL, // Explicitly set URL
+      // });
 
       if (!res?.ok) {
         setLoading(false);

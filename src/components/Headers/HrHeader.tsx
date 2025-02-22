@@ -1,12 +1,13 @@
 'use client';
 
-import { useRouter, usePathname } from 'next/navigation';
-import { GoBell } from 'react-icons/go';
-import { PiPlusCircleBold } from 'react-icons/pi';
-import { useState } from 'react';
-import UserProfileInfo from '../UserProfileInfo';
 import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { HiUsers } from 'react-icons/hi';
+import { PiPlusCircleBold } from 'react-icons/pi';
+import Notifications from '../Notifications/Notifications';
+import UserProfileInfo from '../UserProfileInfo';
+
 const HrHeader = () => {
   const router = useRouter();
   const pathname = usePathname();
@@ -32,22 +33,28 @@ const HrHeader = () => {
                 <li
                   onClick={() => {
                     setShowDropdown(false);
-                    router.push('/hr/announcements-&-policies/announcements/create-announcment');
+                    router.push(
+                      '/hr/announcements-&-policies/announcements/create-announcment'
+                    );
                   }}
                   className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex flex-row items-center gap-2 "
                 >
-                 <Image src="/announcment.svg" alt='img' width={13} height={13}/>
+                  <Image
+                    src="/announcment.svg"
+                    alt="img"
+                    width={13}
+                    height={13}
+                  />
                   Announcement
                 </li>
                 <li
                   onClick={() => {
                     setShowDropdown(false);
-                    router.push('/hr/hiring/Create-jobopening');
+                    router.push('/hr/hiring/create-job');
                   }}
                   className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex flex-row items-center gap-2"
                 >
-                 <Image src="/job.svg" alt='img' width={13} height={13}/>
-
+                  <Image src="/job.svg" alt="img" width={13} height={13} />
                   Job Posting
                 </li>
                 <li
@@ -66,12 +73,7 @@ const HrHeader = () => {
         </div>
       )}
 
-      {/* Notification Button */}
-      <button className="border border-[#E0E0E0] rounded-full size-8 flex items-center justify-center ml-auto">
-        <GoBell size={18} />
-      </button>
-
-      {/* User Profile */}
+      <Notifications />
       <UserProfileInfo />
     </nav>
   );

@@ -15,6 +15,7 @@ interface FileOption {
   label: string;
 }
 const Onboarding = ({ jobApplication }) => {
+  console.log('Job Application: ', jobApplication.data.items[0]);
   const searchParams = useSearchParams();
   const candidateId = searchParams.get('candidate');
 
@@ -236,7 +237,8 @@ const Onboarding = ({ jobApplication }) => {
         <button
           type="submit"
           className="p-3 w-[500px] text-center bg-black text-white disabled:opacity-60 disabled:cursor-not-allowed"
-          disabled={loading || stage === 'Onboarding'}
+          disabled={loading}
+          // disabled={loading || stage === 'Onboarding'}
         >
           {loading ? 'Finalizing...' : 'Finalize Onboarding'}
         </button>

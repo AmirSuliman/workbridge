@@ -3,6 +3,7 @@ import MonthlyBarChart from './barchart';
 import { FiUsers } from 'react-icons/fi';
 import Button from '../Button';
 import Link from 'next/link';
+
 const Employeementreport = () => {
   return (
     <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4">
