@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     options {
-        disableConcurrentBuilds()  // Prevents multiple concurrent builds.
+        disableConcurrentBuilds()  // Prevents multiple concurrent builds
     }
 
     environment {
