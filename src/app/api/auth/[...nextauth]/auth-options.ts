@@ -1,4 +1,4 @@
-// pages/api/auth/[...nextauth].ts
+// pages/api/auth/[...nextauth].ts 
 import axiosInstance from '@/lib/axios';
 import { jwtDecode } from 'jwt-decode';
 import { NextAuthOptions, User } from 'next-auth';
@@ -10,33 +10,20 @@ export const authOptions: NextAuthOptions = {
       id: 'credentials',
       name: 'credentials',
       credentials: {},
-      async authorize(credentials: any) {
-        try {
-          console.log("🔹 Logging in user:", credentials);
-          
-          const res = await axiosInstance.post('/user/login', {
-            email: credentials.email,
-            password: credentials.password,
-          });
-
-          console.log("✅ API Response:", res.data);
-          
-          let accessToken = res.data?.data?.accessToken?.accessToken;
-          if (accessToken?.startsWith('Bearer ')) {
-            accessToken = accessToken.replace('Bearer ', '');
-          }
-
-          if (accessToken) {
-            const user = jwtDecode(accessToken.trim()) as User;
-            console.log("🔹 Decoded User:", user);
-            return { ...user, accessToken };
-          }
-
-          throw new Error('Invalid credentials');
-        } catch (error) {
-          console.error("❌ Login failed:", error);
-          throw new Error('Authentication failed');
+      authorize: async (credentials: any) => {
+        const res = await axiosInstance.post('/user/login', {
+          email: credentials.email,
+          password: credentials.password,
+        });
+        let accessToken = res.data?.data?.accessToken?.accessToken;
+        if (accessToken?.startsWith('Bearer ')) {
+          accessToken = accessToken.replace('Bearer ', '');
         }
+        if (accessToken) {
+          const user = jwtDecode(accessToken.trim()) as User;
+          return { ...user, accessToken };
+        }
+        return null;
       },
     }),
   ],
