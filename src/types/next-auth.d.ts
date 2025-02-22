@@ -1,22 +1,90 @@
-// auth.d.ts
-import { DefaultSession } from "@auth/core/types"
+// types/next-auth.d.ts
 
-declare module "@auth/core/types" {
-  interface Session extends DefaultSession {
+import 'next-auth';
+
+interface InnerUser {
+  active: boolean;
+  email: string;
+  firstName: string;
+  id: number;
+  lastName: string;
+  permissions: string[];
+  profilePictureUrl: string;
+  role: string;
+  roleId: number;
+}
+
+declare module 'next-auth' {
+  interface Session {
     user: {
-      id: string
-      email: string
-      name?: string
-    } & DefaultSession["user"]
-    accessToken?: string
+      active: boolean;
+      email: string;
+      firstName: string;
+      id: number;
+      lastName: string;
+      permissions: string[];
+      profilePictureUrl: string;
+      role: string;
+      roleId: number;
+      userId: string;
+      employeeId: number;
+      accessToken: string;
+      user: InnerUser;
+    };
+    accessToken: string; // Move accessToken to the root
+    expires: string;
   }
 }
 
-declare module "@auth/core/jwt" {
-  interface JWT {
-    id?: string
-    email?: string
-    name?: string
-    accessToken?: string
-  }
+interface JobApplicationsState {
+  data: {
+    totalItems: number;
+    items: {
+      id: number;
+      stage: string;
+      jobId: number;
+      candidateId: number;
+      rating: number | null;
+      interviewUrl: string | null;
+      createdAt: string;
+      job: {
+        id: number;
+        tittle: string;
+        description: string;
+        status: string;
+        department: {
+          id: number;
+          name: string;
+        };
+        location: {
+          id: number;
+          street1: string;
+          street2: string | null;
+          zipCode: string;
+          city: string;
+          country: string;
+          state: string;
+        };
+      };
+      candidate: {
+        id: number;
+        firstName: string;
+        lastName: string;
+        email: string;
+        location: {
+          id: number;
+          street1: string;
+          street2: string | null;
+          zipCode: string;
+          city: string;
+          country: string;
+          state: string;
+        };
+      };
+    }[];
+    totalPages: number;
+    currentPage: number;
+  } | null;
+  loading: boolean;
+  error: string | null;
 }
