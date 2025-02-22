@@ -31,6 +31,17 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
     maxAge: 60 * 10 * 6, // 1 hour
   },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: true // Keep this true since your frontend is HTTPS
+      }
+    }
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
