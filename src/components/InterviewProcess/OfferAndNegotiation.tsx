@@ -127,9 +127,7 @@ const OfferAndNegotiation = ({ jobApplication }) => {
         type="button"
         disabled={stage === 'Negotiation'}
         name={`Continue to Offer Approval`}
-        className={`w-full max-w-xl mx-auto col-span-full mt-12 ${
-          stage == 'Negotiation' && 'opacity-50'
-        }`}
+        className={`w-full max-w-xl mx-auto col-span-full mt-12 disabled:opacity-50`}
       />
     </form>
   );

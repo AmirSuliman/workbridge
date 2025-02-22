@@ -1,15 +1,14 @@
 'use client';
-import { useEffect, useMemo, useState } from 'react';
 import axiosInstance from '@/lib/axios';
+import { useEffect, useMemo, useState } from 'react';
 import { PiListChecksLight } from 'react-icons/pi';
 import InviteSent from './InviteSent';
-import SendInvite from './SendInvite';
-import Stepper from './Stepper';
 import OfferAndNegotiation from './OfferAndNegotiation';
 import OfferApproval from './OfferApproval';
 import Onboarding from './Onboarding';
-import { useParams } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
+import SendInvite from './SendInvite';
+import Stepper from './Stepper';
+
 interface ApiResponse {
   data: {
     offer?: {
@@ -24,7 +23,6 @@ const InterviewLayout = ({ jobApplication }) => {
     () => jobApplication?.data?.items[0] || {},
     [jobApplication]
   );
-  console.log('jobData interview layout: ', jobData);
   const initialStage = jobData?.stage || 'Applied';
   const jobApplicationId = jobData?.id;
 

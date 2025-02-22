@@ -50,7 +50,7 @@ const HrHeader = () => {
                 <li
                   onClick={() => {
                     setShowDropdown(false);
-                    router.push('/hr/hiring/Create-jobopening');
+                    router.push('/hr/hiring/create-job');
                   }}
                   className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex flex-row items-center gap-2"
                 >

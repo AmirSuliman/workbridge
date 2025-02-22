@@ -13,7 +13,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import { JobFormFields, JobListing, JobPreviewData } from '@/types/job';
 import { Department, EmployeeData, question } from '@/types/employee';
 import { getAllEmployees } from '@/services/getAllEmployees';
-import JobPreview from '../../../Create-jobopening/JobPreview';
+import JobPreview from '../../../create-job/JobPreview';
 
 const Createjobopening = () => {
   const router = useRouter();
