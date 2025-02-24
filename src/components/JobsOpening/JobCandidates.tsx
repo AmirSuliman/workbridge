@@ -136,61 +136,61 @@ export const JobCandidates = () => {
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="text-gray-400 font-medium p-4">
           <tr>
-            <th className="px-6 py-4 text-left text-sm font-medium">
+            <th className="px-4 py-4 text-left text-sm font-medium">
               Candidate Information
             </th>
-            <th className="px-6 py-4 text-left text-sm font-medium">Status</th>
-            <th className="px-6 py-4 text-left text-sm font-medium">Rating</th>
-            <th className="px-6 py-4 text-left text-sm font-medium">Applied</th>
-            <th className="px-6 py-4 text-left text-sm font-medium">Email</th>
+            <th className="px-4 py-4 text-left text-sm font-medium">Status</th>
+            <th className="px-4 py-4 text-left text-sm font-medium">Rating</th>
+            <th className="px-4 py-4 text-left text-sm font-medium">Applied</th>
+            <th className="px-4 py-4 text-left text-sm font-medium">Email</th>
 
             {sortedItems.some((item) => item.aiReview?.relevantExperience) && (
-              <th className="px-6 py-4 text-left text-sm font-medium">
+              <th className="px-4 py-4 text-left text-sm font-medium">
                 Relevant Experience
               </th>
             )}
             {sortedItems.some((item) => item.aiReview?.technicalSkills) && (
-              <th className="px-6 py-4 text-left text-sm font-medium">
+              <th className="px-4 py-4 text-left text-sm font-medium">
                 Technical Skills
               </th>
             )}
 
             {sortedItems.some((item) => item.aiReview?.relatedWorkProjects) && (
-              <th className="px-6 py-4 text-left text-sm font-medium">
+              <th className="px-4 py-4 text-left text-sm font-medium">
                 Related Work Projects
               </th>
             )}
             {sortedItems.some((item) => item.aiReview?.conclusion) && (
-              <th className="px-6 py-4 text-left text-sm font-medium">
+              <th className="px-4 py-4 text-left text-sm font-medium">
                 Conclusion
               </th>
             )}
-            <th className="px-6 py-4 text-left text-sm font-medium"></th>
+            <th className="px-4 py-4 text-left text-sm font-medium"></th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {sortedItems.map((item, index) => (
             // don't use item.candidate.id as a key here, it cause duplicate key error
             <tr key={index}>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                 {`${item.candidate.firstName} ${item.candidate.lastName}`}
               </td>
               <td
-                className={`px-6 py-4 whitespace-nowrap text-sm ${
+                className={`px-4 py-4 whitespace-nowrap text-sm ${
                   item.stage === 'Rejected' ? 'text-[#F53649]' : 'text-gray-500'
                 }`}
               >
                 {item.stage}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                 {item.rating != null
                   ? `${item.rating}/10`
                   : item.aiReview?.overallScore}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                 {item.createdAt ? item.createdAt.split('T')[0] : ''}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                 <a
                   href={`mailto:${item.candidate.email}`}
                   className="text-blue-600"
@@ -199,23 +199,23 @@ export const JobCandidates = () => {
                 </a>
               </td>
               {item.aiReview?.relevantExperience && (
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                   {item.aiReview.relevantExperience}
                 </td>
               )}
               {item.aiReview?.technicalSkills && (
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                   {item.aiReview.technicalSkills}
                 </td>
               )}
 
               {item.aiReview?.relatedWorkProjects && (
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                   {item.aiReview.relatedWorkProjects}
                 </td>
               )}
               {item.aiReview?.conclusion && (
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                   <button
                     onClick={() => openModal(item.aiReview.conclusion)}
                     className="text-blue-600 hover:text-blue-800"
