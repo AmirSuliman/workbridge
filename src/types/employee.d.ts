@@ -43,6 +43,8 @@ export interface EmployeeData {
   locationId: number;
   department: Department;
   departmentId: number;
+  sickLeaveCounter: number;
+  vacationLeaveCounter: number;
   effectiveDate: string | null;
   reportingManagerId: number | null;
   surveyStatus?: { status: string }[];

@@ -2,7 +2,7 @@
 import axiosInstance from '@/lib/axios';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import LeaveAndVacationCard from '../LeaveAndVacationCard/LeaveAndVacationCard';
+import LeaveAndVacationCardsCombined from '../LeaveAndVacationCard/LeaveAndVacationCardsCombined';
 
 interface Timeoff {
   id: string;
@@ -22,6 +22,7 @@ const WhosOut = () => {
         setLoading(true);
 
         const response = await axiosInstance.get('/timeoffs');
+        console.log('timeoffs: ', response.data);
 
         const fetchedTimeoffs = Array.isArray(response.data?.data?.items)
           ? response.data.data.items
@@ -84,28 +85,7 @@ const WhosOut = () => {
 
   return (
     <section className="h-fit bg-white rounded-xl border-[1px] border-[#E0E0E0]">
-      <div className="flex gap-4 flex-wrap lg:flex-nowrap p-4">
-        <LeaveAndVacationCard
-          title="Vacation"
-          bgColor="#25A244"
-          icon={
-            <img src="/vacation.svg" alt="Vacation Icon" className="w-4 h-4" />
-          }
-          description="Requests need to be made at least 48 hours prior."
-          daysNum="32"
-          name="Request Vacation"
-        />
-        <LeaveAndVacationCard
-          title="Sick leave"
-          bgColor="#F53649"
-          icon={
-            <img src="/sickicon.svg" alt="Vacation Icon" className="w-5 h-5" />
-          }
-          description=""
-          daysNum="11"
-          name="Request Sick Leave"
-        />
-      </div>
+      <LeaveAndVacationCardsCombined />
       <hr className="my-4" />
       <h2 className="font-medium text-lg px-4">Who’s Out</h2>
       <h6 className="text-sm opacity-50 my-1 px-4">
