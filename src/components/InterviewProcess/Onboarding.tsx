@@ -18,8 +18,10 @@ const Onboarding = ({ jobApplication }) => {
   console.log('Job Application: ', jobApplication.data.items[0]);
   const searchParams = useSearchParams();
   const candidateId = searchParams.get('candidate');
-
+const jobsId = searchParams.get('job');
+console.log(jobsId, "jobid");
   const jobId = jobApplication?.data?.items[0].id;
+  console.log(jobId, "id");
   const stage = jobApplication?.data?.items[0].stage;
 
   const [isOpenOnboarding, setIsOpenOnboarding] = useState(false);
@@ -102,7 +104,7 @@ const Onboarding = ({ jobApplication }) => {
 
     try {
       const response = await axiosInstance.post(
-        `/onboarding/${jobId}/${candidateId}`,
+        `/onboarding/${jobsId}/${candidateId}`,
         payload
       );
       console.log('Onboarding finalized successfully:', response.data);
