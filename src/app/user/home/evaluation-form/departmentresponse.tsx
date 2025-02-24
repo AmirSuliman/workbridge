@@ -13,7 +13,7 @@ const DepartmentResponse = () => {
   const { data: session } = useSession();
   const [departmentId, setDepartmentId] = useState(null);
   const [departmentHeadId, setDepartmentHeadId] = useState(null);
-  const [responses, setResponses] = useState({}); // Stores user responses
+  const [responses, setResponses] = useState({}); 
 
   const searchParams = useSearchParams();
   const surveyId = searchParams.get('survey');
