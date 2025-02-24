@@ -44,7 +44,7 @@ const Home = () => {
   const [evaluation, setEvaluation] = useState<any[]>([]);
   const [employeeId, setEmployeeId] = useState<User>();
   const [role, setRole] = useState<string>();
-  const [loading, setLoading] = useState<boolean>(true); 
+  const [loading, setLoading] = useState<boolean>(true);
   const fetchSession = async (): Promise<Session | null> => {
     const session = await getSession();
     console.log('session: ', session);
@@ -77,7 +77,6 @@ const Home = () => {
   console.log('Home employeeId: ', employeeId);
 
   useEffect(() => {
-   
     const getEvaluationNotification = async () => {
       if (employeeId?.employeeId && role) {
         setLoading(true); // Start loading while fetching
@@ -87,14 +86,17 @@ const Home = () => {
             `/survey/notification/employee/${employeeId.employeeId}?role=${roleParam}`
           );
           console.log(response, 'resnotification');
-    
-          const updatedEvaluations = response.data.data.notifications.map((item) => ({
-            ...item,
-            employeeId: employeeId.employeeId,
-            surveyId: item.surveyId || item.surveyEmployeeStatus?.surveyId || null,
-            surveyType: item.surveyType || '', 
-          }));
-    
+
+          const updatedEvaluations = response.data.data.notifications.map(
+            (item) => ({
+              ...item,
+              employeeId: employeeId.employeeId,
+              surveyId:
+                item.surveyId || item.surveyEmployeeStatus?.surveyId || null,
+              surveyType: item.surveyType || '',
+            })
+          );
+
           setEvaluation(updatedEvaluations);
         } catch (error) {
           console.log(error);
@@ -103,24 +105,26 @@ const Home = () => {
         }
       }
     };
-    
-  
+
     if (employeeId && role) {
       getEvaluationNotification();
     }
   }, [employeeId, role]);
-  
+
   // console.log('surveys: ');
 
   return (
     <div className="p-6">
       <main className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <WhosOut />
-        {!isViewOnly && evaluation.length > 0 && <Evaluation evaluation={evaluation} employeeId={employeeId} />}
+        {!isViewOnly && evaluation.length > 0 && (
+          <Evaluation evaluation={evaluation} employeeId={employeeId} />
+        )}
 
-
-{isViewOnly && <UserEvaluation  evaluation={evaluation} employeeId={employeeId}  />}
-<HomePolicies />
+        {isViewOnly && (
+          <UserEvaluation evaluation={evaluation} employeeId={employeeId} />
+        )}
+        <HomePolicies />
         <Celebrations />
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
           <header className="px-4 flex items-center gap-4 justify-between">
