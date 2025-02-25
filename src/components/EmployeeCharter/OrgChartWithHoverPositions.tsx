@@ -18,22 +18,17 @@ const OrgChartWithHoverPositions = ({
   compact,
   search,
 }) => {
-  console.log('openPositions: ', employees[59]);
   const d3Container = useRef(null);
   const refOrgChart = useRef<OrgChart | null>(null);
   const [expandedEmployeeIds, setExpandedEmployeeIds] = useState(new Set());
 
   function filterChart(value: string) {
-    // Clear previous higlighting
     refOrgChart.current.clearHighlighting();
-
-    // Get chart nodes
     const data = refOrgChart.current.data();
 
     // Mark all previously expanded nodes for collapse
     data?.forEach((d) => (d._expanded = false));
 
-    // Loop over data and check if input value matches any name
     data?.forEach((d) => {
       if (
         value != '' &&
@@ -45,11 +40,25 @@ const OrgChartWithHoverPositions = ({
       }
     });
 
-    // Update data and rerender graph
     refOrgChart.current.data(data).render();
   }
 
   const processChange = debounce(() => filterChart(search), 1000);
+  const [actualSubordinates, setActualSubordinates] = useState({});
+
+  // Update this when your employee data changes
+  useEffect(() => {
+    if (!employees) return;
+
+    const subordinateCounts = {};
+    employees.forEach((emp) => {
+      subordinateCounts[emp.id] = employees.filter(
+        (e) => e.parentId === emp.id && !e.isOpenPosition
+      ).length;
+    });
+
+    setActualSubordinates(subordinateCounts);
+  }, [employees]);
 
   useEffect(() => {
     if (search.length > 0) {
@@ -69,23 +78,45 @@ const OrgChartWithHoverPositions = ({
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 
-  const toggleOpenPositions = useCallback((employeeId) => {
-    setExpandedEmployeeIds((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(employeeId)) {
-        newSet.delete(employeeId);
-      } else {
-        newSet.add(employeeId);
-      }
-      return newSet;
-    });
-  }, []);
+  const toggleOpenPositions = useCallback(
+    (employeeId) => {
+      setExpandedEmployeeIds((prev) => {
+        const newSet = new Set(prev);
+        if (newSet.has(employeeId)) {
+          newSet.delete(employeeId);
+        } else {
+          newSet.add(employeeId);
+
+          const employee = employees.find((emp) => emp.id === employeeId);
+
+          // If there are open positions, focus on the first one after rendering
+          if (employee?.openPositions?.length > 0) {
+            setTimeout(() => {
+              const firstOpenPositionId = `${employeeId}-op-${employee.openPositions[0].id}`;
+              // Find the node and center/highlight it
+              if (refOrgChart.current) {
+                refOrgChart.current.setCentered(firstOpenPositionId).render();
+                refOrgChart.current.setActiveNodeCentered(true);
+                refOrgChart.current
+                  .setUpToTheRootHighlighted(firstOpenPositionId)
+                  .render();
+                // Set back to original setting after focusing
+                refOrgChart.current.setActiveNodeCentered(false);
+              }
+            }, 100);
+          }
+        }
+        return newSet;
+      });
+    },
+    [employees]
+  );
 
   const getTransformedData = useCallback(
     (originalData) => {
-      return originalData.reduce((acc, employee) => {
-        // Always add the employee node
-        acc.push(employee);
+      const transformedData = originalData.reduce((acc, employee) => {
+        const employeeCopy = { ...employee };
+        acc.push(employeeCopy);
 
         // Add open positions if this employee's positions are expanded
         if (
@@ -93,9 +124,9 @@ const OrgChartWithHoverPositions = ({
           employee.openPositions &&
           Array.isArray(employee.openPositions)
         ) {
-          employee.openPositions.forEach((position, index) => {
+          employee.openPositions.forEach((position) => {
             acc.push({
-              id: `${employee.id}-op-${[position.id]}`,
+              id: `${employee.id}-op-${position.id}`,
               parentId: employee.id,
               isOpenPosition: true,
               firstName: 'Open Position',
@@ -105,7 +136,7 @@ const OrgChartWithHoverPositions = ({
                 name: employee.department?.name,
               },
               location: position.location || employee.location,
-              _directSubordinatesPaging: 0,
+              _directSubordinates: 0, // Open positions have no subordinates
               openPositions: [],
             });
           });
@@ -113,9 +144,12 @@ const OrgChartWithHoverPositions = ({
 
         return acc;
       }, []);
+
+      return transformedData;
     },
     [expandedEmployeeIds]
   );
+
   useLayoutEffect(() => {
     if (!d3Container.current || !employees) return;
 
@@ -124,7 +158,6 @@ const OrgChartWithHoverPositions = ({
     }
 
     const transformedData = getTransformedData(employees);
-
     if (refOrgChart.current && d3Container.current) {
       refOrgChart.current
         .container(d3Container.current)
@@ -147,7 +180,7 @@ const OrgChartWithHoverPositions = ({
         })
         .nodeContent((d) => {
           // console.log('openPositions: ', d.data.openPositions);
-
+          const directSubordinatesCount = actualSubordinates[d.data.id] || 0;
           const isSelected = d.data.selectedEmployees?.includes(d.data.id);
           const color = isSelected
             ? '#230E37'
@@ -289,10 +322,10 @@ const OrgChartWithHoverPositions = ({
               
               
               ${
-                d.data._directSubordinatesPaging
+                directSubordinatesCount
                   ? `<div style="color: #86699D; display: flex; align-items: center; margin-left: auto;">
                 <img src="/user-group.svg" style="width: 12px; height: 12px;" alt="user group">
-                <span style="font-size: 10px; font-style: italic">${d.data._directSubordinatesPaging}</span>
+                <span style="font-size: 10px; font-style: italic">${directSubordinatesCount}</span>
               </div>`
                   : ``
               }`
@@ -365,12 +398,13 @@ const OrgChartWithHoverPositions = ({
     onSelectedEmployees,
     toggleOpenPositions,
     isUserPanel,
+    actualSubordinates,
   ]);
 
   return (
-    <div className="h-[calc(100vh-10rem)] overflow-hidden relative">
+    <main className="h-[calc(100vh-10rem)] overflow-hidden relative">
       <div ref={d3Container} className="w-full h-full" />
-    </div>
+    </main>
   );
 };
 

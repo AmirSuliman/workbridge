@@ -7,6 +7,8 @@ import EmployeesDropdown from '../DropDowns/EmployeesDropdown';
 import FormField from './FormField';
 import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
+import { getSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
 const EmploymentSection = ({
   errors,
@@ -15,7 +17,6 @@ const EmploymentSection = ({
   editEmployee,
   employeeData,
 }) => {
-  console.log('employeeData: ', employeeData);
   const hireDate = employeeData?.hireDate
     ? employeeData.hireDate.split('T')[0]
     : 'N/A';
@@ -39,6 +40,19 @@ const EmploymentSection = ({
     return `${years}y ${remainingMonths}m`;
   };
   const duration = employeeData?.hireDate ? calculateDuration(hireDate) : '';
+
+  const [role, setRole] = useState<string>();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setRole(session?.user?.role);
+    };
+
+    fetchSession();
+  }, []);
+
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 
   return (
     <main className="rounded-md  h-full">
@@ -178,12 +192,20 @@ const EmploymentSection = ({
           </article>
           <article>
             <Label text="Reporting Manager*" />
-            <EmployeesDropdown
-              errors={errors}
-              register={register}
-              resetField={resetField}
-              reportingManagerId={employeeData.reportingManagerId}
-            />
+            {isUserPanel ? (
+              <input
+                value={`${employeeData?.manager?.firstName} ${employeeData?.manager?.lastName}`}
+                className="form-input"
+                readOnly
+              ></input>
+            ) : (
+              <EmployeesDropdown
+                errors={errors}
+                register={register}
+                resetField={resetField}
+                reportingManagerId={employeeData.reportingManagerId}
+              />
+            )}
           </article>
           <article>
             <Label text="Job Title*" />
