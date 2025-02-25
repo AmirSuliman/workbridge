@@ -13,6 +13,9 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { data: session } = useSession();
 
+  // Store responses separately
+  const [responses, setResponses] = useState<{ [key: string]: any }>({});
+
   useEffect(() => {
     const getQuestions = async () => {
       try {
@@ -27,17 +30,21 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
     getQuestions();
   }, [surveyId]);
 
-  const { register, handleSubmit, formState: { isSubmitting } } = useForm();
+  const { handleSubmit, formState: { isSubmitting } } = useForm();
 
-  const onSubmit = async (data) => {
+  const handleResponseChange = (key: string, value: any) => {
+    setResponses((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const onSubmit = async () => {
     const payload = {
       surveyId,
       managerId,
       employeeId,
       responses: questions.map((question, index) => ({
         questionId: question.id,
-        responseText: data[`responseText_${index}`],
-        rating: data[`rating_${index}`],
+        responseText: responses[`responseText_${index}`] || '',
+        rating: responses[`rating_${index}`] || null,
       })),
     };
 
@@ -89,14 +96,17 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
                     <input
                       type="text"
                       className="border p-2 rounded w-full"
-                      {...register(`responseText_${currentQuestionIndex}`)}
+                      value={responses[`responseText_${currentQuestionIndex}`] || ''}
+                      onChange={(e) => handleResponseChange(`responseText_${currentQuestionIndex}`, e.target.value)}
                     />
                   )}
                   {questions[currentQuestionIndex].responseType === 'Rating' && (
                     <select
                       className="border p-2 rounded w-full"
-                      {...register(`rating_${currentQuestionIndex}`)}
+                      value={responses[`rating_${currentQuestionIndex}`] || ''}
+                      onChange={(e) => handleResponseChange(`rating_${currentQuestionIndex}`, e.target.value)}
                     >
+                      <option value="">Select a rating</option>
                       {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((value) => (
                         <option key={value} value={value}>
                           {value}
@@ -140,6 +150,5 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
     </div>
   );
 };
-
 
 export default Response;
