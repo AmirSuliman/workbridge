@@ -265,7 +265,7 @@ const OrgChartWithHoverPositions = ({
                   </div>
                   <span>•</span>
                   <div style="font-size: 9px; color: rgba(15, 23, 42, 1);">
-                    ${d.data.department.name}
+                    ${d.data.department?.name}
                   </div>
                 </div>
               </div>

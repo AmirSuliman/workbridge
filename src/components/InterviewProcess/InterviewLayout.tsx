@@ -159,7 +159,7 @@ const InterviewLayout = ({ jobApplication }) => {
             token={token}
           />
         )}
-        {['Onboarding'].includes(currentStage) && (
+        {['Onboarding', 'Onboarded'].includes(currentStage) && (
           <Onboarding jobApplication={jobApplication} />
         )}
       </section>

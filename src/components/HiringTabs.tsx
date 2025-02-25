@@ -12,13 +12,13 @@ export const HiringTabs = ({
   const stage = jobApplication.data?.items[0]?.stage || 'Applied';
   return (
     <nav className="relative flex items-center gap-8 border-b border-gray-300">
-      {stage === 'Onboarding' && (
+      {stage === 'Onboarded' && (
         <button
           onClick={() => {
-            setActiveTab('Onboarding');
+            setActiveTab('Onboarded');
           }}
           className={`py-2 px-4 ${
-            activeTab === 'Onboarding'
+            activeTab === 'Onboarded'
               ? 'text-black font-semibold border-b-2 border-black'
               : 'text-gray-600'
           }`}

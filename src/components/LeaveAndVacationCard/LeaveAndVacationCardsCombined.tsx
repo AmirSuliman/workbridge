@@ -12,7 +12,7 @@ const LeaveAndVacationCardsCombined = () => {
   const { data: employeeData } = useSelector(
     (state: RootState) => state.employee
   );
-  console.log('employee data: ', employeeData);
+
   useEffect(() => {
     // Only fetch if we don't already have the data
     if (

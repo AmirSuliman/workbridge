@@ -12,13 +12,7 @@ interface ErrorResponse {
 
 const InviteSent = ({ jobApplication, heading, buttonText }) => {
   const jobData = jobApplication.data.items[0];
-  console.log(jobData);
-
-  // const date = new Date(jobData.meetingDate);
   const meetingDate = new Date(jobData?.meetingDate);
-  const currentDate = new Date();
-  // const isToday = meetingDate.toDateString() === currentDate.toDateString();
-  const isFuture = meetingDate > currentDate;
 
   const formattedTime = new Intl.DateTimeFormat('en-US', {
     hour: '2-digit',

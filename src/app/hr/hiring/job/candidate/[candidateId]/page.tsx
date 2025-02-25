@@ -9,11 +9,10 @@ import { fetchCandidateData } from '@/store/slices/candidateSlice';
 import { AppDispatch, RootState } from '@/store/store';
 import { JobListing } from '@/types/job';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { FaArrowRight } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
+import ProceedToNextRoundButton from '../ProceedToNextRoundButton';
 
 const Candidate = () => {
   const { candidateId } = useParams();
@@ -62,12 +61,7 @@ const Candidate = () => {
           {singleJobData?.data.tittle || ''}
         </div>
 
-        <Link
-          href={`/hr/hiring/interview-process?candidate=${candidateId}&job=${jobId}`}
-          className="flex flex-row items-center gap-4 p-3 bg-[#0F172A] text-white text-[12px] rounded-lg"
-        >
-          Proceed to First Round Interview <FaArrowRight />{' '}
-        </Link>
+        <ProceedToNextRoundButton />
       </div>
       <div>
         {loading && <ScreenLoader />}
