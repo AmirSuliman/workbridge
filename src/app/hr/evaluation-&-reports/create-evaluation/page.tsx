@@ -90,22 +90,32 @@ const CreateEvaluation = () => {
   
     const payload = {
       sendBy: employeeId?.employeeId || null,
-      departmentIds: departmentIds,
+      departmentIds: departmentIds.length > 0 ? departmentIds : null,
       title: 'Survey Title',
       type: type,
-      isReportingEmployee: isEvaluativeReportingEmployee, // Dynamically set based on checkbox state
+      isReportingEmployee: isEvaluativeReportingEmployee,
       status: status,
       questions: transformedQuestions,
       employeeId: data.reportingManagerId,
-      managerIds: managerIds,
+      managerIds: managerIds.length > 0 ? managerIds : null,
     };
   
     try {
       setLoading(true);
-      await axiosInstance.post('/survey/', payload);
+      const response = await axiosInstance.post('/survey/', payload);
+      console.log('Survey Created Response:', response.data);
+      // Always send the survey if status is 'In Progress'
+      const surveyId = response.data?.data?.survey?.id;
+      console.log('Extracted Survey ID:', surveyId);
+      if (surveyId && status === 'In Progress') {
+        console.log('Survey ID:', surveyId);
+        const sendPayload = {
+          surveyId: surveyId,
+          departmentIds: departmentIds.length > 0 ? departmentIds : null,
+          managerIds: managerIds.length > 0 ? managerIds : null,
+        };
   
-      if (status === 'In Progress') {
-        await axiosInstance.post('/survey/send/', payload);
+        await axiosInstance.post('/survey/send/', sendPayload);
       }
   
       setLoading(false);
@@ -123,6 +133,7 @@ const CreateEvaluation = () => {
     }
   };
   
+  
   return (
     <form>
       <div className="flex flex-row items-center justify-between w-full">
@@ -131,7 +142,7 @@ const CreateEvaluation = () => {
           <button
             disabled={loading}
             onClick={handleSubmit((data) => onSubmit(data, 'Draft'))}
-            className="p-2 px-2 bg-black rounded text-white text-[14px]"
+            className="p-2 px-2 bg-[#0F172A] rounded text-white text-[14px]"
           >
             Save Draft
           </button>
@@ -231,24 +242,25 @@ const CreateEvaluation = () => {
           <button
             type="button"
             onClick={() => append({ question: '', responseType: false })}
-            className="bg-black text-white p-3 px-10 rounded flex flex-row items-center gap-3"
+            className="bg-[#0F172A] text-white p-3 px-10 rounded flex flex-row items-center gap-3"
           >
             <FiPlusCircle /> Add Question
           </button>
         </div>
       </div>
       <Button
-        onClick={handleSubmit((data) => onSubmit(data, 'In Progress'))}
-        name={loading ? '' : 'Send Evaluation Survey'}
-        icon={
-          loading && (
-            <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
-          )
-        }
-        className="w-full max-w-xl mx-auto col-span-full mt-12"
-        type="submit"
-        disabled={loading}
-      />
+  onClick={handleSubmit((data) => onSubmit(data, 'In Progress'))}
+  name={loading ? '' : 'Send Evaluation Survey'}
+  icon={
+    loading && (
+      <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+    )
+  }
+  className="w-full max-w-xl mx-auto col-span-full mt-12"
+  type="submit"
+  disabled={loading}
+/>
+
     </form>
   );
 };
