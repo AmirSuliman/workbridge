@@ -274,6 +274,16 @@ const MyInformation = () => {
       setEditLoading(false);
       setEditEmployee(false);
       dispatch(updateEmployeeData(response.data.data));
+      console.log(
+        'response.data.data.profilePictureUrl',
+        response.data.data.profilePictureUrl
+      );
+      if (!empId) {
+        sessionStorage.setItem(
+          'profilePictureUrl',
+          response.data.data.profilePictureUrl
+        );
+      }
     } catch (err) {
       console.error('Error updating employee data:', err);
       setEditLoading(false);
@@ -316,7 +326,6 @@ const MyInformation = () => {
           <TabButton
             isRootTab={true}
             name="Personal"
-            
             href={`${
               empId
                 ? `/${
