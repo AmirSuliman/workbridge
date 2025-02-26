@@ -24,7 +24,6 @@ const ProfileAvatarItem: React.FC<ProfileAvatarItemProps> = ({
   return (
     <div className="flex  items-center p-0 gap-2">
       <Image
-        loader={imageLoader}
         src={imgSrc}
         alt={alt}
         width={500}

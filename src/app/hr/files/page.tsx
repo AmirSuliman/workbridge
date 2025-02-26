@@ -261,13 +261,7 @@ const Page = () => {
     <div>
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-2">
-          <Image
-            loader={imageLoader}
-            src="/folder.svg"
-            alt="img"
-            width={25}
-            height={25}
-          />
+          <Image src="/folder.svg" alt="img" width={25} height={25} />
           <h1 className="font-semibold text-[22px]">Files</h1>
         </div>
         <div className="flex flex-row items-center gap-4">
@@ -335,13 +329,7 @@ const Page = () => {
         <div className="flex flex-col bg-white border rounded-[10px] p-5 w-full overflow-x-auto">
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-2">
-              <Image
-                loader={imageLoader}
-                src="/folder.svg"
-                alt="img"
-                width={20}
-                height={20}
-              />
+              <Image src="/folder.svg" alt="img" width={20} height={20} />
               <h1 className="font-medium text-[18px]">
                 {isAllFilesActive
                   ? 'All Files'

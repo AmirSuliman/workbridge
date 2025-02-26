@@ -271,7 +271,6 @@ const VacationPolicies = () => {
                 </td>
                 <td className="p-4 text-center flex justify-center space-x-2">
                   <Image
-                    loader={imageLoader}
                     src="/delete.svg"
                     alt="delete"
                     width={13}
@@ -281,7 +280,6 @@ const VacationPolicies = () => {
                     onClick={() => deleteModal(holiday.id)}
                   />
                   <Image
-                    loader={imageLoader}
                     src="/edit.svg"
                     alt="edit"
                     width={13}

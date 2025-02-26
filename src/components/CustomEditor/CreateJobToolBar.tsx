@@ -1,12 +1,19 @@
-import { FaBold, FaItalic, FaRedo, FaUndo } from 'react-icons/fa';
+import {
+  FaBold,
+  FaItalic,
+  FaListOl,
+  FaListUl,
+  FaRedo,
+  FaUndo,
+} from 'react-icons/fa';
 import { GrTextAlignCenter, GrTextAlignLeft } from 'react-icons/gr';
 import { LuAlignJustify } from 'react-icons/lu';
 import { MdLink, MdLinkOff } from 'react-icons/md';
-import { Editor } from '@tiptap/react'; // Import the Editor type from TipTap
+import { Editor } from '@tiptap/react';
 import { FaUnderline } from 'react-icons/fa6';
 
 interface ToolBarProps {
-  editor: Editor; // Define the editor prop type
+  editor: Editor;
 }
 
 const CreateJobToolBar: React.FC<ToolBarProps> = ({ editor }) => {
@@ -142,6 +149,32 @@ const CreateJobToolBar: React.FC<ToolBarProps> = ({ editor }) => {
         className="px-3 py-1 hover:bg-gray-300 text-sm font-medium rounded disabled:bg-gray-100 disabled:cursor-not-allowed"
       >
         <FaRedo size={14} />
+      </button>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          editor.chain().focus().toggleBulletList().run();
+        }}
+        className={`px-3 py-1 grow-0 shrink-0 ${
+          editor.isActive('bulletList')
+            ? 'bg-blue-500 text-white'
+            : 'hover:bg-gray-300'
+        }`}
+      >
+        <FaListUl size={14} />
+      </button>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          editor.chain().focus().toggleOrderedList().run();
+        }}
+        className={`px-3 py-1 grow-0 shrink-0 ${
+          editor.isActive('orderedList')
+            ? 'bg-blue-500 text-white'
+            : 'hover:bg-gray-300'
+        }`}
+      >
+        <FaListOl size={14} />
       </button>
     </div>
   );
