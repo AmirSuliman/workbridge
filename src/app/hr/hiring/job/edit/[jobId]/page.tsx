@@ -135,14 +135,13 @@ const Createjobopening = () => {
         name: key,
         required: toggleStates[key],
       }));
-
     const location = {
-      street1: data.street1 || '',
-      street2: data.street2 || '',
-      zipCode: Number(data.zipCode || 0),
-      city: data.city || '',
-      country: data.country || '',
-      state: data.state || '',
+      street1: data.location.street1,
+      street2: data.location.street2,
+      zipCode: data.location.zipCode,
+      city: data.location.city,
+      country: data.location.country,
+      state: data.location.state,
     };
 
     const shareWebsites = [
@@ -219,12 +218,12 @@ const Createjobopening = () => {
       }));
 
     const location = {
-      street1: data.street1 || '',
-      street2: data.street2 || '',
-      zipCode: Number(data.zipCode || 0),
-      city: data.city || '',
-      country: data.country || '',
-      state: data.state || '',
+      street1: data.location.street1,
+      street2: data.location.street2,
+      zipCode: data.location.zipCode,
+      city: data.location.city,
+      country: data.location.country,
+      state: data.location.state,
     };
 
     const shareWebsites = [
