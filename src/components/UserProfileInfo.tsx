@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaAngleDown, FaUser } from 'react-icons/fa';
+import imageLoader from '../../imageLoader';
 
 const UserProfileInfo: React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement>
@@ -58,6 +59,7 @@ const UserProfileInfo: React.FC<
       }`}
     >
       <Image
+        loader={imageLoader}
         src={
           profilePictureUrl ||
           session?.user.user.profilePictureUrl ||

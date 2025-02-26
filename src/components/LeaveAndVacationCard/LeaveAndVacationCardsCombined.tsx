@@ -35,6 +35,7 @@ const LeaveAndVacationCardsCombined = () => {
     session?.user.employeeId,
     employeeData,
   ]);
+
   return (
     <div className="flex gap-4 flex-wrap lg:flex-nowrap p-4">
       <LeaveAndVacationCard
@@ -44,7 +45,7 @@ const LeaveAndVacationCardsCombined = () => {
           <img src="/vacation.svg" alt="Vacation Icon" className="w-4 h-4" />
         }
         description="Requests need to be made at least 48 hours prior."
-        daysNum={String(employeeData?.vacationLeaveCounter)}
+        daysNum={String(employeeData?.vacationLeaveCounter || '0')}
         name="Request Vacation"
       />
       <LeaveAndVacationCard
@@ -54,7 +55,7 @@ const LeaveAndVacationCardsCombined = () => {
           <img src="/sickicon.svg" alt="Vacation Icon" className="w-5 h-5" />
         }
         description=""
-        daysNum={String(employeeData?.sickLeaveCounter)}
+        daysNum={String(employeeData?.sickLeaveCounter || '0')}
         name="Request Sick Leave"
       />
     </div>

@@ -141,12 +141,21 @@ const Createjobopening = () => {
 
   const handleCheckboxChange =
     (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const isChecked = event.target.checked;
+
       setCheckboxStates((prev) => ({
         ...prev,
-        [name]: event.target.checked,
+        [name]: isChecked,
       }));
-    };
 
+      // If the checkbox is unchecked, set the toggle state to false
+      if (!isChecked) {
+        setToggleStates((prev) => ({
+          ...prev,
+          [name]: false,
+        }));
+      }
+    };
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -383,21 +392,15 @@ const Createjobopening = () => {
                 <label className="flex flex-col mb-4 sm:w-1/3 w-full">
                   <span className="form-label">Department*</span>
                   <select
-                    className="form-input text-gray-400 bg-white"
+                    className="form-input"
                     {...register('departmentId', {
                       required: 'Department is required',
                     })}
                   >
-                    <option value="" className="text-gray-400">
-                      Select a Department
-                    </option>
+                    <option value="">Select a Department</option>
 
                     {departments?.map((department) => (
-                      <option
-                        value={department?.id}
-                        key={department.id}
-                        className="text-gray-400"
-                      >
+                      <option value={department?.id} key={department.id}>
                         {department?.name}
                       </option>
                     ))}
@@ -411,17 +414,13 @@ const Createjobopening = () => {
                 <label className="flex flex-col mb-4 sm:w-1/3 w-full">
                   <span className="form-label">Employment Type*</span>
                   <select
-                    className="form-input text-gray-400 bg-white"
+                    className="form-input"
                     {...register('employmentType', {
                       required: 'Employment type is required',
                     })}
                   >
-                    <option value="" className="text-gray-400">
-                      Select employment type
-                    </option>
-                    <option value="Fulltime" className="text-gray-400">
-                      Full time
-                    </option>
+                    <option value="">Select employment type</option>
+                    <option value="Fulltime">Full time</option>
                     <option value="Part Time">Part-Time</option>
                     <option value="Freelance">Freelance</option>
                   </select>
@@ -437,20 +436,14 @@ const Createjobopening = () => {
                 <label className="flex flex-col mb-4 sm:w-1/3 w-full">
                   <span className="form-label">Hiring Lead*</span>
                   <select
-                    className="form-input text-gray-400 bg-white"
+                    className="form-input"
                     {...register('hiringLeadId', {
                       required: 'Hiring lead required',
                     })}
                   >
-                    <option value="" className="text-gray-400">
-                      Select hiring leads
-                    </option>
+                    <option value="">Select hiring leads</option>
                     {employees.map((lead) => (
-                      <option
-                        key={lead.id}
-                        value={lead.id}
-                        className="text-gray-400"
-                      >
+                      <option key={lead.id} value={lead.id}>
                         {lead.firstName} {lead.lastName}
                       </option>
                     ))}
