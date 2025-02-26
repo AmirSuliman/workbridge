@@ -46,7 +46,7 @@ const PaymentSection = ({ employeeId }) => {
     fetchSession();
   }, []);
 
-  const isEmployee = role === 'ViewOnly';
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -156,7 +156,7 @@ const PaymentSection = ({ employeeId }) => {
                     payment.payType || '',
                     payment.overtime ? 'Liable' : 'Exempt',
                     payment.note || '',
-                    !isEmployee && (
+                    !isUserPanel && (
                       <FaTrash
                         className="cursor-pointer"
                         key={payment.id}
@@ -168,7 +168,7 @@ const PaymentSection = ({ employeeId }) => {
                         }}
                       />
                     ),
-                    !isEmployee && (
+                    !isUserPanel && (
                       <FaEdit
                         className="cursor-pointer"
                         key={payment.id}
@@ -307,7 +307,7 @@ const PaymentSection = ({ employeeId }) => {
           </div>
         )}
       </div>
-      {!isEmployee && !addeNew && !isEditPayment && (
+      {!isUserPanel && !addeNew && !isEditPayment && (
         <Button
           onClick={(e) => {
             e.preventDefault();
@@ -318,14 +318,14 @@ const PaymentSection = ({ employeeId }) => {
           className="w-full max-w-xl mx-auto col-span-full mt-4"
         />
       )}
-      {!isEmployee && addeNew && (
+      {!isUserPanel && addeNew && (
         <AddPayments
           setPayments={setPayments}
           employeeId={employeeId}
           setAddNew={setAddNew}
         />
       )}
-      {!isEmployee && deleteModal && (
+      {!isUserPanel && deleteModal && (
         <PaymentDeleteModal
           onClose={() => {
             setDeleteModal(false);
