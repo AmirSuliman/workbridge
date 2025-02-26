@@ -47,13 +47,7 @@ const HrSidebar = () => {
         } lg:translate-x-0`}
       >
         <h1 className="text-center px-8 text-2xl py-8">
-          <Image
-            loader={imageLoader}
-            src="/logo.svg"
-            alt="logo"
-            width={150}
-            height={150}
-          />
+          <Image src="/logo.svg" alt="logo" width={150} height={150} />
         </h1>
         <>
           <SidebarNavItem
