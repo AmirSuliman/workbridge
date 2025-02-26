@@ -57,7 +57,7 @@ const Page = () => {
 
       if (response?.status === 200) {
         setJobData((prevData) =>
-          prevData ? { ...prevData, status } : { status } as OfferData
+          prevData ? { ...prevData, status } : ({ status } as OfferData)
         );
         toast.success(`Offer ${status} successfully!`);
       } else {
@@ -74,7 +74,7 @@ const Page = () => {
 
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 bg-[#000000]/50 flex items-center justify-center z-50">
-      <div className="max-w-4xl my-4 lg:my-8 p-4 bg-white rounded-lg">
+      <div className="max-w-4xl my-4 lg:my-8 p-4 bg-white rounded-lg max-h-[calc(100svh-3rem)] overflow-y-auto">
         <header className="flex items-center gap-4 justify-between pb-4 border-b-[1px] border-[#E0E0E0]">
           <h2 className="font-semibold text-lg">Offer</h2>
         </header>
@@ -111,11 +111,11 @@ const Page = () => {
           <h4 className="font-medium text-base">{jobData?.compensation}</h4>
         </main>
         {jobData?.status === 'rejected' && (
-          <p className="text-red-500">This offer is already rejected.</p>
+          <p className="text-red-500">Offer rejected.</p>
         )}
 
         {jobData?.status === 'accepted' && (
-          <p className="text-green-500">This offer is already accepted.</p>
+          <p className="text-green-500">Offer accepted.</p>
         )}
 
         {jobData?.status === 'negotiation' && (
