@@ -125,13 +125,7 @@ const NotesSection = ({ employeeId }) => {
         <div className="mb-6 flex justify-between flex-wrap gap-4">
           <FormHeading
             icon={
-              <Image
-                loader={imageLoader}
-                src="/document.svg"
-                alt="img"
-                width={13}
-                height={13}
-              />
+              <Image src="/document.svg" alt="img" width={13} height={13} />
             }
             text="Notes"
           />
@@ -195,7 +189,6 @@ const NotesSection = ({ employeeId }) => {
                           }}
                         >
                           <Image
-                            loader={imageLoader}
                             src="/edit.svg"
                             alt="img"
                             width={10}
@@ -212,7 +205,6 @@ const NotesSection = ({ employeeId }) => {
                           }}
                         >
                           <Image
-                            loader={imageLoader}
                             src="/delete.svg"
                             alt="img"
                             width={10}

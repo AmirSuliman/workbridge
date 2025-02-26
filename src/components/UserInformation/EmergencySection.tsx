@@ -125,15 +125,6 @@ const EmergencySection = ({ employeeData }) => {
     setisEditPayment(true);
     setPaymentId(payment.id);
     setCurrentPayment(payment);
-
-    // Pre-fill the form with existing data
-    // setValue('firstName', payment.firstName);
-    // setValue('middle', payment.firstName);
-    // setValue('lastName', payment.lastName);
-    // setValue('paymentSchedule', payment.paymentSchedule);
-    // setValue('note', payment.note);
-    // setValue('effectiveDate', payment.effectiveDate.split('T')[0]);
-    // setValue('overtime', payment.overtime);
     reset(payment);
   };
 
@@ -142,15 +133,7 @@ const EmergencySection = ({ employeeData }) => {
       <div className="p-3 sm:p-6 rounded-[10px] border-gray-border border-[1px] bg-white my-5">
         <div className="mb-5 flex justify-between flex-wrap gap-4">
           <FormHeading
-            icon={
-              <Image
-                loader={imageLoader}
-                src="/contact.svg"
-                alt="img"
-                width={17}
-                height={17}
-              />
-            }
+            icon={<Image src="/contact.svg" alt="img" width={17} height={17} />}
             text="Emergency Contact"
           />
 
@@ -192,7 +175,6 @@ const EmergencySection = ({ employeeData }) => {
                       payment.location?.state || ''
                     } ${payment.location?.country || ''}`,
                     <Image
-                      loader={imageLoader}
                       src="/delete.svg"
                       width={10}
                       height={10}
@@ -207,7 +189,6 @@ const EmergencySection = ({ employeeData }) => {
                       }}
                     />,
                     <Image
-                      loader={imageLoader}
                       src="/edit.svg"
                       width={10}
                       height={10}

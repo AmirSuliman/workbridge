@@ -17,7 +17,6 @@ import { useDispatch } from 'react-redux';
 import { z } from 'zod';
 import Footer from './footer';
 import Navbar from './nav';
-import imageLoader from '../../../imageLoader';
 
 type AuthFormInputs = z.infer<typeof authSchema>;
 
@@ -111,7 +110,6 @@ const Auth = () => {
           <div className="min-w-[100%] sm:min-w-[27rem]  z-10 p-4 border rounded-[27px] backdrop-blur-sm bg-white/30 shadow-lg">
             <div className="flex flex-col items-center bg-white rounded-[27px] p-8 h-full shadow-custom-deep pt-[2rem] px-[1rem]">
               <Image
-                loader={imageLoader}
                 src="/Flattened (1).svg"
                 alt="img"
                 width={50}

@@ -1,11 +1,12 @@
 'use client';
 
-import ToolBar from './ToolBar';
 import Link from '@tiptap/extension-link';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
-
+import Underline from '@tiptap/extension-underline';
+import StarterKit from '@tiptap/starter-kit';
+import BulletList from '@tiptap/extension-bullet-list';
+import OrderedList from '@tiptap/extension-ordered-list';
+import ListItem from '@tiptap/extension-list-item';
 import { EditorContent, useEditor } from '@tiptap/react';
 import CreateJobToolBar from './CreateJobToolBar';
 
@@ -21,6 +22,9 @@ const CreateJobTextEditor = ({
     extensions: [
       StarterKit,
       Underline,
+      BulletList,
+      OrderedList,
+      ListItem,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
       }),
