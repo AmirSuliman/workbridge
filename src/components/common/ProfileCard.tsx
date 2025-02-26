@@ -28,24 +28,22 @@ const ProfileCard = ({
   loading,
 }: {
   setEditEmployee: (value: boolean) => void;
-  editEmployee: boolean;
   employeeData: EmployeeData;
+  editEmployee: boolean;
   loading?: boolean;
 }) => {
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
   const hireDate = employeeData?.hireDate
     ? new Date(employeeData.hireDate).toLocaleDateString()
-    : 'N/A';
+    : '';
 
-  useSelector((state: RootState) => state.myInfo);
-  // const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
   const logedInUser = useSelector((state: RootState) => state.myInfo?.user);
   const userRole = logedInUser?.role;
-  const logedInUserId = logedInUser?.employeeId;
+  const isUserPanel = userRole === 'ViewOnly' || userRole === 'Manager';
 
   const calculateDuration = (startDate: string | undefined): string => {
-    if (!startDate) return 'N/A';
+    if (!startDate) return '';
 
     const start = new Date(startDate);
     const now = new Date();
@@ -64,18 +62,16 @@ const ProfileCard = ({
 
     // If less than a month, return days
     if (months < 1) return `${days}d`;
-
-    // If less than a year, return months
     if (months < 12) return `${months}m`;
 
     // Otherwise, calculate years and months
     const years = Math.floor(months / 12);
     const remainingMonths = months % 12;
 
-    return `${years}y ${remainingMonths}m`;
+    return `${years || ''}y ${remainingMonths || ''}m`;
   };
 
-  const duration = employeeData?.hireDate ? calculateDuration(hireDate) : 'N/A';
+  const duration = employeeData?.hireDate ? calculateDuration(hireDate) : '';
   const [imgSrc, setImgSrc] = useState(
     employeeData?.profilePictureUrl || IMAGES.placeholderAvatar
   );
@@ -138,13 +134,13 @@ const ProfileCard = ({
                 employeeData?.firstName || ''
               } ${employeeData?.lastName || ''}`}</h1>
               <p className="text-[16px] text-gray-500">
-                {employeeData?.tittle || 'N/A'}
+                {employeeData?.tittle || ''}
               </p>
             </div>
             {/* hide buttons for all tabs except for 0, 1 and root (no tab) */}
             {(!tab || tab === '0' || tab === '1') && (
               <div className="flex items-center gap-4">
-                {userRole !== 'ViewOnly' &&
+                {!isUserPanel &&
                   (loading ? (
                     <Button
                       type="button"
@@ -191,24 +187,24 @@ const ProfileCard = ({
           <div className="flex mt-3 gap-8 flex-wrap">
             <ProfileInfoItem
               icon={CiMobile3}
-              text={employeeData?.phoneNumber || 'N/A'}
+              text={employeeData?.phoneNumber || ''}
               title="Phone Number"
             />
             <ProfileInfoItem
               icon={FaPhoneAlt}
-              text={employeeData?.workPhone || 'N/A'}
+              text={employeeData?.workPhone || ''}
               title="Work Number"
             />
             <ProfileInfoItem
               icon={MdEmail}
-              text={employeeData?.email || 'N/A'}
+              text={employeeData?.email || ''}
               title="Email"
             />
           </div>
           <div className="flex mt-4 gap-8 flex-wrap">
             <ProfileInfoItem
               icon={HiOutlineHashtag}
-              text={employeeData?.userId?.toString() || 'N/A'}
+              text={employeeData?.userId?.toString() || ''}
               title="Identification No."
             />
             <ProfileInfoItem
@@ -223,19 +219,19 @@ const ProfileCard = ({
             />
             <ProfileInfoItem
               icon={HiMiniBriefcase}
-              text={employeeData?.employmentType || 'N/A'}
+              text={employeeData?.employmentType || ''}
               title="Work Type"
             />
             <ProfileInfoItem
               icon={HiMiniBriefcase}
-              text={employeeData?.tittle || 'N/A'}
+              text={employeeData?.tittle || ''}
               title="Job Title"
             />
             <ProfileInfoItem
               icon={IoLocationSharp}
               text={
                 `${employeeData?.location?.country}, ${employeeData?.location?.state}` ||
-                'N/A'
+                ''
               }
               title="Location"
             />

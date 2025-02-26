@@ -9,7 +9,9 @@ interface QuestionProp {
     id: number;
     surveyEmployeeId: number;
     employeeId: number;
-    response: string;
+    response?: string;
+    rating?: number;
+
   }[];
 }
 
@@ -60,8 +62,12 @@ const Questions = () => {
             <div className="flex flex-col gap-1 w-full">
               <span className="text-gray-400 text-[14px]">Answer</span>
               <div className="p-3 w-full border rounded text-[12px]">
-                {question.responses?.[0]?.response || 'No response available'}
-              </div>
+              {question.responses?.[0]?.response
+                  ? question.responses[0].response
+                  : question.responses?.[0]?.rating !== undefined
+                  ? `${question.responses[0].rating}/5`
+                  : 'No response available'}          
+            </div>
             </div>
           </div>
         ))

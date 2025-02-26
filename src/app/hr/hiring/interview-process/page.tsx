@@ -53,8 +53,6 @@ const InterviewProcess = () => {
 
   useEffect(() => {
     const params = {
-      // page: 1,
-      // size: 100000,
       candidateId: candidateId || undefined,
       jobId: jobId || undefined,
     };
@@ -69,12 +67,10 @@ const InterviewProcess = () => {
         {singleJobData?.data.tittle || ''}
       </div>
 
-      <div className="p-6 bg-white border rounded-lg">
-        <Candidatecomponent
-          data={data}
-          jobTitle={singleJobData?.data.tittle || ''}
-        />
-      </div>
+      <Candidatecomponent
+        data={data}
+        jobTitle={singleJobData?.data.tittle || ''}
+      />
       {/* Tab Navigation */}
       <HiringTabs
         jobApplication={jobApplication}
@@ -86,9 +82,7 @@ const InterviewProcess = () => {
       {activeTab === 'jobOpenings' && (
         <InterviewLayout jobApplication={jobApplication} />
       )}
-      {activeTab === 'Onboarding' && (
-        <Summary jobApplication={jobApplication} />
-      )}
+      {activeTab === 'Onboarded' && <Summary jobApplication={jobApplication} />}
       {activeTab === 'candidates' && (
         <div className="pt-6">
           <div className="p-6 bg-white rounded-lg border">

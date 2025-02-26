@@ -1,62 +1,53 @@
 import Logout from '@/app/user/home/Logout';
 import { IMAGES } from '@/constants/images';
-import { fetchEmployeeData } from '@/store/slices/employeeInfoSlice';
-import { AppDispatch, RootState } from '@/store/store';
 import { getSession, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FaAngleDown, FaUser } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
 
 const UserProfileInfo: React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement>
 > = ({ ...props }) => {
   const [showDropdown, setShowDropdown] = useState(false);
+
   const [role, setRole] = useState<string>();
   const { data: session } = useSession();
-  const dispatch = useDispatch<AppDispatch>();
-
-  const { data: employeeData } = useSelector(
-    (state: RootState) => state.employee
+  const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(
+    sessionStorage.getItem('profilePictureUrl')
   );
-
-  useEffect(() => {
-    // Only fetch if we don't already have the data
-    if (
-      session?.user.accessToken &&
-      session?.user.employeeId &&
-      (!employeeData || !employeeData.firstName)
-    ) {
-      dispatch(
-        fetchEmployeeData({
-          accessToken: session.user.accessToken,
-          userId: Number(session?.user.employeeId),
-        })
-      );
-    } else if (!session?.user.accessToken || !session?.user.employeeId) {
-      console.log('Invalid session or user ID');
-    }
-  }, [
-    dispatch,
-    session?.user.accessToken,
-    session?.user.employeeId,
-    employeeData,
-  ]);
 
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
       setRole(session?.user?.role);
     };
-
     fetchSession();
-  }, []);
+
+    // Add event listener for storage changes
+    const handleStorageChange = () => {
+      setProfilePictureUrl(sessionStorage.getItem('profilePictureUrl'));
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // Additional check to update profile picture
+    const checkProfilePicture = setInterval(() => {
+      const currentPicture = sessionStorage.getItem('profilePictureUrl');
+      if (currentPicture !== profilePictureUrl) {
+        setProfilePictureUrl(currentPicture);
+      }
+    }, 1000);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(checkProfilePicture);
+    };
+  }, [profilePictureUrl]);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
-
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
   return (
     <button
@@ -67,7 +58,11 @@ const UserProfileInfo: React.FC<
       }`}
     >
       <Image
-        src={employeeData?.profilePictureUrl || IMAGES.placeholderAvatar}
+        src={
+          profilePictureUrl ||
+          session?.user.user.profilePictureUrl ||
+          IMAGES.placeholderAvatar
+        }
         alt="user avatar"
         height={2000}
         width={2000}

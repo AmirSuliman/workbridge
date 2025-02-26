@@ -1,7 +1,9 @@
 export const ApplicationRequirements = ({
+  register,
   toggleStates,
   handleToggle,
-  register,
+  checkboxStates,
+  handleCheckboxChange,
 }) => {
   return (
     <div className="flex flex-wrap gap-5">
@@ -13,6 +15,8 @@ export const ApplicationRequirements = ({
             value="Resume"
             className="form-checkbox h-5 w-5  accent-black cursor-pointer mr-3"
             {...register('Resume')}
+            onChange={handleCheckboxChange('Resume')} // Add onChange handler
+            checked={checkboxStates.Resume}
           />
           Resume
         </div>
@@ -20,7 +24,7 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('Resume')}
+            onClick={() => handleToggle('Resume', checkboxStates.Resume)}
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
               toggleStates.Resume ? 'bg-gray-800' : 'bg-gray-300'
             }`}
@@ -43,6 +47,8 @@ export const ApplicationRequirements = ({
             value="Portfolio"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Portfolio')}
+            onChange={handleCheckboxChange('Portfolio')} // Add onChange handler
+            checked={checkboxStates.Portfolio}
           />
           Portfolio
         </div>
@@ -50,7 +56,7 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('Portfolio')}
+            onClick={() => handleToggle('Portfolio', checkboxStates.Portfolio)}
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
               toggleStates.Portfolio ? 'bg-gray-800' : 'bg-gray-300'
             }`}
@@ -72,6 +78,8 @@ export const ApplicationRequirements = ({
             value="CoverLetter"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('CoverLetter')}
+            onChange={handleCheckboxChange('CoverLetter')} // Add onChange handler
+            checked={checkboxStates.CoverLetter}
           />
           Cover Letter
         </div>
@@ -79,7 +87,9 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('CoverLetter')}
+            onClick={() =>
+              handleToggle('CoverLetter', checkboxStates.CoverLetter)
+            }
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
               toggleStates.CoverLetter ? 'bg-gray-800' : 'bg-gray-300'
             }`}
@@ -101,6 +111,8 @@ export const ApplicationRequirements = ({
             value="Address"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Address')}
+            onChange={handleCheckboxChange('Address')} // Add onChange handler
+            checked={checkboxStates.Address}
           />
           Address
         </div>
@@ -108,7 +120,7 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('Address')}
+            onClick={() => handleToggle('Address', checkboxStates.Address)}
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
               toggleStates.Address ? 'bg-gray-800' : 'bg-gray-300'
             }`}
@@ -130,6 +142,8 @@ export const ApplicationRequirements = ({
             value="DesiredSalary"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('DesiredSalary')}
+            onChange={handleCheckboxChange('DesiredSalary')} // Add onChange handler
+            checked={checkboxStates.DesiredSalary}
           />
           Desired Salary
         </div>
@@ -137,7 +151,9 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('DesiredSalary')}
+            onClick={() =>
+              handleToggle('DesiredSalary', checkboxStates.DesiredSalary)
+            }
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
               toggleStates.DesiredSalary ? 'bg-gray-800' : 'bg-gray-300'
             }`}
@@ -159,6 +175,8 @@ export const ApplicationRequirements = ({
             value="Education"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Education')}
+            onChange={handleCheckboxChange('Education')} // Add onChange handler
+            checked={checkboxStates.Education}
           />
           Education
         </div>
@@ -166,7 +184,7 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('Education')}
+            onClick={() => handleToggle('Education', checkboxStates.Education)}
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
               toggleStates.Education ? 'bg-gray-800' : 'bg-gray-300'
             }`}
@@ -188,6 +206,8 @@ export const ApplicationRequirements = ({
             value="LinkedInProfile"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('LinkedInProfile')}
+            onChange={handleCheckboxChange('LinkedInProfile')} // Add onChange handler
+            checked={checkboxStates.LinkedInProfile}
           />
           LinkedIn Profile
         </div>
@@ -195,7 +215,9 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('LinkedInProfile')}
+            onClick={() =>
+              handleToggle('LinkedInProfile', checkboxStates.LinkedInProfile)
+            }
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
               toggleStates.LinkedInProfile ? 'bg-gray-800' : 'bg-gray-300'
             }`}
@@ -217,6 +239,8 @@ export const ApplicationRequirements = ({
             value="Website"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Website')}
+            onChange={handleCheckboxChange('Website')} // Add onChange handler
+            checked={checkboxStates.Website}
           />
           Website
         </div>
@@ -224,7 +248,7 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('Website')}
+            onClick={() => handleToggle('Website', checkboxStates.Website)}
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
               toggleStates.Website ? 'bg-gray-800' : 'bg-gray-300'
             }`}
@@ -246,6 +270,8 @@ export const ApplicationRequirements = ({
             value="Referral"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Referral')}
+            onChange={handleCheckboxChange('Referral')} // Add onChange handler
+            checked={checkboxStates.Referral}
           />
           Referral
         </div>
@@ -253,7 +279,7 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('Referral')}
+            onClick={() => handleToggle('Referral', checkboxStates.Referral)}
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
               toggleStates.Referral ? 'bg-gray-800' : 'bg-gray-300'
             }`}

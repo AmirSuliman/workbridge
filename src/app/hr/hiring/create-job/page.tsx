@@ -99,11 +99,24 @@ const Createjobopening = () => {
 
   const {
     register,
+    trigger,
     formState: { errors },
     watch,
     handleSubmit,
   } = useForm<JobFormFields>();
   const formValues = watch();
+
+  const [checkboxStates, setCheckboxStates] = useState({
+    Resume: false,
+    Address: false,
+    CoverLetter: false,
+    Portfolio: false,
+    DesiredSalary: false,
+    Education: false,
+    LinkedinProfile: false,
+    Referral: false,
+    Website: false,
+  });
 
   const [toggleStates, setToggleStates] = useState({
     Resume: false,
@@ -117,12 +130,22 @@ const Createjobopening = () => {
     Website: false,
   });
 
-  const handleToggle = (name: string) => {
-    setToggleStates((prev) => ({
-      ...prev,
-      [name]: !prev[name],
-    }));
+  const handleToggle = (name: string, isChecked: boolean) => {
+    if (isChecked) {
+      setToggleStates((prev) => ({
+        ...prev,
+        [name]: !prev[name],
+      }));
+    }
   };
+
+  const handleCheckboxChange =
+    (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setCheckboxStates((prev) => ({
+        ...prev,
+        [name]: event.target.checked,
+      }));
+    };
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -665,9 +688,11 @@ const Createjobopening = () => {
               </div>
 
               <ApplicationRequirements
+                register={register}
                 toggleStates={toggleStates}
                 handleToggle={handleToggle}
-                register={register}
+                checkboxStates={checkboxStates}
+                handleCheckboxChange={handleCheckboxChange}
               />
             </div>
 

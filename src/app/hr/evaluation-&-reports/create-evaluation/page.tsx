@@ -82,38 +82,45 @@ const CreateEvaluation = () => {
       ...question,
       responseType: question.responseType ? 'text' : 'Rating',
     }));
-  
-    console.log('Selected Department IDs:', departmentIds);
-    console.log('Selected Manager IDs:', managerIds);
-  
+
     const type = managerIds.length > 0 ? 'Manager' : 'Department';
-  
     const payload = {
       sendBy: employeeId?.employeeId || null,
-      departmentIds: departmentIds,
+      departmentIds: departmentIds.length > 0 ? departmentIds : null,
       title: 'Survey Title',
       type: type,
-      isReportingEmployee: isEvaluativeReportingEmployee, // Dynamically set based on checkbox state
+      isReportingEmployee: isEvaluativeReportingEmployee,
       status: status,
       questions: transformedQuestions,
       employeeId: data.reportingManagerId,
-      managerIds: managerIds,
+      managerIds: managerIds.length > 0 ? managerIds : null,
     };
-  
+
     try {
       setLoading(true);
-      await axiosInstance.post('/survey/', payload);
-  
-      if (status === 'In Progress') {
-        await axiosInstance.post('/survey/send/', payload);
+      const response = await axiosInstance.post('/survey/', payload);
+      console.log('Survey Created Response:', response.data);
+      // Always send the survey if status is 'In Progress'
+      const surveyId = response.data?.data?.survey?.id;
+      console.log('Extracted Survey ID:', surveyId);
+      if (surveyId && status === 'In Progress') {
+        console.log('Survey ID:', surveyId);
+        const sendPayload = {
+          surveyId: surveyId,
+          departmentIds: departmentIds.length > 0 ? departmentIds : null,
+          managerIds: managerIds.length > 0 ? managerIds : null,
+        };
+
+        await axiosInstance.post('/survey/send/', sendPayload);
       }
-  
+
       setLoading(false);
       toast.success(
         `${status === 'Draft' ? 'Draft saved' : 'Survey sent'} successfully!`
       );
       reset();
     } catch (error) {
+      console.log(error);
       setLoading(false);
       if (isAxiosError(error) && error.response) {
         toast.error(error.response.data.message || 'Failed to create survey.');
@@ -122,7 +129,7 @@ const CreateEvaluation = () => {
       }
     }
   };
-  
+
   return (
     <form>
       <div className="flex flex-row items-center justify-between w-full">
@@ -131,7 +138,7 @@ const CreateEvaluation = () => {
           <button
             disabled={loading}
             onClick={handleSubmit((data) => onSubmit(data, 'Draft'))}
-            className="p-2 px-2 bg-black rounded text-white text-[14px]"
+            className="p-2 px-2 bg-[#0F172A] rounded text-white text-[14px]"
           >
             Save Draft
           </button>
@@ -151,43 +158,42 @@ const CreateEvaluation = () => {
       <div className=" bg-white rounded-[10px] border mt-8">
         <h1 className="text-[18px] font-medium p-6">Department</h1>
         <div className="flex items-center gap-4 p-6">
-    {!isEvaluativeReportingEmployee ? (
-      <label className=" flex flex-col gap-1">
-        <span className="form-label">Department*</span>
-        <DepartmentDropdown
-          departmentId={departmentIds}
-          setValue={setValue}
-          errors={errors}
-          onSelect={(selectedIds) => setDepartmentIds(selectedIds)}
-        />
-      </label>
-    ) : (
-      <label className=" flex flex-col gap-1">
-        <span className="form-label">Select Employee or Manager*</span>
-        <ManagersDropdown
-          errors={errors}
-          register={register}
-          resetField={resetField}
-          reportingManagerId={null}
-          onSelect={(selectedIds) => setManagerIds(selectedIds)}
-        />
-      </label>
-    )}
+          {!isEvaluativeReportingEmployee ? (
+            <label className=" flex flex-col gap-1">
+              <span className="form-label">Department*</span>
+              <DepartmentDropdown
+                departmentId={departmentIds}
+                setValue={setValue}
+                errors={errors}
+                onSelect={(selectedIds) => setDepartmentIds(selectedIds)}
+              />
+            </label>
+          ) : (
+            <label className=" flex flex-col gap-1">
+              <span className="form-label">Select Employee or Manager*</span>
+              <ManagersDropdown
+                errors={errors}
+                register={register}
+                resetField={resetField}
+                reportingManagerId={null}
+                onSelect={(selectedIds) => setManagerIds(selectedIds)}
+              />
+            </label>
+          )}
 
-    <label className="flex items-center gap-2 mt-auto mb-3">
-    <input
-  type="checkbox"
-  {...register('isReportingEmployee')}
-  className="appearance-none border-2 border-black checked:bg-black text-white size-4 rounded"
-  onChange={(e) => {
-    const isChecked = e.target.checked;
-    setIsEvaluativeReportingEmployee(isChecked);
-    setValue('isReportingEmployee', isChecked);
-  }}
-/>
-
-      Evaluative Reporting Employees
-    </label>
+          <label className="flex items-center gap-2 mt-auto mb-3">
+            <input
+              type="checkbox"
+              {...register('isReportingEmployee')}
+              className="appearance-none border-2 border-black checked:bg-black text-white size-4 rounded"
+              onChange={(e) => {
+                const isChecked = e.target.checked;
+                setIsEvaluativeReportingEmployee(isChecked);
+                setValue('isReportingEmployee', isChecked);
+              }}
+            />
+            Evaluative Reporting Employees
+          </label>
         </div>
         <div className="h-[1.5px] w-full bg-gray-300 " />
 
@@ -231,7 +237,7 @@ const CreateEvaluation = () => {
           <button
             type="button"
             onClick={() => append({ question: '', responseType: false })}
-            className="bg-black text-white p-3 px-10 rounded flex flex-row items-center gap-3"
+            className="bg-[#0F172A] text-white p-3 px-10 rounded flex flex-row items-center gap-3"
           >
             <FiPlusCircle /> Add Question
           </button>

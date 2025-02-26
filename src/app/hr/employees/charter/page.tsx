@@ -1,16 +1,14 @@
 'use client';
 
 import clsx from 'clsx';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FC, useEffect, useReducer, useState } from 'react';
 
 import OrgChartWithHoverPositions from '@/components/EmployeeCharter/OrgChartWithHoverPositions';
 import { getCharter } from '@/services/getCharter';
 import { initialState, reducer } from '@/store/reducer';
-import { DataTypes } from '@/types/data';
 import { EmployeeData } from '@/types/employee';
-import { FaBackspace, FaCross } from 'react-icons/fa';
+import { FaBackspace } from 'react-icons/fa';
 
 const OrgChartPage: FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);

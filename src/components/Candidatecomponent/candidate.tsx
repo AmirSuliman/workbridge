@@ -73,13 +73,15 @@ const Candidatecomponent = ({ data, jobTitle }) => {
           />
         ) : (
           <UserImgPlaceholder
-            name={`${data?.data?.firstName} ${data?.data?.lastName}`}
+            name={`${data?.data?.firstName || ''} ${
+              data?.data?.lastName || ''
+            }`}
             className="size-20 !text-3xl"
           />
         )}
         <div className="flex flex-col ">
           <h1 className="text-[#0F172A] text-[24px] font-normal">
-            {`${data?.data?.firstName} ${data?.data?.lastName}`}
+            {`${data?.data?.firstName || ''} ${data?.data?.lastName || ''}`}
           </h1>
           <p className="text-gray-400 text-[16px]">Applying for {jobTitle}</p>
           <div className="flex flex-col  sm:flex-row items-start sm:items-center gap-2 sm:gap-20 mt-6">
