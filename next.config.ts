@@ -1,22 +1,17 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  images: { 
-    domains: ['i.pravatar.cc', 'www.google.com', 'wb-uploads.s3.amazonaws.com'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'wb-uploads.s3.amazonaws.com',
-        pathname: '/public/**',
-      },
-    ],
-    unoptimized: true, // Consider this option for simple deployment
+  images: {
+    domains: ['wb-uploads.s3.amazonaws.com'],
+    formats: ['image/webp'],
+    minimumCacheTTL: 60,
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  eslint: { 
-    ignoreDuringBuilds: true, 
+  eslint: {
+    ignoreDuringBuilds: true,
   },
 };
-
 
 
 
