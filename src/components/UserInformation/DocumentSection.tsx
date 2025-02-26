@@ -70,35 +70,8 @@ const DocumentSection = ({
   );
   const [openDocumentModal, setOpenDocumentModal] = useState(false);
   const [documentContent, setDocumentContent] = useState<string>('');
-  const [pdfPageNumber, setPdfPageNumber] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  // const [numPages, setNumPages] = useState(null);
-  //const [pdfBlobUrl, setPdfBlobUrl] = useState(null);
-
-  {
-    /*useEffect(() => {
-  if (selectedDocument?.url) {
-    fetch(selectedDocument.url)
-      .then((response) => response.blob())
-      .then((blob) => {
-        const url = URL.createObjectURL(blob);
-        setPdfBlobUrl(url);
-      })
-      .catch((error) => {
-        console.error("Error fetching PDF:", error);
-        setError("Failed to load PDF.");
-      });
-  }
-}, [selectedDocument]);
-
-<Document
-  file={pdfBlobUrl} // ✅ Use the blob URL
-  onLoadSuccess={({ numPages }) => setNumPages(numPages)}
->
-  <Page pageNumber={pdfPageNumber} />
-</Document>*/
-  }
 
   const handleDocumentDelete = (deletedDocumentId: number) => {
     setDocuments((prevDocuments) =>
@@ -181,16 +154,6 @@ const DocumentSection = ({
     }
   };
 
-  const sortedDocuments = [...documents].sort((a, b) => {
-    const dateA = a.EmployeeDocument?.createdAt
-      ? new Date(a.EmployeeDocument.createdAt).getTime()
-      : 0;
-    const dateB = b.EmployeeDocument?.createdAt
-      ? new Date(b.EmployeeDocument.createdAt).getTime()
-      : 0;
-    return dateA - dateB;
-  });
-
   const values = documents?.map((document) => {
     const sizeInBytes = document.size ?? 0;
     const sizeInKB = sizeInBytes / 1024;
@@ -225,15 +188,7 @@ const DocumentSection = ({
     <div className="p-2 md:p-5 rounded-md h-full bg-white border-gray-border">
       <div className="flex flex-col md:flex-row gap-2 md:gap-0 md:items-center md:justify-between mb-5">
         <FormHeading
-          icon={
-            <Image
-              loader={imageLoader}
-              src="/document.svg"
-              alt="img"
-              width={15}
-              height={15}
-            />
-          }
+          icon={<Image src="/document.svg" alt="img" width={15} height={15} />}
           text="Documents"
         />
         <div className="flex items-center gap-4">
