@@ -9,13 +9,6 @@
   --foreground: #171717;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
 body {
   color: var(--foreground);
   background: var(--background);
@@ -30,7 +23,7 @@ body {
 
 @layer components {
   .form-input {
-    @apply p-2 border border-gray-border text-dark-navy text-sm outline-none focus:outline-none rounded-md w-full transition-colors;
+    @apply p-2 border border-gray-border text-[#0F172A] text-sm outline-none focus:outline-none rounded-md w-full transition-colors;
 
     &:read-only {
       @apply cursor-default;
