@@ -8,6 +8,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { isAxiosError } from 'axios';
+import imageLoader from '../../../imageLoader';
 interface SickCardProps {
   onButtonClick?: () => void;
   totalDays: number;
@@ -118,7 +119,13 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
           <div>
             <div className="flex gap-2 items-center mb-2">
               <div className="flex items-center justify-center rounded-full p-1">
-                <Image src="/sickleave.png" alt="img" width={25} height={25} />
+                <Image
+                  loader={imageLoader}
+                  src="/sickleave.png"
+                  alt="img"
+                  width={25}
+                  height={25}
+                />
               </div>
               <h3 className="text-dark-navy font-[500] text-sm">
                 Request Sick Leave
@@ -149,7 +156,13 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
         <Modal onClose={() => setIsModalOpen(false)}>
           <div className="p-6 w-full sm:w-[600px]">
             <div className="flex flex-row items-center gap-2">
-              <Image src="/sickleave.png" alt="img" width={40} height={40} />
+              <Image
+                loader={imageLoader}
+                src="/sickleave.png"
+                alt="img"
+                width={40}
+                height={40}
+              />
               <h2 className="text-2xl font-semibold">Request Sick Leave</h2>
             </div>
 

@@ -5,20 +5,20 @@ import Image from 'next/image';
 import toast from 'react-hot-toast';
 
 import { getPolicy } from '@/services/getPolicy';
+import { setUser } from '@/store/slices/myInfoSlice';
+import { AppDispatch, RootState } from '@/store/store';
+import { Policy } from '@/types/policy';
+import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { FaBox } from 'react-icons/fa';
 import { HiOutlineUpload } from 'react-icons/hi';
-import PreviewPolicy from '../components/PreviewPolicy';
-import axios from 'axios';
-import SendPolicyModal from '../components/SendPolicyModal';
-import { setUser } from '@/store/slices/myInfoSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store/store';
-import { useSession } from 'next-auth/react';
-import { Policy } from '@/types/policy';
+import PreviewPolicy from '../components/PreviewPolicy';
+import SendPolicyModal from '../components/SendPolicyModal';
+import imageLoader from '../../../../../../imageLoader';
 
 const Addnewpolicies = () => {
   const [loading, setLoading] = useState(false);
@@ -63,8 +63,8 @@ const Addnewpolicies = () => {
             headers: { Authorization: `Bearer ${session.user.accessToken}` },
           });
           const userId = response.data.data?.id;
-          setMyId(userId); 
-          dispatch(setUser(response.data.data)); 
+          setMyId(userId);
+          dispatch(setUser(response.data.data));
         } catch (error) {
           console.error('Error fetching user data:', error);
           toast.error('Failed to load user data!');
@@ -81,14 +81,14 @@ const Addnewpolicies = () => {
       try {
         const response = await getPolicy(id);
         console.log('Full API Response:', response.data); // Log full response
-  
+
         const policy = response.data.data;
         setPolicyData({
           ...policy,
-          previewUrl: policy?.file?.url || null, 
-          description: policy?.description || '', 
+          previewUrl: policy?.file?.url || null,
+          description: policy?.description || '',
         });
-  
+
         console.log('Fetched Policy Data:', policy);
         console.log('Image URL:', policy?.file?.url);
       } catch (error) {
@@ -96,31 +96,28 @@ const Addnewpolicies = () => {
         toast.error('Failed to fetch policy.');
       }
     };
-  
+
     if (id) fetchPolicie();
   }, [id]);
-  
+
   useEffect(() => {
     if (policyData.fileId) {
       setPreviewUrl(policyData.previewUrl);
     }
   }, [policyData]);
-  
 
   const previewData = {
     type: policyData?.type || '',
     title: policyData?.title || '',
     status: policyData?.status || '',
     fileId: policyData?.fileId || fileId,
-    previewUrl: policyData?.previewUrl || previewUrl, 
-    description: policyData?.description || '', 
+    previewUrl: policyData?.previewUrl || previewUrl,
+    description: policyData?.description || '',
     effectiveDate: policyData?.effectiveDate
       ? new Date(policyData?.effectiveDate).toISOString().split('T')[0]
       : '',
   };
-  
-  
-  
+
   const {
     control,
     handleSubmit,
@@ -128,9 +125,9 @@ const Addnewpolicies = () => {
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: previewData, 
+    defaultValues: previewData,
   });
-  
+
   useEffect(() => {
     if (policyData) {
       reset({
@@ -144,12 +141,10 @@ const Addnewpolicies = () => {
       });
     }
   }, [policyData, previewUrl, reset]);
-  
-  
+
   useEffect(() => {
     console.log('Fetched Policy Description:', policyData.description);
   }, [policyData.description]);
-  
 
   const handleFileChange = (event) => {
     if (event.target.files) {
@@ -181,24 +176,23 @@ const Addnewpolicies = () => {
       return null;
     }
   };
- 
 
   const handleSaveDraft = async (data) => {
     try {
       setLoading(true);
       let uploadedFileId = fileId || policyData.fileId; // Use existing fileId if available
-  
+
       // Upload only if a new file is selected
       if (selectedFile) {
         uploadedFileId = await handleUpload();
       }
-  
+
       const payload = {
         ...data,
         fileId: uploadedFileId, // Ensure correct fileId is sent
         status: 'Draft',
       };
-  
+
       const response = await axiosInstance.put(`/policy/${id}`, payload);
       console.log('put policy res: ', response.data);
       toast.success('Draft saved successfully!');
@@ -210,30 +204,30 @@ const Addnewpolicies = () => {
       setLoading(false);
     }
   };
-  
+
   const handlePublish = async (data) => {
     try {
       setLoading(true);
       let uploadedFileId = fileId || policyData.fileId; // Use existing fileId if available
-  
+
       // Upload only if a new file is selected
       if (selectedFile) {
         uploadedFileId = await handleUpload();
       }
-  
+
       const payload = {
         ...data,
         status: 'Published',
         uploadBy: myId,
         fileId: uploadedFileId, // Ensure correct fileId is sent
       };
-  
+
       const response = await axiosInstance.put(`/policy/${id}`, payload);
       console.log('put policy res: ', response.data);
       if (id) {
         sessionStorage.setItem('policy', id);
       }
-  
+
       toast.success('Policy published successfully!');
       reset();
       return response.data.id;
@@ -244,7 +238,7 @@ const Addnewpolicies = () => {
       setLoading(false);
     }
   };
-  
+
   const handlePreviewPost = () => {
     setIsPreview(true);
   };
@@ -436,44 +430,45 @@ const Addnewpolicies = () => {
             </div>
             <div className="w-full h-[1.5px] bg-gray-300 mt-12 mb-8 " />
             {previewUrl ? (
-  <div className="my-4 relative">
-    <button
-      onClick={() => setPreviewUrl(null)}
-      type="button"
-      className="absolute top-2 right-2 px-6 py-1 bg-white rounded-lg text-2xl"
-    >
-      x
-    </button>
-    <Image
-      width={300}
-      height={150}
-      src={previewUrl}
-      alt="Profile Preview"
-      className="w-full mx-auto max-h-[500px] rounded-lg border"
-    />
-  </div>
-) : (
-  <div>
-    <label
-      htmlFor="policyImg"
-      className="cursor-pointer flex flex-col gap-1 text-gray-400 mb-8 max-w-xs"
-    >
-      Upload image (Optional)
-      <div className="px-6 py-3 bg-black rounded-md flex gap-2 items-center justify-between text-white">
-        Upload Image
-        <HiOutlineUpload />
-      </div>
-      <input
-        onChange={handleFileChange}
-        type="file"
-        accept="image/*"
-        name="fileId"
-        id="policyImg"
-        className="hidden"
-      />
-    </label>
-  </div>
-)}
+              <div className="my-4 relative">
+                <button
+                  onClick={() => setPreviewUrl(null)}
+                  type="button"
+                  className="absolute top-2 right-2 px-6 py-1 bg-white rounded-lg text-2xl"
+                >
+                  x
+                </button>
+                <Image
+                  loader={imageLoader}
+                  width={300}
+                  height={150}
+                  src={previewUrl}
+                  alt="Profile Preview"
+                  className="w-full mx-auto max-h-[500px] rounded-lg border"
+                />
+              </div>
+            ) : (
+              <div>
+                <label
+                  htmlFor="policyImg"
+                  className="cursor-pointer flex flex-col gap-1 text-gray-400 mb-8 max-w-xs"
+                >
+                  Upload image (Optional)
+                  <div className="px-6 py-3 bg-black rounded-md flex gap-2 items-center justify-between text-white">
+                    Upload Image
+                    <HiOutlineUpload />
+                  </div>
+                  <input
+                    onChange={handleFileChange}
+                    type="file"
+                    accept="image/*"
+                    name="fileId"
+                    id="policyImg"
+                    className="hidden"
+                  />
+                </label>
+              </div>
+            )}
 
             <h1 className="text-[18px] font-medium">Policy Description</h1>
             <label className="flex flex-col gap-2 mt-8">
@@ -482,21 +477,17 @@ const Addnewpolicies = () => {
                 onClick={(e) => e.preventDefault()}
                 className="border rounded "
               >
-  <Controller
-  name="description"
-  control={control}
-  defaultValue={policyData?.description || ''} 
-  render={({ field }) => (
-    <CustomTextEditor
-      setContent={field.onChange}  // Pass `field.onChange` for updating form state
-      body={field.value || ''}  // Pass the current content as `body`
-    />
-  )}
-/>
-
-
-     
-
+                <Controller
+                  name="description"
+                  control={control}
+                  defaultValue={policyData?.description || ''}
+                  render={({ field }) => (
+                    <CustomTextEditor
+                      setContent={field.onChange} // Pass `field.onChange` for updating form state
+                      body={field.value || ''} // Pass the current content as `body`
+                    />
+                  )}
+                />
 
                 {errors.description && (
                   <span className="text-red-500 text-xs">

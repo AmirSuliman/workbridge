@@ -8,6 +8,7 @@ import { BiLoaderCircle } from 'react-icons/bi';
 import { FaArrowUp } from 'react-icons/fa';
 import { HiSpeakerphone } from 'react-icons/hi';
 import { IoCalendarOutline } from 'react-icons/io5';
+import imageLoader from '../../../../../imageLoader';
 
 const AllPolicies = () => {
   const router = useRouter();
@@ -95,6 +96,7 @@ const AllPolicies = () => {
             <div className="flex flex-row items-center justify-between">
               <div className="flex flex-row items-center gap-5">
                 <Image
+                  loader={imageLoader}
                   src="/Group 1000004576.png"
                   alt="img"
                   width={15}
