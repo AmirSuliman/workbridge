@@ -11,6 +11,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import FullJobPreview from '../FullJobPreview';
+import imageLoader from '../../../../../../imageLoader';
 
 const SingleJob = () => {
   const route = useRouter();
@@ -52,6 +53,7 @@ const SingleJob = () => {
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-3 text-[22px] text-[#0F172A] font-semibold">
           <Image
+            loader={imageLoader}
             height={2000}
             width={2000}
             src="/jobicon.png"
@@ -102,6 +104,7 @@ const SingleJob = () => {
         <div className="flex flex-col p-4 border bg-white w-[30%] h-auto rounded-lg h-[27vh]">
           <div className="flex flex-row gap-3 items-center mb-4">
             <Image
+              loader={imageLoader}
               src={
                 singleJobData?.data.hiringLead.profilePictureUrl ||
                 IMAGES.placeholderAvatar

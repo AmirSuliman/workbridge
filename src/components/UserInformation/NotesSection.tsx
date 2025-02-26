@@ -1,9 +1,4 @@
 'use client';
-import React, { useCallback, useEffect, useState } from 'react';
-import { FaEdit, FaTrash } from 'react-icons/fa';
-import { MdStickyNote2 } from 'react-icons/md';
-import FormHeading from './FormHeading';
-import Image from 'next/image';
 import {
   closeModals,
   deleteNote,
@@ -14,13 +9,17 @@ import {
   updateNoteFields,
 } from '@/store/slices/noteSlice';
 import { useAppDispatch, useAppSelector } from '@/store/storeWrapper';
+import Image from 'next/image';
+import React, { useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { BiLoaderCircle } from 'react-icons/bi';
 import { FiPlusCircle } from 'react-icons/fi';
 import Button from '../Button';
 import ScreenLoader from '../common/ScreenLoader';
 import Modal from '../modal/Modal';
 import CreateNote from './CreateNote';
-import { BiLoaderCircle } from 'react-icons/bi';
-import toast from 'react-hot-toast';
+import FormHeading from './FormHeading';
+import imageLoader from '../../../imageLoader';
 
 interface Note {
   id: number;
@@ -124,7 +123,18 @@ const NotesSection = ({ employeeId }) => {
     <div className="p-1 rounded-md w-full h-full">
       <div className="p-3 md:p-6 rounded-[10px] border-gray-border border-b border-[1px] bg-white mb-5">
         <div className="mb-6 flex justify-between flex-wrap gap-4">
-          <FormHeading icon={<Image src="/document.svg" alt='img' width={13} height={13} />} text="Notes" />
+          <FormHeading
+            icon={
+              <Image
+                loader={imageLoader}
+                src="/document.svg"
+                alt="img"
+                width={13}
+                height={13}
+              />
+            }
+            text="Notes"
+          />
           <Button
             onClick={(e) => {
               e.preventDefault();
@@ -184,7 +194,13 @@ const NotesSection = ({ employeeId }) => {
                             handleEditClick(note);
                           }}
                         >
-                          <Image src="/edit.svg" alt='img' width={10} height={10}/>
+                          <Image
+                            loader={imageLoader}
+                            src="/edit.svg"
+                            alt="img"
+                            width={10}
+                            height={10}
+                          />
                         </button>
                         <button
                           type="button"
@@ -195,8 +211,14 @@ const NotesSection = ({ employeeId }) => {
                             setDeleteNoteModal(true);
                           }}
                         >
-                          <Image src="/delete.svg" alt='img' width={10} height={10}/>
-                          </button>
+                          <Image
+                            loader={imageLoader}
+                            src="/delete.svg"
+                            alt="img"
+                            width={10}
+                            height={10}
+                          />
+                        </button>
                       </div>
                     </td>
                   </tr>

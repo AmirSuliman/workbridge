@@ -1,12 +1,13 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { BiEdit, BiPlusCircle, BiTrash } from 'react-icons/bi';
-import { FaBullhorn } from 'react-icons/fa';
 import Modal from '@/components/modal';
 import axiosInstance from '@/lib/axios';
-import SendHolidayNotification from './sendholidaynotification';
-import toast from 'react-hot-toast';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { BiPlusCircle } from 'react-icons/bi';
+import { FaBullhorn } from 'react-icons/fa';
+import SendHolidayNotification from './sendholidaynotification';
+import imageLoader from '../../../../../imageLoader';
 interface User {
   id: number;
   firstName: string;
@@ -18,7 +19,6 @@ interface Country {
   code: string;
 }
 
-
 interface Holiday {
   id: number;
   title: string;
@@ -27,7 +27,7 @@ interface Holiday {
   createdBy: number;
   createdAt: string;
   updatedAt: string;
-  user?: User; 
+  user?: User;
   countryholidays: {
     id: number;
     holidayId: number;
@@ -40,7 +40,6 @@ interface Holiday {
   }[];
 }
 
-
 const VacationPolicies = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [countries, setCountries] = useState<Country[]>([]);
@@ -49,7 +48,7 @@ const VacationPolicies = () => {
   const [isModalOpen3, setIsModalOpen3] = useState(false);
   const [holidayToDelete, setHolidayToDelete] = useState<number | null>(null);
   const [selectedHoliday, setSelectedHoliday] = useState<Holiday | null>(null);
-  const [selectedCountry, setSelectedCountry] = useState<number>(3); 
+  const [selectedCountry, setSelectedCountry] = useState<number>(3);
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [type, setType] = useState('');
@@ -57,23 +56,24 @@ const VacationPolicies = () => {
   const [additionalCountries, setAdditionalCountries] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const [addCountries, setAddCountries] = useState(false);
- 
-    const fetchCountries = async () => {
-      try {
-        const response = await axiosInstance.get('/countries');
-        if (response.data?.data?.items) {
-          setCountries(response.data.data.items);
-        }
-      } catch (error) {
-        console.error('Error fetching countries:', error);
-      }
-    };
 
-    const fetchHolidays = async (countryId: number) => {
-      try {
-        const response = await axiosInstance.get(`/holidays/${countryId}`);
-        if (response.data?.data?.rows) {
-          setHolidays(response.data.data.rows.map((item) => ({
+  const fetchCountries = async () => {
+    try {
+      const response = await axiosInstance.get('/countries');
+      if (response.data?.data?.items) {
+        setCountries(response.data.data.items);
+      }
+    } catch (error) {
+      console.error('Error fetching countries:', error);
+    }
+  };
+
+  const fetchHolidays = async (countryId: number) => {
+    try {
+      const response = await axiosInstance.get(`/holidays/${countryId}`);
+      if (response.data?.data?.rows) {
+        setHolidays(
+          response.data.data.rows.map((item) => ({
             id: item.holiday.id,
             title: item.holiday.title,
             date: item.holiday.date,
@@ -81,29 +81,25 @@ const VacationPolicies = () => {
             createdBy: item.holiday.createdBy,
             user: item.holiday.user, // Include user object
             countryholidays: [item],
-          })));
-        }
-      } catch (error) {
-        console.error('Error fetching holidays:', error);
+          }))
+        );
       }
-    };
-    
-    
-    
-    
-    useEffect(() => {
-      fetchCountries();
-      fetchHolidays(selectedCountry);
-    }, [selectedCountry]);
-    
+    } catch (error) {
+      console.error('Error fetching holidays:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCountries();
+    fetchHolidays(selectedCountry);
+  }, [selectedCountry]);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
     if (!isModalOpen) {
-      fetchHolidays(selectedCountry); 
+      fetchHolidays(selectedCountry);
     }
   };
-  
 
   const deleteModal = (holidayId: number) => {
     setHolidayToDelete(holidayId);
@@ -119,7 +115,7 @@ const VacationPolicies = () => {
         );
 
         if (response.status === 200) {
-          toast.success("Holiday successfully deleted!")
+          toast.success('Holiday successfully deleted!');
           setHolidays(
             holidays.filter((holiday) => holiday.id !== holidayToDelete)
           );
@@ -225,20 +221,19 @@ const VacationPolicies = () => {
 
       {/* Dropdown and Add Button */}
       <div className="flex flex-row items-center justify-between">
-      <select
-  id="countries"
-  name="countries"
-  value={selectedCountry}
-  onChange={(e) => setSelectedCountry(Number(e.target.value))}
-  className="border p-2 rounded w-[400px] focus:outline-none"
->
-  {countries.map((country) => (
-    <option key={country.id} value={country.id}>
-      {country.country}
-    </option>
-  ))}
-</select>
-
+        <select
+          id="countries"
+          name="countries"
+          value={selectedCountry}
+          onChange={(e) => setSelectedCountry(Number(e.target.value))}
+          className="border p-2 rounded w-[400px] focus:outline-none"
+        >
+          {countries.map((country) => (
+            <option key={country.id} value={country.id}>
+              {country.country}
+            </option>
+          ))}
+        </select>
 
         <button
           onClick={toggleModal}
@@ -269,16 +264,28 @@ const VacationPolicies = () => {
                 <td className="p-4">{holiday.title}</td>
                 <td className="p-4">{formatDate(holiday.date)}</td>
                 <td className="p-4">{holiday.type}</td>
-<td className="p-4">
-  {holiday.user ? `${holiday.user.firstName} ${holiday.user.lastName}` : ''}
-</td>
+                <td className="p-4">
+                  {holiday.user
+                    ? `${holiday.user.firstName} ${holiday.user.lastName}`
+                    : ''}
+                </td>
                 <td className="p-4 text-center flex justify-center space-x-2">
-                  <Image src="/delete.svg" alt='delete' width={13} height={13}
+                  <Image
+                    loader={imageLoader}
+                    src="/delete.svg"
+                    alt="delete"
+                    width={13}
+                    height={13}
                     className="cursor-pointer"
                     title="Delete"
                     onClick={() => deleteModal(holiday.id)}
                   />
-                  <Image src="/edit.svg" alt='edit' width={13} height={13}
+                  <Image
+                    loader={imageLoader}
+                    src="/edit.svg"
+                    alt="edit"
+                    width={13}
+                    height={13}
                     className="cursor-pointer"
                     title="Edit"
                     onClick={() => openEditModal(holiday)}
@@ -291,13 +298,16 @@ const VacationPolicies = () => {
       </div>
 
       {isModalOpen && (
-  <Modal onClose={toggleModal}>
-    <div className="p-6 w-full sm:w-[600px]">
-      <h2 className="text-lg font-bold mb-4">Add Holiday</h2>
-      <SendHolidayNotification toggleModal={toggleModal} onHolidayAdded={fetchHolidays} />
-      </div>
-  </Modal>
-)}
+        <Modal onClose={toggleModal}>
+          <div className="p-6 w-full sm:w-[600px]">
+            <h2 className="text-lg font-bold mb-4">Add Holiday</h2>
+            <SendHolidayNotification
+              toggleModal={toggleModal}
+              onHolidayAdded={fetchHolidays}
+            />
+          </div>
+        </Modal>
+      )}
 
       {isModalOpen2 && (
         <Modal onClose={() => setIsModalOpen2(false)}>

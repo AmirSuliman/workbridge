@@ -19,6 +19,7 @@ import axiosInstance from '@/lib/axios';
 import AddSubFolder from './components/addSubFolder';
 import { formatFileSize } from '@/utils/formatFileSize';
 import Image from 'next/image';
+import imageLoader from '../../../../imageLoader';
 interface Folder {
   id: string;
   parentId: number | null;
@@ -80,7 +81,7 @@ const Page = () => {
           axiosInstance.get('/folders'),
           axiosInstance.get('/files'),
         ]);
-  
+
         setFolders(foldersResponse.data.data.items);
         setAllFiles(filesResponse.data.data.items);
         setIsAllFilesActive(true); // Ensure "All Files" is selected by default
@@ -92,10 +93,9 @@ const Page = () => {
         setLoading(false);
       }
     };
-  
+
     fetchInitialData();
   }, []);
-  
 
   const handleEditdocument = (file: File) => {
     setDocumentId(file.id);
@@ -261,7 +261,13 @@ const Page = () => {
     <div>
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-2">
-         <Image src="/folder.svg" alt='img' width={25} height={25}/>
+          <Image
+            loader={imageLoader}
+            src="/folder.svg"
+            alt="img"
+            width={25}
+            height={25}
+          />
           <h1 className="font-semibold text-[22px]">Files</h1>
         </div>
         <div className="flex flex-row items-center gap-4">
@@ -329,8 +335,14 @@ const Page = () => {
         <div className="flex flex-col bg-white border rounded-[10px] p-5 w-full overflow-x-auto">
           <div className="flex flex-row items-center justify-between">
             <div className="flex flex-row items-center gap-2">
-            <Image src="/folder.svg" alt='img' width={20} height={20}/>
-            <h1 className="font-medium text-[18px]">
+              <Image
+                loader={imageLoader}
+                src="/folder.svg"
+                alt="img"
+                width={20}
+                height={20}
+              />
+              <h1 className="font-medium text-[18px]">
                 {isAllFilesActive
                   ? 'All Files'
                   : activeFolder
@@ -398,11 +410,21 @@ const Page = () => {
                             : ''}
                         </td>
                         <td className="flex flex-row gap-3 justify-center items-center">
-                          <Image src="/edit.svg" alt='edit' width={10} height={10}
+                          <Image
+                            loader={imageLoader}
+                            src="/edit.svg"
+                            alt="edit"
+                            width={10}
+                            height={10}
                             onClick={() => handleEditdocument(file)}
                             className="cursor-pointer"
                           />
-                          <Image src="/delete.svg" alt='del' width={10} height={10}
+                          <Image
+                            loader={imageLoader}
+                            src="/delete.svg"
+                            alt="del"
+                            width={10}
+                            height={10}
                             onClick={() => handleDeletedocument(file.id)}
                             className="cursor-pointer"
                           />
@@ -431,11 +453,21 @@ const Page = () => {
                         <td className="p-4">{file.size}</td>
                         <td className="p-4">{file.fileType}</td>
                         <td className="flex flex-row gap-3 justify-center items-center">
-                          <Image src="/edit.svg" alt='edit' width={10} height={10}
+                          <Image
+                            loader={imageLoader}
+                            src="/edit.svg"
+                            alt="edit"
+                            width={10}
+                            height={10}
                             onClick={() => handleEditdocument(file)}
                             className="cursor-pointer"
                           />
-                          <Image src="/delete.svg" alt='del' width={10} height={10}
+                          <Image
+                            loader={imageLoader}
+                            src="/delete.svg"
+                            alt="del"
+                            width={10}
+                            height={10}
                             onClick={() => handleDeletedocument(file.id)}
                             className="cursor-pointer"
                           />

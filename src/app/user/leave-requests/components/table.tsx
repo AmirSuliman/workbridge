@@ -7,6 +7,7 @@ import Modal from '@/components/modal/Modal';
 import ConfirmLeave from './confirmleave';
 import Deny from './deny';
 import UserImgPlaceholder from '@/components/LeaveRequests/UserImgPlaceholder';
+import imageLoader from '../../../../../imageLoader';
 const ITEMS_PER_PAGE = 7;
 
 export interface Employee {
@@ -189,6 +190,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
                     <td className="p-4 whitespace-nowrap text-left">
                       <span className="flex items-center gap-3">
                         <Image
+                          loader={imageLoader}
                           src={
                             employee.type === 'Vacation'
                               ? '/vaction.png'

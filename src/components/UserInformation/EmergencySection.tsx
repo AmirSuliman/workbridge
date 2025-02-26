@@ -1,25 +1,25 @@
 import axiosInstance from '@/lib/axios';
 import { emergencyContactSchema } from '@/schemas/employeeSchema';
+import { setEmergencyContact } from '@/store/slices/emergencyContactSlice';
+import { AppDispatch, RootState } from '@/store/store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isAxiosError } from 'axios';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
-import { FaEdit, FaTrash } from 'react-icons/fa';
 import { GoPlusCircle } from 'react-icons/go';
-import { HiMiniBriefcase, HiMiniHomeModern } from 'react-icons/hi2';
+import { HiMiniHomeModern } from 'react-icons/hi2';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from '../Button';
 import BasicInfoIcon from '../icons/basic-info-icon';
+import Modal from '../modal';
 import AddEmergencyContact from './AddEmergencyContact';
 import EmergencyDeleteModal from './EmergencyDeleteModal';
 import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store/store';
-import { setEmergencyContact } from '@/store/slices/emergencyContactSlice';
-import Modal from '../modal';
-import Image from 'next/image';
+import imageLoader from '../../../imageLoader';
 interface PaymentProps {
   id: number;
   note: string;
@@ -142,7 +142,15 @@ const EmergencySection = ({ employeeData }) => {
       <div className="p-3 sm:p-6 rounded-[10px] border-gray-border border-[1px] bg-white my-5">
         <div className="mb-5 flex justify-between flex-wrap gap-4">
           <FormHeading
-            icon={<Image src="/contact.svg" alt='img' width={17} height={17} />}
+            icon={
+              <Image
+                loader={imageLoader}
+                src="/contact.svg"
+                alt="img"
+                width={17}
+                height={17}
+              />
+            }
             text="Emergency Contact"
           />
 
@@ -183,10 +191,12 @@ const EmergencySection = ({ employeeData }) => {
                     } ${payment.location?.city || ''} ${
                       payment.location?.state || ''
                     } ${payment.location?.country || ''}`,
-                    <Image src="/delete.svg"
-                    width={10}
-                    height={10}
-                    alt='delete'
+                    <Image
+                      loader={imageLoader}
+                      src="/delete.svg"
+                      width={10}
+                      height={10}
+                      alt="delete"
                       className="cursor-pointer"
                       key={payment.id}
                       onClick={(e) => {
@@ -196,10 +206,12 @@ const EmergencySection = ({ employeeData }) => {
                         setPaymentId(payment.id);
                       }}
                     />,
-                    <Image src="/edit.svg"
-                    width={10}
-                    height={10}
-                    alt='edit'
+                    <Image
+                      loader={imageLoader}
+                      src="/edit.svg"
+                      width={10}
+                      height={10}
+                      alt="edit"
                       className="cursor-pointer"
                       key={payment.id}
                       onClick={(e) => {

@@ -1,21 +1,26 @@
 'use client';
 import Button from '@/components/Button';
+import JobOpeningReportingManagers from '@/components/DropDowns/JobOpeningReportingManagers';
+import { ApplicationRequirements } from '@/components/JobsOpening/ApplicationRequirements';
 import Modal from '@/components/modal/Modal';
 import { API_ROUTES } from '@/constants/apiRoutes';
 import axiosInstance from '@/lib/axios';
+import { createJobSchema } from '@/schemas/createJobSchema';
+import { getAllEmployees } from '@/services/getAllEmployees';
+import { Department, EmployeeData, question } from '@/types/employee';
+import { JobFormFields, JobPreviewData } from '@/types/job';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { isAxiosError } from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
-import { FaEdit, FaTrash } from 'react-icons/fa';
-import { JobFormFields, JobPreviewData } from '@/types/job';
-import { Department, EmployeeData, question } from '@/types/employee';
-import { getAllEmployees } from '@/services/getAllEmployees';
+import { FaEdit } from 'react-icons/fa';
 import JobPreview from './JobPreview';
-import { ApplicationRequirements } from '@/components/JobsOpening/ApplicationRequirements';
-import JobOpeningReportingManagers from '@/components/DropDowns/JobOpeningReportingManagers';
+import CreateJobTextEditor from '@/components/CustomEditor/CreateJobTextEditor';
+import imageLoader from '../../../../../imageLoader';
 
 const Createjobopening = () => {
   const router = useRouter();
@@ -98,14 +103,19 @@ const Createjobopening = () => {
   }, []);
 
   const {
-    register,
-    trigger,
-    formState: { errors },
     watch,
+    control,
+    register,
     handleSubmit,
-  } = useForm<JobFormFields>();
+    formState: { errors },
+  } = useForm<JobFormFields>({
+    resolver: zodResolver(createJobSchema),
+    mode: 'onChange',
+  });
+
   const formValues = watch();
 
+  console.log('job form errors: ', errors);
   const [checkboxStates, setCheckboxStates] = useState({
     Resume: false,
     Address: false,
@@ -141,12 +151,21 @@ const Createjobopening = () => {
 
   const handleCheckboxChange =
     (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const isChecked = event.target.checked;
+
       setCheckboxStates((prev) => ({
         ...prev,
-        [name]: event.target.checked,
+        [name]: isChecked,
       }));
-    };
 
+      // If the checkbox is unchecked, set the toggle state to false
+      if (!isChecked) {
+        setToggleStates((prev) => ({
+          ...prev,
+          [name]: false,
+        }));
+      }
+    };
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -161,12 +180,12 @@ const Createjobopening = () => {
       }));
 
     const location = {
-      street1: data.street1 || '',
-      street2: data.street2 || '',
-      zipCode: Number(data.zipCode || 0),
-      city: data.city || '',
-      country: data.country || '',
-      state: data.state || '',
+      street1: data.location.street1,
+      street2: data.location.street2,
+      zipCode: data.location.zipCode,
+      city: data.location.city,
+      country: data.location.country,
+      state: data.location.state,
     };
 
     const shareWebsites = [
@@ -221,11 +240,13 @@ const Createjobopening = () => {
       setLoading(false);
     } catch (error) {
       console.error(error);
-      toast.error(
-        jobStatus === 'Published'
-          ? 'Failed to publish job'
-          : 'Failed to save draft'
-      );
+      if (isAxiosError(error) && error.response?.data?.message)
+        toast.error(
+          error.response?.data?.message ||
+            (jobStatus === 'Published'
+              ? 'Failed to publish job'
+              : 'Failed to save draft')
+        );
       setLoading(false);
     } finally {
       setLoading(false);
@@ -243,12 +264,12 @@ const Createjobopening = () => {
       }));
 
     const location = {
-      street1: data.street1 || '',
-      street2: data.street2 || '',
-      zipCode: Number(data.zipCode || 0),
-      city: data.city || '',
-      country: data.country || '',
-      state: data.state || '',
+      street1: data.location.street1,
+      street2: data.location.street2,
+      zipCode: data.location.zipCode,
+      city: data.location.city,
+      country: data.location.country,
+      state: data.location.state,
     };
 
     const shareWebsites = [
@@ -371,9 +392,7 @@ const Createjobopening = () => {
                     type="text"
                     placeholder="Add job title"
                     className="form-input"
-                    {...register('tittle', {
-                      required: 'Job title is required',
-                    })}
+                    {...register('tittle')}
                   />
                   {errors.tittle && (
                     <span className="form-error">{errors.tittle.message}</span>
@@ -382,22 +401,11 @@ const Createjobopening = () => {
 
                 <label className="flex flex-col mb-4 sm:w-1/3 w-full">
                   <span className="form-label">Department*</span>
-                  <select
-                    className="form-input text-gray-400 bg-white"
-                    {...register('departmentId', {
-                      required: 'Department is required',
-                    })}
-                  >
-                    <option value="" className="text-gray-400">
-                      Select a Department
-                    </option>
+                  <select className="form-input" {...register('departmentId')}>
+                    <option value="">Select a Department</option>
 
                     {departments?.map((department) => (
-                      <option
-                        value={department?.id}
-                        key={department.id}
-                        className="text-gray-400"
-                      >
+                      <option value={department?.id} key={department.id}>
                         {department?.name}
                       </option>
                     ))}
@@ -411,17 +419,11 @@ const Createjobopening = () => {
                 <label className="flex flex-col mb-4 sm:w-1/3 w-full">
                   <span className="form-label">Employment Type*</span>
                   <select
-                    className="form-input text-gray-400 bg-white"
-                    {...register('employmentType', {
-                      required: 'Employment type is required',
-                    })}
+                    className="form-input"
+                    {...register('employmentType')}
                   >
-                    <option value="" className="text-gray-400">
-                      Select employment type
-                    </option>
-                    <option value="Fulltime" className="text-gray-400">
-                      Full time
-                    </option>
+                    <option value="">Select employment type</option>
+                    <option value="Fulltime">Full time</option>
                     <option value="Part Time">Part-Time</option>
                     <option value="Freelance">Freelance</option>
                   </select>
@@ -436,21 +438,10 @@ const Createjobopening = () => {
               <div className="flex flex-col mt-4 sm:flex-row sm:gap-4 gap-2 items-center justify-between w-full">
                 <label className="flex flex-col mb-4 sm:w-1/3 w-full">
                   <span className="form-label">Hiring Lead*</span>
-                  <select
-                    className="form-input text-gray-400 bg-white"
-                    {...register('hiringLeadId', {
-                      required: 'Hiring lead required',
-                    })}
-                  >
-                    <option value="" className="text-gray-400">
-                      Select hiring leads
-                    </option>
+                  <select className="form-input" {...register('hiringLeadId')}>
+                    <option value="">Select hiring leads</option>
                     {employees.map((lead) => (
-                      <option
-                        key={lead.id}
-                        value={lead.id}
-                        className="text-gray-400"
-                      >
+                      <option key={lead.id} value={lead.id}>
                         {lead.firstName} {lead.lastName}
                       </option>
                     ))}
@@ -475,9 +466,7 @@ const Createjobopening = () => {
                     type="text"
                     placeholder="Add minimum years of experience"
                     className="form-input"
-                    {...register('minYearsExperience', {
-                      required: 'Experience is required',
-                    })}
+                    {...register('minYearsExperience')}
                   />
                   {errors.minYearsExperience && (
                     <span className="form-error">
@@ -510,21 +499,31 @@ const Createjobopening = () => {
                 </svg>
                 Job Description
               </div>
-              <label className="flex flex-col mb-4  w-full mt-8">
+              {/* <label className="flex flex-col mb-4  w-full mt-8">
                 <span className="form-label mb-2">Description*</span>
                 <textarea
                   placeholder="Write job description"
                   className="form-input resize"
-                  {...register('description', {
-                    required: 'Description is required',
-                  })}
+                  {...register('description')}
                 />
                 {errors.description && (
                   <span className="form-error">
                     {errors.description.message}
                   </span>
                 )}
-              </label>
+              </label> */}
+
+              <Controller
+                name="description"
+                control={control}
+                // defaultValue={policyData?.description || ''}
+                render={({ field }) => (
+                  <CreateJobTextEditor
+                    setContent={field.onChange} // Pass `field.onChange` for updating form state
+                    body={field.value || ''} // Pass the current content as `body`
+                  />
+                )}
+              />
             </div>
             <div className="w-full h-[0.7px] bg-gray-200 " />
 
@@ -554,12 +553,12 @@ const Createjobopening = () => {
                     type="text"
                     placeholder="Add street"
                     className="form-input"
-                    {...register('street1', {
-                      required: 'Street1 is required',
-                    })}
+                    {...register('location.street1')}
                   />
-                  {errors.street1 && (
-                    <span className="form-error">{errors.street1.message}</span>
+                  {errors?.location && errors?.location?.street1 && (
+                    <p className="form-error">
+                      {errors?.location?.street1.message}
+                    </p>
                   )}
                 </label>
                 <label className="flex flex-col mb-4 sm:w-1/3 w-full">
@@ -568,8 +567,13 @@ const Createjobopening = () => {
                     type="text"
                     placeholder="Add street"
                     className="form-input"
-                    {...register('street2', { required: false })}
+                    {...register('location.street2')}
                   />
+                  {errors?.location && errors?.location?.street2 && (
+                    <p className="form-error">
+                      {errors?.location?.street2.message}
+                    </p>
+                  )}
                 </label>
                 <label className="flex flex-col mb-4 sm:w-1/3 w-full">
                   <span className="form-label">Zip</span>
@@ -577,29 +581,29 @@ const Createjobopening = () => {
                     type="text"
                     placeholder="Add Zip"
                     className="form-input"
-                    {...register('zipCode', {
-                      required: 'Zip code is required',
-                    })}
+                    {...register('location.zipCode', { valueAsNumber: true })}
                   />
-                  {errors.zipCode && (
-                    <span className="form-error">{errors.zipCode.message}</span>
+                  {errors?.location?.zipCode && (
+                    <p className="form-error">
+                      {errors?.location?.zipCode.message}
+                    </p>
                   )}
                 </label>
               </div>
 
               <div className="flex flex-col mt-4 sm:flex-row sm:gap-4 gap-2 items-center justify-between w-full">
                 <label className="flex flex-col mb-4 sm:w-1/3 w-full">
-                  <span className="form-label">Country</span>
+                  <span className="form-label">Country*</span>
                   <input
                     type="text"
                     placeholder="Add country"
                     className="form-input"
-                    {...register('country', {
-                      required: 'Country is required',
-                    })}
+                    {...register('location.country')}
                   />
-                  {errors.country && (
-                    <span className="form-error">{errors.country.message}</span>
+                  {errors?.location?.country && (
+                    <p className="form-error">
+                      {errors?.location?.country.message}
+                    </p>
                   )}
                 </label>
                 <label className="flex flex-col mb-4 sm:w-1/3 w-full">
@@ -608,10 +612,12 @@ const Createjobopening = () => {
                     type="text"
                     placeholder="Add state"
                     className="form-input"
-                    {...register('state', { required: 'State is required' })}
+                    {...register('location.state')}
                   />
-                  {errors.state && (
-                    <span className="form-error">{errors.state.message}</span>
+                  {errors?.location?.state && (
+                    <p className="form-error">
+                      {errors?.location?.state.message}
+                    </p>
                   )}
                 </label>
                 <label className="flex flex-col mb-4 sm:w-1/3 w-full">
@@ -620,10 +626,12 @@ const Createjobopening = () => {
                     type="text"
                     placeholder="Add city"
                     className="form-input"
-                    {...register('city', { required: 'City is required' })}
+                    {...register('location.city')}
                   />
-                  {errors.city && (
-                    <span className="form-error">{errors.city.message}</span>
+                  {errors?.location?.city && (
+                    <p className="form-error">
+                      {errors?.location?.city.message}
+                    </p>
                   )}
                 </label>
               </div>
@@ -653,9 +661,7 @@ const Createjobopening = () => {
                 <input
                   placeholder="Add annual compensation amount"
                   className="form-input"
-                  {...register('salary', {
-                    required: 'Compensation is required',
-                  })}
+                  {...register('salary')}
                 />
                 {errors.salary && (
                   <span className="form-error">{errors.salary.message}</span>
@@ -745,6 +751,7 @@ const Createjobopening = () => {
                       className="form-error hover:text-red-700 p-2"
                     >
                       <Image
+                        loader={imageLoader}
                         src="/delete.svg"
                         alt="img"
                         width={15}
@@ -872,11 +879,6 @@ const Createjobopening = () => {
               </div>
             </div>
           </div>
-          {/* <button onClick={handleSubmit(onSubmit)} disabled={loading}>
-          {jobStatus === 'Published' && loading
-            ? 'Publishing...'
-            : 'Publish Job'}
-        </button> */}
           <div
             onClick={handlePublish}
             className="w-fit p-3 px-8 h-fit mx-auto mt-4"

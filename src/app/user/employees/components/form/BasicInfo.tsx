@@ -9,6 +9,7 @@ import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer'
 import { useRouter } from 'next/navigation';
 import { EmployeeData } from '@/types/employee';
 import Image from 'next/image';
+import imageLoader from '../../../../../../imageLoader';
 
 const BasicInfo = () => {
   const router = useRouter();
@@ -57,6 +58,7 @@ const BasicInfo = () => {
           {previewUrl && (
             <div className="mt-4">
               <Image
+                loader={imageLoader}
                 width={300}
                 height={150}
                 src={previewUrl}

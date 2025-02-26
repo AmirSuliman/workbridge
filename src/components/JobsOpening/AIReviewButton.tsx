@@ -8,6 +8,7 @@ import {
   clearAiReviewData,
 } from '@/store/slices/candidateEvaluationSlice';
 import { AppDispatch, RootState } from '@/store/store';
+import imageLoader from '../../../imageLoader';
 
 interface AIReviewButtonProps {
   jobId: string | string[];
@@ -78,6 +79,7 @@ const AIReviewButton = ({
               Sorting Candidates
             </h2>
             <Image
+              loader={imageLoader}
               src="/animation_ai_review.gif"
               alt="AI Review Animation"
               width={128}

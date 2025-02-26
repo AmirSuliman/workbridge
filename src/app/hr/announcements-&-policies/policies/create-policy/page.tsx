@@ -17,6 +17,7 @@ import { AppDispatch, RootState } from '@/store/store';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { useSession } from 'next-auth/react';
 import { publishPolicy } from '@/store/slices/postPolicy';
+import imageLoader from '../../../../../../imageLoader';
 
 const CreatePolicy = () => {
   const [loading, setLoading] = useState(false);
@@ -282,43 +283,69 @@ const CreatePolicy = () => {
                   <option value="">Select a Policy Type</option>
                   <optgroup label="Human Resources">
                     <option value="employee-benefits">Employee Benefits</option>
-                    <option value="leave-attendance">Leave and Attendance</option>
+                    <option value="leave-attendance">
+                      Leave and Attendance
+                    </option>
                     <option value="code-of-conduct">Code of Conduct</option>
-                    <option value="recruitment-hiring">Recruitment and Hiring</option>
-                    <option value="workplace-harassment">Workplace Harassment</option>
+                    <option value="recruitment-hiring">
+                      Recruitment and Hiring
+                    </option>
+                    <option value="workplace-harassment">
+                      Workplace Harassment
+                    </option>
                   </optgroup>
                   <optgroup label="Information Technology">
                     <option value="data-security">Data Security</option>
-                    <option value="acceptable-use">Acceptable Use Policy</option>
+                    <option value="acceptable-use">
+                      Acceptable Use Policy
+                    </option>
                     <option value="byod">Bring Your Own Device (BYOD)</option>
-                    <option value="software-use">Software Installation and Use</option>
-                    <option value="password-management">Password Management</option>
+                    <option value="software-use">
+                      Software Installation and Use
+                    </option>
+                    <option value="password-management">
+                      Password Management
+                    </option>
                   </optgroup>
                   <optgroup label="Finance">
-                    <option value="expense-reimbursement">Expense Reimbursement</option>
+                    <option value="expense-reimbursement">
+                      Expense Reimbursement
+                    </option>
                     <option value="budget-allocation">Budget Allocation</option>
                     <option value="procurement">Procurement Policy</option>
-                    <option value="financial-reporting">Financial Reporting</option>
+                    <option value="financial-reporting">
+                      Financial Reporting
+                    </option>
                     <option value="travel-expense">Travel and Expense</option>
                   </optgroup>
                   <optgroup label="Operations">
                     <option value="health-safety">Health and Safety</option>
-                    <option value="business-continuity">Business Continuity</option>
+                    <option value="business-continuity">
+                      Business Continuity
+                    </option>
                     <option value="environmental">Environmental Policy</option>
                     <option value="quality-assurance">Quality Assurance</option>
                     <option value="vendor-management">Vendor Management</option>
                   </optgroup>
                   <optgroup label="Compliance and Legal">
-                    <option value="anti-bribery">Anti-Bribery and Corruption</option>
+                    <option value="anti-bribery">
+                      Anti-Bribery and Corruption
+                    </option>
                     <option value="data-protection">Data Protection</option>
                     <option value="whistleblower">Whistleblower Policy</option>
-                    <option value="intellectual-property">Intellectual Property</option>
+                    <option value="intellectual-property">
+                      Intellectual Property
+                    </option>
                   </optgroup>
                   <optgroup label="Other">
                     <option value="remote-work">Remote Work Policy</option>
                     <option value="social-media">Social Media Policy</option>
-                    <option value="conflict-of-interest">Conflict of Interest</option>
-                    <option value="performance-review">Performance Review and Management</option>
+                    <option value="conflict-of-interest">
+                      Conflict of Interest
+                    </option>
+                    <option value="performance-review">
+                      Performance Review and Management
+                    </option>
                   </optgroup>
                 </select>
                 {errors.type && (
@@ -380,6 +407,7 @@ const CreatePolicy = () => {
                   x
                 </button>
                 <Image
+                  loader={imageLoader}
                   width={300}
                   height={150}
                   src={previewUrl}
@@ -392,7 +420,10 @@ const CreatePolicy = () => {
             <h1 className="text-[18px] font-medium">Policy Description</h1>
             <label className="flex flex-col gap-2 mt-8">
               <span className="text-[13px] text-gray-400">Description</span>
-              <div onClick={(e) => e.preventDefault()} className="border rounded">
+              <div
+                onClick={(e) => e.preventDefault()}
+                className="border rounded"
+              >
                 <Controller
                   name="description"
                   control={control}
