@@ -1,11 +1,12 @@
 'use client';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
+import imageLoader from '../../../../../../imageLoader';
 const PreviewPolicy = ({ previewData }) => {
-
   const { data: session } = useSession();
   console.log(session, 'session');
-  const username = session?.user?.user?.firstName + " " + session?.user?.user?.lastName;
+  const username =
+    session?.user?.user?.firstName + ' ' + session?.user?.user?.lastName;
   console.log(username, 'username');
 
   return (
@@ -16,7 +17,6 @@ const PreviewPolicy = ({ previewData }) => {
           {/* this is when we preview a fetched policy from the backend */}
           <p className="text-[13px] ">Posted by:</p>
           <p className="text-[13px] font-semibold">{username}</p>
-         
 
           <div className="flex flex-row items-center gap-1">
             <p className="text-[13px] ">Effective Date:</p>
@@ -33,6 +33,7 @@ const PreviewPolicy = ({ previewData }) => {
         {/* this is when we preview a policy at create time */}
         {previewData.previewUrl && (
           <Image
+            loader={imageLoader}
             src={previewData.previewUrl}
             alt="policy"
             width={1200}

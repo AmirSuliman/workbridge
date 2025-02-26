@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { Menu, MoveUpRight, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MoveUpRight, Menu, X } from 'lucide-react';
-import imageLoader from '../../../imageLoader';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +41,6 @@ const Navbar = () => {
       <div className="mx-auto max-w-[1750px] overflow-x-hidden flex items-center justify-between w-full">
         <Link href="/">
           <Image
-            loader={imageLoader}
             src="/logo.svg"
             alt="Logo"
             width={130}

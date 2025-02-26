@@ -1,7 +1,6 @@
 import { MoveUpRight } from 'lucide-react';
-import Link from 'next/link';
 import Image from 'next/image';
-import imageLoader from '../../../imageLoader';
+import Link from 'next/link';
 
 const Footer = () => {
   return (
@@ -9,7 +8,6 @@ const Footer = () => {
       <div className=" gap-6 p-8 px-4 mx-auto max-w-[1750px] sm:px-16 flex flex-col sm:flex-row items-center sm:items-start justify-between ">
         <div className="flex flex-col gap-2">
           <Image
-            loader={imageLoader}
             src="/logo.svg"
             alt="Logo"
             width={130}

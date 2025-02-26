@@ -274,10 +274,8 @@ const MyInformation = () => {
       setEditLoading(false);
       setEditEmployee(false);
       dispatch(updateEmployeeData(response.data.data));
-      console.log(
-        'response.data.data.profilePictureUrl',
-        response.data.data.profilePictureUrl
-      );
+
+      // to immediatly get updated profile picture in the UserProfileInfo.tsx if a user update it
       if (!empId) {
         sessionStorage.setItem(
           'profilePictureUrl',
