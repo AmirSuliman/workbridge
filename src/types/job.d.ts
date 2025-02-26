@@ -9,12 +9,15 @@ export interface JobFormFields {
   reportingToEmployeeId: string;
   minYearsExperience: string;
   description: string;
-  street1: string;
-  street2?: string;
-  zipCode: string;
-  country: string;
-  state: string;
-  city: string;
+  location: {
+    id: number;
+    street1: string;
+    street2?: string;
+    zipCode: string;
+    city: string;
+    country: string;
+    state: string;
+  };
   salary: string;
   Resume: string | boolean;
   Address: string | boolean;
@@ -97,12 +100,15 @@ type JobFormFields = {
   reportingToEmployeeId: string;
   minYearsExperience: string;
   description: string;
-  street1: string;
-  street2?: string;
-  zipCode: string;
-  country: string;
-  state: string;
-  city: string;
+  location: {
+    id: number;
+    street1: string;
+    street2?: string;
+    zipCode: string;
+    city: string;
+    country: string;
+    state: string;
+  };
   salary: string;
   Resume: string | boolean;
   Address: string | boolean;
@@ -122,7 +128,15 @@ interface JobPreviewData {
   reportingTo: string;
   minYearsExperience: number;
   requirements: { name: string; required: boolean }[];
-  location: Location;
+  location: {
+    // id: number;
+    street1: string;
+    street2?: string;
+    zipCode: string;
+    city: string;
+    country: string;
+    state: string;
+  };
   shareWebsites: string[];
   questions: { question: string; required: boolean }[];
 }

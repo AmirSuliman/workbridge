@@ -14,6 +14,7 @@ import { JobFormFields, JobListing, JobPreviewData } from '@/types/job';
 import { Department, EmployeeData, question } from '@/types/employee';
 import { getAllEmployees } from '@/services/getAllEmployees';
 import JobPreview from '../../../create-job/JobPreview';
+import imageLoader from '../../../../../../../imageLoader';
 
 const Createjobopening = () => {
   const router = useRouter();
@@ -134,14 +135,13 @@ const Createjobopening = () => {
         name: key,
         required: toggleStates[key],
       }));
-
     const location = {
-      street1: data.street1 || '',
-      street2: data.street2 || '',
-      zipCode: Number(data.zipCode || 0),
-      city: data.city || '',
-      country: data.country || '',
-      state: data.state || '',
+      street1: data.location.street1,
+      street2: data.location.street2,
+      zipCode: data.location.zipCode,
+      city: data.location.city,
+      country: data.location.country,
+      state: data.location.state,
     };
 
     const shareWebsites = [
@@ -218,12 +218,12 @@ const Createjobopening = () => {
       }));
 
     const location = {
-      street1: data.street1 || '',
-      street2: data.street2 || '',
-      zipCode: Number(data.zipCode || 0),
-      city: data.city || '',
-      country: data.country || '',
-      state: data.state || '',
+      street1: data.location.street1,
+      street2: data.location.street2,
+      zipCode: data.location.zipCode,
+      city: data.location.city,
+      country: data.location.country,
+      state: data.location.state,
     };
 
     const shareWebsites = [
@@ -339,6 +339,7 @@ const Createjobopening = () => {
           <div className=" w-ful p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium ">
               <Image
+                loader={imageLoader}
                 src="/jobicon.png"
                 alt="img"
                 className="w-5"
@@ -497,6 +498,7 @@ const Createjobopening = () => {
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium ">
               <Image
+                loader={imageLoader}
                 src="/jobdescription.png"
                 alt="img"
                 className="w-5"
@@ -529,6 +531,7 @@ const Createjobopening = () => {
           <div className=" w-ful p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium ">
               <Image
+                loader={imageLoader}
                 src="/loctaion.png"
                 alt="img"
                 className="w-5"
@@ -545,11 +548,13 @@ const Createjobopening = () => {
                   type="text"
                   placeholder="Add street"
                   className="p-3 border rounded-lg w-full"
-                  {...register('street1', { required: 'Street1 is required' })}
+                  {...register('location.street1')}
                   defaultValue={singleJobData?.data.location.street1}
                 />
-                {errors.street1 && (
-                  <span className="text-red-500">{errors.street1.message}</span>
+                {errors?.location && errors?.location?.street1 && (
+                  <p className="form-error">
+                    {errors?.location?.street1.message}
+                  </p>
                 )}
               </label>
               <label className="flex flex-col mb-4 sm:w-1/3 w-full">
@@ -558,9 +563,14 @@ const Createjobopening = () => {
                   type="text"
                   placeholder="Add street"
                   className="p-3 border rounded-lg w-full"
-                  {...register('street2', { required: false })}
+                  {...register('location.street2')}
                   defaultValue={singleJobData?.data.location.street2}
                 />
+                {errors?.location && errors?.location?.street2 && (
+                  <p className="form-error">
+                    {errors?.location?.street2.message}
+                  </p>
+                )}
               </label>
               <label className="flex flex-col mb-4 sm:w-1/3 w-full">
                 <span className="text-[14px] text-gray-400">Zip</span>
@@ -568,11 +578,13 @@ const Createjobopening = () => {
                   type="text"
                   placeholder="Add Zip"
                   className="p-3 border rounded-lg w-full"
-                  {...register('zipCode', { required: 'Zip code is required' })}
+                  {...register('location.zipCode', { valueAsNumber: true })}
                   defaultValue={singleJobData?.data.location.zipCode}
                 />
-                {errors.zipCode && (
-                  <span className="text-red-500">{errors.zipCode.message}</span>
+                {errors?.location?.zipCode && (
+                  <p className="form-error">
+                    {errors?.location?.zipCode.message}
+                  </p>
                 )}
               </label>
             </div>
@@ -584,11 +596,13 @@ const Createjobopening = () => {
                   type="text"
                   placeholder="Add country"
                   className="p-3 border rounded-lg w-full"
-                  {...register('country', { required: 'Country is required' })}
+                  {...register('location.country')}
                   defaultValue={singleJobData?.data.location.country}
                 />
-                {errors.country && (
-                  <span className="text-red-500">{errors.country.message}</span>
+                {errors?.location?.country && (
+                  <p className="form-error">
+                    {errors?.location?.country.message}
+                  </p>
                 )}
               </label>
               <label className="flex flex-col mb-4 sm:w-1/3 w-full">
@@ -597,11 +611,13 @@ const Createjobopening = () => {
                   type="text"
                   placeholder="Add state"
                   className="p-3 border rounded-lg w-full"
-                  {...register('state', { required: 'State is required' })}
+                  {...register('location.state')}
                   defaultValue={singleJobData?.data.location.state}
                 />
-                {errors.state && (
-                  <span className="text-red-500">{errors.state.message}</span>
+                {errors?.location?.state && (
+                  <p className="form-error">
+                    {errors?.location?.state.message}
+                  </p>
                 )}
               </label>
               <label className="flex flex-col mb-4 sm:w-1/3 w-full">
@@ -610,11 +626,11 @@ const Createjobopening = () => {
                   type="text"
                   placeholder="Add city"
                   className="p-3 border rounded-lg w-full"
-                  {...register('city', { required: 'City is required' })}
+                  {...register('location.city')}
                   defaultValue={singleJobData?.data.location.city}
                 />
-                {errors.city && (
-                  <span className="text-red-500">{errors.city.message}</span>
+                {errors?.location?.city && (
+                  <p className="form-error">{errors?.location?.city.message}</p>
                 )}
               </label>
             </div>
@@ -624,6 +640,7 @@ const Createjobopening = () => {
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium ">
               <Image
+                loader={imageLoader}
                 src="/compensation.png"
                 alt="img"
                 className="w-5"
@@ -654,6 +671,7 @@ const Createjobopening = () => {
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium mb-8">
               <Image
+                loader={imageLoader}
                 src="/jobicon.png"
                 alt="img"
                 className="w-5"
@@ -729,6 +747,7 @@ const Createjobopening = () => {
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium mb-8">
               <Image
+                loader={imageLoader}
                 src="/question.png"
                 alt="img"
                 className="w-5"
@@ -827,6 +846,7 @@ const Createjobopening = () => {
           <div className="p-8">
             <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium mb-8">
               <Image
+                loader={imageLoader}
                 src="/jobpost.png"
                 alt="img"
                 className="w-5"

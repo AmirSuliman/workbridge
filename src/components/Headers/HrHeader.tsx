@@ -7,6 +7,7 @@ import { HiUsers } from 'react-icons/hi';
 import { PiPlusCircleBold } from 'react-icons/pi';
 import Notifications from '../Notifications/Notifications';
 import UserProfileInfo from '../UserProfileInfo';
+import imageLoader from '../../../imageLoader';
 
 const HrHeader = () => {
   const router = useRouter();
@@ -40,6 +41,7 @@ const HrHeader = () => {
                   className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex flex-row items-center gap-2 "
                 >
                   <Image
+                    loader={imageLoader}
                     src="/announcment.svg"
                     alt="img"
                     width={13}
@@ -54,7 +56,13 @@ const HrHeader = () => {
                   }}
                   className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer flex flex-row items-center gap-2"
                 >
-                  <Image src="/job.svg" alt="img" width={13} height={13} />
+                  <Image
+                    loader={imageLoader}
+                    src="/job.svg"
+                    alt="img"
+                    width={13}
+                    height={13}
+                  />
                   Job Posting
                 </li>
                 <li

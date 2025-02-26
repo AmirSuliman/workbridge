@@ -1,15 +1,14 @@
-import { BiTrendingUp } from 'react-icons/bi';
-import { FaDownload, FaFilePdf } from 'react-icons/fa';
-import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
-import { isAxiosError } from 'axios';
-import toast from 'react-hot-toast';
 import axiosInstance from '@/lib/axios';
-import * as XLSX from 'xlsx';
-import { CountryBox, WorldMap } from './worldmap';
+import { isAxiosError } from 'axios';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { BiTrendingUp } from 'react-icons/bi';
+import { FaDownload } from 'react-icons/fa';
+import * as XLSX from 'xlsx';
+import { CountryBox, WorldMap } from './worldmap';
 
 export interface DemographicsProps {
   countryName: string | null;

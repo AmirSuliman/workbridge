@@ -8,6 +8,7 @@ import ConfirmLeave from './confirmleave';
 import Deny from './deny';
 import UserImgPlaceholder from '@/components/LeaveRequests/UserImgPlaceholder';
 import { getSession } from 'next-auth/react';
+import imageLoader from '../../../../../imageLoader';
 
 const ITEMS_PER_PAGE = 7;
 
@@ -199,6 +200,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
                     <td className="p-4 whitespace-nowrap text-left">
                       <span className="flex items-center gap-3">
                         <Image
+                          loader={imageLoader}
                           src={
                             employee.type === 'Vacation'
                               ? '/vaction.png'

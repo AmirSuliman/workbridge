@@ -1,7 +1,5 @@
 'use client';
-import { FaArrowUp, FaBullhorn } from 'react-icons/fa';
 import AllPolicies from '../components/AllPolicies';
-import Image from 'next/image';
 import Announcements from '../components/Announcements';
 
 const Allannouncments = () => {

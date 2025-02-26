@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { FaTrash } from 'react-icons/fa';
 import { GoPlusCircle } from 'react-icons/go';
 import { useEffect, useState } from 'react';
@@ -11,8 +11,8 @@ import DeleteDocumentModal from './DeleteDocumentModal';
 import { Document, Page, pdfjs } from 'react-pdf';
 import mammoth from 'mammoth';
 import Image from 'next/image';
+import imageLoader from '../../../imageLoader';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-
 
 interface DocumentType {
   id: number;
@@ -31,7 +31,10 @@ interface EmployeeDataType {
 }
 const SelectableCell = (text, document, onClick) => {
   return (
-    <div className="text-dark-navy text-md items-center justify-start flex gap-2 cursor-pointer" onClick={() => onClick(document)}>
+    <div
+      className="text-dark-navy text-md items-center justify-start flex gap-2 cursor-pointer"
+      onClick={() => onClick(document)}
+    >
       <input
         type="checkbox"
         className="h-3 w-3 cursor-pointer text-[#878b94]"
@@ -50,22 +53,31 @@ const getFileExtension = (mimeType) => {
   return mimeToExtensionMap[mimeType] || '';
 };
 
-const DocumentSection = ({ employeeData }: { employeeData?: EmployeeDataType }) => {
+const DocumentSection = ({
+  employeeData,
+}: {
+  employeeData?: EmployeeDataType;
+}) => {
   const [documentId, setDocumentId] = useState<number | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [sortOption, setSortOption] = useState<'size' | 'date'>('size');
-  const [documents, setDocuments] = useState<DocumentType[]>(employeeData?.documents ?? []);
-  const [selectedDocument, setSelectedDocument] = useState<DocumentType | null>(null);
+  const [documents, setDocuments] = useState<DocumentType[]>(
+    employeeData?.documents ?? []
+  );
+  const [selectedDocument, setSelectedDocument] = useState<DocumentType | null>(
+    null
+  );
   const [openDocumentModal, setOpenDocumentModal] = useState(false);
-  const [documentContent, setDocumentContent] = useState<string>(''); 
+  const [documentContent, setDocumentContent] = useState<string>('');
   const [pdfPageNumber, setPdfPageNumber] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
- // const [numPages, setNumPages] = useState(null);
-//const [pdfBlobUrl, setPdfBlobUrl] = useState(null);
+  const [error, setError] = useState('');
+  // const [numPages, setNumPages] = useState(null);
+  //const [pdfBlobUrl, setPdfBlobUrl] = useState(null);
 
-{/*useEffect(() => {
+  {
+    /*useEffect(() => {
   if (selectedDocument?.url) {
     fetch(selectedDocument.url)
       .then((response) => response.blob())
@@ -85,9 +97,8 @@ const DocumentSection = ({ employeeData }: { employeeData?: EmployeeDataType }) 
   onLoadSuccess={({ numPages }) => setNumPages(numPages)}
 >
   <Page pageNumber={pdfPageNumber} />
-</Document>*/}
-
-
+</Document>*/
+  }
 
   const handleDocumentDelete = (deletedDocumentId: number) => {
     setDocuments((prevDocuments) =>
@@ -97,17 +108,18 @@ const DocumentSection = ({ employeeData }: { employeeData?: EmployeeDataType }) 
 
   const handleNewDocument = (newDoc: DocumentType) => {
     if (!newDoc) return;
-  
+
     const updatedDoc = {
       ...newDoc,
       EmployeeDocument: {
         ...newDoc.EmployeeDocument,
-        createdAt: newDoc.EmployeeDocument?.createdAt || new Date().toISOString(),
+        createdAt:
+          newDoc.EmployeeDocument?.createdAt || new Date().toISOString(),
       },
-      size: newDoc.size || 0, 
+      size: newDoc.size || 0,
     };
-  
-    setDocuments((prevDocuments) => [updatedDoc, ...prevDocuments]); 
+
+    setDocuments((prevDocuments) => [updatedDoc, ...prevDocuments]);
   };
 
   useEffect(() => {
@@ -115,54 +127,69 @@ const DocumentSection = ({ employeeData }: { employeeData?: EmployeeDataType }) 
   }, [employeeData]);
 
   const handleDocumentOpen = async (document) => {
-
     window.open(document.url, '_blank');
-  
+
     setSelectedDocument(document);
     setOpenDocumentModal(true);
     setIsLoading(true);
-  
-    console.log("Document fileType:", document.fileType);
-    console.log("Document fileUrl:", document.url);
-  
-    if (document.fileType === 'application/pdf' || document.fileType === 'pdf') {
+
+    console.log('Document fileType:', document.fileType);
+    console.log('Document fileUrl:', document.url);
+
+    if (
+      document.fileType === 'application/pdf' ||
+      document.fileType === 'pdf'
+    ) {
       try {
         const response = await fetch(document.url);
-        if (!response.ok) throw new Error(`PDF not found, status code: ${response.status}`);
+        if (!response.ok)
+          throw new Error(`PDF not found, status code: ${response.status}`);
         console.log('PDF fetched successfully');
         setDocumentContent('');
         setIsLoading(false);
       } catch (error) {
-        setError(`Error loading PDF file. Please check the URL or try again. Details: ${(error as Error).message}`);
-        console.log("Error loading PDF:", error);
+        setError(
+          `Error loading PDF file. Please check the URL or try again. Details: ${
+            (error as Error).message
+          }`
+        );
+        console.log('Error loading PDF:', error);
         setIsLoading(false);
       }
-    } else if (document.fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    } else if (
+      document.fileType ===
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ) {
       try {
-        const arrayBuffer = await fetch(document.url).then((res) => res.arrayBuffer());
+        const arrayBuffer = await fetch(document.url).then((res) =>
+          res.arrayBuffer()
+        );
         const result = await mammoth.convertToHtml({ arrayBuffer });
         setDocumentContent(result.value);
         setIsLoading(false);
       } catch (error) {
-        setError("Error loading Word document content.");
-        console.log("Error loading Word document:", error);
+        setError('Error loading Word document content.');
+        console.log('Error loading Word document:', error);
         setIsLoading(false);
       }
     } else {
-      setDocumentContent('This file type is not supported for content preview.');
-      console.log("Unsupported file type:", document.fileType);
+      setDocumentContent(
+        'This file type is not supported for content preview.'
+      );
+      console.log('Unsupported file type:', document.fileType);
       setIsLoading(false);
     }
   };
-  
+
   const sortedDocuments = [...documents].sort((a, b) => {
-    const dateA = a.EmployeeDocument?.createdAt ? new Date(a.EmployeeDocument.createdAt).getTime() : 0;
-    const dateB = b.EmployeeDocument?.createdAt ? new Date(b.EmployeeDocument.createdAt).getTime() : 0;
+    const dateA = a.EmployeeDocument?.createdAt
+      ? new Date(a.EmployeeDocument.createdAt).getTime()
+      : 0;
+    const dateB = b.EmployeeDocument?.createdAt
+      ? new Date(b.EmployeeDocument.createdAt).getTime()
+      : 0;
     return dateA - dateB;
   });
-  
-  
-  
 
   const values = documents?.map((document) => {
     const sizeInBytes = document.size ?? 0;
@@ -171,39 +198,53 @@ const DocumentSection = ({ employeeData }: { employeeData?: EmployeeDataType }) 
       sizeInKB >= 1024
         ? `${(sizeInKB / 1024).toFixed(2)} MB`
         : `${sizeInKB.toFixed(2)} KB`;
-  
+
     return [
       SelectableCell(document.fileName, document, handleDocumentOpen),
-      document?.EmployeeDocument?.createdAt ? document.EmployeeDocument.createdAt.split('T')[0] : 'N/A',
+      document?.EmployeeDocument?.createdAt
+        ? document.EmployeeDocument.createdAt.split('T')[0]
+        : 'N/A',
       formattedSize,
       document.fileType ? getFileExtension(document.fileType) : '',
       <Image
-    src="/delete.svg" 
-    alt="Delete"
-    width={12}
-    height={12}
-    onClick={() => {
-      setDocumentId(document.id);
-      setOpenDeleteModal(true);
-    }}
-    key={1}
-    className=" cursor-pointer"
-  />,
+        src="/delete.svg"
+        alt="Delete"
+        width={12}
+        height={12}
+        onClick={() => {
+          setDocumentId(document.id);
+          setOpenDeleteModal(true);
+        }}
+        key={1}
+        className=" cursor-pointer"
+      />,
     ];
   });
 
   return (
     <div className="p-2 md:p-5 rounded-md h-full bg-white border-gray-border">
       <div className="flex flex-col md:flex-row gap-2 md:gap-0 md:items-center md:justify-between mb-5">
-        <FormHeading icon={<Image src="/document.svg" alt='img' width={15} height={15} />} text="Documents" />
+        <FormHeading
+          icon={
+            <Image
+              loader={imageLoader}
+              src="/document.svg"
+              alt="img"
+              width={15}
+              height={15}
+            />
+          }
+          text="Documents"
+        />
         <div className="flex items-center gap-4">
           <label className="flex gap-3 items-center text-dark-navy ms-2 ">
             <span className="text-[14px] text-gray-400">Sort</span>{' '}
             <select
               value={sortOption}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => 
-                setSortOption(e.target.value as 'size' | 'date')}
-                            className="outline-none text-xs p-2 border w-[150px] rounded-md"
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setSortOption(e.target.value as 'size' | 'date')
+              }
+              className="outline-none text-xs p-2 border w-[150px] rounded-md"
             >
               <option value="size">Size</option>
               <option value="date">Date</option>
@@ -221,7 +262,7 @@ const DocumentSection = ({ employeeData }: { employeeData?: EmployeeDataType }) 
       </div>
       <InfoGrid
         headers={['Document Name', 'Date Uploaded', 'Size', 'File Type']}
-        values={values} 
+        values={values}
       />
 
       {openModal && (
@@ -234,13 +275,13 @@ const DocumentSection = ({ employeeData }: { employeeData?: EmployeeDataType }) 
       {openDeleteModal && (
         <DeleteDocumentModal
           onClose={() => setOpenDeleteModal(false)}
-          employeeId={employeeData?.id ?? 0} 
+          employeeId={employeeData?.id ?? 0}
           documentId={documentId}
           onDocumentDelete={handleDocumentDelete}
         />
       )}
 
-    {/*{openDocumentModal && selectedDocument && (
+      {/*{openDocumentModal && selectedDocument && (
   <Modal onClose={() => setOpenDocumentModal(false)}>
     <div className="p-5">
       <h2 className="text-xl font-semibold">{selectedDocument.fileName}</h2>
@@ -289,7 +330,6 @@ const DocumentSection = ({ employeeData }: { employeeData?: EmployeeDataType }) 
     </div>
   </Modal>
 )}  */}
-
     </div>
   );
 };

@@ -20,6 +20,7 @@ import ProfileInfoItem from './ProfileInfoItem';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import imageLoader from '../../../imageLoader';
 
 const ProfileCard = ({
   setEditEmployee,
@@ -87,6 +88,7 @@ const ProfileCard = ({
       <div className="flex gap-4">
         <div className="flex flex-col items-center">
           <Image
+            loader={imageLoader}
             src={imgSrc}
             alt="Avatar"
             width={700}

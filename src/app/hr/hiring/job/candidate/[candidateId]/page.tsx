@@ -13,6 +13,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ProceedToNextRoundButton from '../ProceedToNextRoundButton';
+import imageLoader from '../../../../../../../imageLoader';
 
 const Candidate = () => {
   const { candidateId } = useParams();
@@ -52,6 +53,7 @@ const Candidate = () => {
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-2 text-[22px] font-semibold">
           <Image
+            loader={imageLoader}
             width={300}
             height={150}
             src="/jobicon.png"

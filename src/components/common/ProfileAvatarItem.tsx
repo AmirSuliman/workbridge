@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { IMAGES } from '@/constants/images';
+import imageLoader from '../../../imageLoader';
 interface ProfileAvatarItemProps {
   src: string;
   title: string;
@@ -23,6 +24,7 @@ const ProfileAvatarItem: React.FC<ProfileAvatarItemProps> = ({
   return (
     <div className="flex  items-center p-0 gap-2">
       <Image
+        loader={imageLoader}
         src={imgSrc}
         alt={alt}
         width={500}

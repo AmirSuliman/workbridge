@@ -20,17 +20,6 @@ const JobOpeningReportingManagers = ({ errors, register }) => {
     fetchEmployees();
   }, []);
 
-  // useEffect(() => {
-  //   if (reportingManagerId && employees.length > 0) {
-  //     const matchedDepartment = employees.find(
-  //       (employee) => employee.id === reportingManagerId
-  //     );
-  //     if (matchedDepartment) {
-  //       resetField('reportingManagerId');
-  //     }
-  //   }
-  // }, [employees, reportingManagerId, resetField]);
-
   return (
     <>
       <select className="form-input" {...register('reportingToEmployeeId')}>
