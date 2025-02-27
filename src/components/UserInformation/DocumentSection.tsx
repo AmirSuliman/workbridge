@@ -94,15 +94,14 @@ const DocumentSection = ({
   useEffect(() => {
     setDocuments(employeeData?.documents ?? []);
   }, [employeeData]);
+
   const handleDocumentOpen = async (doc) => {
-    // Rename parameter to avoid shadowing the global document object
     const isEdge = window.navigator.userAgent.indexOf('Edg') > -1;
     const isOfficeDoc =
       doc.fileType.includes('openxmlformats-officedocument') ||
       doc.fileType === 'msword';
 
     if (isEdge && isOfficeDoc) {
-      // Now this correctly refers to the global document object
       const link = document.createElement('a');
       link.href = doc.url;
       link.setAttribute('download', doc.fileName);
