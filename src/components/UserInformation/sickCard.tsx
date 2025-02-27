@@ -65,7 +65,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
   const handleRequestVacation = async () => {
     const duration = calculateDuration();
     if (!startDate || !endDate || duration <= 0) {
-      alert('Please select valid dates.');
+      toast.error('Please select valid dates.');
       return;
     }
 
@@ -168,38 +168,37 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
 
             <div className="grid grid-cols-2 gap-4 w-full mt-8">
              
-              <label className="flex flex-col w-full">
-                              <span className="text-gray-400 text-[12px]">Leaving Date</span>
-                              <DatePicker
-                                selected={startDate}
-                                onChange={(date) => setStartDate(date)}
-                                selectsStart
-                                startDate={startDate}
-                                endDate={endDate}
-                                minDate={new Date()}
-                                dateFormat="dd/MM/yyyy"
-                                placeholderText="dd/mm/yyyy"
-                                className="p-3 border rounded w-full"
-                              />
-                            </label>
-                            <label className="flex flex-col w-full">
-                              <span className="text-gray-400 text-[12px]">
-                                Returning Date
-                              </span>
-                              <DatePicker
-                selected={endDate}
-                onChange={(date) => setEndDate(date)}
-                selectsEnd
-                startDate={startDate}
-                endDate={endDate}
-                minDate={startDate || new Date()} 
-                maxDate={startDate ? addDays(startDate, totalDays - 1) : undefined}
-                dateFormat="dd/MM/yyyy"
-                placeholderText="dd/mm/yyyy"
-                className="p-3 border rounded w-full"
-              />
-              
-                            </label>
+             <label className="flex flex-col w-full">
+               <span className="text-gray-400 text-[12px]">Leaving Date</span>
+               <DatePicker
+                 selected={startDate}
+                 onChange={(date) => setStartDate(date)}
+                 selectsStart
+                 startDate={startDate}
+                 endDate={endDate}
+                 minDate={new Date()}
+                 dateFormat="dd/MM/yyyy"
+                 placeholderText="dd/mm/yyyy"
+                 className="p-3 border rounded w-full"
+               />
+             </label>
+             
+             <label className="flex flex-col w-full">
+               <span className="text-gray-400 text-[12px]">Returning Date</span>
+               <DatePicker
+                 selected={endDate}
+                 onChange={(date) => setEndDate(date)}
+                 selectsEnd
+                 startDate={startDate}
+                 endDate={endDate}
+                 minDate={startDate || undefined} 
+                 maxDate={startDate ? addDays(startDate, totalDays - 1) : undefined}
+                 dateFormat="dd/MM/yyyy"
+                 placeholderText="dd/mm/yyyy"
+                 className="p-3 border rounded w-full"
+                 disabled={!startDate} // Disable when no Leaving Date is selected
+               />
+             </label>
               <label className="flex flex-col w-full col-span-full">
                 <span className="text-gray-400 text-[12px]">Note</span>
                 <textarea
