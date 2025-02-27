@@ -22,8 +22,6 @@ const WhosOut = () => {
         setLoading(true);
 
         const response = await axiosInstance.get('/timeoffs');
-        console.log('timeoffs: ', response.data);
-
         const fetchedTimeoffs = Array.isArray(response.data?.data?.items)
           ? response.data.data.items
           : [];

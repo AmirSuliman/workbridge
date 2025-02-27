@@ -12,7 +12,6 @@ export const JobCandidates = () => {
   const router = useRouter();
   const { jobId } = useParams();
   const { data } = useSelector((state: RootState) => state.jobApplications);
-  console.log('jobApplications: ', data);
   const [sortOption, setSortOption] = useState<string>('');
   const [aiReviewData, setAiReviewData] = useState<any[] | null>(null);
 
