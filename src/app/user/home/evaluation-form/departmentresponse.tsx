@@ -92,13 +92,16 @@ const DepartmentResponse = () => {
       );
       return true; // Valid input
     } catch (validationError) {
-      const newErrors = validationError.inner.reduce((acc, err) => {
-        acc[currentQuestionIndex] = {
-          ...acc[currentQuestionIndex],
-          [err.path]: err.message,
-        };
-        return acc;
-      }, {});
+      const newErrors = (validationError as yup.ValidationError).inner.reduce(
+        (acc, err) => {
+          acc[currentQuestionIndex] = {
+            ...acc[currentQuestionIndex],
+            [err.path ?? '']: err.message,
+          };
+          return acc;
+        },
+        {}
+      );
       setErrors(newErrors);
       return false; // Invalid input
     }
@@ -156,7 +159,11 @@ const DepartmentResponse = () => {
   }
 
   if (status !== 'In Progress') {
-    return <p className="text-center text-lg font-medium text-gray-600">Survey Completed</p>;
+    return (
+      <p className="text-center text-lg font-medium text-gray-600">
+        Survey Completed
+      </p>
+    );
   }
 
   return (
@@ -171,7 +178,9 @@ const DepartmentResponse = () => {
       {currentQuestion && (
         <label className="mt-4 flex flex-col">
           <span className="text-[16px] text-gray-400 mb-1">Question</span>
-          <div className="border p-3 rounded text-[18px]">{currentQuestion.question}</div>
+          <div className="border p-3 rounded text-[18px]">
+            {currentQuestion.question}
+          </div>
         </label>
       )}
 
@@ -186,11 +195,17 @@ const DepartmentResponse = () => {
                   className="border p-2 rounded w-full"
                   value={responses[currentQuestionIndex]?.responseText || ''}
                   onChange={(e) =>
-                    handleResponseChange(currentQuestionIndex, 'responseText', e.target.value)
+                    handleResponseChange(
+                      currentQuestionIndex,
+                      'responseText',
+                      e.target.value
+                    )
                   }
                 />
                 {errors[currentQuestionIndex]?.responseText && (
-                  <p className="text-red-500 text-sm">{errors[currentQuestionIndex]?.responseText}</p>
+                  <p className="text-red-500 text-sm">
+                    {errors[currentQuestionIndex]?.responseText}
+                  </p>
                 )}
               </>
             )}
@@ -200,7 +215,11 @@ const DepartmentResponse = () => {
                   className="border p-2 rounded w-full"
                   value={responses[currentQuestionIndex]?.rating || ''}
                   onChange={(e) =>
-                    handleResponseChange(currentQuestionIndex, 'rating', e.target.value)
+                    handleResponseChange(
+                      currentQuestionIndex,
+                      'rating',
+                      e.target.value
+                    )
                   }
                 >
                   <option value="">Select a rating</option>
@@ -211,7 +230,9 @@ const DepartmentResponse = () => {
                   ))}
                 </select>
                 {errors[currentQuestionIndex]?.rating && (
-                  <p className="text-red-500 text-sm">{errors[currentQuestionIndex]?.rating}</p>
+                  <p className="text-red-500 text-sm">
+                    {errors[currentQuestionIndex]?.rating}
+                  </p>
                 )}
               </>
             )}
@@ -220,10 +241,19 @@ const DepartmentResponse = () => {
       </label>
 
       <div className="flex flex-row items-center justify-end mt-32 gap-4">
-        <button type="button" className="text-[14px] p-2 border rounded px-4 bg-white" onClick={handlePreviousQuestion} disabled={currentQuestionIndex === 0}>
+        <button
+          type="button"
+          className="text-[14px] p-2 border rounded px-4 bg-white"
+          onClick={handlePreviousQuestion}
+          disabled={currentQuestionIndex === 0}
+        >
           Previous
         </button>
-        <button type="button" className="text-[14px] p-2 border rounded px-4 bg-white" onClick={handleNextQuestion}>
+        <button
+          type="button"
+          className="text-[14px] p-2 border rounded px-4 bg-white"
+          onClick={handleNextQuestion}
+        >
           Next
         </button>
         {currentQuestionIndex + 1 === questions.length && (
