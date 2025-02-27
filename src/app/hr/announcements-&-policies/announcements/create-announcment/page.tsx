@@ -1,19 +1,20 @@
 'use client';
-import CustomTextEditor from '@/components/CustomEditor/CustomTextEditor';
+import CreateAnnouncementTextEditor from '@/components/CustomEditor/CreateAnnouncementTextEditor';
 import axiosInstance from '@/lib/axios';
+import { announcementSchema } from '@/schemas/announcementSchema';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { FaEdit } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-import { announcementSchema } from '@/schemas/announcementSchema';
 
 // Define Zod schema for validation
 
 const CreateAnnouncement = () => {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
+  const [announcementType, setAnnouncementType] = useState('');
   const [, setStatus] = useState('Draft');
   const [body, setBody] = useState('');
   const [errors, setErrors] = useState<{ title?: string; body?: string }>({});
@@ -149,7 +150,11 @@ const CreateAnnouncement = () => {
               )}
             </div>
             <div className="w-full h-[1px] bg-gray-300 mb-2" />
-            <CustomTextEditor setContent={setBody} body={body} />
+            <CreateAnnouncementTextEditor
+              setAnnouncementType={setAnnouncementType}
+              setContent={setBody}
+              body={body}
+            />
             {errors.body && (
               <p className="text-red-500 text-sm mt-2 px-8">{errors.body}</p>
             )}
