@@ -60,12 +60,16 @@ const DepartmentResponse = () => {
         rating: responses[index]?.rating || null,
       })),
     };
-
+  
     try {
       await axiosInstance.post(`/survey/response/department`, payload, {
         headers: { Authorization: `Bearer ${session?.user?.accessToken}` },
       });
       toast.success('Evaluation successful!');
+  
+      // Reset the form state
+      setResponses({});
+      setCurrentQuestionIndex(0);
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         toast.error(error.response.data.message || 'Some error occurred');
@@ -74,7 +78,7 @@ const DepartmentResponse = () => {
       }
     }
   };
-
+  
   const handleNextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -129,6 +133,7 @@ const DepartmentResponse = () => {
                   handleResponseChange(currentQuestionIndex, 'rating', e.target.value)
                 }
               >
+                 <option value="">Select a rating</option>
                 {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((value) => (
                   <option key={value} value={value}>
                     {value}

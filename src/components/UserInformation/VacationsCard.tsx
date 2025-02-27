@@ -178,7 +178,6 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
                   startDate={startDate}
                   endDate={endDate}
                   minDate={new Date()}
-                  maxDate={addDays(new Date(), totalDays - 1)}
                   dateFormat="dd/MM/yyyy"
                   placeholderText="dd/mm/yyyy"
                   className="p-3 border rounded w-full"
@@ -189,17 +188,18 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
                   Returning Date
                 </span>
                 <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                  minDate={startDate || new Date()}
-                  maxDate={addDays(new Date(), totalDays - 1)}
-                  dateFormat="dd/MM/yyyy"
-                  placeholderText="dd/mm/yyyy"
-                  className="p-3 border rounded w-full"
-                />
+  selected={endDate}
+  onChange={(date) => setEndDate(date)}
+  selectsEnd
+  startDate={startDate}
+  endDate={endDate}
+  minDate={startDate || new Date()} // Ensure returning date is not before leaving date
+  maxDate={startDate ? addDays(startDate, totalDays - 1) : undefined}
+  dateFormat="dd/MM/yyyy"
+  placeholderText="dd/mm/yyyy"
+  className="p-3 border rounded w-full"
+/>
+
               </label>
               <label className="flex flex-col w-full col-span-full">
                 <span className="text-gray-400 text-[12px]">Note</span>
