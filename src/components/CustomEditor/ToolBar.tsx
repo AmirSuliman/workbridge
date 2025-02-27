@@ -1,4 +1,11 @@
-import { FaBold, FaItalic, FaRedo, FaUndo } from 'react-icons/fa';
+import {
+  FaBold,
+  FaItalic,
+  FaListOl,
+  FaListUl,
+  FaRedo,
+  FaUndo,
+} from 'react-icons/fa';
 import { GrTextAlignCenter, GrTextAlignLeft } from 'react-icons/gr';
 import { LuAlignJustify } from 'react-icons/lu';
 import { MdLink, MdLinkOff } from 'react-icons/md';
@@ -92,6 +99,32 @@ const ToolBar: React.FC<ToolBarProps> = ({ editor }) => {
         }`}
       >
         <LuAlignJustify size={14} />
+      </button>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          editor.chain().focus().toggleBulletList().run();
+        }}
+        className={`px-3 py-1 grow-0 shrink-0 ${
+          editor.isActive('bulletList')
+            ? 'bg-blue-500 text-white'
+            : 'hover:bg-gray-300'
+        }`}
+      >
+        <FaListUl size={14} />
+      </button>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          editor.chain().focus().toggleOrderedList().run();
+        }}
+        className={`px-3 py-1 grow-0 shrink-0 ${
+          editor.isActive('orderedList')
+            ? 'bg-blue-500 text-white'
+            : 'hover:bg-gray-300'
+        }`}
+      >
+        <FaListOl size={14} />
       </button>
       <button
         onClick={setLink}

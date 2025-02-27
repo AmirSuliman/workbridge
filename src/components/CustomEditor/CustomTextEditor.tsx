@@ -5,7 +5,9 @@ import Link from '@tiptap/extension-link';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
-
+import BulletList from '@tiptap/extension-bullet-list';
+import OrderedList from '@tiptap/extension-ordered-list';
+import ListItem from '@tiptap/extension-list-item';
 import { EditorContent, useEditor } from '@tiptap/react';
 
 const CustomTextEditor = ({
@@ -20,6 +22,9 @@ const CustomTextEditor = ({
     extensions: [
       StarterKit,
       Underline,
+      BulletList,
+      OrderedList,
+      ListItem,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
       }),
@@ -34,13 +39,12 @@ const CustomTextEditor = ({
     ],
     content: body,
     onUpdate: ({ editor }) => {
-      setContent(editor.getHTML()); 
-    }
-    
+      setContent(editor.getHTML());
+    },
   });
 
   if (!editor) {
-    return null; 
+    return null;
   }
 
   return (
@@ -48,10 +52,7 @@ const CustomTextEditor = ({
       {/* Toolbar */}
       <ToolBar editor={editor} />
       {/* Editor */}
-      <EditorContent
-        editor={editor}
-        className="p-8 bg-white rounded-lg border"
-      />
+      <EditorContent editor={editor} className="bg-white rounded-lg border" />
     </div>
   );
 };

@@ -133,12 +133,12 @@ const CreateAnnouncement = () => {
       ) : (
         <div>
           <div className="bg-white rounded-lg border">
-            <div className="flex flex-col p-8">
+            <div className="flex flex-col p-4">
               <label className="text-[#0F172A] text-[14px] p-2">Title</label>
               <input
                 type="text"
                 placeholder="Add a title for your post"
-                className={`p-3 w-full border rounded-lg text-black ${
+                className={`outline-none p-3 w-full border rounded text-[20px] font-medium text-[#0D1322] ${
                   errors.title ? 'border-red-500' : ''
                 }`}
                 value={title}

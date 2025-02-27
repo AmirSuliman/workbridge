@@ -1,17 +1,13 @@
 'use client';
-import { FaTrash } from 'react-icons/fa';
-import { GoPlusCircle } from 'react-icons/go';
+import mammoth from 'mammoth';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import Modal from '../modal';
-import FileIcon from '../icons/file-icon';
+import { GoPlusCircle } from 'react-icons/go';
+import { pdfjs } from 'react-pdf';
+import DeleteDocumentModal from './DeleteDocumentModal';
 import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import UploadDocumentModal from './UploadDocumentModal';
-import DeleteDocumentModal from './DeleteDocumentModal';
-import { Document, Page, pdfjs } from 'react-pdf';
-import mammoth from 'mammoth';
-import Image from 'next/image';
-import imageLoader from '../../../imageLoader';
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 interface DocumentType {
@@ -98,23 +94,31 @@ const DocumentSection = ({
   useEffect(() => {
     setDocuments(employeeData?.documents ?? []);
   }, [employeeData]);
+  const handleDocumentOpen = async (doc) => {
+    // Rename parameter to avoid shadowing the global document object
+    const isEdge = window.navigator.userAgent.indexOf('Edg') > -1;
+    const isOfficeDoc =
+      doc.fileType.includes('openxmlformats-officedocument') ||
+      doc.fileType === 'msword';
 
-  const handleDocumentOpen = async (document) => {
-    window.open(document.url, '_blank');
+    if (isEdge && isOfficeDoc) {
+      // Now this correctly refers to the global document object
+      const link = document.createElement('a');
+      link.href = doc.url;
+      link.setAttribute('download', doc.fileName);
+      link.setAttribute('target', '_self');
+      link.click();
+    } else {
+      window.open(doc.url, '_blank');
+    }
 
-    setSelectedDocument(document);
+    setSelectedDocument(doc);
     setOpenDocumentModal(true);
     setIsLoading(true);
 
-    console.log('Document fileType:', document.fileType);
-    console.log('Document fileUrl:', document.url);
-
-    if (
-      document.fileType === 'application/pdf' ||
-      document.fileType === 'pdf'
-    ) {
+    if (doc.fileType === 'application/pdf' || doc.fileType === 'pdf') {
       try {
-        const response = await fetch(document.url);
+        const response = await fetch(doc.url);
         if (!response.ok)
           throw new Error(`PDF not found, status code: ${response.status}`);
         console.log('PDF fetched successfully');
@@ -130,11 +134,11 @@ const DocumentSection = ({
         setIsLoading(false);
       }
     } else if (
-      document.fileType ===
+      doc.fileType ===
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     ) {
       try {
-        const arrayBuffer = await fetch(document.url).then((res) =>
+        const arrayBuffer = await fetch(doc.url).then((res) =>
           res.arrayBuffer()
         );
         const result = await mammoth.convertToHtml({ arrayBuffer });
@@ -149,7 +153,7 @@ const DocumentSection = ({
       setDocumentContent(
         'This file type is not supported for content preview.'
       );
-      console.log('Unsupported file type:', document.fileType);
+      console.log('Unsupported file type:', doc.fileType);
       setIsLoading(false);
     }
   };
@@ -235,56 +239,6 @@ const DocumentSection = ({
           onDocumentDelete={handleDocumentDelete}
         />
       )}
-
-      {/*{openDocumentModal && selectedDocument && (
-  <Modal onClose={() => setOpenDocumentModal(false)}>
-    <div className="p-5">
-      <h2 className="text-xl font-semibold">{selectedDocument.fileName}</h2>
-      
-      {isLoading ? (
-        <div>Loading document...</div>
-      ) : error ? (
-        <div className="text-red-500">{error}</div>
-      ) : selectedDocument.fileType === 'application/pdf' ? (
-        <div className="flex flex-col items-center">
-          <Document
-            file={{ url: selectedDocument.url }}
-            onLoadSuccess={({ numPages }) => {
-              console.log("PDF Loaded. Pages:", numPages);
-              setNumPages(numPages);
-              setPdfPageNumber(1);
-            }}
-            onLoadError={(error) => {
-              console.error("Error loading PDF:", error);
-              setError(`Error loading PDF: ${error.message}`);
-            }}
-          >
-            <Page pageNumber={pdfPageNumber} />
-          </Document>
-          <div className="mt-3 flex gap-2">
-            <button
-              onClick={() => setPdfPageNumber((prev) => Math.max(prev - 1, 1))}
-              disabled={pdfPageNumber <= 1}
-              className="p-2 bg-gray-300 rounded"
-            >
-              Previous
-            </button>
-            <span>Page {pdfPageNumber} / {numPages}</span>
-            <button
-              onClick={() => setPdfPageNumber((prev) => Math.min(prev + 1, numPages))}
-              disabled={pdfPageNumber >= numPages}
-              className="p-2 bg-gray-300 rounded"
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="mt-4" dangerouslySetInnerHTML={{ __html: documentContent }} />
-      )}
-    </div>
-  </Modal>
-)}  */}
     </div>
   );
 };
