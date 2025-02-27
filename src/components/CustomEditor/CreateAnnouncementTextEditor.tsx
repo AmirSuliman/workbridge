@@ -1,14 +1,13 @@
 'use client';
 
-import ToolBar from './ToolBar';
-import Link from '@tiptap/extension-link';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
 import BulletList from '@tiptap/extension-bullet-list';
-import OrderedList from '@tiptap/extension-ordered-list';
+import Link from '@tiptap/extension-link';
 import ListItem from '@tiptap/extension-list-item';
+import OrderedList from '@tiptap/extension-ordered-list';
+import TextAlign from '@tiptap/extension-text-align';
+import Underline from '@tiptap/extension-underline';
 import { EditorContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 import CreateAnnouncementToolBar from './CreateAnnouncementToolBar';
 
 const CreateAnnouncementTextEditor = ({
@@ -16,8 +15,9 @@ const CreateAnnouncementTextEditor = ({
   setContent,
   setAnnouncementType,
 }: {
-  setContent: (content: string) => void;
   body: string;
+  setContent: (content: string) => void;
+  setAnnouncementType: (type: string) => void;
 }) => {
   const editor = useEditor({
     immediatelyRender: false,

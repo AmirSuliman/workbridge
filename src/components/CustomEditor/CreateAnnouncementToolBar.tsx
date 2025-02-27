@@ -15,6 +15,7 @@ import Image from 'next/image';
 
 interface ToolBarProps {
   editor: Editor; // Define the editor prop type
+  setAnnouncementType: (type: string) => void;
 }
 
 const CreateAnnouncementToolBar: React.FC<ToolBarProps> = ({
