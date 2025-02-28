@@ -15,7 +15,9 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [responses, setResponses] = useState({});
   const { data: session } = useSession();
-  const [validationSchema, setValidationSchema] = useState(yup.object().shape({}));
+  const [validationSchema, setValidationSchema] = useState(
+    yup.object().shape({})
+  );
 
   useEffect(() => {
     const getQuestions = async () => {
@@ -26,15 +28,21 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
         setQuestions(response.data.data.questions);
 
         // Dynamically create validation schema
-        const schema: Record<string, yup.AnySchema> = response.data.data.questions.reduce((acc, question) => {
-          if (question.responseType === 'Text') {
-            acc[`responseText_${question.id}`] = yup.string().trim().required('This field is required');
-          } else if (question.responseType === 'Rating') {
-            acc[`rating_${question.id}`] = yup.number().nullable().required('Please select a rating');
-          }
-          return acc;
-        }, {});
-        
+        const schema: Record<string, yup.AnySchema> =
+          response.data.data.questions.reduce((acc, question) => {
+            if (question.responseType === 'Text') {
+              acc[`responseText_${question.id}`] = yup
+                .string()
+                .trim()
+                .required('This field is required');
+            } else if (question.responseType === 'Rating') {
+              acc[`rating_${question.id}`] = yup
+                .number()
+                .nullable()
+                .required('Please select a rating');
+            }
+            return acc;
+          }, {});
 
         setValidationSchema(yup.object().shape(schema));
       } catch (error) {
@@ -47,7 +55,7 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
   type FormValues = {
     [key: string]: string | number | null;
   };
-  
+
   const {
     control,
     handleSubmit,
@@ -55,12 +63,11 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
     getValues,
     reset,
     formState: { errors, isSubmitting },
-    trigger,  // <-- Add this here
+    trigger, // <-- Add this here
   } = useForm<FormValues>({
     resolver: yupResolver(validationSchema),
     mode: 'onBlur',
   });
-  
 
   // Handle input changes and update responses state
   const handleInputChange = (questionId, value) => {
@@ -81,7 +88,7 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
         rating: responses[`rating_${question.id}`] || null,
       })),
     };
-  
+
     try {
       await axiosInstance.post(`/survey/response`, payload, {
         headers: { Authorization: `Bearer ${session?.user?.accessToken}` },
@@ -89,7 +96,7 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
       toast.success('Evaluation successful!');
       setIsSubmitted(true);
       onSurveyUpdate('Completed');
-  
+
       // Reset form and clear responses state
       reset();
       setResponses({});
@@ -102,13 +109,14 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
       }
     }
   };
-  
 
   return (
     <div className="mt-2 w-full">
       {isSubmitted ? (
         <div className="text-center p-6 border rounded-lg shadow-md">
-          <h2 className="text-lg font-semibold">Survey Submitted Successfully</h2>
+          <h2 className="text-lg font-semibold">
+            Survey Submitted Successfully
+          </h2>
           <p className="text-gray-500">Thank you for completing the survey!</p>
         </div>
       ) : (
@@ -136,22 +144,39 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
                     <Controller
                       name={`responseText_${questions[currentQuestionIndex].id}`}
                       control={control}
-                      defaultValue={responses[`responseText_${questions[currentQuestionIndex].id}`] || ""}
+                      defaultValue={
+                        responses[
+                          `responseText_${questions[currentQuestionIndex].id}`
+                        ] || ''
+                      }
                       render={({ field }) => (
                         <>
                           <input
                             type="text"
                             className="border p-2 rounded w-full"
                             {...field}
-                            value={responses[`responseText_${questions[currentQuestionIndex].id}`] || ""}
+                            value={
+                              responses[
+                                `responseText_${questions[currentQuestionIndex].id}`
+                              ] || ''
+                            }
                             onChange={(e) => {
                               field.onChange(e);
-                              handleInputChange(`responseText_${questions[currentQuestionIndex].id}`, e.target.value);
+                              handleInputChange(
+                                `responseText_${questions[currentQuestionIndex].id}`,
+                                e.target.value
+                              );
                             }}
                           />
-                          {errors[`responseText_${questions[currentQuestionIndex].id}`] && (
+                          {errors[
+                            `responseText_${questions[currentQuestionIndex].id}`
+                          ] && (
                             <p className="text-red-500 text-sm">
-                              {errors[`responseText_${questions[currentQuestionIndex].id}`]?.message}
+                              {
+                                errors[
+                                  `responseText_${questions[currentQuestionIndex].id}`
+                                ]?.message
+                              }
                             </p>
                           )}
                         </>
@@ -159,40 +184,55 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
                     />
                   )}
 
-{questions[currentQuestionIndex].responseType === 'Rating' && (
-  <Controller
-    name={`rating_${questions[currentQuestionIndex].id}`}
-    control={control}
-    defaultValue={responses[`rating_${questions[currentQuestionIndex].id}`] || null}
-    render={({ field }) => (
-      <>
-        <select
-          className="border p-2 rounded w-full"
-          {...field}
-          value={field.value ?? ""}
-          onChange={(e) => {
-            const value = e.target.value ? parseFloat(e.target.value) : null;
-            field.onChange(value);
-            handleInputChange(`rating_${questions[currentQuestionIndex].id}`, value);
-          }}
-        >
-          <option value="">Select a rating</option>
-          {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((value) => (
-            <option key={value} value={value}>
-              {value}
-            </option>
-          ))}
-        </select>
-        {errors[`rating_${questions[currentQuestionIndex].id}`] && (
-          <p className="text-red-500 text-sm">
-            {errors[`rating_${questions[currentQuestionIndex].id}`]?.message || 'Please select a rating'}
-          </p>
-        )}
-      </>
-    )}
-  />
-)}
-
+                  {questions[currentQuestionIndex].responseType ===
+                    'Rating' && (
+                    <Controller
+                      name={`rating_${questions[currentQuestionIndex].id}`}
+                      control={control}
+                      defaultValue={
+                        responses[
+                          `rating_${questions[currentQuestionIndex].id}`
+                        ] || null
+                      }
+                      render={({ field }) => (
+                        <>
+                          <select
+                            className="border p-2 rounded w-full"
+                            {...field}
+                            value={field.value ?? ''}
+                            onChange={(e) => {
+                              const value = e.target.value
+                                ? parseFloat(e.target.value)
+                                : null;
+                              field.onChange(value);
+                              handleInputChange(
+                                `rating_${questions[currentQuestionIndex].id}`,
+                                value
+                              );
+                            }}
+                          >
+                            <option value="">Select a rating</option>
+                            {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(
+                              (value) => (
+                                <option key={value} value={value}>
+                                  {value}
+                                </option>
+                              )
+                            )}
+                          </select>
+                          {errors[
+                            `rating_${questions[currentQuestionIndex].id}`
+                          ] && (
+                            <p className="text-red-500 text-sm">
+                              {errors[
+                                `rating_${questions[currentQuestionIndex].id}`
+                              ]?.message || 'Please select a rating'}
+                            </p>
+                          )}
+                        </>
+                      )}
+                    />
+                  )}
                 </div>
               </label>
             </>
@@ -202,40 +242,47 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
             <button
               type="button"
               className="text-[14px] p-2 border rounded px-4 bg-white"
-              onClick={() => setCurrentQuestionIndex((prev) => Math.max(0, prev - 1))}
+              onClick={() =>
+                setCurrentQuestionIndex((prev) => Math.max(0, prev - 1))
+              }
               disabled={currentQuestionIndex === 0}
             >
               Previous
             </button>
 
             <button
-  type="button"
-  className="text-[14px] p-2 border rounded px-4 bg-white"
-  onClick={async () => {
-    const question = questions[currentQuestionIndex];
-    const responseKey = question.responseType === 'Text' 
-      ? `responseText_${question.id}` 
-      : `rating_${question.id}`;
+              type="button"
+              className="text-[14px] p-2 border rounded px-4 bg-white"
+              onClick={async () => {
+                const question = questions[currentQuestionIndex];
+                const responseKey =
+                  question.responseType === 'Text'
+                    ? `responseText_${question.id}`
+                    : `rating_${question.id}`;
 
-    const isValid = await trigger(responseKey); 
+                const isValid = await trigger(responseKey);
 
-    if (isValid) {
-      setCurrentQuestionIndex((prev) => Math.min(questions.length - 1, prev + 1));
-    }
-  }}
-  disabled={currentQuestionIndex === questions.length - 1}
->
-  Next
-</button>
-
-
+                if (isValid) {
+                  setCurrentQuestionIndex((prev) =>
+                    Math.min(questions.length - 1, prev + 1)
+                  );
+                }
+              }}
+              disabled={currentQuestionIndex === questions.length - 1}
+            >
+              Next
+            </button>
 
             {currentQuestionIndex + 1 === questions.length && (
               <Button
                 disabled={isSubmitting}
                 onClick={handleSubmit(onSubmit)}
                 name={isSubmitting ? '' : 'Submit'}
-                icon={isSubmitting && <BiLoaderCircle className="h-5 w-5 animate-spin" />}
+                icon={
+                  isSubmitting && (
+                    <BiLoaderCircle className="h-5 w-5 animate-spin" />
+                  )
+                }
               />
             )}
           </div>

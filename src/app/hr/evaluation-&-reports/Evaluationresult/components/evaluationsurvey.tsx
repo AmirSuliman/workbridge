@@ -68,16 +68,15 @@ const Evaluationsurvey = () => {
               <div className="p-3 w-full border rounded text-[14px]">
                 {survey?.managers?.[0]?.department?.name || 'N/A'}
               </div>
-
             </label>
             <label className="flex flex-col gap-1 w-full ">
               <span className="text-gray-400 text-[14px]">
                 Employee/Manager
               </span>
               <div className="p-3 w-full border rounded text-[14px]">
-                {`${survey?.managers?.[0]?.firstName} ${survey?.managers?.[0]?.lastName}` || 'N/A'}
+                {`${survey?.managers?.[0]?.firstName} ${survey?.managers?.[0]?.lastName}` ||
+                  'N/A'}
               </div>
-              
             </label>
           </div>
         </>
