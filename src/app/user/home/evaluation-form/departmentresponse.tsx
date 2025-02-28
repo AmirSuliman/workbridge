@@ -4,9 +4,9 @@ import { isAxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { BiLoaderCircle } from 'react-icons/bi';
 import { useSearchParams } from 'next/navigation';
 import * as yup from 'yup';
+import { useRouter } from 'next/navigation';
 
 const DepartmentResponse = () => {
   const [questions, setQuestions] = useState<any[]>([]);
@@ -16,7 +16,8 @@ const DepartmentResponse = () => {
   const [departmentHeadId, setDepartmentHeadId] = useState(null);
   const [responses, setResponses] = useState({});
   const [status, setStatus] = useState<string | null>(null);
-  const [errors, setErrors] = useState({}); // Track validation errors
+  const [errors, setErrors] = useState({});
+  const router = useRouter(); // Initialize the router
 
   const searchParams = useSearchParams();
   const surveyId = searchParams.get('survey');
@@ -40,7 +41,7 @@ const DepartmentResponse = () => {
           setQuestions(surveyData.questions);
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
     getSurveyDetails();
@@ -52,10 +53,13 @@ const DepartmentResponse = () => {
       is: 'Text',
       then: (schema) => schema.required('This field is required'),
     }),
-    rating: yup.number().when('responseType', {
-      is: 'Rating',
-      then: (schema) => schema.required('Please select a rating'),
-    }),
+    rating: yup
+      .number()
+      .nullable()
+      .when('responseType', {
+        is: 'Rating',
+        then: (schema) => schema.required('Please select a rating'),
+      }),
   });
 
   const handleResponseChange = (index, type, value) => {
@@ -63,11 +67,11 @@ const DepartmentResponse = () => {
       ...prevResponses,
       [index]: {
         ...prevResponses[index],
-        [type]: value,
+        [type]: type === 'rating' ? parseFloat(value) || null : value,
       },
     }));
 
-    // Remove error when user starts typing/selecting
+    // Clear error when user starts selecting
     setErrors((prevErrors) => ({
       ...prevErrors,
       [index]: {
@@ -79,7 +83,7 @@ const DepartmentResponse = () => {
 
   const validateCurrentQuestion = async () => {
     const currentQuestion = questions[currentQuestionIndex];
-    if (!currentQuestion) return true; // No question to validate
+    if (!currentQuestion) return true;
 
     try {
       await validationSchema.validate(
@@ -90,7 +94,7 @@ const DepartmentResponse = () => {
         },
         { abortEarly: false }
       );
-      return true; // Valid input
+      return true;
     } catch (validationError) {
       const newErrors = (validationError as yup.ValidationError).inner.reduce(
         (acc, err) => {
@@ -103,14 +107,20 @@ const DepartmentResponse = () => {
         {}
       );
       setErrors(newErrors);
-      return false; // Invalid input
+      return false;
     }
   };
 
   const handleNextQuestion = async () => {
     const isValid = await validateCurrentQuestion();
     if (isValid && currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+    }
+  };
+
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex((prevIndex) => prevIndex - 1);
     }
   };
 
@@ -134,9 +144,9 @@ const DepartmentResponse = () => {
         headers: { Authorization: `Bearer ${session?.user?.accessToken}` },
       });
       toast.success('Evaluation successful!');
-
       setResponses({});
       setCurrentQuestionIndex(0);
+      router.push('/user/home'); // Redirect user after submission
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         toast.error(error.response.data.message || 'Some error occurred');
@@ -145,26 +155,19 @@ const DepartmentResponse = () => {
       }
     }
   };
-
-  const handlePreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-  };
-
-  const currentQuestion = questions[currentQuestionIndex];
-
   if (status === null) {
     return <p>Loading...</p>;
   }
 
   if (status !== 'In Progress') {
     return (
-      <p className="text-center text-lg font-medium text-gray-600">
+      <p className="text-center text-lg font-bold text-green-500 items-center justify-center">
         Survey Completed
       </p>
     );
   }
+
+  const currentQuestion = questions[currentQuestionIndex];
 
   return (
     <div className="mt-2 w-full">
@@ -242,7 +245,6 @@ const DepartmentResponse = () => {
 
       <div className="flex flex-row items-center justify-end mt-32 gap-4">
         <button
-          type="button"
           className="text-[14px] p-2 border rounded px-4 bg-white"
           onClick={handlePreviousQuestion}
           disabled={currentQuestionIndex === 0}
@@ -250,14 +252,13 @@ const DepartmentResponse = () => {
           Previous
         </button>
         <button
-          type="button"
           className="text-[14px] p-2 border rounded px-4 bg-white"
           onClick={handleNextQuestion}
         >
           Next
         </button>
         {currentQuestionIndex + 1 === questions.length && (
-          <Button disabled={false} onClick={onSubmit} name={'Submit'} />
+          <Button onClick={onSubmit} name="Submit" />
         )}
       </div>
     </div>

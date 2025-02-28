@@ -44,11 +44,7 @@ export default function DashboardLayout({
       icon: <EmployeesIcon classNames="w-4" />,
       path: '/user/employees',
     },
-    {
-      label: 'Files',
-      icon: <FileIcon classNames="w-4" />,
-      path: '/user/files',
-    },
+   
     ...(isManager
       ? [
           {

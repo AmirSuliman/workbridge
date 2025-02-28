@@ -82,7 +82,7 @@ const CreateEvaluation = () => {
       ...question,
       responseType: question.responseType ? 'text' : 'Rating',
     }));
-
+  
     const type = managerIds.length > 0 ? 'Manager' : 'Department';
     const payload = {
       sendBy: employeeId?.employeeId || null,
@@ -95,30 +95,34 @@ const CreateEvaluation = () => {
       employeeId: data.reportingManagerId,
       managerIds: managerIds.length > 0 ? managerIds : null,
     };
-
+  
     try {
       setLoading(true);
       const response = await axiosInstance.post('/survey/', payload);
       console.log('Survey Created Response:', response.data);
+  
       // Always send the survey if status is 'In Progress'
       const surveyId = response.data?.data?.survey?.id;
-      console.log('Extracted Survey ID:', surveyId);
       if (surveyId && status === 'In Progress') {
-        console.log('Survey ID:', surveyId);
         const sendPayload = {
           surveyId: surveyId,
           departmentIds: departmentIds.length > 0 ? departmentIds : null,
           managerIds: managerIds.length > 0 ? managerIds : null,
         };
-
+  
         await axiosInstance.post('/survey/send/', sendPayload);
       }
-
+  
       setLoading(false);
       toast.success(
         `${status === 'Draft' ? 'Draft saved' : 'Survey sent'} successfully!`
       );
-      reset();
+  
+      // Reset form fields
+      reset(); // Clears the form inputs
+      setDepartmentIds([]); // Clear department selection
+      setManagerIds([]); // Clear manager selection
+      setIsEvaluativeReportingEmployee(false); // Reset checkbox
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -129,6 +133,7 @@ const CreateEvaluation = () => {
       }
     }
   };
+  
 
   return (
     <form>

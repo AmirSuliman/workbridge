@@ -55,6 +55,7 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
     getValues,
     reset,
     formState: { errors, isSubmitting },
+    trigger,  // <-- Add this here
   } = useForm<FormValues>({
     resolver: yupResolver(validationSchema),
     mode: 'onBlur',
@@ -158,39 +159,40 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
                     />
                   )}
 
-                  {questions[currentQuestionIndex].responseType === 'Rating' && (
-                    <Controller
-                      name={`rating_${questions[currentQuestionIndex].id}`}
-                      control={control}
-                      defaultValue={responses[`rating_${questions[currentQuestionIndex].id}`] || ""}
-                      render={({ field }) => (
-                        <>
-                          <select
-                            className="border p-2 rounded w-full"
-                            {...field}
-                            value={responses[`rating_${questions[currentQuestionIndex].id}`] || ""}
-                            onChange={(e) => {
-                              const value = e.target.value ? parseFloat(e.target.value) : "";
-                              field.onChange(value);
-                              handleInputChange(`rating_${questions[currentQuestionIndex].id}`, value);
-                            }}
-                          >
-                            <option value="">Select a rating</option>
-                            {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((value) => (
-                              <option key={value} value={value}>
-                                {value}
-                              </option>
-                            ))}
-                          </select>
-                          {errors[`rating_${questions[currentQuestionIndex].id}`] && (
-                            <p className="text-red-500 text-sm">
-                              {errors[`rating_${questions[currentQuestionIndex].id}`]?.message}
-                            </p>
-                          )}
-                        </>
-                      )}
-                    />
-                  )}
+{questions[currentQuestionIndex].responseType === 'Rating' && (
+  <Controller
+    name={`rating_${questions[currentQuestionIndex].id}`}
+    control={control}
+    defaultValue={responses[`rating_${questions[currentQuestionIndex].id}`] || null}
+    render={({ field }) => (
+      <>
+        <select
+          className="border p-2 rounded w-full"
+          {...field}
+          value={field.value ?? ""}
+          onChange={(e) => {
+            const value = e.target.value ? parseFloat(e.target.value) : null;
+            field.onChange(value);
+            handleInputChange(`rating_${questions[currentQuestionIndex].id}`, value);
+          }}
+        >
+          <option value="">Select a rating</option>
+          {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((value) => (
+            <option key={value} value={value}>
+              {value}
+            </option>
+          ))}
+        </select>
+        {errors[`rating_${questions[currentQuestionIndex].id}`] && (
+          <p className="text-red-500 text-sm">
+            {errors[`rating_${questions[currentQuestionIndex].id}`]?.message || 'Please select a rating'}
+          </p>
+        )}
+      </>
+    )}
+  />
+)}
+
                 </div>
               </label>
             </>
@@ -207,13 +209,26 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
             </button>
 
             <button
-              type="button"
-              className="text-[14px] p-2 border rounded px-4 bg-white"
-              onClick={() => setCurrentQuestionIndex((prev) => Math.min(questions.length - 1, prev + 1))}
-              disabled={currentQuestionIndex === questions.length - 1}
-            >
-              Next
-            </button>
+  type="button"
+  className="text-[14px] p-2 border rounded px-4 bg-white"
+  onClick={async () => {
+    const question = questions[currentQuestionIndex];
+    const responseKey = question.responseType === 'Text' 
+      ? `responseText_${question.id}` 
+      : `rating_${question.id}`;
+
+    const isValid = await trigger(responseKey); 
+
+    if (isValid) {
+      setCurrentQuestionIndex((prev) => Math.min(questions.length - 1, prev + 1));
+    }
+  }}
+  disabled={currentQuestionIndex === questions.length - 1}
+>
+  Next
+</button>
+
+
 
             {currentQuestionIndex + 1 === questions.length && (
               <Button
