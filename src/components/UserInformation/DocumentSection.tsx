@@ -1,17 +1,17 @@
 'use client';
-import { FaTrash } from 'react-icons/fa';
-import { GoPlusCircle } from 'react-icons/go';
+import mammoth from 'mammoth';
+import { getSession } from 'next-auth/react';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import Modal from '../modal';
-import FileIcon from '../icons/file-icon';
+import { GoPlusCircle } from 'react-icons/go';
+import { pdfjs } from 'react-pdf';
+import DeleteDocumentModal from './DeleteDocumentModal';
 import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import UploadDocumentModal from './UploadDocumentModal';
-import DeleteDocumentModal from './DeleteDocumentModal';
-import { Document, Page, pdfjs } from 'react-pdf';
-import mammoth from 'mammoth';
-import Image from 'next/image';
-import imageLoader from '../../../imageLoader';
+import { InnerUser } from '@/types/next-auth';
+import { useParams } from 'next/navigation';
+
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 interface DocumentType {
@@ -23,6 +23,26 @@ interface DocumentType {
   EmployeeDocument?: {
     createdAt?: string;
   };
+}
+
+interface Session {
+  user: {
+    active: boolean;
+    email: string;
+    firstName: string;
+    id: number;
+    lastName: string;
+    permissions: string[];
+    profilePictureUrl: string;
+    role: string;
+    roleId: number;
+    userId: string;
+    employeeId: number;
+    accessToken: string;
+    user: InnerUser; // ⚠️ Nested duplicate user type
+  };
+  accessToken: string;
+  expires: string;
 }
 
 interface EmployeeDataType {
@@ -73,6 +93,19 @@ const DocumentSection = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const [role, setRole] = useState<string>();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setRole(session?.user?.role);
+    };
+    fetchSession();
+  }, []);
+
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
+  const { empId } = useParams();
+
   const handleDocumentDelete = (deletedDocumentId: number) => {
     setDocuments((prevDocuments) =>
       prevDocuments.filter((document) => document.id !== deletedDocumentId)
@@ -99,22 +132,29 @@ const DocumentSection = ({
     setDocuments(employeeData?.documents ?? []);
   }, [employeeData]);
 
-  const handleDocumentOpen = async (document) => {
-    window.open(document.url, '_blank');
+  const handleDocumentOpen = async (doc) => {
+    const isEdge = window.navigator.userAgent.indexOf('Edg') > -1;
+    const isOfficeDoc =
+      doc.fileType.includes('openxmlformats-officedocument') ||
+      doc.fileType === 'msword';
 
-    setSelectedDocument(document);
+    if (isEdge && isOfficeDoc) {
+      const link = document.createElement('a');
+      link.href = doc.url;
+      link.setAttribute('download', doc.fileName);
+      link.setAttribute('target', '_self');
+      link.click();
+    } else {
+      window.open(doc.url, '_blank');
+    }
+
+    setSelectedDocument(doc);
     setOpenDocumentModal(true);
     setIsLoading(true);
 
-    console.log('Document fileType:', document.fileType);
-    console.log('Document fileUrl:', document.url);
-
-    if (
-      document.fileType === 'application/pdf' ||
-      document.fileType === 'pdf'
-    ) {
+    if (doc.fileType === 'application/pdf' || doc.fileType === 'pdf') {
       try {
-        const response = await fetch(document.url);
+        const response = await fetch(doc.url);
         if (!response.ok)
           throw new Error(`PDF not found, status code: ${response.status}`);
         console.log('PDF fetched successfully');
@@ -130,11 +170,11 @@ const DocumentSection = ({
         setIsLoading(false);
       }
     } else if (
-      document.fileType ===
+      doc.fileType ===
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     ) {
       try {
-        const arrayBuffer = await fetch(document.url).then((res) =>
+        const arrayBuffer = await fetch(doc.url).then((res) =>
           res.arrayBuffer()
         );
         const result = await mammoth.convertToHtml({ arrayBuffer });
@@ -149,7 +189,7 @@ const DocumentSection = ({
       setDocumentContent(
         'This file type is not supported for content preview.'
       );
-      console.log('Unsupported file type:', document.fileType);
+      console.log('Unsupported file type:', doc.fileType);
       setIsLoading(false);
     }
   };
@@ -169,18 +209,24 @@ const DocumentSection = ({
         : 'N/A',
       formattedSize,
       document.fileType ? getFileExtension(document.fileType) : '',
-      <Image
-        src="/delete.svg"
-        alt="Delete"
-        width={12}
-        height={12}
-        onClick={() => {
-          setDocumentId(document.id);
-          setOpenDeleteModal(true);
-        }}
-        key={1}
-        className=" cursor-pointer"
-      />,
+      // if it is user panel and you are viewing other employee info
+      // then hide edit button
+      isUserPanel && empId ? (
+        ''
+      ) : (
+        <Image
+          src="/delete.svg"
+          alt="Delete"
+          width={12}
+          height={12}
+          onClick={() => {
+            setDocumentId(document.id);
+            setOpenDeleteModal(true);
+          }}
+          key={1}
+          className=" cursor-pointer"
+        />
+      ),
     ];
   });
 
@@ -205,14 +251,18 @@ const DocumentSection = ({
               <option value="date">Date</option>
             </select>
           </label>
-          <button
-            onClick={() => setOpenModal(true)}
-            type="button"
-            className="flex items-center p-2 rounded-[4px] w-[6rem] gap-2 text-white bg-dark-navy text-xs"
-          >
-            <GoPlusCircle className="w-4" />
-            Upload
-          </button>
+          {isUserPanel && empId ? (
+            ''
+          ) : (
+            <button
+              onClick={() => setOpenModal(true)}
+              type="button"
+              className="flex items-center p-2 rounded-[4px] w-[6rem] gap-2 text-white bg-dark-navy text-xs"
+            >
+              <GoPlusCircle className="w-4" />
+              Upload
+            </button>
+          )}
         </div>
       </div>
       <InfoGrid
@@ -235,56 +285,6 @@ const DocumentSection = ({
           onDocumentDelete={handleDocumentDelete}
         />
       )}
-
-      {/*{openDocumentModal && selectedDocument && (
-  <Modal onClose={() => setOpenDocumentModal(false)}>
-    <div className="p-5">
-      <h2 className="text-xl font-semibold">{selectedDocument.fileName}</h2>
-      
-      {isLoading ? (
-        <div>Loading document...</div>
-      ) : error ? (
-        <div className="text-red-500">{error}</div>
-      ) : selectedDocument.fileType === 'application/pdf' ? (
-        <div className="flex flex-col items-center">
-          <Document
-            file={{ url: selectedDocument.url }}
-            onLoadSuccess={({ numPages }) => {
-              console.log("PDF Loaded. Pages:", numPages);
-              setNumPages(numPages);
-              setPdfPageNumber(1);
-            }}
-            onLoadError={(error) => {
-              console.error("Error loading PDF:", error);
-              setError(`Error loading PDF: ${error.message}`);
-            }}
-          >
-            <Page pageNumber={pdfPageNumber} />
-          </Document>
-          <div className="mt-3 flex gap-2">
-            <button
-              onClick={() => setPdfPageNumber((prev) => Math.max(prev - 1, 1))}
-              disabled={pdfPageNumber <= 1}
-              className="p-2 bg-gray-300 rounded"
-            >
-              Previous
-            </button>
-            <span>Page {pdfPageNumber} / {numPages}</span>
-            <button
-              onClick={() => setPdfPageNumber((prev) => Math.min(prev + 1, numPages))}
-              disabled={pdfPageNumber >= numPages}
-              className="p-2 bg-gray-300 rounded"
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="mt-4" dangerouslySetInnerHTML={{ __html: documentContent }} />
-      )}
-    </div>
-  </Modal>
-)}  */}
     </div>
   );
 };

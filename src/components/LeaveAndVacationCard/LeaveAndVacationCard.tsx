@@ -55,11 +55,12 @@ const LeaveAndVacationCard = ({
 
       <div onClick={navigateToTimeRequestTab} className="w-full h-fit ">
         <Button
+          disabled={daysNum === '0'}
           name={name}
           icon=""
           bg="#0F172A"
           textColor="white"
-          className="w-full mt-8"
+          className="w-full mt-8 disabled:opacity-70 disabled:cursor-not-allowed"
         />
       </div>
     </div>

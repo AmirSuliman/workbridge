@@ -399,7 +399,6 @@ const Page = () => {
                         </td>
                         <td className="flex flex-row gap-3 justify-center items-center">
                           <Image
-                            loader={imageLoader}
                             src="/edit.svg"
                             alt="edit"
                             width={10}
@@ -408,7 +407,6 @@ const Page = () => {
                             className="cursor-pointer"
                           />
                           <Image
-                            loader={imageLoader}
                             src="/delete.svg"
                             alt="del"
                             width={10}
@@ -442,7 +440,6 @@ const Page = () => {
                         <td className="p-4">{file.fileType}</td>
                         <td className="flex flex-row gap-3 justify-center items-center">
                           <Image
-                            loader={imageLoader}
                             src="/edit.svg"
                             alt="edit"
                             width={10}
@@ -451,7 +448,6 @@ const Page = () => {
                             className="cursor-pointer"
                           />
                           <Image
-                            loader={imageLoader}
                             src="/delete.svg"
                             alt="del"
                             width={10}

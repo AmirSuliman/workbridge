@@ -20,6 +20,11 @@ body {
   display: none;
 }
 
+/* this class is for tiptap text editor */
+.tiptap {
+  padding: 1rem;
+  outline: none;
+}
 
 @layer components {
   .form-input {

@@ -119,38 +119,6 @@ const CreateJobToolBar: React.FC<ToolBarProps> = ({ editor }) => {
         <LuAlignJustify size={14} />
       </button>
       <button
-        type="button"
-        onClick={setLink}
-        className="px-3 py-1 text-sm font-medium rounded bg-gray-200 hover:bg-gray-300"
-      >
-        <MdLink size={14} />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().unsetLink().run()}
-        disabled={!editor.isActive('link')}
-        className="px-3 py-1 text-sm font-medium rounded bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed"
-      >
-        <MdLinkOff size={14} />
-      </button>
-
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().undo().run()}
-        disabled={!editor.can().chain().focus().undo().run()}
-        className="px-3 py-1 hover:bg-gray-300 text-sm font-medium rounded disabled:bg-gray-100 disabled:cursor-not-allowed"
-      >
-        <FaUndo size={14} />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().redo().run()}
-        disabled={!editor.can().chain().focus().redo().run()}
-        className="px-3 py-1 hover:bg-gray-300 text-sm font-medium rounded disabled:bg-gray-100 disabled:cursor-not-allowed"
-      >
-        <FaRedo size={14} />
-      </button>
-      <button
         onClick={(e) => {
           e.preventDefault();
           editor.chain().focus().toggleBulletList().run();
@@ -175,6 +143,38 @@ const CreateJobToolBar: React.FC<ToolBarProps> = ({ editor }) => {
         }`}
       >
         <FaListOl size={14} />
+      </button>
+      {/* <button
+        type="button"
+        onClick={setLink}
+        className="px-3 py-1 text-sm font-medium rounded bg-gray-200 hover:bg-gray-300"
+      >
+        <MdLink size={14} />
+      </button>
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().unsetLink().run()}
+        disabled={!editor.isActive('link')}
+        className="px-3 py-1 text-sm font-medium rounded bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed"
+      >
+        <MdLinkOff size={14} />
+      </button> */}
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().undo().run()}
+        disabled={!editor.can().chain().focus().undo().run()}
+        className="px-3 py-1 hover:bg-gray-300 text-sm font-medium rounded disabled:bg-gray-100 disabled:cursor-not-allowed"
+      >
+        <FaUndo size={14} />
+      </button>
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().redo().run()}
+        disabled={!editor.can().chain().focus().redo().run()}
+        className="px-3 py-1 hover:bg-gray-300 text-sm font-medium rounded disabled:bg-gray-100 disabled:cursor-not-allowed"
+      >
+        <FaRedo size={14} />
       </button>
     </div>
   );

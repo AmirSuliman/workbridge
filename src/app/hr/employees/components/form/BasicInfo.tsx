@@ -30,6 +30,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
         if (countriesResponse.data?.data?.items) {
           setCountries(countriesResponse.data.data.items);
         }
+        console.log('countries: ', countriesResponse.data?.data?.items);
       } catch (error) {
         console.error('Error fetching data:', error);
       }

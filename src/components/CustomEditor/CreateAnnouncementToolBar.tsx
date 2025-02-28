@@ -11,12 +11,17 @@ import { LuAlignJustify } from 'react-icons/lu';
 import { MdLink, MdLinkOff } from 'react-icons/md';
 import { Editor } from '@tiptap/react'; // Import the Editor type from TipTap
 import { FaUnderline } from 'react-icons/fa6';
+import Image from 'next/image';
 
 interface ToolBarProps {
   editor: Editor; // Define the editor prop type
+  setAnnouncementType: (type: string) => void;
 }
 
-const ToolBar: React.FC<ToolBarProps> = ({ editor }) => {
+const CreateAnnouncementToolBar: React.FC<ToolBarProps> = ({
+  editor,
+  setAnnouncementType,
+}) => {
   const setLink = () => {
     const previousUrl = editor.getAttributes('link').href;
     const url = window.prompt('URL', previousUrl);
@@ -155,17 +160,32 @@ const ToolBar: React.FC<ToolBarProps> = ({ editor }) => {
         <FaRedo size={14} />
       </button>
       <div className="flex flex-row gap-3 items-center ">
-        <div className="p-2 bg-[#0F172A] rounded-full">
-          <img src="/Union.png" alt="img" />
-        </div>
-        <div className="p-2 bg-[#00B87D] rounded-full">
-          <img src="/important_details.png" alt="img" />
-        </div>
-        <div className="p-2 bg-[#F53649] mr-0 sm:mr-4 rounded-full">
-          <img src="/important_details.png" alt="img" />
-        </div>
+        <label className="p-2 cursor-pointer bg-[#0F172A] rounded-full">
+          <Image
+            src="/Union.png"
+            alt="Company Activity"
+            width={20}
+            height={20}
+          />
+        </label>
+        <label className="p-2 cursor-pointer bg-[#00B87D] rounded-full">
+          <Image
+            src="/important_details.png"
+            alt="Miscellaneous"
+            width={20}
+            height={20}
+          />
+        </label>
+        <label className="p-2 cursor-pointer bg-[#F53649] mr-0 sm:mr-4 rounded-full">
+          <Image
+            src="/important_details.png"
+            alt="Policy Changes"
+            width={20}
+            height={20}
+          />
+        </label>
       </div>
     </div>
   );
 };
-export default ToolBar;
+export default CreateAnnouncementToolBar;

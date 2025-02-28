@@ -48,14 +48,11 @@ const CreateJobTextEditor = ({
   }
 
   return (
-    <div className="p-4 w-full">
+    <div className="mt-4 w-full">
       {/* Toolbar */}
       <CreateJobToolBar editor={editor} />
       {/* Editor */}
-      <EditorContent
-        editor={editor}
-        className="p-8 bg-white rounded-lg border"
-      />
+      <EditorContent editor={editor} className="bg-white rounded-lg border" />
     </div>
   );
 };

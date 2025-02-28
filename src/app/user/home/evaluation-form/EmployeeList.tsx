@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Response from './Response';
 
-
 interface Employee {
   id: number;
   firstName: string;
@@ -16,7 +15,9 @@ interface Employee {
 }
 const Employeelist = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(null);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
+    null
+  );
   const searchParams = useSearchParams();
   const survey = searchParams.get('survey');
   const managerId = searchParams.get('employee');
@@ -25,16 +26,19 @@ const Employeelist = () => {
     const getManagerEmployees = async () => {
       if (!managerId || !survey) return;
       try {
-        const response = await axiosInstance.get(`/survey/${survey}/manager/${managerId}`);
+        const response = await axiosInstance.get(
+          `/survey/${survey}/manager/${managerId}`
+        );
         if (response.data?.data?.length > 0) {
-          const mappedEmployees = response.data.data[0].surveyEmployeeStatus.map((empStatus) => ({
-            id: empStatus.employee.id,
-            firstName: empStatus.employee.firstName,
-            lastName: empStatus.employee.lastName,
-            profilePictureUrl: IMAGES.placeholderAvatar.src, // Adjust if profile picture URL is available
-            title: empStatus.employee.department?.name,
-            surveyStatus: empStatus.status,
-          }));
+          const mappedEmployees =
+            response.data.data[0].surveyEmployeeStatus.map((empStatus) => ({
+              id: empStatus.employee.id,
+              firstName: empStatus.employee.firstName,
+              lastName: empStatus.employee.lastName,
+              profilePictureUrl: IMAGES.placeholderAvatar.src, // Adjust if profile picture URL is available
+              title: empStatus.employee.department?.name,
+              surveyStatus: empStatus.status,
+            }));
           setEmployees(mappedEmployees);
         }
       } catch (error) {
@@ -45,12 +49,14 @@ const Employeelist = () => {
   }, [managerId, survey]);
 
   // Find the selected employee details
-  const selectedEmployee = employees.find(emp => emp.id === selectedEmployeeId);
+  const selectedEmployee = employees.find(
+    (emp) => emp.id === selectedEmployeeId
+  );
   const surveyStatus = selectedEmployee?.surveyStatus;
 
   return (
-    <div className='flex flex-col gap-8 w-full items-start sm:flex-row'>
-      <div className="bg-white border rounded-[10px] mt-8 sm:w-[35%] w-full">
+    <div className="flex flex-col gap-4 w-full items-start sm:flex-row">
+      <div className="bg-white border rounded-[10px] min-w-[300px] mt-8 w-fit">
         <h1 className="font-medium text-[18px] p-6">List of Employees</h1>
         <div className="flex flex-col items-start w-full my-4">
           {employees.length > 0 ? (
@@ -58,18 +64,18 @@ const Employeelist = () => {
               <button
                 key={employee.id}
                 onClick={() => setSelectedEmployeeId(employee.id)}
-                className={`flex flex-row items-center justify-between w-full py-2 px-6 hover:bg-gray-100 ${
+                className={`flex flex-row gap-2 flex-wrap items-center justify-between w-full py-2 px-6 hover:bg-gray-100 ${
                   employee.id === selectedEmployeeId ? 'bg-gray-100' : ''
                 }`}
               >
-                <div className="flex flex-row items-center gap-2 w-full">
+                <div className="flex flex-row items-center gap-2 w-fit">
                   <ProfileAvatarItem
                     src={employee.profilePictureUrl}
                     title={`${employee.firstName} ${employee.lastName}`}
                     subtitle={employee.title}
                   />
                 </div>
-                <div className="text-[#00B87D] bg-[#D5F6DD] p-1 px-3 text-[12px] font-medium rounded">
+                <div className="text-[#00B87D] bg-[#D5F6DD] p-1 px-3 text-[12px] font-medium rounded w-fit ml-auto mr-0">
                   {employee.surveyStatus}
                 </div>
               </button>
@@ -90,18 +96,22 @@ const Employeelist = () => {
       )}
 
       {selectedEmployeeId && (
-        <div className='bg-white p-6 mt-8 rounded-[10px] border w-full'>
+        <div className="bg-white p-6 mt-8 rounded-[10px] border w-full">
           {surveyStatus === 'Completed' ? (
-            <p className="text-center text-green-600 font-semibold">Survey Completed</p>
+            <p className="text-center text-green-600 font-semibold">
+              Survey Completed
+            </p>
           ) : (
-            <Response 
-              surveyId={survey} 
-              employeeId={selectedEmployeeId} 
-              managerId={managerId} 
+            <Response
+              surveyId={survey}
+              employeeId={selectedEmployeeId}
+              managerId={managerId}
               onSurveyUpdate={(updatedStatus) => {
                 setEmployees((prevEmployees) =>
                   prevEmployees.map((emp) =>
-                    emp.id === selectedEmployeeId ? { ...emp, surveyStatus: updatedStatus } : emp
+                    emp.id === selectedEmployeeId
+                      ? { ...emp, surveyStatus: updatedStatus }
+                      : emp
                   )
                 );
               }}

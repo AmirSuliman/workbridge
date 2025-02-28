@@ -125,16 +125,6 @@ const EmploymentSection = ({
               <p className="form-error">{errors?.employmentType.message}</p>
             )}
           </label>
-          {/* <label className="form-label">
-            Note
-            <input
-              type="text"
-              className={`form-input`}
-              {...register('note')}
-              readOnly={!editEmployee}
-            />
-            {errors?.note && <p className="form-error">{errors?.note.message}</p>}
-          </label> */}
         </div>
       </div>
 
@@ -221,82 +211,6 @@ const EmploymentSection = ({
           </article>
         </div>
       </div>
-      {/* <div className="p-3 sm:p-6 rounded-[10px] border-gray-border border-[1px] bg-white my-5">
-      <div className="mb-5">
-        <FormHeading
-          icon={<HiMiniBriefcase className="w-4" />}
-          text="Payment"
-        />
-      </div>
-
-      {!editEmployee ? (
-        <InfoGrid
-          cols={6}
-          headers={[
-            'Effective Date',
-            'Payrate',
-            'Schedule',
-            'Pay Type',
-            'Overtime',
-            'Note',
-          ]}
-          values={
-            employeeData.payments
-              ? employeeData?.payments?.map((payment) => [
-                  payment.effectiveDate.split('T')[0] || 'N/A',
-                  payment.payRate || 'N/A',
-                  payment.paymentSchedule || 'N/A',
-                  payment.payType || 'N/A',
-                  payment.overtime ? 'Liable' : 'Exempt',
-                  payment.note || 'N/A',
-                ])
-              : ['', '', '', '', '', '']
-          }
-        />
-      ) : (
-        <div className="grid grid-cols-3 gap-4">
-          <article>
-            <Label text="Compensation*" />
-            <input
-              type="text"
-              placeholder="Add annual compensation amount"
-              className="form-input"
-              {...register('salary', {
-                valueAsNumber: true,
-              })}
-            />
-            {errors?.salary && (
-              <span className="form-error">{errors?.salary.message}</span>
-            )}
-          </article>
-          <article>
-            <Label text="Pay type" />
-            <select className="form-input" {...register('payType')}>
-              <option value="">Select PayType</option>
-              <option value="Salary">Salary</option>
-              <option value="Contract">Contract</option>
-            </select>
-            {errors?.payType && (
-              <span className="form-error">{errors?.payType.message}</span>
-            )}
-          </article>
-          <article>
-            <Label text="Schedule*" />
-            <select className="form-input" {...register('paymentSchedule')}>
-              <option value="">Select Schedule</option>
-              <option value="Weekly">Weekly</option>
-              <option value="Biweekly">Biweekly</option>
-              <option value="Once a month">Once a month</option>
-            </select>
-            {errors?.paymentSchedule && (
-              <span className="form-error">
-                {errors?.paymentSchedule.message}
-              </span>
-            )}
-          </article>
-        </div>
-      )}
-    </div> */}
     </main>
   );
 };
