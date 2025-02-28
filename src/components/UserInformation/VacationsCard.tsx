@@ -16,9 +16,17 @@ interface VacationCardProps {
   totalDays: number; // Use totalDays as prop
 }
 
+interface HolidaysErrorsProps {
+  id: number;
+  date: string;
+  title: string;
+}
+
 const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [holidaysErrors, setHolidaysErrors] = useState<HolidaysErrorsProps[]>(
+    []
+  );
   const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
   const [vacationDaysUsed, setVacationDaysUsed] = useState(0);
@@ -102,6 +110,15 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
             error.response.data.message ||
             'Unknown error occurred'
         );
+
+        // Check for holidays errors
+        if (error.response.data.message?.holidays) {
+          setHolidaysErrors(error.response.data.message?.holidays);
+          console.log(
+            'holidays errors: ',
+            error.response.data.message?.holidays
+          );
+        }
       } else {
         toast.error('Unknown error occurred');
       }
@@ -155,7 +172,13 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
       </div>
 
       {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
+        <Modal
+          onClose={() => {
+            setIsModalOpen(false);
+            setStartDate(null);
+            setEndDate(null);
+          }}
+        >
           <div className="p-6 w-full sm:w-[600px]">
             <div className="flex flex-row items-center gap-2">
               <Image
@@ -168,40 +191,71 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
               <h2 className="text-2xl font-semibold">Request Vacation</h2>
             </div>
 
+            {/* if holidays errors exist then show it as a list */}
+            {holidaysErrors.length > 0 && (
+              <section className="my-4 rounded border-2 border-red-500 p-3 relative">
+                <button
+                  type="button"
+                  className="absolute -top-2 -right-2 font-medium text-lg border-[1px] border-black bg-white flex items-center justify-center grow-0 shrink-0 rounded-full p-1 size-[20px]"
+                  onClick={() => {
+                    setHolidaysErrors([]);
+                    setStartDate(null);
+                    setEndDate(null);
+                  }}
+                >
+                  x
+                </button>
+                <h1 className="font-medium text-lg mb-2">
+                  Following are the holidays, you cannot make a leave request on
+                  these days.
+                </h1>
+                {holidaysErrors.map((holidayError, index) => (
+                  <ul key={index} className="space-y-2 list-disc ml-4">
+                    <li>
+                      {holidayError.title} (
+                      {new Date(holidayError.date).toLocaleDateString()})
+                    </li>
+                  </ul>
+                ))}
+              </section>
+            )}
+
             <div className="grid grid-cols-2 gap-4 w-full mt-8">
-            
-            <label className="flex flex-col w-full">
-  <span className="text-gray-400 text-[12px]">Leaving Date</span>
-  <DatePicker
-    selected={startDate}
-    onChange={(date) => setStartDate(date)}
-    selectsStart
-    startDate={startDate}
-    endDate={endDate}
-    minDate={new Date()}
-    dateFormat="dd/MM/yyyy"
-    placeholderText="dd/mm/yyyy"
-    className="p-3 border rounded w-full"
-  />
-</label>
+              <label className="flex flex-col w-full">
+                <span className="text-gray-400 text-[12px]">Leaving Date</span>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  selectsStart
+                  startDate={startDate}
+                  endDate={endDate}
+                  minDate={new Date()}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyyy"
+                  className="p-3 border rounded w-full"
+                />
+              </label>
 
-<label className="flex flex-col w-full">
-  <span className="text-gray-400 text-[12px]">Returning Date</span>
-  <DatePicker
-    selected={endDate}
-    onChange={(date) => setEndDate(date)}
-    selectsEnd
-    startDate={startDate}
-    endDate={endDate}
-    minDate={startDate || undefined} 
-    maxDate={startDate ? addDays(startDate, totalDays - 1) : undefined}
-    dateFormat="dd/MM/yyyy"
-    placeholderText="dd/mm/yyyy"
-    className="p-3 border rounded w-full"
-    disabled={!startDate} 
-  />
-</label>
-
+              <label className="flex flex-col w-full">
+                <span className="text-gray-400 text-[12px]">
+                  Returning Date
+                </span>
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  minDate={startDate || undefined}
+                  maxDate={
+                    startDate ? addDays(startDate, totalDays - 1) : undefined
+                  }
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyyy"
+                  className="p-3 border rounded w-full"
+                  disabled={!startDate}
+                />
+              </label>
 
               <label className="flex flex-col w-full col-span-full">
                 <span className="text-gray-400 text-[12px]">Note</span>
