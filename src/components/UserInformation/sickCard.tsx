@@ -278,6 +278,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
 
             <div className="flex flex-row  px-6 w-full gap-4 mt-16">
               <button
+                type="button"
                 onClick={handleRequestVacation}
                 className="mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full"
                 disabled={loading}
@@ -285,6 +286,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                 {loading ? 'Submitting...' : 'Request Sick Leave'}
               </button>
               <button
+                type="button"
                 onClick={() => setIsModalOpen(false)}
                 className="mt-4 px-4 py-3 border rounded w-full"
               >

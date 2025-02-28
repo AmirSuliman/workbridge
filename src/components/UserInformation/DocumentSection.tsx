@@ -1,5 +1,6 @@
 'use client';
 import mammoth from 'mammoth';
+import { getSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { GoPlusCircle } from 'react-icons/go';
@@ -8,6 +9,9 @@ import DeleteDocumentModal from './DeleteDocumentModal';
 import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import UploadDocumentModal from './UploadDocumentModal';
+import { InnerUser } from '@/types/next-auth';
+import { useParams } from 'next/navigation';
+
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 interface DocumentType {
@@ -19,6 +23,26 @@ interface DocumentType {
   EmployeeDocument?: {
     createdAt?: string;
   };
+}
+
+interface Session {
+  user: {
+    active: boolean;
+    email: string;
+    firstName: string;
+    id: number;
+    lastName: string;
+    permissions: string[];
+    profilePictureUrl: string;
+    role: string;
+    roleId: number;
+    userId: string;
+    employeeId: number;
+    accessToken: string;
+    user: InnerUser; // ⚠️ Nested duplicate user type
+  };
+  accessToken: string;
+  expires: string;
 }
 
 interface EmployeeDataType {
@@ -68,6 +92,19 @@ const DocumentSection = ({
   const [documentContent, setDocumentContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const [role, setRole] = useState<string>();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setRole(session?.user?.role);
+    };
+    fetchSession();
+  }, []);
+
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
+  const { empId } = useParams();
 
   const handleDocumentDelete = (deletedDocumentId: number) => {
     setDocuments((prevDocuments) =>
@@ -172,18 +209,24 @@ const DocumentSection = ({
         : 'N/A',
       formattedSize,
       document.fileType ? getFileExtension(document.fileType) : '',
-      <Image
-        src="/delete.svg"
-        alt="Delete"
-        width={12}
-        height={12}
-        onClick={() => {
-          setDocumentId(document.id);
-          setOpenDeleteModal(true);
-        }}
-        key={1}
-        className=" cursor-pointer"
-      />,
+      // if it is user panel and you are viewing other employee info
+      // then hide edit button
+      isUserPanel && empId ? (
+        ''
+      ) : (
+        <Image
+          src="/delete.svg"
+          alt="Delete"
+          width={12}
+          height={12}
+          onClick={() => {
+            setDocumentId(document.id);
+            setOpenDeleteModal(true);
+          }}
+          key={1}
+          className=" cursor-pointer"
+        />
+      ),
     ];
   });
 
@@ -208,14 +251,18 @@ const DocumentSection = ({
               <option value="date">Date</option>
             </select>
           </label>
-          <button
-            onClick={() => setOpenModal(true)}
-            type="button"
-            className="flex items-center p-2 rounded-[4px] w-[6rem] gap-2 text-white bg-dark-navy text-xs"
-          >
-            <GoPlusCircle className="w-4" />
-            Upload
-          </button>
+          {isUserPanel && empId ? (
+            ''
+          ) : (
+            <button
+              onClick={() => setOpenModal(true)}
+              type="button"
+              className="flex items-center p-2 rounded-[4px] w-[6rem] gap-2 text-white bg-dark-navy text-xs"
+            >
+              <GoPlusCircle className="w-4" />
+              Upload
+            </button>
+          )}
         </div>
       </div>
       <InfoGrid

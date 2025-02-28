@@ -9,17 +9,25 @@ import { IMAGES } from '@/constants/images';
 import { getAllEmployees } from '@/services/getAllEmployees';
 import { addEmployees } from '@/store/slices/allEmployeesSlice';
 import { AllEmployeeData } from '@/types/employee';
+import { getSession } from 'next-auth/react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { CiCirclePlus } from 'react-icons/ci';
 import { FaChevronRight, FaDownload } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
-import Link from 'next/link';
+import { useDispatch } from 'react-redux';
 export const AllEmployees = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const userRole = useSelector((state: RootState) => state.myInfo?.user?.role);
+  const [role, setRole] = useState<string>();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setRole(session?.user?.role);
+    };
+    fetchSession();
+  }, []);
 
   const [employees, setEmployeesState] = useState<
     AllEmployeeData | undefined
@@ -213,7 +221,7 @@ export const AllEmployees = () => {
               </optgroup>
             </select>
           </div>
-          {userRole !== 'ViewOnly' && (
+          {(role === 'Admin' || role === 'SuperAdmin') && (
             <Button
               name="Add new Employee"
               icon={<CiCirclePlus />}
@@ -225,17 +233,19 @@ export const AllEmployees = () => {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="text-sm text-gray-500">
-                <th className="py-3 px-4 font-medium border-b">Employee Name</th>
+                <th className="py-3 px-4 font-medium border-b">
+                  Employee Name
+                </th>
                 <th className="py-3 px-4 font-medium border-b">Job Title</th>
                 <th className="py-3 px-4 font-medium border-b">Department</th>
                 <th className="py-3 px-4 font-medium border-b">Email</th>
                 <th className="py-3 px-4 font-medium border-b">Hire Date</th>
                 <th className="py-3 px-4 font-medium border-b">
-                  <span className='border bg-gray-200 text-gray-400 p-2 text-[12px] flex flex-row items-center gap-2 rounded-sm'>
-                    <FaDownload/>
-                  Download
+                  <span className="border bg-gray-200 text-gray-400 p-2 text-[12px] flex flex-row items-center gap-2 rounded-sm">
+                    <FaDownload />
+                    Download
                   </span>
-                  </th>
+                </th>
               </tr>
             </thead>
             {!loading ? (
@@ -273,7 +283,8 @@ export const AllEmployees = () => {
                   return (
                     <tr
                       onClick={() => {
-                        router.push(`employees/employee-info/${employee.id}`);
+                        if (role !== 'ViewOnly')
+                          router.push(`employees/employee-info/${employee.id}`);
                       }}
                       key={employee.id}
                       className="hover:bg-gray-50 text-[#0F172A] text-[14px] w-full cursor-pointer"
@@ -308,9 +319,11 @@ export const AllEmployees = () => {
                         <span className="text-[10px] mt-2">{duration}</span>
                       </td>
                       <td className="py-3 px-4 border-b ">
-                        <span className="p-2 border w-8 rounded-md flex items-center justify-center hover:bg-black hover:text-white">
-                          <FaChevronRight size={12} />
-                        </span>
+                        {role !== 'ViewOnly' && (
+                          <span className="p-2 border w-8 rounded-md flex items-center justify-center hover:bg-black hover:text-white">
+                            <FaChevronRight size={12} />
+                          </span>
+                        )}
                       </td>
                     </tr>
                   );

@@ -20,6 +20,8 @@ import Modal from '../modal/Modal';
 import CreateNote from './CreateNote';
 import FormHeading from './FormHeading';
 import imageLoader from '../../../imageLoader';
+import { useParams } from 'next/navigation';
+import { getSession } from 'next-auth/react';
 
 interface Note {
   id: number;
@@ -115,6 +117,19 @@ const NotesSection = ({ employeeId }) => {
     setSelectedNote(null);
   };
 
+  const [role, setRole] = useState<string>();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setRole(session?.user?.role);
+    };
+    fetchSession();
+  }, []);
+
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
+  const { empId } = useParams();
+
   if (error) {
     return <div className="text-red-500">Error: {error}</div>;
   }
@@ -129,15 +144,19 @@ const NotesSection = ({ employeeId }) => {
             }
             text="Notes"
           />
-          <Button
-            onClick={(e) => {
-              e.preventDefault();
-              setCreateNoteModal(true);
-            }}
-            icon={<FiPlusCircle />}
-            name="Create"
-            className="flex-row-reverse"
-          />
+          {isUserPanel && empId ? (
+            ''
+          ) : (
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                setCreateNoteModal(true);
+              }}
+              icon={<FiPlusCircle />}
+              name="Create"
+              className="flex-row-reverse"
+            />
+          )}
         </div>
 
         <div className="overflow-x-auto">
@@ -179,39 +198,43 @@ const NotesSection = ({ employeeId }) => {
                       {new Date(note.createdAt).toLocaleDateString()}
                     </td>
                     <td className="py-4 px-4 align-middle">
-                      <div className="flex space-x-2">
-                        <button
-                          type="button"
-                          className="text-black"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleEditClick(note);
-                          }}
-                        >
-                          <Image
-                            src="/edit.svg"
-                            alt="img"
-                            width={10}
-                            height={10}
-                          />
-                        </button>
-                        <button
-                          type="button"
-                          className="text-black"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setDeleteId(note.id);
-                            setDeleteNoteModal(true);
-                          }}
-                        >
-                          <Image
-                            src="/delete.svg"
-                            alt="img"
-                            width={10}
-                            height={10}
-                          />
-                        </button>
-                      </div>
+                      {isUserPanel && empId ? (
+                        ''
+                      ) : (
+                        <div className="flex space-x-2">
+                          <button
+                            type="button"
+                            className="text-black"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleEditClick(note);
+                            }}
+                          >
+                            <Image
+                              src="/edit.svg"
+                              alt="img"
+                              width={10}
+                              height={10}
+                            />
+                          </button>
+                          <button
+                            type="button"
+                            className="text-black"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setDeleteId(note.id);
+                              setDeleteNoteModal(true);
+                            }}
+                          >
+                            <Image
+                              src="/delete.svg"
+                              alt="img"
+                              width={10}
+                              height={10}
+                            />
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))}
