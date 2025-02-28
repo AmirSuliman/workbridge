@@ -2,17 +2,15 @@
 
 import { Pagination } from '@/components/common/Pagination';
 import axiosInstance from '@/lib/axios';
+import { Announcement } from '@/types/common';
+import { getSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { HiSpeakerphone } from 'react-icons/hi';
 import { PiPlusCircleBold } from 'react-icons/pi';
-import SingleAnnouncement from '../../../../components/SingleAnnouncement/SingleAnnouncement';
 import Policies from '../policies/components/policies';
 import Vacationpolicies from '../VacationPolicies/page';
-import IconWithBg from '@/components/SingleAnnouncement/IconWithBg';
-import { getSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { Announcement } from '@/types/common';
 
 // type Announcement = {
 //   id: string;
@@ -33,7 +31,7 @@ const fetchAnnouncements = async (
         size,
       },
     });
-    console.log(`Fetched ${status} announcements:`, response.data);
+    // console.log(`Fetched ${status} announcements:`, response.data);
     return {
       announcements: response.data.data.items || [],
       total: response.data.data.totalItems || 0,
@@ -74,7 +72,7 @@ const Page = () => {
       );
       setPublishedAnnouncements(publishedData.announcements);
       setTotalPublishedAnnouncements(publishedData.total);
-      console.log('publishedData.total', publishedData.total);
+      // console.log('publishedData.total', publishedData.total);
     };
 
     const fetchDraftData = async () => {

@@ -20,6 +20,8 @@ import EmergencyDeleteModal from './EmergencyDeleteModal';
 import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import imageLoader from '../../../imageLoader';
+import { getSession } from 'next-auth/react';
+import { useParams } from 'next/navigation';
 interface PaymentProps {
   id: number;
   note: string;
@@ -127,7 +129,18 @@ const EmergencySection = ({ employeeData }) => {
     setCurrentPayment(payment);
     reset(payment);
   };
+  const [role, setRole] = useState<string>();
 
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setRole(session?.user?.role);
+    };
+    fetchSession();
+  }, []);
+
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
+  const { empId } = useParams();
   return (
     <>
       <div className="p-3 sm:p-6 rounded-[10px] border-gray-border border-[1px] bg-white my-5">
@@ -136,18 +149,24 @@ const EmergencySection = ({ employeeData }) => {
             icon={<Image src="/contact.svg" alt="img" width={17} height={17} />}
             text="Emergency Contact"
           />
-
-          {!addeNew && !isEditPayment && (
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                setAddNew(true);
-              }}
-              name={'Add New Contact'}
-              icon={<GoPlusCircle />}
-              className="flex-row-reverse !text-[14px]"
-            />
-          )}
+          {
+            // if it is user panel and you are viewing other employee info
+            // then hide add button
+          }
+          {isUserPanel && empId
+            ? ''
+            : !addeNew &&
+              !isEditPayment && (
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setAddNew(true);
+                  }}
+                  name={'Add New Contact'}
+                  icon={<GoPlusCircle />}
+                  className="flex-row-reverse !text-[14px]"
+                />
+              )}
         </div>
 
         {!isEditPayment ? (
@@ -174,32 +193,40 @@ const EmergencySection = ({ employeeData }) => {
                     } ${payment.location?.city || ''} ${
                       payment.location?.state || ''
                     } ${payment.location?.country || ''}`,
-                    <Image
-                      src="/delete.svg"
-                      width={10}
-                      height={10}
-                      alt="delete"
-                      className="cursor-pointer"
-                      key={payment.id}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setDeleteModal(true);
-                        setAddNew(false);
-                        setPaymentId(payment.id);
-                      }}
-                    />,
-                    <Image
-                      src="/edit.svg"
-                      width={10}
-                      height={10}
-                      alt="edit"
-                      className="cursor-pointer"
-                      key={payment.id}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleEditClick(payment);
-                      }}
-                    />,
+                    isUserPanel && empId ? (
+                      ''
+                    ) : (
+                      <Image
+                        src="/delete.svg"
+                        width={10}
+                        height={10}
+                        alt="delete"
+                        className="cursor-pointer"
+                        key={payment.id}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setDeleteModal(true);
+                          setAddNew(false);
+                          setPaymentId(payment.id);
+                        }}
+                      />
+                    ),
+                    isUserPanel && empId ? (
+                      ''
+                    ) : (
+                      <Image
+                        src="/edit.svg"
+                        width={10}
+                        height={10}
+                        alt="edit"
+                        className="cursor-pointer"
+                        key={payment.id}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleEditClick(payment);
+                        }}
+                      />
+                    ),
                   ])
                 : [['', '', '', '', '', '', '']]
             }

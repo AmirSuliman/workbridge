@@ -12,7 +12,7 @@ import { FaBackspace } from 'react-icons/fa';
 
 const OrgChartPage: FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [compact, setCompact] = useState(false);
+  const [compact, setCompact] = useState(true);
   const [search, setSearch] = useState('');
   const [employeesData, setEmployeesData] = useState<EmployeeData[]>([]);
   const router = useRouter();

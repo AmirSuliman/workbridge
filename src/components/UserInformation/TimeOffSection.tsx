@@ -46,17 +46,6 @@ const TimeOffSection = ({ employeeData }) => {
       ? employeeData?.vacationLeaveCounter
       : employeeData?.sickLeaveCounter || 0;
 
-  // const [sessionUser, setSessionUser] = useState('');
-  // useEffect(() => {
-  //   const fetchSession = async () => {
-  //     const session = await getSession();
-  //     console.log('session: ', session);
-  //     setSessionUser(session?.user);
-  //   };
-
-  //   fetchSession();
-  // }, []);
-
   const calculateDuration = (start: string, end: string) => {
     if (start && end) {
       const startDate = new Date(start);

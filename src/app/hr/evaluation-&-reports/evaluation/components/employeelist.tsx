@@ -4,7 +4,6 @@ import axiosInstance from '@/lib/axios';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-
 interface Employee {
   id: number;
   firstName: string;
@@ -28,7 +27,9 @@ const Employeelist = () => {
     const getManagerEmployees = async () => {
       if (!managerId || !survey) return;
       try {
-        const response = await axiosInstance.get(`/survey/${survey}/manager/${managerId}`);
+        const response = await axiosInstance.get(
+          `/survey/${survey}/manager/${managerId}`
+        );
         console.log('API Response:', response.data);
 
         if (response.data?.data?.length > 0) {
@@ -36,14 +37,18 @@ const Employeelist = () => {
 
           let mappedEmployees: Employee[] = [];
           if (surveyData.surveyEmployeeStatus.length > 0) {
-            mappedEmployees = surveyData.surveyEmployeeStatus.map((empStatus) => ({
-              id: empStatus.employee?.id || null,
-              firstName: empStatus.employee?.firstName || 'Unknown',
-              lastName: empStatus.employee?.lastName || '',
-              profilePictureUrl: empStatus.employee?.profilePictureUrl || IMAGES.placeholderAvatar.src,
-              title: empStatus.employee?.department?.name || 'No Title',
-              surveyStatus: empStatus.status || 'Pending',
-            }));
+            mappedEmployees = surveyData.surveyEmployeeStatus.map(
+              (empStatus) => ({
+                id: empStatus.employee?.id || null,
+                firstName: empStatus.employee?.firstName || 'Unknown',
+                lastName: empStatus.employee?.lastName || '',
+                profilePictureUrl:
+                  empStatus.employee?.profilePictureUrl ||
+                  IMAGES.placeholderAvatar.src,
+                title: empStatus.employee?.department?.name || 'No Title',
+                surveyStatus: empStatus.status || 'Pending',
+              })
+            );
           }
 
           setEmployees(mappedEmployees);
@@ -77,18 +82,18 @@ const Employeelist = () => {
                 );
               }}
               key={employee.id}
-              className={`flex flex-row items-center justify-between w-full py-2 px-6 hover:bg-gray-100 ${
+              className={`flex flex-row gap-2 flex-wrap items-center justify-between w-full py-2 px-6 hover:bg-gray-100 ${
                 employee.id === Number(employeeId) ? 'bg-gray-100' : ''
               }`}
             >
-              <div className="flex flex-row items-center gap-2 w-full">
+              <div className="flex flex-row items-center gap-2 w-fit">
                 <ProfileAvatarItem
                   src={employee.profilePictureUrl}
                   title={`${employee.firstName} ${employee.lastName}`}
                   subtitle={employee.title}
                 />
               </div>
-              <div className="text-[#00B87D] bg-[#D5F6DD] p-1 px-3 text-[12px] font-medium rounded">
+              <div className="text-[#00B87D] bg-[#D5F6DD] p-1 px-3 text-[12px] font-medium rounded mr-0 ml-auto w-fit">
                 {employee.surveyStatus}
               </div>
             </button>

@@ -1,12 +1,11 @@
 import axiosInstance from '@/lib/axios';
-import { isAxiosError } from 'axios';
 import { useState } from 'react';
 
 import toast from 'react-hot-toast';
+import { BiLoaderCircle } from 'react-icons/bi';
 import Button from '../Button';
 import Modal from '../modal/Modal';
 import UploadDocument from './UploadDocument';
-import { BiLoaderCircle } from 'react-icons/bi';
 
 const UploadDocumentModal = ({ onClose, employeeData, onDocumentUpload }) => {
   const [loading, setLoading] = useState(false);
@@ -37,14 +36,14 @@ const UploadDocumentModal = ({ onClose, employeeData, onDocumentUpload }) => {
       toast.error('Please select a file before submitting.');
       return;
     }
-  
+
     try {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('type', file.type);
       formData.append('size', file.size.toString());
       setLoading(true);
-  
+
       const response = await axiosInstance.post(
         `/employee/${employeeData.id}/document/upload`,
         formData,
@@ -58,16 +57,17 @@ const UploadDocumentModal = ({ onClose, employeeData, onDocumentUpload }) => {
           },
         }
       );
-  
       toast.success('File uploaded successfully!');
-  
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
       // Update document list immediately in the parent component
       if (response.data) {
-        onDocumentUpload(response.data);  // This should update the table instantly
+        onDocumentUpload(response.data);
       }
-  
+
       setLoading(false);
-      onClose();  // Close the modal after upload
+      onClose(); // Close the modal after upload
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -75,8 +75,7 @@ const UploadDocumentModal = ({ onClose, employeeData, onDocumentUpload }) => {
       toast.error('Failed to upload file.');
     }
   };
-  
-  
+
   return (
     <Modal onClose={onClose}>
       <section className="w-full p-8">
