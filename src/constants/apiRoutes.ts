@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://devbackend.isaworkbridge.com/'; // for development
+export const BASE_URL = 'https://devbackend.isaworkbridge.com/'; // for development.
 // export const BASE_URL = 'https://backend.app.isaworkbridge.com/'; // for production
 
 export const API_ROUTES = {
