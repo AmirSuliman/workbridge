@@ -32,8 +32,8 @@ export interface Employee {
 }
 
 type TableProps = {
-  filter: string;
-  sort: 'default' | 'duration' | 'leaveEarliest' | 'returnEarliest';
+  filter: string | undefined;
+  sort: undefined | 'duration' | 'returningDay' | 'leaveDay';
 };
 
 const Table: React.FC<TableProps> = ({ filter, sort }) => {
@@ -70,20 +70,21 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
           page: currentPage,
           size: ITEMS_PER_PAGE,
           sort,
+          type: filter,
         };
 
         const response = await axiosInstance.get('/timeoffs', { params });
         const fetchedData = response.data.data.items || [];
 
-        const filteredData =
-          filter !== 'All'
-            ? fetchedData.filter(
-                (employee) =>
-                  employee.type.toLowerCase() === filter.toLowerCase()
-              )
-            : fetchedData;
+        // const filteredData =
+        //   filter !== 'All'
+        //     ? fetchedData.filter(
+        //         (employee) =>
+        //           employee.type.toLowerCase() === filter.toLowerCase()
+        //       )
+        //     : fetchedData;
 
-        setEmployeeData(filteredData);
+        setEmployeeData(fetchedData);
         setTotalPages(response.data.data.totalPages || 1);
       } catch (err) {
         setError('Failed to fetch employee data.');
