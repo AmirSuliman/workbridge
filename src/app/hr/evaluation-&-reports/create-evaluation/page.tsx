@@ -43,6 +43,7 @@ const CreateEvaluation = () => {
     useState(false);
   const [departmentIds, setDepartmentIds] = useState<number[]>([]);
   const [managerIds, setManagerIds] = useState<number[]>([]);
+  const [deadline, setDeadline] = useState<string>(''); 
 
   const fetchSession = async (): Promise<Session | null> => {
     const session = await getSession();
@@ -94,6 +95,7 @@ const CreateEvaluation = () => {
       questions: transformedQuestions,
       employeeId: data.reportingManagerId,
       managerIds: managerIds.length > 0 ? managerIds : null,
+      deadline: deadline || null,
     };
   
     try {
@@ -118,11 +120,18 @@ const CreateEvaluation = () => {
         `${status === 'Draft' ? 'Draft saved' : 'Survey sent'} successfully!`
       );
   
-      // Reset form fields
+      // Reset form fields for both Draft and Sent states
       reset(); // Clears the form inputs
       setDepartmentIds([]); // Clear department selection
       setManagerIds([]); // Clear manager selection
       setIsEvaluativeReportingEmployee(false); // Reset checkbox
+      setDeadline('');
+  
+      // Reset form field values in React Hook Form
+      setValue('isReportingEmployee', false);
+      setValue('departmentIds', []);
+      setValue('managerIds', []);
+      setValue('deadline', '');
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -199,7 +208,20 @@ const CreateEvaluation = () => {
             />
             Evaluative Reporting Employees
           </label>
+          
         </div>
+        <div className="p-6 w-[350px]">
+  <label className="flex flex-col gap-1 ">
+    <span className="form-label">Deadline*</span>
+    <input
+      type="date"
+      value={deadline}
+      onChange={(e) => setDeadline(e.target.value)}
+      className="form-input p-2"
+      required
+    />
+  </label>
+</div>
         <div className="h-[1.5px] w-full bg-gray-300 " />
 
         <h1 className="text-[18px] font-medium p-6 mt-6">Questions</h1>
