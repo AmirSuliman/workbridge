@@ -46,7 +46,6 @@ const getFileExtension = (mimeType) => {
 
 const Page = () => {
   const [documents, setDocuments] = useState<DocumentType[]>([]);
-
   const [documentContent, setDocumentContent] = useState<string>('');
 
   const { data: session } = useSession();
@@ -56,7 +55,6 @@ const Page = () => {
         const response = await axiosInstance.get(
           `/employee/${session?.user.employeeId}/documents`
         );
-        console.log('doc res: ', response.data.data.items);
         setDocuments(response.data.data.items);
       } catch (error) {
         console.log('error: ', error);

@@ -47,13 +47,6 @@ const Auth = () => {
         redirect: false,
       });
 
-      // const res = await signIn('credentials', {
-      //   email: data.email,
-      //   password: data.password,
-      //   redirect: false,
-      //   callbackUrl: BASE_URL, // Explicitly set URL
-      // });
-
       if (!res?.ok) {
         setLoading(false);
         toast.error('Invalid Email or Password!');
@@ -62,7 +55,6 @@ const Auth = () => {
 
       // Get session after sign-in
       const session = await getSession();
-      console.log('session: ', session);
 
       if (session?.user?.accessToken) {
         try {
