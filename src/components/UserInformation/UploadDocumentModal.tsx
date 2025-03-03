@@ -58,12 +58,13 @@ const UploadDocumentModal = ({ onClose, employeeData, onDocumentUpload }) => {
         }
       );
       toast.success('File uploaded successfully!');
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 1000);
       // Update document list immediately in the parent component
       if (response.data) {
-        onDocumentUpload(response.data);
+        console.log('file', response.data.data.file);
+        onDocumentUpload(response.data.data.file);
       }
 
       setLoading(false);
