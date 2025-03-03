@@ -95,7 +95,6 @@ const CreateEvaluation = () => {
       questions: transformedQuestions,
       employeeId: data.reportingManagerId,
       managerIds: managerIds.length > 0 ? managerIds : null,
-      deadline: deadline || null,
     };
   
     try {
@@ -125,7 +124,6 @@ const CreateEvaluation = () => {
       setDepartmentIds([]); // Clear department selection
       setManagerIds([]); // Clear manager selection
       setIsEvaluativeReportingEmployee(false); // Reset checkbox
-      setDeadline('');
   
       // Reset form field values in React Hook Form
       setValue('isReportingEmployee', false);
@@ -210,18 +208,7 @@ const CreateEvaluation = () => {
           </label>
           
         </div>
-        <div className="p-6 w-[350px]">
-  <label className="flex flex-col gap-1 ">
-    <span className="form-label">Deadline*</span>
-    <input
-      type="date"
-      value={deadline}
-      onChange={(e) => setDeadline(e.target.value)}
-      className="form-input p-2"
-      required
-    />
-  </label>
-</div>
+     
         <div className="h-[1.5px] w-full bg-gray-300 " />
 
         <h1 className="text-[18px] font-medium p-6 mt-6">Questions</h1>
