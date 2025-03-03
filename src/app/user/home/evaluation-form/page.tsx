@@ -9,7 +9,7 @@ import imageLoader from '../../../../../imageLoader';
 const Evaluationform = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const surveyType = searchParams.get('surveyType'); // Extract `surveyType`
+  const surveyType = searchParams.get('surveyType'); 
 
   console.log(surveyType, 'surveyType');
 
