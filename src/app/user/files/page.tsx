@@ -10,13 +10,13 @@ import { useEffect, useState } from 'react';
 
 interface DocumentType {
   id: number;
-  fileName: string;
-  fileTitle: string;
-  fileType: string;
-  size?: number;
-  url: string;
-  EmployeeDocument?: {
-    createdAt?: string;
+  createdAt?: string;
+  file: {
+    fileName: string;
+    fileTitle: string;
+    fileType: string;
+    size?: number;
+    url: string;
   };
 }
 
@@ -53,44 +53,40 @@ const Page = () => {
   useEffect(() => {
     const getEmployeeDocument = async () => {
       try {
-        // actual API endpoint is (/employee/4/documents) but
-        // this does not have correct information such as name, type, size
-        // therefore I am pulling docs from employee/id API
-
         const response = await axiosInstance.get(
-          `/employee/${session?.user.employeeId}`,
-          {
-            params: { associations: true },
-          }
+          `/employee/${session?.user.employeeId}/documents`
         );
-        // console.log('doc res: ', response.data.data.documents);
-        setDocuments(response.data.data.documents);
+        console.log('doc res: ', response.data.data.items);
+        setDocuments(response.data.data.items);
       } catch (error) {
         console.log('error: ', error);
       }
     };
     getEmployeeDocument();
-  }, []);
+  }, [session?.user.employeeId]);
 
   const handleDocumentOpen = async (doc) => {
     const isEdge = window.navigator.userAgent.indexOf('Edg') > -1;
     const isOfficeDoc =
-      doc.fileType.includes('openxmlformats-officedocument') ||
-      doc.fileType === 'msword';
+      doc?.file.fileType.includes('openxmlformats-officedocument') ||
+      doc?.file.fileType === 'msword';
 
     if (isEdge && isOfficeDoc) {
       const link = document.createElement('a');
-      link.href = doc.url;
-      link.setAttribute('download', doc.fileName);
+      link.href = doc?.file.url;
+      link.setAttribute('download', doc?.file.fileName);
       link.setAttribute('target', '_self');
       link.click();
     } else {
-      window.open(doc.url, '_blank');
+      window.open(doc?.file.url, '_blank');
     }
 
-    if (doc.fileType === 'application/pdf' || doc.fileType === 'pdf') {
+    if (
+      doc?.file.fileType === 'application/pdf' ||
+      doc?.file.fileType === 'pdf'
+    ) {
       try {
-        const response = await fetch(doc.url);
+        const response = await fetch(doc?.file.url);
         if (!response.ok)
           throw new Error(`PDF not found, status code: ${response.status}`);
         console.log('PDF fetched successfully');
@@ -99,11 +95,11 @@ const Page = () => {
         console.log('Error loading PDF:', error);
       }
     } else if (
-      doc.fileType ===
+      doc?.file.fileType ===
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     ) {
       try {
-        const arrayBuffer = await fetch(doc.url).then((res) =>
+        const arrayBuffer = await fetch(doc?.file.url).then((res) =>
           res.arrayBuffer()
         );
         const result = await mammoth.convertToHtml({ arrayBuffer });
@@ -115,12 +111,12 @@ const Page = () => {
       setDocumentContent(
         'This file type is not supported for content preview.'
       );
-      console.log('Unsupported file type:', doc.fileType);
+      console.log('Unsupported file type:', doc?.file.fileType);
     }
   };
 
   const values = documents?.map((document) => {
-    const sizeInBytes = document.size ?? 0;
+    const sizeInBytes = document?.file.size ?? 0;
     const sizeInKB = sizeInBytes / 1024;
     const formattedSize =
       sizeInKB >= 1024
@@ -129,15 +125,15 @@ const Page = () => {
 
     return [
       SelectableCell(
-        document.fileTitle ? document.fileTitle : document.fileName,
+        document?.file.fileTitle
+          ? document?.file.fileTitle
+          : document?.file.fileName,
         document,
         handleDocumentOpen
       ),
-      document?.EmployeeDocument?.createdAt
-        ? document.EmployeeDocument.createdAt.split('T')[0]
-        : 'N/A',
+      document?.createdAt ? document.createdAt.split('T')[0] : 'N/A',
       formattedSize,
-      document.fileType ? getFileExtension(document.fileType) : '',
+      document?.file.fileType ? getFileExtension(document?.file.fileType) : '',
     ];
   });
 
@@ -148,21 +144,6 @@ const Page = () => {
           icon={<Image src="/document.svg" alt="img" width={15} height={15} />}
           text="Documents"
         />
-        {/* <div className="flex items-center gap-4">
-          <label className="flex gap-3 items-center text-dark-navy ms-2 ">
-            <span className="text-[14px] text-gray-400">Sort</span>{' '}
-            <select
-              value={sortOption}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                setSortOption(e.target.value as 'size' | 'date')
-              }
-              className="outline-none text-xs p-2 border w-[150px] rounded-md"
-            >
-              <option value="size">Size</option>
-              <option value="date">Date</option>
-            </select>
-          </label>
-        </div> */}
       </div>
       <InfoGrid
         headers={['Document Name', 'Date Uploaded', 'Size', 'File Type']}
