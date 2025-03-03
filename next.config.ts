@@ -2,19 +2,17 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['i.pravatar.cc', 'www.google.com', 'wb-uploads.s3.amazonaws.com'],
+    domains: ['wb-uploads.s3.amazonaws.com'],
+    formats: ['image/webp'],
+    minimumCacheTTL: 60,
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  // typescript:{
-  //   ignoreBuildErrors: true,
-  // },
   eslint: {
     ignoreDuringBuilds: true,
   },
-
-  // webpck:(config)=>{
-  // config.resolve.alias.canvas= false;
-  //return config;
-  //},
 };
+
+
 
 export default nextConfig;
