@@ -25,26 +25,6 @@ interface DocumentType {
   };
 }
 
-interface Session {
-  user: {
-    active: boolean;
-    email: string;
-    firstName: string;
-    id: number;
-    lastName: string;
-    permissions: string[];
-    profilePictureUrl: string;
-    role: string;
-    roleId: number;
-    userId: string;
-    employeeId: number;
-    accessToken: string;
-    user: InnerUser; // ⚠️ Nested duplicate user type
-  };
-  accessToken: string;
-  expires: string;
-}
-
 interface EmployeeDataType {
   id: number;
   documents?: DocumentType[];
