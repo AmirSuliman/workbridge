@@ -47,7 +47,6 @@ const Home = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const fetchSession = async (): Promise<Session | null> => {
     const session = await getSession();
-    console.log('session: ', session);
     return session;
   };
   useEffect(() => {
