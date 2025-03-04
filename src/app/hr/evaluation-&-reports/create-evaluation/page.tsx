@@ -43,6 +43,7 @@ const CreateEvaluation = () => {
     useState(false);
   const [departmentIds, setDepartmentIds] = useState<number[]>([]);
   const [managerIds, setManagerIds] = useState<number[]>([]);
+  const [deadline, setDeadline] = useState<string>(''); 
 
   const fetchSession = async (): Promise<Session | null> => {
     const session = await getSession();
@@ -118,11 +119,17 @@ const CreateEvaluation = () => {
         `${status === 'Draft' ? 'Draft saved' : 'Survey sent'} successfully!`
       );
   
-      // Reset form fields
+      // Reset form fields for both Draft and Sent states
       reset(); // Clears the form inputs
       setDepartmentIds([]); // Clear department selection
       setManagerIds([]); // Clear manager selection
       setIsEvaluativeReportingEmployee(false); // Reset checkbox
+  
+      // Reset form field values in React Hook Form
+      setValue('isReportingEmployee', false);
+      setValue('departmentIds', []);
+      setValue('managerIds', []);
+      setValue('deadline', '');
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -199,7 +206,9 @@ const CreateEvaluation = () => {
             />
             Evaluative Reporting Employees
           </label>
+          
         </div>
+     
         <div className="h-[1.5px] w-full bg-gray-300 " />
 
         <h1 className="text-[18px] font-medium p-6 mt-6">Questions</h1>

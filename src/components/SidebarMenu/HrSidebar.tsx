@@ -85,13 +85,14 @@ const HrSidebar = () => {
             icon={<IoIosFolderOpen size={22} />}
             href="/hr/files"
           />
-          {/* Conditionally render Admins */}
 
           <SidebarNavItem
             name="Reports"
             icon={<FiTrendingUp size={22} />}
             href="/hr/evaluation-&-reports"
           />
+
+          {/* Conditionally render Admins */}
           {isSuperAdmin && (
             <SidebarNavItem
               name="Admins"

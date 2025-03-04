@@ -1,25 +1,26 @@
 'use client';
-import { useState, useEffect, useMemo } from 'react';
+import Modal from '@/components/modal/Modal';
+import axiosInstance from '@/lib/axios';
+import { formatFileSize } from '@/utils/formatFileSize';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import { useEffect, useMemo, useState } from 'react';
 import {
+  FaChevronDown,
+  FaChevronRight,
+  FaEdit,
   FaFolder,
   FaPlusCircle,
   FaUpload,
-  FaEdit,
-  FaTrash,
-  FaChevronRight,
-  FaChevronDown,
 } from 'react-icons/fa';
-import Modal from '@/components/modal/Modal';
 import Addfolder from './components/addfolder';
-import Uploadfiles from './components/uploadfiles';
-import Editfolder from './components/editfolder';
-import Editdocument from './components/editdocument';
-import Deletedocument from './components/deletedocumnet';
-import axiosInstance from '@/lib/axios';
 import AddSubFolder from './components/addSubFolder';
-import { formatFileSize } from '@/utils/formatFileSize';
-import Image from 'next/image';
-import imageLoader from '../../../../imageLoader';
+import Deletedocument from './components/deletedocumnet';
+import Editdocument from './components/editdocument';
+import Editfolder from './components/editfolder';
+import Uploadfiles from './components/uploadfiles';
+import mammoth from 'mammoth';
+
 interface Folder {
   id: string;
   parentId: number | null;
@@ -36,10 +37,10 @@ interface File {
   size: number;
   dateUploaded: string;
   fileType: string;
-  folderId: string; // Add this line
+  folderId: string;
 }
 
-const Page = () => {
+const HrFiles = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
@@ -55,10 +56,59 @@ const Page = () => {
   const [allFiles, setAllFiles] = useState<File[]>([]);
   const [isAllFilesActive, setIsAllFilesActive] = useState(false);
   const [expandedFolders, setExpandedFolders] = useState(new Set());
-
   const [documentId, setDocumentId] = useState<string | null>(null);
   const [currentTitle, setCurrentTitle] = useState<string | null>(null);
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
+  const { data: session } = useSession();
+  const role = session?.user.role;
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
+
+  const handleDocumentOpen = async (doc) => {
+    const isEdge = window.navigator.userAgent.indexOf('Edg') > -1;
+    const isOfficeDoc =
+      doc.fileType.includes('openxmlformats-officedocument') ||
+      doc.fileType === 'msword';
+
+    if (isEdge && isOfficeDoc) {
+      const link = document.createElement('a');
+      link.href = doc.url;
+      link.setAttribute('download', doc.fileName);
+      link.setAttribute('target', '_self');
+      link.click();
+    } else {
+      window.open(doc.url, '_blank');
+    }
+
+    if (doc.fileType === 'application/pdf' || doc.fileType === 'pdf') {
+      try {
+        const response = await fetch(doc.url);
+        if (!response.ok)
+          throw new Error(`PDF not found, status code: ${response.status}`);
+        console.log('PDF fetched successfully');
+      } catch (error) {
+        setError(
+          `Error loading PDF file. Please check the URL or try again. Details: ${
+            (error as Error).message
+          }`
+        );
+        console.log('Error loading PDF:', error);
+      }
+    } else if (
+      doc.fileType ===
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ) {
+      try {
+        const arrayBuffer = await fetch(doc.url).then((res) =>
+          res.arrayBuffer()
+        );
+      } catch (error) {
+        setError('Error loading Word document content.');
+        console.log('Error loading Word document:', error);
+      }
+    } else {
+      console.log('Unsupported file type:', doc.fileType);
+    }
+  };
 
   const handleAddfolder = () => {
     setIsModalOpen(true);
@@ -104,17 +154,6 @@ const Page = () => {
     setIsModalOpen3(true);
   };
 
-  const handleSortFolders = (criteria: string) => {
-    setSortCriteria(criteria);
-    const sortedFolders = [...folders];
-
-    if (criteria === 'Name') {
-      sortedFolders.sort((a, b) => a.name.localeCompare(b.name));
-    }
-
-    setFolders(sortedFolders);
-  };
-
   const handleSortFiles = (criteria: string) => {
     if (!activeFolder && !isAllFilesActive) return;
 
@@ -147,7 +186,6 @@ const Page = () => {
     try {
       const response = await axiosInstance.get('/files');
       setAllFiles(response.data.data.items);
-      console.log('response.data.data.items', response.data.data.items);
     } catch (err) {
       setError('Failed to load files.');
       console.error(err);
@@ -164,7 +202,6 @@ const Page = () => {
       setAllFiles(response.data.data.items);
       folder.files = response.data.data.items;
       setActiveFolder(folder);
-      console.log('response.data.data.items', response.data.data.items);
     } catch (err) {
       setError('Failed to load files.');
       console.error(err);
@@ -264,30 +301,32 @@ const Page = () => {
           <Image src="/folder.svg" alt="img" width={25} height={25} />
           <h1 className="font-semibold text-[22px]">Files</h1>
         </div>
-        <div className="flex flex-row items-center gap-4">
-          {activeFolder?.id && (
+        {!isUserPanel && (
+          <div className="flex flex-row items-center gap-4">
+            {activeFolder?.id && (
+              <button
+                onClick={() => {
+                  setSubfolderOpen(true);
+                }}
+                className="flex flex-row items-center p-3 gap-2 px-4 bg-white border rounded text-[12px]"
+              >
+                Add Sub Folder <FaPlusCircle />
+              </button>
+            )}
             <button
-              onClick={() => {
-                setSubfolderOpen(true);
-              }}
+              onClick={handleAddfolder}
               className="flex flex-row items-center p-3 gap-2 px-4 bg-white border rounded text-[12px]"
             >
-              Add Sub Folder <FaPlusCircle />
+              Add Folder <FaPlusCircle />
             </button>
-          )}
-          <button
-            onClick={handleAddfolder}
-            className="flex flex-row items-center p-3 gap-2 px-4 bg-white border rounded text-[12px]"
-          >
-            Add Folder <FaPlusCircle />
-          </button>
-          <button
-            onClick={handleUploadfiles}
-            className="flex flex-row items-center p-3 gap-2 px-4 bg-[#0F172A] text-white border rounded text-[12px]"
-          >
-            Upload Files <FaUpload />
-          </button>
-        </div>
+            <button
+              onClick={handleUploadfiles}
+              className="flex flex-row items-center p-3 gap-2 px-4 bg-[#0F172A] text-white border rounded text-[12px]"
+            >
+              Upload Files <FaUpload />
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col sm:flex-row items-start gap-6 w-full mt-8">
@@ -352,13 +391,15 @@ const Page = () => {
                   <option>Size</option>
                 </select>
               </label>
-              <button
-                onClick={handleEditfolder}
-                className="flex flex-row items-center p-2 gap-2 px-4 bg-[#0F172A] text-white border rounded text-[12px]"
-                disabled={!activeFolder}
-              >
-                Edit Folder <FaEdit />
-              </button>
+              {!isUserPanel && (
+                <button
+                  onClick={handleEditfolder}
+                  className="flex flex-row items-center p-2 gap-2 px-4 bg-[#0F172A] text-white border rounded text-[12px]"
+                  disabled={!activeFolder}
+                >
+                  Edit Folder <FaEdit />
+                </button>
+              )}
             </div>
           </div>
 
@@ -370,7 +411,9 @@ const Page = () => {
                   <th className="p-4 font-medium text-left">Date Uploaded</th>
                   <th className="p-4 font-medium text-left">Size</th>
                   <th className="p-4 font-medium text-left">Filetype</th>
-                  <th className="p-4 font-medium text-center">Actions</th>
+                  {!isUserPanel && (
+                    <th className="p-4 font-medium text-center">Actions</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -381,8 +424,13 @@ const Page = () => {
                         key={index}
                         className="p-3 border-b text-[14px] font-normal hover:bg-gray-50"
                       >
-                        <td className="p-4 flex items-center gap-2 ">
-                          <input type="checkbox" />
+                        <td
+                          onClick={() => {
+                            handleDocumentOpen(file);
+                          }}
+                          className="p-4 flex items-center gap-2 cursor-pointer"
+                        >
+                          {/* <input type="checkbox" /> */}
                           <span className="max-w-[300px] truncate">
                             {file.fileTitle || file.fileName}
                           </span>
@@ -394,27 +442,31 @@ const Page = () => {
                             ? file.fileType ===
                               'vnd.openxmlformats-officedocument.wordprocessingml.document'
                               ? 'docx'
+                              : file.fileType === 'msword'
+                              ? 'doc'
                               : file.fileType
                             : ''}
                         </td>
-                        <td className="flex flex-row gap-3 justify-center items-center">
-                          <Image
-                            src="/edit.svg"
-                            alt="edit"
-                            width={10}
-                            height={10}
-                            onClick={() => handleEditdocument(file)}
-                            className="cursor-pointer"
-                          />
-                          <Image
-                            src="/delete.svg"
-                            alt="del"
-                            width={10}
-                            height={10}
-                            onClick={() => handleDeletedocument(file.id)}
-                            className="cursor-pointer"
-                          />
-                        </td>
+                        {!isUserPanel && (
+                          <td className="flex flex-row gap-3 justify-center items-center">
+                            <Image
+                              src="/edit.svg"
+                              alt="edit"
+                              width={10}
+                              height={10}
+                              onClick={() => handleEditdocument(file)}
+                              className="cursor-pointer"
+                            />
+                            <Image
+                              src="/delete.svg"
+                              alt="del"
+                              width={10}
+                              height={10}
+                              onClick={() => handleDeletedocument(file.id)}
+                              className="cursor-pointer"
+                            />
+                          </td>
+                        )}
                       </tr>
                     ))
                   ) : (
@@ -431,31 +483,47 @@ const Page = () => {
                         key={index}
                         className="p-3 border-b text-[14px] font-normal hover:bg-gray-50"
                       >
-                        <td className="p-4 flex items-center gap-2">
-                          <input type="checkbox" />
+                        <td
+                          onClick={() => {
+                            handleDocumentOpen(file);
+                          }}
+                          className="p-4 flex items-center gap-2 cursor-pointer"
+                        >
+                          {/* <input type="checkbox" /> */}
                           <span>{file.fileTitle || file.fileName}</span>
                         </td>
                         <td className="p-4">{file.dateUploaded}</td>
                         <td className="p-4">{file.size}</td>
-                        <td className="p-4">{file.fileType}</td>
-                        <td className="flex flex-row gap-3 justify-center items-center">
-                          <Image
-                            src="/edit.svg"
-                            alt="edit"
-                            width={10}
-                            height={10}
-                            onClick={() => handleEditdocument(file)}
-                            className="cursor-pointer"
-                          />
-                          <Image
-                            src="/delete.svg"
-                            alt="del"
-                            width={10}
-                            height={10}
-                            onClick={() => handleDeletedocument(file.id)}
-                            className="cursor-pointer"
-                          />
+                        <td className="p-4">
+                          {file.fileType
+                            ? file.fileType ===
+                              'vnd.openxmlformats-officedocument.wordprocessingml.document'
+                              ? 'docx'
+                              : file.fileType === 'msword'
+                              ? 'doc'
+                              : file.fileType
+                            : ''}
                         </td>
+                        {!isUserPanel && (
+                          <td className="flex flex-row gap-3 justify-center items-center">
+                            <Image
+                              src="/edit.svg"
+                              alt="edit"
+                              width={10}
+                              height={10}
+                              onClick={() => handleEditdocument(file)}
+                              className="cursor-pointer"
+                            />
+                            <Image
+                              src="/delete.svg"
+                              alt="del"
+                              width={10}
+                              height={10}
+                              onClick={() => handleDeletedocument(file.id)}
+                              className="cursor-pointer"
+                            />
+                          </td>
+                        )}
                       </tr>
                     ))
                   ) : (
@@ -536,4 +604,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default HrFiles;

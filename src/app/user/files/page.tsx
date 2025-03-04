@@ -1,11 +1,10 @@
-import React from 'react'
-import Page from '../../hr/files/page'
+import HrFiles from '@/app/hr/files/page';
+
 const page = () => {
   return (
-    <div className='p-6'>
-      <Page/>
-    </div>
-  )
-}
-
-export default page
+    <main className="m-4">
+      <HrFiles />
+    </main>
+  );
+};
+export default page;
