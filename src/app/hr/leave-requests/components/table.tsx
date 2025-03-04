@@ -58,7 +58,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
     fetchSession();
   }, []);
 
-  const isSuperadmin = role === 'SuperAdmin';
+  const isAdminOrManager = role === 'SuperAdmin' || role === 'Manager';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -226,7 +226,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
                     </td>
                     <td className="p-4 flex justify-center items-center whitespace-nowrap gap-2">
                       {employee.status === 'Pending' ? (
-                        isSuperadmin ? (
+                        isAdminOrManager ? (
                           <>
                             <button
                               className="p-2 text-white bg-[#25A244] rounded text-[10px] flex items-center gap-2"
