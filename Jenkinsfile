@@ -19,20 +19,23 @@ pipeline {
                         env.NODE_LABEL = 'master'
                         env.SERVER_USER = 'jenkins'
                         env.SERVER_IP = '13.48.115.146'
-                        // env.NODE_ENV = 'production'
                         env.ENV_PATH = '/var/lib/jenkins/envFiles/workbridgeFrontendEnv/.env'
                         env.APP_DIR = '/var/www/workbridge-frontend-dev'
                     } else if (env.BRANCH_NAME == 'prod') {
                         env.NODE_LABEL = 'production'
                         env.SERVER_USER = 'jenkins'
                         env.SERVER_IP = '13.48.115.146'  // Replace with actual production IP.
-                        // env.NODE_ENV = 'production'
                         env.ENV_PATH = '/home/jenkins/envFiles/workbridgeFrontendEnv/.env'
                         env.APP_DIR = '/var/www/workbridge-frontend'
+                    } else if (env.BRANCH_NAME == 'uat') {  // ✅ Added UAT functionality
+                        env.NODE_LABEL = 'uat'
+                        env.SERVER_USER = 'jenkins'
+                        env.SERVER_IP = '13.51.4.88'  // Replace with actual UAT IP
+                        env.ENV_PATH = '/home/jenkins/envFiles/workbridgeFrontendEnv/.env'
+                        env.APP_DIR = '/var/www/workbridge-frontend-uat'
                     } else {
                         error "Unsupported branch: ${env.BRANCH_NAME}"
                     }
-                    // echo "🚀 Deploying ${APP_NAME} to ${env.NODE_ENV} at ${env.APP_DIR}"
                 }
             }
         }
@@ -129,7 +132,6 @@ module.exports = {
             args: "start",
             cwd: "${env.APP_DIR}",
             env: {
-
                 PORT: ${env.APP_PORT}
             }
         }
