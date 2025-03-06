@@ -20,7 +20,6 @@ const HomePolicies = () => {
       try {
         const response = await getAllPolicies(1, 1000);
         const allPolicies = response.data.data.items || [];
-        console.log('policies: ', allPolicies);
         if (Array.isArray(allPolicies)) {
           const formattedData = allPolicies.map((item: any) => ({
             id: item.id,

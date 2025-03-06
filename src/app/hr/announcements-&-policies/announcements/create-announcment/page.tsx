@@ -45,6 +45,7 @@ const CreateAnnouncement = () => {
       const payload = { title, body, status: 'Draft' };
       await axiosInstance.post('/announcement/', payload);
       toast.success('Draft saved successfully!');
+      router.back();
     } catch (error: any) {
       console.error('Error saving draft:', error);
       toast.error('An error occurred while saving the draft.');
@@ -76,6 +77,7 @@ const CreateAnnouncement = () => {
       toast.success('Announcement published successfully!');
       setTitle('');
       setBody('');
+      router.back();
     } catch (error: any) {
       console.error('Error publishing announcement:', error);
       toast.error('An error occurred while publishing the announcement.');
