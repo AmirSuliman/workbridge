@@ -6,8 +6,6 @@ interface FetchUsersParams {
   page: number;
   pageSize: number;
   searchQuery?: string;
-  sortBy: string;
-  sortOrder: 'asc' | 'desc';
   filter: string;
 }
 
@@ -15,8 +13,6 @@ export const fetchUsers = async ({
   page = 1,
   pageSize = 10,
   searchQuery = '',
-  sortBy = '',
-  sortOrder = 'asc',
   filter = '',
 }: Partial<FetchUsersParams>) => {
   try {
@@ -24,10 +20,8 @@ export const fetchUsers = async ({
       params: {
         page,
         size: pageSize,
-        searchQuery: searchQuery,
-        sortBy,
-        sortOrder,
-        filter,
+        firstName: searchQuery,
+        roleId: filter,
       },
     });
     return response.data;

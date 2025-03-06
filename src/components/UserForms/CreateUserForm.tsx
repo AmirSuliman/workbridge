@@ -10,7 +10,7 @@ const lato = Lato({
   subsets: ['latin'],
   weight: ['400', '300', '700'],
 });
-export default function CreateUserForm() {
+export default function CreateUserForm({ onClose }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export default function CreateUserForm() {
         are filled correctly to avoid errors.
       </p>
       <TabsContainer>
-        <HRForm />
+        <HRForm onClose={onClose} />
       </TabsContainer>
     </div>
   );
