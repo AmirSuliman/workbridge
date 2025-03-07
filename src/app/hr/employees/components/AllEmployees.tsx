@@ -54,7 +54,7 @@ export const AllEmployees = () => {
           searchTerm
         );
         dispatch(addEmployees(data.items));
-
+        console.log('employees: ', data);
         // Extract unique job titles and departments
         const jobTitles: string[] = Array.from(
           new Set(data.items.map((employee) => employee.tittle))

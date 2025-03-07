@@ -134,8 +134,12 @@ const Auth = () => {
         try {
           // Fetch user data
           const userData = await fetchUserData(session.user.accessToken);
-
+          console.log('user/my: ', userData);
           dispatch(setUser(userData));
+          // if(userData.firstTime){
+
+          //   return
+          // }
           toast.success('Login Successful!');
 
           // Redirect based on role

@@ -11,6 +11,7 @@ interface Props extends React.PropsWithChildren {
   notification: NotificationItem;
 }
 const NotificationLink = ({ notification, children }: Props) => {
+  // console.log('NotificationType', NotificationType);
   const dispatch = useDispatch();
   const _clickHandler = useCallback(() => {
     dispatch(toggleDropdown(false));
@@ -19,6 +20,10 @@ const NotificationLink = ({ notification, children }: Props) => {
     }
   }, []);
 
+  // console.log(
+  //   'notification.notification.issueId:',
+  //   notification.notification.issueId
+  // );
   switch (notification.notification?.notificationType) {
     case NotificationType.Announcement:
       return (

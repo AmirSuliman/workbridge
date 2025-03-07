@@ -8,6 +8,8 @@ import { PiPlusCircleBold } from 'react-icons/pi';
 import Notifications from '../Notifications/Notifications';
 import UserProfileInfo from '../UserProfileInfo';
 import imageLoader from '../../../imageLoader';
+import Button from '../Button';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const HrHeader = () => {
   const router = useRouter();
@@ -18,7 +20,7 @@ const HrHeader = () => {
   return (
     <nav className="relative flex items-center gap-4 bg-white px-8 py-4 border-b border-[#E8E8E8] w-full">
       {/* Create New Button with Dropdown */}
-      {isHomePage && (
+      {isHomePage ? (
         <div className="relative">
           <button
             onClick={() => setShowDropdown((prev) => !prev)}
@@ -79,6 +81,13 @@ const HrHeader = () => {
             </div>
           )}
         </div>
+      ) : (
+        <Button
+          onClick={() => router.back()}
+          icon={<FaArrowLeft />}
+          name="Back"
+          className="flex-row-reverse"
+        />
       )}
 
       <Notifications />
