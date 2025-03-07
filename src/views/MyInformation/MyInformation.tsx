@@ -23,7 +23,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { FieldErrors, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -206,6 +206,11 @@ const MyInformation = () => {
 
   useEffect(() => {
     setSchemaErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      toast.error(
+        'Some input fields are missing in Personal or Employment tab!'
+      );
+    }
   }, [errors]);
 
   const onSubmit = async (data: any) => {

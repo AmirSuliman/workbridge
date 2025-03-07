@@ -181,7 +181,7 @@ const EmploymentSection = ({
             />
           </article>
           <article>
-            <Label text="Reporting Manager*" />
+            <Label text="Reporting Manager" />
             {isUserPanel ? (
               <input
                 value={`${employeeData?.manager?.firstName} ${employeeData?.manager?.lastName}`}

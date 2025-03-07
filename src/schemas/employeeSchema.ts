@@ -139,7 +139,7 @@ export const putEmployeeSchema = z.object({
 
   reportingManagerId: z.preprocess(
     (val) => Number(val), // Convert string to number
-    z.number().min(1, 'Reporting manger is required')
+    z.number().optional()
   ),
   gender: z
     .string({ message: 'Gender is required' })
