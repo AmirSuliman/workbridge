@@ -23,13 +23,11 @@ const Hiring = () => {
         <AllJobsTable />
       </TabComponent>
       <TabComponent index="1">
-        <div className="  mt-4">
-          <div className="flex flex-row items-center gap-2 text-[22px] font-medium">
-            <FaUsers />
-            Candidates
-          </div>
-          <Candidatetable />
+        <div className="flex flex-row items-center gap-2 mt-4 text-[22px] font-medium">
+          <FaUsers />
+          Candidates
         </div>
+        <Candidatetable />
       </TabComponent>
     </main>
   );

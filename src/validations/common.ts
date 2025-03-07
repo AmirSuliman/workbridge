@@ -15,9 +15,9 @@ export const password = z
   .refine((val) => !val || /\d/.test(val), {
     message: 'Password must contain at least one number',
   })
-  .refine((val) => !val || /[@$!%*?&#]/.test(val), {
+  .refine((val) => !val || /[@$!%*?&#|]/.test(val), {
     message:
-      'Password must contain at least one special character - (@$!%*?&#)',
+      'Password must contain at least one special character - (@$!%*?&#|)',
   });
 
 export const email = z

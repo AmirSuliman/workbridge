@@ -30,7 +30,7 @@ const CandidateTable = () => {
       sort: sort || undefined,
       page: currentPage,
       size: pageSize,
-      candidateId: searchQuery || undefined,
+      name: searchQuery || undefined,
     };
     dispatch(fetchJobApplications(params));
   }, [dispatch, searchQuery, sort, filter, currentPage]);
@@ -46,7 +46,7 @@ const CandidateTable = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search candidate"
-            className="text-[12px] outline-none"
+            className="text-[12px] text-black outline-none"
           />
         </div>
 
@@ -64,7 +64,7 @@ const CandidateTable = () => {
             <option value="createdAt">Date Applied</option>
             <option value="stage">Status</option>
             <option value="rating">Highets rating</option>
-            <option value="rating">Lowets rating</option>
+            <option value="lowerRating">Lowets rating</option>
           </select>
         </div>
 
@@ -79,9 +79,15 @@ const CandidateTable = () => {
             onChange={(e) => setFilter(e.target.value)}
           >
             <option value="">Select</option>
-            <option value="Published">Active</option>
-            <option value="Draft">Pending</option>
-            {/* <option value="Draft">Closed</option> */}
+            <option value="Applied">Applied</option>
+            <option value="First">First</option>
+            <option value="Technical">Technical</option>
+            <option value="Second">Second</option>
+            <option value="Negotiation">Negotiation</option>
+            <option value="Offer">Offer</option>
+            <option value="Onboarding">Onboarding</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Onboarded">Onboarded</option>
           </select>
         </div>
       </div>
