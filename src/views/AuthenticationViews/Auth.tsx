@@ -5,11 +5,11 @@ import { fetchUserData } from '@/services/myInfo';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { authSchema } from '@/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getSession, signIn } from 'next-auth/react';
+import { getSession, signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
@@ -17,6 +17,7 @@ import { useDispatch } from 'react-redux';
 import { z } from 'zod';
 import Footer from './footer';
 import Navbar from './nav';
+import Head from 'next/head';
 
 type AuthFormInputs = z.infer<typeof authSchema>;
 
@@ -35,6 +36,79 @@ const Auth = () => {
   });
 
   const router = useRouter();
+
+  // Check for existing session when component mounts
+  useEffect(() => {
+    const checkSession = async () => {
+      const session = await getSession();
+      if (session?.user?.accessToken) {
+        try {
+          // Fetch user data with the existing token
+          const userData = await fetchUserData(session.user.accessToken);
+          dispatch(setUser(userData));
+
+          // Redirect based on role
+          if (userData.role === 'Manager' || userData.role === 'ViewOnly') {
+            router.replace('/user/home');
+          } else {
+            router.replace('/hr/home');
+          }
+        } catch (error) {
+          // If token is invalid or expired, sign out
+          signOut({ redirect: false });
+        }
+      }
+    };
+
+    checkSession();
+
+    // Add event listener to prevent using the back button after logout
+    const handlePopState = (event: PopStateEvent) => {
+      const session = getSession();
+      if (!session) {
+        // Prevent going back to authorized pages after logout
+        window.history.pushState(null, '', window.location.pathname);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [dispatch, router]);
+
+  // Add cache control headers
+  useEffect(() => {
+    // Set cache control headers
+    const setNoCache = () => {
+      // For modern browsers
+      if (typeof window !== 'undefined') {
+        document
+          .getElementsByTagName('meta')[0]
+          .setAttribute('http-equiv', 'Cache-Control');
+        document
+          .getElementsByTagName('meta')[0]
+          .setAttribute(
+            'content',
+            'no-store, no-cache, must-revalidate, max-age=0'
+          );
+        document
+          .getElementsByTagName('meta')[1]
+          .setAttribute('http-equiv', 'Pragma');
+        document
+          .getElementsByTagName('meta')[1]
+          .setAttribute('content', 'no-cache');
+
+        document
+          .getElementsByTagName('meta')[2]
+          .setAttribute('http-equiv', 'Expires');
+        document.getElementsByTagName('meta')[2].setAttribute('content', '0');
+      }
+    };
+
+    setNoCache();
+  }, []);
 
   const onSubmit = async (data: AuthFormInputs) => {
     setLoading(true);
@@ -66,9 +140,9 @@ const Auth = () => {
 
           // Redirect based on role
           if (userData.role === 'Manager' || userData.role === 'ViewOnly') {
-            router.push('/user/home');
+            router.replace('/user/home');
           } else {
-            router.push('/hr/home');
+            router.replace('/hr/home');
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
@@ -89,6 +163,15 @@ const Auth = () => {
 
   return (
     <>
+      <Head>
+        <meta
+          httpEquiv="Cache-Control"
+          content="no-store, no-cache, must-revalidate, max-age=0"
+        />
+        <meta httpEquiv="Pragma" content="no-cache" />
+        <meta httpEquiv="Expires" content="0" />
+        <title>Login - WorkBridge</title>
+      </Head>
       <Navbar />
       <div
         className="h-[400px] "

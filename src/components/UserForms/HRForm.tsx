@@ -63,9 +63,7 @@ const HRForm = ({ onClose }) => {
     error: 'text-[9px]',
   };
   const onSubmit = async (data: HRFormInputs) => {
-    console.log('admin form data: ', data);
     const response = await dispatch(createUser(data) as any);
-    console.log('user res: ', response);
     if (response?.type === 'users/createUser/fulfilled') onClose();
   };
 
