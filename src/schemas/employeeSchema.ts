@@ -5,19 +5,23 @@ const TEXT_REGX = /^[A-Za-z\s]+$/;
 const locationSchema = z.object({
   street1: z
     .string({ message: 'Street1 is required' })
-    .min(1, 'Street1 is required'),
+    // .min(1, 'Street1 is required'),
+    .optional(),
+
   street2: z.union([z.string().optional(), z.null()]).optional(),
   zipCode: z
-    .number({ message: 'zip code is required' })
-    .min(1, 'zip code is required')
-    .refine((value) => !isNaN(Number(value)), {
-      message: 'Zip code must be a number',
-    }),
-  city: z.string({ message: 'City is required' }).min(1, 'City is required'),
+    .string()
+    .trim()
+    .transform((val) => (val === '' ? undefined : Number(val)))
+    .refine((val) => val === undefined || !isNaN(val), {
+      message: 'Must be a valid number',
+    })
+    .optional(),
+  city: z.string({ message: 'City is required' }).optional(),
   country: z
     .string({ message: 'Country is required' })
     .min(1, 'Country is required'),
-  state: z.string({ message: 'State is required' }).min(1, 'State is required'),
+  state: z.string({ message: 'State is required' }).optional(),
 });
 
 export const employeeSchema = z.object({
@@ -30,25 +34,42 @@ export const employeeSchema = z.object({
     .number({ message: 'salary must be a number' })
     .min(1000, 'Salary must be at least 1000$ per year'),
   tittle: z.string().min(1, 'Title is required'),
-  effectiveDate: z
-    .string()
-    .regex(
-      /^\d{4}-\d{2}-\d{2}$/,
-      'Effective date must be in mm/dd/yyyy format'
-    ),
-  note: z.string().optional(),
   hireDate: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in mm/dd/yyyy format'),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in mm/dd/yyyy format')
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+
   birthday: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birth date must be in mm/dd/yyyy format'),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birth date must be in mm/dd/yyyy format')
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
   phoneNumber: z
-    .number({ message: 'Phone number must be at least 7 digits' })
-    .min(7, 'Phone number must be at least 7 digits'),
+    .string()
+    .trim()
+    .transform((val) => (val === '' ? undefined : Number(val)))
+    .refine((val) => val === undefined || !isNaN(val), {
+      message: 'Must be a valid number',
+    })
+    .refine((val) => val === undefined || val.toString().length >= 7, {
+      message: 'Phone number must be at least 7 digits',
+    })
+    .optional(),
+
   workPhone: z
-    .number({ message: 'Work phone number must be at least 7 digits' })
-    .min(7, 'Work phone number must be at least 7 digits'),
+    .string()
+    .trim()
+    .transform((val) => (val === '' ? undefined : Number(val)))
+    .refine((val) => val === undefined || !isNaN(val), {
+      message: 'Must be a valid number',
+    })
+    .refine((val) => val === undefined || val.toString().length >= 7, {
+      message: 'Work phone must be at least 7 digits',
+    })
+    .optional(),
   departmentId: z.preprocess(
     (val) => Number(val), // Convert string to number
     z
@@ -69,7 +90,9 @@ export const employeeSchema = z.object({
   paymentSchedule: z
     .string({ message: 'Payment schedule is required' })
     .min(1, 'Payment schedule is required'),
-  payType: z.union([z.string().optional(), z.null()]).optional(),
+  payType: z
+    .string({ message: 'Paytype is required' })
+    .min(1, 'Paytype is required'),
   countryId: z.union([z.number().optional(), z.null()]).optional(),
   isManager: z.boolean().optional(),
   profilePictureUrl: z.union([z.string().optional(), z.null()]).optional(),
@@ -111,42 +134,71 @@ export const putEmployeeSchema = z.object({
   email: z.string().email('Invalid email address'),
   middleName: z.string().optional().nullable().or(z.literal('')),
   tittle: z.string().min(1, 'Title is required'),
-  effectiveDate: z
-    .string()
-    .regex(
-      /^\d{4}-\d{2}-\d{2}$/,
-      'Effective date must be in mm/dd/yyyy format'
-    ),
+
   note: z.string().optional(),
   hireDate: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in mm/dd/yyyy format'),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in mm/dd/yyyy format')
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+
   birthday: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birth date must be in mm/dd/yyyy format'),
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birth date must be in mm/dd/yyyy format')
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
   phoneNumber: z
-    .number({ message: 'Phone number must be at least 7 digits' })
-    .min(7, 'Phone number must be at least 7 digits'),
+    .string()
+    .trim()
+    .transform((val) => (val === '' ? undefined : Number(val)))
+    .refine((val) => val === undefined || !isNaN(val), {
+      message: 'Must be a valid number',
+    })
+    .refine((val) => val === undefined || val.toString().length >= 7, {
+      message: 'Phone number must be at least 7 digits',
+    })
+    .optional(),
+
   workPhone: z
-    .number({ message: 'Work phone number must be at least 7 digits' })
-    .min(7, 'Work phone number must be at least 7 digits'),
+    .string()
+    .trim()
+    .transform((val) => (val === '' ? undefined : Number(val)))
+    .refine((val) => val === undefined || !isNaN(val), {
+      message: 'Must be a valid number',
+    })
+    .refine((val) => val === undefined || val.toString().length >= 7, {
+      message: 'Work phone must be at least 7 digits',
+    })
+    .optional(),
+
   departmentId: z.preprocess(
     (val) => Number(val), // Convert string to number
     z
       .number({ message: 'Department is required' })
       .min(1, 'Department is required')
+    // .optional()
   ),
 
   reportingManagerId: z.preprocess(
     (val) => Number(val), // Convert string to number
-    z.number().min(1, 'Reporting manger is required')
+    z.number().optional()
   ),
   gender: z
     .string({ message: 'Gender is required' })
-    .min(1, 'Gender is required'),
+    // .min(1, 'Gender is required'),
+    .optional()
+    .nullable()
+    .or(z.literal('')),
+
   marritialStatus: z
     .string({ message: 'Marital status is required' })
-    .min(1, 'Marital status is required'),
+    // .min(1, 'Marital status is required'),
+    .optional()
+    .nullable()
+    .or(z.literal('')),
+
   countryId: z.union([z.number().optional(), z.null()]).optional(),
   isManager: z.boolean().optional(),
   profilePictureUrl: z.union([z.string().optional(), z.null()]).optional(),
@@ -176,7 +228,8 @@ export const putEmployeeSchema = z.object({
     .or(z.literal('')),
   employmentType: z
     .string({ message: 'Employment type is required' })
-    .min(1, 'Employment type is required'),
+    // .min(1, 'Employment type is required'),
+    .optional(),
 });
 
 // --------------------------------------------------------------------------------------------

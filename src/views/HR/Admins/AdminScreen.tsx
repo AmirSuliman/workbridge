@@ -41,12 +41,10 @@ const AdminScreen = () => {
         page: currentPage,
         pageSize,
         filter,
-        sortBy,
         searchQuery: searchQuery,
-        sortOrder,
       }) as any
     );
-  }, [currentPage, filter, sortBy, sortOrder, searchQuery]);
+  }, [currentPage, filter, searchQuery]);
 
   // Search handler
   const handleSearch = (query: string) => {
@@ -56,8 +54,6 @@ const AdminScreen = () => {
         page: currentPage,
         pageSize,
         filter,
-        sortBy,
-        sortOrder,
         searchQuery: query,
       }) as any
     );
@@ -71,7 +67,7 @@ const AdminScreen = () => {
         <ProfileAvatarItem
           src={row.profilePictureUrl}
           title={`${row.firstName} ${row.lastName}`}
-          subtitle="-"
+          subtitle=""
         />
       ),
     },
@@ -90,25 +86,13 @@ const AdminScreen = () => {
         </Link>
       ),
     },
-    {
-      title: 'Hire Date',
-      accessor: 'hireDate',
-      render: () => (
-        <div className="flex flex-col">
-          <div className="text-sm text-dark-navy font-[500]">24.01.2024</div>
-          <div className="text-[10px] text-dark-navy font-[500]">
-            1 Year 4 Months
-          </div>
-        </div>
-      ),
-    },
-    {
-      title: '',
-      accessor: 'actions',
-      render: () => (
-        <MdOutlineKeyboardArrowRight className="w-6 h-6 border border-gray-border rounded-sm hover:cursor-pointer hover:bg-gray-100" />
-      ),
-    },
+    // {
+    //   title: '',
+    //   accessor: 'actions',
+    //   render: () => (
+    //     <MdOutlineKeyboardArrowRight className="w-6 h-6 border border-gray-border rounded-sm hover:cursor-pointer hover:bg-gray-100" />
+    //   ),
+    // },
   ];
 
   useEffect(() => {
@@ -131,17 +115,7 @@ const AdminScreen = () => {
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
             />
-            <div className="flex gap-2 items-center w-full">
-              <label className="text-sm text-[#abaeb4]">Sort</label>
-              <select
-                className="p-2 border w-full max-w-xs border-gray-border rounded-[5px] outline-none focus:outline-none ring-0 text-xs text-dark-gray"
-                onChange={(e) => setSortBy(e.target.value)}
-              >
-                <option value="">Select</option>
-                <option value="recently_added">Recently Added</option>
-                <option value="name">Name</option>
-              </select>
-            </div>
+
             <div className="flex gap-2 items-center w-full">
               <label className="text-sm text-[#abaeb4]">Filter</label>
               <select
@@ -149,8 +123,10 @@ const AdminScreen = () => {
                 onChange={(e) => setFilter(e.target.value)}
               >
                 <option value="">Select</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="2">Super Admins</option>
+                <option value="1">Hr Admins</option>
+                <option value="4">Managers</option>
+                <option value="3">Employess</option>
               </select>
             </div>
           </div>
@@ -180,7 +156,7 @@ const AdminScreen = () => {
       </div>
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-          <CreateUserForm />
+          <CreateUserForm onClose={() => setIsModalOpen(false)} />
         </Modal>
       )}
     </div>

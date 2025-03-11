@@ -9,11 +9,12 @@ import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import { getSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 
 const EmploymentSection = ({
   errors,
-  resetField,
   register,
+  resetField,
   editEmployee,
   employeeData,
 }) => {
@@ -42,6 +43,7 @@ const EmploymentSection = ({
   const duration = employeeData?.hireDate ? calculateDuration(hireDate) : '';
 
   const [role, setRole] = useState<string>();
+  const { empId } = useParams(); // This id is used to view any employee's info
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -62,7 +64,7 @@ const EmploymentSection = ({
         </div>
         <div className="grid md:grid-cols-3 gap-4">
           <label className="form-label">
-            Hire Date*
+            Hire Date
             <input
               type="date"
               className={`form-input`}
@@ -92,18 +94,6 @@ const EmploymentSection = ({
         </div>
 
         <div className="grid md:grid-cols-3 gap-4">
-          <label className="form-label">
-            Effective Date*
-            <input
-              type="date"
-              className={`form-input`}
-              {...register('effectiveDate')}
-              readOnly={!editEmployee}
-            />
-            {errors?.effectiveDate && (
-              <p className="form-error">{errors?.effectiveDate.message}</p>
-            )}
-          </label>
           <label className="form-label">
             Employment Type*
             {editEmployee ? (
@@ -140,7 +130,7 @@ const EmploymentSection = ({
           <InfoGrid
             cols={6}
             headers={[
-              'Effective Date',
+              'Hire Date',
               'Location',
               'Division',
               'Department',
@@ -150,8 +140,8 @@ const EmploymentSection = ({
             values={[
               [
                 `${
-                  employeeData?.effectiveDate
-                    ? employeeData?.effectiveDate.split('T')[0] || 'N/A'
+                  employeeData?.hireDate
+                    ? employeeData?.hireDate.split('T')[0] || 'N/A'
                     : 'N/A'
                 }`,
                 employeeData?.location?.country ===
@@ -180,23 +170,21 @@ const EmploymentSection = ({
               departmentId={employeeData.id}
             />
           </article>
-          <article>
-            <Label text="Reporting Manager*" />
-            {isUserPanel ? (
-              <input
-                value={`${employeeData?.manager?.firstName} ${employeeData?.manager?.lastName}`}
-                className="form-input"
-                readOnly
-              ></input>
-            ) : (
+
+          {/* If role is admin and empId not coming from the search params */}
+          {role === 'SuperAdmin' && !empId ? (
+            ''
+          ) : (
+            <article>
+              <Label text="Reporting Manager" />
               <EmployeesDropdown
                 errors={errors}
                 register={register}
                 resetField={resetField}
                 reportingManagerId={employeeData.reportingManagerId}
               />
-            )}
-          </article>
+            </article>
+          )}
           <article>
             <Label text="Job Title*" />
             <input

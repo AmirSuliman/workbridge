@@ -141,7 +141,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
               )}
             </article>
             <article>
-              <Label text="Birthday*" />
+              <Label text="Birthday" />
               <input
                 type="date"
                 placeholder="Add birthday"
@@ -195,10 +195,10 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                     {country.country}
                   </option>
                 ))}
-                {errors.countryId && (
-                  <span className="form-error">{errors.countryId.message}</span>
-                )}
               </select>
+              {errors.countryId && (
+                <span className="form-error">{errors.countryId.message}</span>
+              )}
             </article>
           </div>
         </div>
@@ -210,7 +210,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
               {
                 type: 'text',
                 name: 'location.street1',
-                label: 'Street 1*',
+                label: 'Street 1',
               },
               {
                 type: 'text',
@@ -218,9 +218,9 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                 label: 'Street 2',
               },
               {
-                type: 'number',
+                type: 'text',
                 name: 'location.zipCode',
-                label: 'Zip*',
+                label: 'Zip',
               },
               {
                 type: 'text',
@@ -235,7 +235,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
               {
                 type: 'text',
                 name: 'location.state',
-                label: 'State*',
+                label: 'State',
               },
             ].map((field) => (
               <article key={field.name}>
@@ -244,9 +244,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
                   type={field.type}
                   placeholder={`Add ${field.label.toLowerCase().split('*')[0]}`}
                   className="form-input"
-                  {...register(field.name as keyof EmployeeData, {
-                    valueAsNumber: field.name.includes('zipCode'),
-                  })}
+                  {...register(field.name as keyof EmployeeData)}
                 />
                 {errors.location &&
                   errors.location[field.name.split('.')[1]] && (
@@ -263,27 +261,22 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
           <FormHeading icon={<FaPhoneAlt className="w-4" />} text="Contact" />
           <div className="grid sm:grid-cols-3 gap-4 mt-5">
             <label className="form-label">
-              Phone*
+              Phone
               <input
-                type="number"
+                type="text"
                 className={`form-input`}
-                {...register('phoneNumber', {
-                  valueAsNumber: true,
-                })}
+                {...register('phoneNumber')}
               />
               {errors.phoneNumber && (
                 <p className="form-error">{errors.phoneNumber.message}</p>
               )}
             </label>
             <label className="form-label">
-              Work Phone*
+              Work Phone
               <input
-                type="number"
+                type="text"
                 className={`form-input`}
-                {...register('workPhone', {
-                  required: 'Work phone number is required',
-                  valueAsNumber: true,
-                })}
+                {...register('workPhone')}
               />
               {errors.workPhone && (
                 <p className="form-error">{errors.workPhone.message}</p>

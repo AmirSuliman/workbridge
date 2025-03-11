@@ -1,3 +1,4 @@
+import axiosInstance from '@/lib/axios';
 import { createUser } from '@/store/slices/userSlice';
 import { RootState } from '@/store/store';
 import { hrFormSchema } from '@/validations/formValidations';
@@ -10,8 +11,6 @@ import { z } from 'zod';
 import InputField from '../common/InputField';
 import SelectField from '../common/SelectField';
 import EyeIcon from '../icons/eye-icon';
-import axiosInstance from '@/lib/axios';
-import { Label } from '@/app/hr/employees/components/Helpers';
 interface Country {
   id: number;
   country: string;
@@ -19,7 +18,7 @@ interface Country {
 }
 
 type HRFormInputs = z.infer<typeof hrFormSchema>;
-const HRForm = () => {
+const HRForm = ({ onClose }) => {
   const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.users);
 
@@ -63,9 +62,9 @@ const HRForm = () => {
     container: '',
     error: 'text-[9px]',
   };
-  const onSubmit = (data: HRFormInputs) => {
-    console.log('admin form data: ', data);
-    dispatch(createUser(data) as any);
+  const onSubmit = async (data: HRFormInputs) => {
+    const response = await dispatch(createUser(data) as any);
+    if (response?.type === 'users/createUser/fulfilled') onClose();
   };
 
   return (

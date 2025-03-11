@@ -12,8 +12,6 @@ interface UserState {
   error: string | null;
   status: 'idle' | 'loading' | 'success' | 'failed';
   createStatus: 'idle' | 'loading' | 'success' | 'failed';
-  sortBy: string | null;
-  sortOrder: 'asc' | 'desc' | null;
   filter: string | null; // Example filter, e.g., a search term
 }
 
@@ -26,8 +24,6 @@ const initialState: UserState = {
   error: null,
   status: 'idle',
   createStatus: 'idle',
-  sortBy: null,
-  sortOrder: null,
   filter: null,
 };
 export const getUsers = createAsyncThunk(
@@ -37,15 +33,11 @@ export const getUsers = createAsyncThunk(
       page,
       pageSize = 5,
       searchQuery = '',
-      sortBy = null,
-      sortOrder = null,
       filter = null,
     }: {
       page: number;
       pageSize: number;
       searchQuery?: string;
-      sortBy?: string | null;
-      sortOrder?: 'asc' | 'desc' | null;
       filter?: string | null;
     },
     { rejectWithValue }
@@ -56,8 +48,6 @@ export const getUsers = createAsyncThunk(
         page,
         pageSize,
         searchQuery: searchQuery,
-        sortBy: sortBy || undefined,
-        sortOrder: sortOrder || undefined,
         filter: filter || undefined,
       });
       return { ...response, pageSize };
@@ -89,10 +79,6 @@ const usersSlice = createSlice({
   reducers: {
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
-    },
-    setSort: (state, action) => {
-      state.sortBy = action.payload.sortBy;
-      state.sortOrder = action.payload.sortOrder;
     },
     setFilter: (state, action) => {
       state.filter = action.payload;
@@ -131,6 +117,6 @@ const usersSlice = createSlice({
   },
 });
 
-export const { setCurrentPage, setSort, setFilter } = usersSlice.actions;
+export const { setCurrentPage, setFilter } = usersSlice.actions;
 
 export default usersSlice.reducer;

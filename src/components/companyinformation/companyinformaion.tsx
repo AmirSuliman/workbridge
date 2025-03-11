@@ -7,7 +7,7 @@ import { FaLinkedin } from 'react-icons/fa';
 
 const Companyinfo = () => {
   return (
-    <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4">
+    <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4 ">
       <div className="flex flex-row gap-2 items-center mb-8">
         <img src="/Vector.png" alt="img" className="w-8 " />
         <h1 className="text-[#0F172A] font-medium text-[18px]">
