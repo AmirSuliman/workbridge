@@ -214,7 +214,7 @@ const OrgChartWithHoverPositions = ({
     if (
       refOrgChart.current &&
       d3Container.current &&
-      !multipleRoots &&
+      multipleRoots &&
       !hasCycle
     ) {
       refOrgChart.current
@@ -463,7 +463,7 @@ const OrgChartWithHoverPositions = ({
 
   return (
     <main className="h-[calc(100vh-10rem)] overflow-hidden relative">
-      {multipleRoots && (
+      {!multipleRoots && (
         <div className="border-b-[1px] border-gray-border px-6 py-4">
           <h1>There are multiple roots in the data</h1>
         </div>
