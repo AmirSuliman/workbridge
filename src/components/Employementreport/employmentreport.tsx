@@ -56,6 +56,7 @@ const EmployeeReport: React.FC = () => {
       }
 
       const response = await axiosInstance.get('/employees/report', { params });
+      // console.log('emp reports: ', response.data.data);
       const newReports = response.data.data;
       setReports(newReports);
 
@@ -87,6 +88,11 @@ const EmployeeReport: React.FC = () => {
           .substring(0, 3)
           .toUpperCase();
 
+        // if we have a month with the "Unknown" name then delete it from the map
+        if (monthMap.has('UNK')) {
+          monthMap.delete('UNK');
+        }
+
         if (!monthMap.has(monthKey)) {
           monthMap.set(monthKey, { month: monthKey });
         }
@@ -107,7 +113,7 @@ const EmployeeReport: React.FC = () => {
 
   return (
     <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4">
-      <div className="flex flex-row items-center justify-between w-full p-4">
+      <div className="flex flex-row items-center justify-between w-full">
         <div className="flex flex-row items-center gap-2">
           <img src="/Vector (Stroke).png" alt="img" />
           <h1 className="font-medium text-[18px] text-[#0F172A]">
@@ -125,7 +131,7 @@ const EmployeeReport: React.FC = () => {
         </Link>
       </div>
 
-      <div className="flex flex-row items-center justify-between w-full p-4">
+      <div className="flex flex-row items-center justify-between w-full mt-4">
         <div className="flex flex-row items-center gap-2">
           <FiUsers />
           <p className="text-[#0F172A] text-[14px]">

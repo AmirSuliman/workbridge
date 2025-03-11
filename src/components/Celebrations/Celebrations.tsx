@@ -21,10 +21,6 @@ const Celebrations = () => {
       <div className="divide-y-[1px] divide-[#E8E8E8] space-y-4">
         <UserCelebrationInfo />
         <UserCelebrationInfo />
-        <UserCelebrationInfo />
-        <UserCelebrationInfo />
-        <UserCelebrationInfo />
-        <UserCelebrationInfo />
       </div>
     </section>
   );

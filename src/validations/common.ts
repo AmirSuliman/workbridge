@@ -1,3 +1,4 @@
+import { X } from 'lucide-react';
 import { z } from 'zod';
 
 export const password = z
@@ -24,3 +25,8 @@ export const email = z
   .string()
   .trim()
   .email({ message: 'Invalid Email Format' });
+
+export const updatePassword = z.object({
+  oldPassword: password,
+  newPassword: password,
+});

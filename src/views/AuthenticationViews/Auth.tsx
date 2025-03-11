@@ -18,18 +18,18 @@ import { z } from 'zod';
 import Footer from './footer';
 import Navbar from './nav';
 import Head from 'next/head';
+import UpdatePassword from './UpdatePassword';
 
 type AuthFormInputs = z.infer<typeof authSchema>;
 
 const Auth = () => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<AuthFormInputs>({
     resolver: zodResolver(authSchema),
     mode: 'onChange',
@@ -111,8 +111,6 @@ const Auth = () => {
   }, []);
 
   const onSubmit = async (data: AuthFormInputs) => {
-    setLoading(true);
-
     try {
       // Attempt to sign in
       const res = await signIn('credentials', {
@@ -122,7 +120,6 @@ const Auth = () => {
       });
 
       if (!res?.ok) {
-        setLoading(false);
         toast.error('Invalid Email or Password!');
         return;
       }
@@ -136,10 +133,9 @@ const Auth = () => {
           const userData = await fetchUserData(session.user.accessToken);
           console.log('user/my: ', userData);
           dispatch(setUser(userData));
-          // if(userData.firstTime){
-
-          //   return
-          // }
+          if (userData?.firstTime) {
+            return router.replace('/update-password');
+          }
           toast.success('Login Successful!');
 
           // Redirect based on role
@@ -161,7 +157,6 @@ const Auth = () => {
       console.error('Login error:', error);
       toast.error('An unexpected error occurred.');
     } finally {
-      setLoading(false);
     }
   };
 
@@ -247,7 +242,7 @@ const Auth = () => {
                   type="submit"
                   className="p-[10px] bg-[#0F172A] text-center text-sm text-white w-full rounded-md mt-20"
                 >
-                  {loading ? (
+                  {isSubmitting ? (
                     <BiLoaderCircle className="h-4 w-4 animate-spin mx-auto" />
                   ) : (
                     'Continue'

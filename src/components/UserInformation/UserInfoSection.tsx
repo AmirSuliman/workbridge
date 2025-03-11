@@ -78,7 +78,7 @@ const UserInfoSection = ({
             )}
           </div>
           <div className="flex flex-col">
-            <h6 className="form-label">Birthday*</h6>
+            <h6 className="form-label">Birthday</h6>
             <input
               type="date"
               className="form-input"
@@ -90,7 +90,7 @@ const UserInfoSection = ({
             )}
           </div>
           <div className="flex flex-col">
-            <h6 className="form-label">Gender*</h6>
+            <h6 className="form-label">Gender</h6>
             {editEmployee ? (
               <select className="form-input" {...register('gender')}>
                 <option value="" className="font-bold">
@@ -113,7 +113,7 @@ const UserInfoSection = ({
             )}
           </div>
           <div className="flex flex-col">
-            <h6 className="form-label">Marital Status*</h6>
+            <h6 className="form-label">Marital Status</h6>
             {editEmployee ? (
               <select className="form-input" {...register('marritialStatus')}>
                 <option value="">Select Status</option>
@@ -156,7 +156,7 @@ const UserInfoSection = ({
         />
         <div className="grid sm:grid-cols-3 gap-4 mt-10 mb-8">
           <label className="form-label">
-            Street 1*
+            Street 1
             <input
               type="text"
               className={`form-input`}
@@ -180,11 +180,11 @@ const UserInfoSection = ({
             )}
           </label>
           <label className="form-label">
-            Zip*
+            Zip
             <input
-              type="number"
+              type="text"
               className={`form-input`}
-              {...register('location.zipCode', { valueAsNumber: true })}
+              {...register('location.zipCode')}
               readOnly={!editEmployee}
             />
             {errors?.location?.zipCode && (
@@ -192,7 +192,7 @@ const UserInfoSection = ({
             )}
           </label>
           <label className="form-label">
-            City*
+            City
             <input
               type="text"
               className={`form-input`}
@@ -216,7 +216,7 @@ const UserInfoSection = ({
             )}
           </label>
           <label className="form-label">
-            State*
+            State
             <input
               type="text"
               className={`form-input`}
@@ -234,11 +234,11 @@ const UserInfoSection = ({
         <FormHeading icon={<FaPhoneAlt className="w-4" />} text="Contact" />
         <div className="grid sm:grid-cols-3 gap-4 mt-10 mb-8">
           <label className="form-label">
-            Phone*
+            Phone
             <input
-              type="number"
+              type="text"
               className={`form-input`}
-              {...register('phoneNumber', { valueAsNumber: true })}
+              {...register('phoneNumber')}
               readOnly={!editEmployee}
             />
             {errors?.phoneNumber && (
@@ -246,11 +246,11 @@ const UserInfoSection = ({
             )}
           </label>
           <label className="form-label">
-            Work Phone*
+            Work Phone
             <input
-              type="number"
+              type="text"
               className={`form-input`}
-              {...register('workPhone', { valueAsNumber: true })}
+              {...register('workPhone')}
               readOnly={!editEmployee}
             />
             {errors?.workPhone && (

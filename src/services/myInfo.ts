@@ -7,7 +7,7 @@ export const fetchUserData = async (accessToken: string) => {
     });
     return response.data.data; // Return only the user data
   } catch (error: any) {
-    console.error('Error fetching user data:', error);
+    console.log('Error fetching user data:', error);
     throw new Error(
       error.response?.data?.message || 'Failed to fetch user data'
     );

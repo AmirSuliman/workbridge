@@ -21,6 +21,7 @@ const page = () => {
         <Celebrations />
         <Training />
         <Companyinfo />
+        <Employeementreport />
       </div>
       <div className="flex flex-col gap-4 flex-1">
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
@@ -43,7 +44,6 @@ const page = () => {
         </section>
         <LeaveRequests />
         <NewEmployees />
-        <Employeementreport />
       </div>
     </main>
   );

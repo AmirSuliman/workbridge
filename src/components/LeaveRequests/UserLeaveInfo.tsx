@@ -101,7 +101,7 @@ const UserLeaveInfo = () => {
   }
 
   if (error) {
-    return <div className="p-4 text-red-500">{error}</div>;
+    return <div className=" text-red-500">{error}</div>;
   }
 
   return (
@@ -181,12 +181,11 @@ const UserLeaveInfo = () => {
                     <div className="flex items-center gap-2 justify-start">
                       <LuLogOut className="opacity-50" size={14} />
                       <p className="text-[12px]">
-                       {new Date(leave.leaveDay).toLocaleDateString('en-GB', {
-                         day: '2-digit',
-                         month: 'short',
-                       })}
-                     </p>
-
+                        {new Date(leave.leaveDay).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: 'short',
+                        })}
+                      </p>
                     </div>
                   </div>
                   <div className="p-4">
@@ -196,12 +195,14 @@ const UserLeaveInfo = () => {
                     <div className="flex items-center gap-2 justify-start">
                       <LuLogIn className="opacity-50" size={14} />
                       <p className="text-[12px]">
-                       {new Date(leave.returningDay).toLocaleDateString('en-GB', {
-                         day: '2-digit',
-                         month: 'short',
-                       })}
-                     </p>
-                     
+                        {new Date(leave.returningDay).toLocaleDateString(
+                          'en-GB',
+                          {
+                            day: '2-digit',
+                            month: 'short',
+                          }
+                        )}
+                      </p>
                     </div>
                   </div>
                 </div>
