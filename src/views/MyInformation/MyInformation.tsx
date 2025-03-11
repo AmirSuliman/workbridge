@@ -23,7 +23,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { FieldErrors, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -72,20 +72,20 @@ const MyInformation = () => {
     hireDate: employeeData?.hireDate
       ? new Date(employeeData.hireDate).toISOString().split('T')[0]
       : '',
-    effectiveDate: employeeData?.effectiveDate
-      ? new Date(employeeData.effectiveDate).toISOString().split('T')[0]
-      : '',
+    // effectiveDate: employeeData?.effectiveDate
+    //   ? new Date(employeeData.effectiveDate).toISOString().split('T')[0]
+    //   : '',
     salary: employeeData?.salary ? employeeData.salary : 0,
     location: {
-      zipCode: Number(employeeData?.location?.zipCode) || '',
+      zipCode: employeeData?.location?.zipCode || '',
       street1: employeeData?.location?.street1 || '',
       street2: employeeData?.location?.street2 || '',
       city: employeeData?.location?.city || '',
       country: employeeData?.location?.country || '',
       state: employeeData?.location?.state || '',
     },
-    phoneNumber: Number(employeeData?.phoneNumber) || '',
-    workPhone: Number(employeeData?.workPhone) || '',
+    phoneNumber: employeeData?.phoneNumber || '',
+    workPhone: employeeData?.workPhone || '',
   };
 
   const {
@@ -206,12 +206,16 @@ const MyInformation = () => {
 
   useEffect(() => {
     setSchemaErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      toast.error(
+        'Some input fields are missing in Personal or Employment tab!'
+      );
+    }
   }, [errors]);
 
   const onSubmit = async (data: any) => {
     // PUT employee/id needs the following payload.
     // The data parameter ☝ contains extra fields that backend does not expect.
-    console.log('data: ', data);
     const payLoad = {
       firstName: data.firstName,
       lastName: data.lastName,
@@ -219,13 +223,10 @@ const MyInformation = () => {
       departmentId: data.departmentId,
       email: data.email,
       middleName: data.middleName,
-      // salary: data.salary,
       tittle: data.tittle,
       gender: data.gender,
       marritialStatus: data.marritialStatus,
-      // paymentSchedule: data.paymentSchedule,
       payType: data.payType,
-      effectiveDate: data.effectiveDate,
       overtime: data.overtime,
       note: data.note,
       linkedin: data.linkedin,
@@ -247,7 +248,6 @@ const MyInformation = () => {
         state: data.location.state,
       },
     };
-    console.log('payload: ', payLoad);
 
     try {
       setEditLoading(true);
@@ -300,15 +300,15 @@ const MyInformation = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="p-4">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="p-4">Error: {error}</div>;
   }
 
   if (!employeeData) {
-    return <div>No data available.</div>;
+    return <div className="p-4">No data available.</div>;
   }
   console.log('Form errors: ', schemaErrors);
   return (

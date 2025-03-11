@@ -227,8 +227,8 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                   startDate={startDate}
                   endDate={endDate}
                   minDate={new Date()}
-                  dateFormat="dd/MM/yyyy"
-                  placeholderText="dd/mm/yyyy"
+                  dateFormat="MM/dd/yyyy"
+                  placeholderText="mm/dd/yyyy"
                   className="p-3 border rounded w-full"
                 />
               </label>
@@ -247,8 +247,8 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                   maxDate={
                     startDate ? addDays(startDate, totalDays - 1) : undefined
                   }
-                  dateFormat="dd/MM/yyyy"
-                  placeholderText="dd/mm/yyyy"
+                  dateFormat="MM/dd/yyyy"
+                  placeholderText="mm/dd/yyyy"
                   className="p-3 border rounded w-full"
                   disabled={!startDate} // Disable when no Leaving Date is selected
                 />

@@ -3,8 +3,9 @@ import {
   toggleDropdown,
 } from '@/store/slices/notificationsSlice';
 import { NotificationItem, NotificationType } from '@/types/notifications';
+import { getSession } from 'next-auth/react';
 import Link from 'next/link';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 interface Props extends React.PropsWithChildren {
@@ -19,11 +20,27 @@ const NotificationLink = ({ notification, children }: Props) => {
     }
   }, []);
 
+  const [role, setRole] = useState<string>();
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setRole(session?.user?.role);
+    };
+
+    fetchSession();
+  }, []);
+
+  const isUserPanel = role === 'ViewOnly' || role === 'Manager';
+
   switch (notification.notification?.notificationType) {
     case NotificationType.Announcement:
       return (
         <Link
-          href={`/hr/announcements-&-policies/announcements/${notification.notification.issueId}`}
+          href={
+            isUserPanel
+              ? `/user/home/announcement/${notification.notification.issueId}`
+              : `/hr/announcements-&-policies/announcements/${notification.notification.issueId}`
+          }
           onClick={_clickHandler}
         >
           {children}
@@ -50,13 +67,25 @@ const NotificationLink = ({ notification, children }: Props) => {
     case NotificationType.LeaveTime:
     case NotificationType.SickLeave:
       return (
-        <Link href={`/hr/leave-requests`} onClick={_clickHandler}>
+        <Link
+          href={isUserPanel ? '/user/leave-requests' : `/hr/leave-requests`}
+          onClick={_clickHandler}
+        >
+          {children}
+        </Link>
+      );
+    case NotificationType.Survey:
+      return (
+        <Link
+          href={isUserPanel ? '/user/home' : `/hr/evaluation-&-reports?tab=1`}
+          onClick={_clickHandler}
+        >
           {children}
         </Link>
       );
     case NotificationType.NewManager:
       return (
-        <Link href={`/hr/admins`} onClick={_clickHandler}>
+        <Link href={isUserPanel ? '' : `/hr/admins`} onClick={_clickHandler}>
           {children}
         </Link>
       );

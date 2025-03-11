@@ -1,6 +1,7 @@
 import { NotificationType } from '@/types/notifications';
 import { Handshake, UmbrellaIcon } from 'lucide-react';
 import { HiCake, HiDatabase, HiFolder, HiSpeakerphone } from 'react-icons/hi';
+import { SiLimesurvey } from 'react-icons/si';
 import { HiArrowTrendingUp, HiUsers } from 'react-icons/hi2';
 import { MdOutlineSick } from 'react-icons/md';
 interface Props {
@@ -25,6 +26,12 @@ const NotificationIcon = ({ type }: Props) => {
       return (
         <div className="bg-gray-100 text-black border-[1px] rounded-full size-12 flex items-center justify-center shrink-0 grow-0">
           <HiArrowTrendingUp size={22} />
+        </div>
+      );
+    case NotificationType.Survey:
+      return (
+        <div className="bg-gray-100 text-black border-[1px] rounded-full size-12 flex items-center justify-center shrink-0 grow-0">
+          <SiLimesurvey size={22} />
         </div>
       );
     case NotificationType.LeaveTime:

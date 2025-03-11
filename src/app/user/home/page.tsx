@@ -73,7 +73,6 @@ const Home = () => {
 
     fetchSessionAndSetEmployeeId();
   }, []);
-  console.log('Home employeeId: ', employeeId);
 
   useEffect(() => {
     const getEvaluationNotification = async () => {

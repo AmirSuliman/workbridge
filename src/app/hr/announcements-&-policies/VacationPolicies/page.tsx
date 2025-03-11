@@ -56,7 +56,40 @@ const VacationPolicies = () => {
   const [additionalCountries, setAdditionalCountries] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const [addCountries, setAddCountries] = useState(false);
-
+  const [isEditing, setIsEditing] = useState(false);
+  const [vacationLeave, setVacationLeave] = useState('');
+  const [sickLeave, setSickLeave] = useState('');
+  
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+  
+  const handleSave = async () => {
+    try {
+      const response = await axiosInstance.get(`/country/${selectedCountry}`);
+      console.log(response, 'res');
+      const code = response.data.data.code; 
+      const country = response.data.data.country;
+      await axiosInstance.put(`/country/${selectedCountry}`, {
+        code,
+        country,
+        vacationLeaves: vacationLeave, 
+        sickLeaves: sickLeave,
+      });
+  
+      toast.success('Leaves updated successfully!');
+      
+      // Optionally, refresh country data here to reflect changes immediately
+    } catch (error) {
+      console.error('Error updating leaves:', error);
+      toast.error('Failed to update leaves.');
+    } finally {
+      setIsEditing(false);
+    }
+  };
+  
+  
+  
   const fetchCountries = async () => {
     try {
       const response = await axiosInstance.get('/countries');
@@ -67,6 +100,27 @@ const VacationPolicies = () => {
       console.error('Error fetching countries:', error);
     }
   };
+  const fetchCountryById = async () => {
+    if (!selectedCountry) return;  // Ensure country is selected
+    try {
+      const response = await axiosInstance.get(`/country/${selectedCountry}`);
+      console.log('API Response:', response.data);
+  
+      if (response.data?.data) {
+        setVacationLeave(response.data.data.vacationLeaves?.toString() || '');
+        setSickLeave(response.data.data.sickLeaves?.toString() || '');
+      } else {
+        console.warn('No data found for selected country');
+      }
+    } catch (error) {
+      console.error('Error fetching country data:', error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchCountryById();
+  }, [selectedCountry]); 
+  
 
   const fetchHolidays = async (countryId: number) => {
     try {
@@ -79,8 +133,9 @@ const VacationPolicies = () => {
             date: item.holiday.date,
             type: item.holiday.type,
             createdBy: item.holiday.createdBy,
-            user: item.holiday.user, // Include user object
+            user: item.holiday.user, 
             countryholidays: [item],
+            
           }))
         );
       }
@@ -93,6 +148,7 @@ const VacationPolicies = () => {
     fetchCountries();
     fetchHolidays(selectedCountry);
   }, [selectedCountry]);
+  
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -242,6 +298,48 @@ const VacationPolicies = () => {
           Add Holiday <BiPlusCircle size={16} />
         </button>
       </div>
+
+  <div className="flex flex-row items-center gap-4 mt-4 ">
+      <label className='flex flex-col gap-1 w-[200px]'>
+        <span className='text-gray-400 text-[12px]'>Vacation</span>
+        <input
+           type="text"
+           className="border p-3  rounded outline-none"
+           value={vacationLeave}
+           onChange={(e) => setVacationLeave(e.target.value)}
+           disabled={!isEditing}
+         />
+        </label>
+     <label className='flex flex-col gap-1 w-[200px]'>
+      <span className='text-gray-400 text-[12px]'>Sick Leave</span>
+     <input
+      type="text"
+      className="border p-3  rounded outline-none"
+      value={sickLeave}
+      onChange={(e) => setSickLeave(e.target.value)}
+      disabled={!isEditing}
+    />
+     </label>
+   
+
+  <Image
+    src="/edit.svg"
+    alt="edit"
+    width={13}
+    height={13}
+    className="cursor-pointer mt-4"
+    title="Edit"
+    onClick={handleEditClick}
+  />
+  {isEditing && (
+    <button
+      onClick={handleSave}
+      className="bg-[#0F172A] text-white px-4 py-2 rounded mt-4"
+    >
+      Post
+    </button>
+  )}
+</div>
 
       {/* Table */}
       <div className="w-full mt-8 overflow-x-auto">

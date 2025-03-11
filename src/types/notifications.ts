@@ -48,4 +48,5 @@ export enum NotificationType {
   NewManager = 'New_Manager',
   NewHire = 'New_Hire',
   System = 'System',
+  Survey = 'Survey',
 }

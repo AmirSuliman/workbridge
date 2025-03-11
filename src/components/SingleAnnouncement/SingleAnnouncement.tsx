@@ -75,7 +75,7 @@ const SingleAnnouncement = () => {
   }
 
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return <div className="text-red-500 p-4">{error}</div>;
   }
 
   return (
@@ -109,7 +109,7 @@ const SingleAnnouncement = () => {
           </div>
         ))
       ) : (
-        <div>No announcements available.</div>
+        <div className="p-4">No announcements available.</div>
       )}
     </div>
   );
