@@ -161,22 +161,6 @@ const TimeOffSection = ({ employeeData }) => {
     >
       {item.status === 'Pending' ? 'Waiting for Approval' : item.status}
     </span>,
-    // item.status === 'Pending' ? (
-    //   <div key={`edit-${index}`} className="flex justify-end">
-    //     <FaEdit
-    //       className="text-dark-navy w-5 cursor-pointer"
-    //       onClick={() => handleEditClick(item)}
-    //       title="Edit time-off request"
-    //     />
-    //   </div>
-    // ) : (
-    //   <div key={`edit-${index}`} className="flex justify-end">
-    //     <span
-    //       className="text-gray-400"
-    //       title="Cannot edit confirmed requests"
-    //     ></span>
-    //   </div>
-    // ),
   ]);
 
   return (
