@@ -21,6 +21,59 @@ const OrgChartWithHoverPositions = ({
   const d3Container = useRef(null);
   const refOrgChart = useRef<OrgChart | null>(null);
   const [expandedEmployeeIds, setExpandedEmployeeIds] = useState(new Set());
+  function detectMultipleRoots(employees) {
+    const rootNodes = employees.filter((emp) => emp.parentId === null);
+
+    if (rootNodes.length > 1) {
+      console.error('Multiple root nodes detected:', rootNodes);
+      return rootNodes; // Returns the list of multiple roots for debugging
+    }
+
+    return [];
+  }
+
+  const multipleRoots = detectMultipleRoots(employees);
+  console.log('Multiple roots detected:', multipleRoots.length > 0);
+
+  function detectCycle(employee) {
+    const visited = new Set();
+    const stack = new Set();
+
+    const hasCycle = (nodeId, idMap) => {
+      if (stack.has(nodeId)) return true; // Cycle detected
+      if (visited.has(nodeId)) return false;
+
+      visited.add(nodeId);
+      stack.add(nodeId);
+
+      const node = idMap[nodeId];
+      if (node && node.parentId) {
+        if (hasCycle(node.parentId, idMap)) {
+          return true;
+        }
+      }
+
+      stack.delete(nodeId);
+      return false;
+    };
+
+    const idMap = employee.reduce((acc, item) => {
+      acc[item.id] = item;
+      return acc;
+    }, {});
+
+    for (const node of employee) {
+      if (hasCycle(node.id, idMap)) {
+        console.log('Cycle detected at node:', node);
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  const hasCycle = detectCycle(employees);
+  console.log('Cycle detected:', hasCycle);
 
   function filterChart(value: string) {
     refOrgChart.current.clearHighlighting();
@@ -158,7 +211,12 @@ const OrgChartWithHoverPositions = ({
     }
 
     const transformedData = getTransformedData(employees);
-    if (refOrgChart.current && d3Container.current) {
+    if (
+      refOrgChart.current &&
+      d3Container.current &&
+      !multipleRoots &&
+      !hasCycle
+    ) {
       refOrgChart.current
         .container(d3Container.current)
         .data(transformedData)
@@ -399,10 +457,22 @@ const OrgChartWithHoverPositions = ({
     toggleOpenPositions,
     isUserPanel,
     actualSubordinates,
+    hasCycle,
+    multipleRoots,
   ]);
 
   return (
     <main className="h-[calc(100vh-10rem)] overflow-hidden relative">
+      {multipleRoots && (
+        <div className="border-b-[1px] border-gray-border px-6 py-4">
+          <h1>There are multiple roots in the data</h1>
+        </div>
+      )}
+      {hasCycle && (
+        <div className="border-b-[1px] border-gray-border px-6 py-4">
+          <h1>There is a cycle in the data</h1>
+        </div>
+      )}
       <div ref={d3Container} className="w-full h-full" />
     </main>
   );

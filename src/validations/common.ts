@@ -1,4 +1,3 @@
-import { X } from 'lucide-react';
 import { z } from 'zod';
 
 export const password = z
@@ -16,9 +15,9 @@ export const password = z
   .refine((val) => !val || /\d/.test(val), {
     message: 'Password must contain at least one number',
   })
-  .refine((val) => !val || /[@$!%*?&#|]/.test(val), {
+  .refine((val) => !val || /[!@#$%^&*()_+\[\]{}|;:,.<>?]/.test(val), {
     message:
-      'Password must contain at least one special character - (@$!%*?&#|)',
+      'Password must contain at least one special character: !@#$%^&*()_+[]{}|;:,.<>?',
   });
 
 export const email = z

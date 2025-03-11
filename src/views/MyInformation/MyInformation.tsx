@@ -343,6 +343,7 @@ const MyInformation = () => {
             }`}
           />
 
+          {/* If we are editing a user info then hide the following tabs */}
           {!editEmployee && (
             <>
               <TabButton
@@ -385,16 +386,21 @@ const MyInformation = () => {
                     : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=5`
                 }`}
               />
-              <TabButton
-                name="Payments"
-                href={`${
-                  empId
-                    ? `/${
-                        isUserPanel ? 'user' : 'hr'
-                      }/employees/employee-info/${empId}?tab=6`
-                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=6`
-                }`}
-              />
+
+              {/* Superadmin can see all user's payments. Other users can see only thier own payments */}
+
+              {(role === 'SuperAdmin' || !empId) && (
+                <TabButton
+                  name="Payments"
+                  href={`${
+                    empId
+                      ? `/${
+                          isUserPanel ? 'user' : 'hr'
+                        }/employees/employee-info/${empId}?tab=6`
+                      : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=6`
+                  }`}
+                />
+              )}
             </>
           )}
         </div>
@@ -430,9 +436,12 @@ const MyInformation = () => {
           <TabComponent index="5">
             <NotesSection employeeId={empId || myId} />
           </TabComponent>
-          <TabComponent index="6">
-            <PaymentSection employeeId={empId || myId} />
-          </TabComponent>
+          {/* Superadmin can see all user's payments. Other users can see only thier own payments */}
+          {(role === 'SuperAdmin' || !empId) && (
+            <TabComponent index="6">
+              <PaymentSection employeeId={empId || myId} />
+            </TabComponent>
+          )}
         </div>
       </TabsContainer>
     </form>
