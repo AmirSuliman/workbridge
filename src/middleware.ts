@@ -15,13 +15,9 @@ export default withAuth(
       req: request,
       secret: process.env.NEXTAUTH_SECRET,
     });
+    console.log('req.url: ', request.url);
     const pathname = request.nextUrl.pathname;
     const userRole = token?.user?.user?.role;
-
-    // Allow access to /sign-in for unauthenticated users
-    // if (!token && pathname === "/sign-in") {
-    //     return NextResponse.next(); // Allow to proceed to /sign-in
-    // }
 
     // Redirect to /sign-in if user is not authenticated on protected routes
     if (!token && pathname !== '/sign-in') {
@@ -42,6 +38,10 @@ export default withAuth(
 
     // Enforce role-based access to specific protected routes
     if (token && pathname.startsWith('/user') && userRole === 'Admin') {
+      console.log('inside  user path');
+      return NextResponse.redirect(new URL(Routes.HR_HOME, request.url));
+    }
+    if (token && pathname.startsWith('/user') && userRole === 'SuperAdmin') {
       console.log('inside  user path');
       return NextResponse.redirect(new URL(Routes.HR_HOME, request.url));
     }
