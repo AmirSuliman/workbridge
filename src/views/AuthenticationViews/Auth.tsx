@@ -6,9 +6,10 @@ import { setUser } from '@/store/slices/myInfoSlice';
 import { authSchema } from '@/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getSession, signIn, signOut } from 'next-auth/react';
+import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -17,8 +18,6 @@ import { useDispatch } from 'react-redux';
 import { z } from 'zod';
 import Footer from './footer';
 import Navbar from './nav';
-import Head from 'next/head';
-import UpdatePassword from './UpdatePassword';
 
 type AuthFormInputs = z.infer<typeof authSchema>;
 
@@ -36,7 +35,19 @@ const Auth = () => {
   });
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '';
 
+  const getAbsoluteUrl = (url: string) => {
+    try {
+      // If the URL is already absolute, return it
+      new URL(url);
+      return url;
+    } catch (error) {
+      // If the URL is relative, prepend the base URL
+      return `${window.location.origin}${url}`;
+    }
+  };
   // Check for existing session when component mounts
   useEffect(() => {
     const checkSession = async () => {
@@ -47,11 +58,18 @@ const Auth = () => {
           const userData = await fetchUserData(session.user.accessToken);
           dispatch(setUser(userData));
 
-          // Redirect based on role
-          if (userData.role === 'Manager' || userData.role === 'ViewOnly') {
-            router.replace('/user/home');
+          // Check if there's a callback URL to redirect to
+          if (callbackUrl) {
+            const absoluteCallbackUrl = getAbsoluteUrl(callbackUrl);
+            console.log('auth-callbackUrl: ', absoluteCallbackUrl);
+            router.replace(absoluteCallbackUrl);
           } else {
-            router.replace('/hr/home');
+            // Default redirect based on role
+            if (userData.role === 'Manager' || userData.role === 'ViewOnly') {
+              router.replace('/user/home');
+            } else {
+              router.replace('/hr/home');
+            }
           }
         } catch (error) {
           // If token is invalid or expired, sign out
@@ -76,7 +94,7 @@ const Auth = () => {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [dispatch, router]);
+  }, [dispatch, router, callbackUrl]);
 
   // Add cache control headers
   useEffect(() => {
@@ -112,11 +130,15 @@ const Auth = () => {
 
   const onSubmit = async (data: AuthFormInputs) => {
     try {
-      // Attempt to sign in
+      // Attempt to sign in with the callbackUrl included
+      const decodedCallbackUrl = decodeURIComponent(callbackUrl);
+      const absoluteCallbackUrl = getAbsoluteUrl(decodedCallbackUrl);
+
       const res = await signIn('credentials', {
         email: data.email,
         password: data.password,
         redirect: false,
+        callbackUrl: absoluteCallbackUrl || '',
       });
 
       if (!res?.ok) {
@@ -138,11 +160,16 @@ const Auth = () => {
           }
           toast.success('Login Successful!');
 
-          // Redirect based on role
-          if (userData.role === 'Manager' || userData.role === 'ViewOnly') {
-            router.replace('/user/home');
+          // Check if there's a callback URL to redirect to
+          if (callbackUrl) {
+            router.replace(absoluteCallbackUrl);
           } else {
-            router.replace('/hr/home');
+            // Default redirect based on role
+            if (userData.role === 'Manager' || userData.role === 'ViewOnly') {
+              router.replace('/user/home');
+            } else {
+              router.replace('/hr/home');
+            }
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
