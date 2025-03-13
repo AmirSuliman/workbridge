@@ -28,22 +28,24 @@ const UploadDocument = ({ fileName, onFileChange, uploadPercentage }) => {
           <input
             onChange={onFileChange}
             type="file"
-            accept=".pdf,.doc,.docx" // Limit file selection to these types
+            // accept=".pdf,.doc,.docx" // Limit file selection to these types
             className="w-full h-0"
           />
         )}
       </label>
-      <div className="flex items-center gap-4 w-full mt-2">
-        <div className="bg-[rgba(232,232,232,1)] rounded-full w-full h-2 relative">
-          <div
-            style={{
-              width: `${uploadPercentage}%`,
-            }}
-            className="absolute left-0 top-0 bottom-0 bg-black rounded-full h-2"
-          ></div>
+      {uploadPercentage > 0 && (
+        <div className="flex items-center gap-4 w-full mt-2">
+          <div className="bg-[rgba(232,232,232,1)] rounded-full w-full h-2 relative">
+            <div
+              style={{
+                width: `${uploadPercentage}%`,
+              }}
+              className="absolute left-0 top-0 bottom-0 bg-black rounded-full h-2"
+            ></div>
+          </div>
+          <p>{uploadPercentage}%</p>
         </div>
-        <p>{uploadPercentage}%</p>
-      </div>
+      )}
     </>
   );
 };

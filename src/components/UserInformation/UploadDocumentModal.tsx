@@ -16,15 +16,16 @@ const UploadDocumentModal = ({ onClose, employeeData, onDocumentUpload }) => {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      const allowedTypes = [
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      ];
-      if (!allowedTypes.includes(selectedFile.type)) {
-        toast.error('Only PDF and DOC files are allowed.');
-        return;
-      }
+      // const allowedTypes = [
+      //   'image/*',
+      //   'application/pdf',
+      //   'application/msword',
+      //   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      // ];
+      // if (!allowedTypes.includes(selectedFile.type)) {
+      //   toast.error('Only PDF and DOC files are allowed.');
+      //   return;
+      // }
 
       setFile(selectedFile);
       setFileName(selectedFile.name);

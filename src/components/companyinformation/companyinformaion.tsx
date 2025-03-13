@@ -7,6 +7,7 @@ import {
   FaPhone,
   FaTwitter,
 } from 'react-icons/fa';
+import Contact from './Contact';
 
 const Companyinfo = () => {
   return (
@@ -18,43 +19,48 @@ const Companyinfo = () => {
         </h1>
       </div>
 
+      <section className=" p-4 text-[#0F172A]">
+        <h4 className=" font-medium text-[12px] opacity-50 mb-2">
+          Company Contacts
+        </h4>
+        <div
+          style={{
+            scrollbarWidth: 'thin',
+          }}
+          className="w-full overflow-auto grid divide-y-[1px] divide-[#E8E8E8] grid-cols-2 gap-x-8 max-h-[400px] pr-2"
+        >
+          <Contact />
+        </div>
+      </section>
+      <div className="w-full h-[1px] mb-4 bg-[#E8E8E8]" />
       <div className="space-y-2 p-4 ">
         <p className="text-gray-400 font-medium text-[14px]">Company</p>
-        <div className="flex flex-row gap-2 items-center text-[14px] ">
+        <Link
+          href="https://isaconsulting.com/"
+          target="_blank"
+          className="flex flex-row gap-2 items-center text-[14px] "
+        >
           <FaGlobe />
           isaconsulting.com
-        </div>
-        <div className="flex flex-row gap-2 items-center text-[14px]">
+        </Link>
+        <Link
+          href="mailto:prosper@isaconsulting.com"
+          target="_blank"
+          className="flex flex-row gap-2 items-center text-[14px]"
+        >
           <FaEnvelope />
           prosper@isaconsulting.com
-        </div>
-        <div className="flex flex-row gap-2 items-center text-[14px] mb-4">
+        </Link>
+        <Link
+          href="tel:(888) 396-1112"
+          target="_blank"
+          className="flex flex-row gap-2 items-center text-[14px] mb-4"
+        >
           <FaPhone style={{ transform: 'rotate(90deg)' }} />
           (888) 396-1112
-        </div>
+        </Link>
       </div>
       <div className="w-full h-[1px] mb-4 bg-[#E8E8E8]" />
-
-      <div className=" p-4 ">
-        <p className="text-gray-400 font-medium text-[14px] mb-2">
-          Company Contacts
-        </p>
-        <p className="text-[14px]">Firstname Lastname</p>
-        <p className="text-gray-400 font-medium text-[14px] mb-2">
-          Regional Officer
-        </p>
-
-        <div className="flex flex-row gap-2 items-center text-[14px] mb-2">
-          <FaEnvelope />
-          prosper@isaconsulting.com
-        </div>
-        <div className="flex flex-row gap-2 items-center text-[14px] mb-4">
-          <FaPhone style={{ transform: 'rotate(90deg)' }} />
-          (888) 396-1112
-        </div>
-      </div>
-      <div className="w-full h-[1px] mb-4  bg-[#E8E8E8]" />
-
       <div className="space-y-2 p-4 ">
         <p className="text-gray-400 font-medium">Socials</p>
         <Link
@@ -71,7 +77,7 @@ const Companyinfo = () => {
           className="flex flex-row gap-2 items-center text-[14px]"
         >
           <FaTwitter />
-          isaconsulting_
+          ISAConsulting_
         </Link>
         <Link
           href="https://www.linkedin.com/company/isaconsulting/mycompany/"

@@ -162,9 +162,9 @@ const MyInformation = () => {
         const file = event.target.files[0];
         const fileType = file.type;
 
-        if (!['image/png', 'image/jpeg'].includes(fileType)) {
-          console.log('selected file type: ', fileType);
-          return toast.error('Only jpeg, jpg and png files are allowed!');
+        if (!file.type.startsWith('image/')) {
+          console.log('Selected file type: ', file.type);
+          return toast.error('Only image files are allowed!');
         }
         setSelectedFile(file);
         const blobUrl = URL.createObjectURL(file);

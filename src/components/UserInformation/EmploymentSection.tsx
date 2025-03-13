@@ -176,7 +176,7 @@ const EmploymentSection = ({
             ''
           ) : (
             <article>
-              <Label text="Reporting Manager" />
+              <Label text="Reporting Manager*" />
               <EmployeesDropdown
                 errors={errors}
                 register={register}

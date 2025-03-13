@@ -26,6 +26,10 @@ interface TimeOffItem {
   type: string;
   status: string;
   employee: Employee;
+  user: {
+    firstName: string;
+    lastName: string;
+  };
 }
 
 const TimeOffSection = ({ employeeData }) => {
@@ -82,13 +86,20 @@ const TimeOffSection = ({ employeeData }) => {
         // if employee id is not coming from search params then show my timoffs
         // else show that employee's timeoffs
         if (!empId) {
-          const response = await axiosInstance.get('/timeoffs/my');
+          const response = await axiosInstance.get('/timeoffs/my', {
+            params: { associations: true },
+          });
+          console.log('my timeoffs: ', response.data.data.items);
+
           setTimeOffData(response.data.data.items);
         } else {
           const response = await axiosInstance.get(
-            `/timeoffs?employeeId=${empId}`
+            `/timeoffs?employeeId=${empId}`,
+            {
+              params: { associations: true },
+            }
           );
-          // console.log('empId timeoffs: ', response.data.data.items);
+          console.log('empId timeoffs: ', response.data.data.items);
           setTimeOffData(response.data.data.items);
         }
       } catch (err) {
@@ -137,10 +148,20 @@ const TimeOffSection = ({ employeeData }) => {
     try {
       await axiosInstance.put(`/timeoff/${selectedTimeOff.id}`, payload);
       // Refresh data after update
-      const response = await axiosInstance.get('/timeoffs/my');
+      // if employee id is not coming from search params then show my timoffs
+      // else show that employee's timeoffs
+      if (!empId) {
+        const response = await axiosInstance.get('/timeoffs/my');
+        setTimeOffData(response.data.data.items);
+      } else {
+        const response = await axiosInstance.get(
+          `/timeoffs?employeeId=${empId}`
+        );
+        // console.log('empId timeoffs: ', response.data.data.items);
+        setTimeOffData(response.data.data.items);
+      }
       toast.success('Time off updated successfully');
       closeModal();
-      setTimeOffData(response.data.data.items);
     } catch (err) {
       console.error('Error updating time off:', err);
       setError('Failed to update time off');
@@ -240,8 +261,8 @@ const TimeOffSection = ({ employeeData }) => {
                 />,
                 new Date(item.leaveDay).toLocaleDateString(),
                 new Date(item.returningDay).toLocaleDateString(),
-                `${item.employee.firstName || 'N/A'} ${
-                  item.employee.lastName || 'N/A'
+                `${item?.user.firstName || 'N/A'} ${
+                  item?.user.lastName || 'N/A'
                 }`.trim(),
               ])}
           />
