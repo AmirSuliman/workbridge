@@ -148,7 +148,7 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
               </h3>
             </div>
             <p className="font-[400] text-[#878b94] text-xs">
-              Requests need to be made at least 48 hours prior.
+              Requests must be made at least 2 weeks prior to submission
             </p>
           </div>
           <button
