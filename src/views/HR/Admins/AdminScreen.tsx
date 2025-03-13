@@ -71,7 +71,6 @@ const AdminScreen = () => {
         />
       ),
     },
-    { title: 'Role', accessor: 'Role.name' },
     {
       title: 'Status',
       accessor: 'active',

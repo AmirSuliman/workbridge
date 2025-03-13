@@ -4,7 +4,7 @@ import { FaEnvelope, FaPhone } from 'react-icons/fa';
 
 const Contact = () => {
   return keyContactsAtISA.map((contact) => (
-    <div className="pt-4">
+    <div key={contact.email} className="pt-4">
       <p className="text-[14px]">{contact.name}</p>
       <p className="opacity-50 font-medium text-[12px] mb-2">
         {contact.position}

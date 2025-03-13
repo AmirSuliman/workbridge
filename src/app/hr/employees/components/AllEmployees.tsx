@@ -51,7 +51,8 @@ export const AllEmployees = () => {
         const { data } = await getAllEmployees(
           currentPage,
           pageSize,
-          searchTerm
+          searchTerm,
+          false
         );
         dispatch(addEmployees(data.items));
         console.log('employees: ', data);
@@ -278,7 +279,7 @@ export const AllEmployees = () => {
                   };
                   const duration = employee?.hireDate
                     ? calculateDuration(hireDate)
-                    : 'N/A';
+                    : '';
 
                   return (
                     <tr
@@ -314,7 +315,9 @@ export const AllEmployees = () => {
                         </a>
                       </td>
                       <td className="py-3 px-4 border-b">
-                        {new Date(employee.hireDate).toLocaleDateString()}
+                        {employee.hireDate
+                          ? new Date(employee.hireDate).toLocaleDateString()
+                          : ''}
                         <br />
                         <span className="text-[10px] mt-2">{duration}</span>
                       </td>
