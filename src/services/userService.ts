@@ -31,9 +31,14 @@ export const fetchUsers = async ({
   }
 };
 
-export const addUser = async (user: object) => {
+export const addUser = async (user: { isManager?: boolean } & object) => {
   try {
-    const response = await axiosInstance.post(API_ROUTES.CREATE_USER, user);
+    const payload = {
+      ...user,
+      isManager: Boolean(user.isManager), // Ensure it's a boolean
+    };
+
+    const response = await axiosInstance.post(API_ROUTES.CREATE_USER, payload);
     toast.success('User created Successfully!');
     return response.data;
   } catch (error: any) {
@@ -41,3 +46,4 @@ export const addUser = async (user: object) => {
     throw error;
   }
 };
+

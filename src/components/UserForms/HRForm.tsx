@@ -26,6 +26,17 @@ const HRForm = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const { items } = useSelector((state: RootState) => state.userRoles.roles);
   const [countries, setCountries] = useState<Country[]>([]);
+  const [isManager, setIsManager] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch, 
+    formState: { errors },
+  } = useForm<HRFormInputs>({
+    resolver: zodResolver(hrFormSchema),
+    mode: 'onChange',
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,14 +58,7 @@ const HRForm = ({ onClose }) => {
     value: role.id as string,
   })) ?? [{ label: '', value: '' }];
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<HRFormInputs>({
-    resolver: zodResolver(hrFormSchema),
-    mode: 'onChange',
-  });
+  
 
   const style = {
     label: '',
@@ -63,9 +67,16 @@ const HRForm = ({ onClose }) => {
     error: 'text-[9px]',
   };
   const onSubmit = async (data: HRFormInputs) => {
-    const response = await dispatch(createUser(data) as any);
+    const response = await dispatch(
+      createUser({
+        ...data,
+        isManager, 
+      }) as any
+    );
     if (response?.type === 'users/createUser/fulfilled') onClose();
   };
+  
+  const selectedRoleId = watch('roleId'); // ✅ Watches roleId changes
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -92,15 +103,35 @@ const HRForm = ({ onClose }) => {
           error={errors.email?.message}
         />
 
-        <SelectField
-          name="roleId"
-          register={register}
-          error={errors.roleId?.message}
-          key={'roleId'}
-          // styles={{ ...style, container: 'col-span-2' }}
-          placeholder="Select Role"
-          options={roles}
-        />
+<div className='flex flex-col gap-1'>
+<SelectField
+  name="roleId"
+  register={register}
+  error={errors.roleId?.message}
+  key={'roleId'}
+  options={roles}
+  onChange={(e) => {
+    const roleId = Number(e.target.value);
+    console.log('Selected Role ID:', roleId); 
+    setValue('roleId', roleId); 
+  }}
+/>
+
+{Number(selectedRoleId) === 1 && (  // ✅ Convert string to number for comparison
+  <div className="flex items-center col-span-2 mt-2 mb-3">
+    <input
+  type="checkbox"
+  id="isManager"
+  checked={isManager}
+  onChange={(e) => setIsManager(e.target.checked)} // ✅ Directly use checked state
+  className="mr-2"
+/>
+
+    <label htmlFor="isManager" className="text-sm">Is Manager</label>
+  </div>
+)}
+</div>
+
 
         <article className="w-full">
           {/* <Label text="Country*" /> */}

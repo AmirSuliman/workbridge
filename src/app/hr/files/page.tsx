@@ -335,22 +335,7 @@ const HrFiles = () => {
           <h1 className="mt-6 px-4 font-medium text-[18px] text-[#0F172A] mb-4">
             Folders
           </h1>
-          <div
-            onClick={handleAllFilesClick}
-            className={`flex flex-row items-center justify-between p-3 cursor-pointer ${
-              isAllFilesActive
-                ? 'bg-[#0F172A] text-white'
-                : 'hover:bg-[#0F172A] hover:text-white'
-            }`}
-          >
-            <div className="flex flex-row items-center gap-2  font-medium">
-              <FaFolder size={20} />
-              <p>All Files</p>
-            </div>
-            <p className="px-4 text-gray-400 text-sm">
-              {allFiles.length} Files
-            </p>
-          </div>
+          
           {loading && (
             <p className="text-center text-gray-500">Loading folders...</p>
           )}
@@ -418,68 +403,7 @@ const HrFiles = () => {
                 </tr>
               </thead>
               <tbody>
-                {isAllFilesActive ? (
-                  allFiles.length > 0 ? (
-                    allFiles.map((file, index) => (
-                      <tr
-                        key={index}
-                        className="p-3 border-b text-[14px] font-normal hover:bg-gray-50"
-                      >
-                        <td
-                          onClick={() => {
-                            handleDocumentOpen(file);
-                          }}
-                          className="p-4 flex items-center gap-2 cursor-pointer"
-                        >
-                          {/* <input type="checkbox" /> */}
-                          <span className="max-w-[300px] truncate">
-                            {file.fileTitle || file.fileName}
-                          </span>
-                        </td>
-                        <td className="p-4">
-                          {file.createdAt ? file.createdAt.split('T')[0] : ''}
-                        </td>
-                        <td className="p-4">{formatFileSize(file.size)}</td>
-                        <td className="p-4">
-                          {file.fileType
-                            ? file.fileType ===
-                              'vnd.openxmlformats-officedocument.wordprocessingml.document'
-                              ? 'docx'
-                              : file.fileType === 'msword'
-                              ? 'doc'
-                              : file.fileType
-                            : ''}
-                        </td>
-                        {!isUserPanel && (
-                          <td className="flex flex-row gap-3 justify-center items-center">
-                            <Image
-                              src="/edit.svg"
-                              alt="edit"
-                              width={10}
-                              height={10}
-                              onClick={() => handleEditdocument(file)}
-                              className="cursor-pointer"
-                            />
-                            <Image
-                              src="/delete.svg"
-                              alt="del"
-                              width={10}
-                              height={10}
-                              onClick={() => handleDeletedocument(file.id)}
-                              className="cursor-pointer"
-                            />
-                          </td>
-                        )}
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={5} className="text-center text-gray-500">
-                        No files found.
-                      </td>
-                    </tr>
-                  )
-                ) : activeFolder ? (
+                { activeFolder ? (
                   activeFolder?.files?.length > 0 ? (
                     activeFolder.files.map((file, index) => (
                       <tr
