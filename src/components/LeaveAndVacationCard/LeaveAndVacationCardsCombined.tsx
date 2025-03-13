@@ -44,7 +44,7 @@ const LeaveAndVacationCardsCombined = () => {
         icon={
           <img src="/vacation.svg" alt="Vacation Icon" className="w-4 h-4" />
         }
-        description="Requests must be made at least 2 weeks prior to submission"
+        description="Requests must be made at least 2 weeks prior to submission."
         daysNum={String(employeeData?.vacationLeaveCounter || '0')}
         name="Request Vacation"
       />
