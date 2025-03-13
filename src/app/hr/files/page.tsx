@@ -35,7 +35,7 @@ interface File {
   fileName: string;
   fileTitle: string;
   size: number;
-  dateUploaded: string;
+  createdAt: string;
   fileType: string;
   folderId: string;
 }
@@ -166,8 +166,7 @@ const HrFiles = () => {
     } else if (criteria === 'Date uploaded') {
       sortedFiles.sort(
         (a, b) =>
-          new Date(a.dateUploaded).getTime() -
-          new Date(b.dateUploaded).getTime()
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
     } else if (criteria === 'Size') {
       sortedFiles.sort((a, b) => a.size - b.size);
@@ -437,7 +436,9 @@ const HrFiles = () => {
                             {file.fileTitle || file.fileName}
                           </span>
                         </td>
-                        <td className="p-4">{file.dateUploaded}</td>
+                        <td className="p-4">
+                          {file.createdAt ? file.createdAt.split('T')[0] : ''}
+                        </td>
                         <td className="p-4">{formatFileSize(file.size)}</td>
                         <td className="p-4">
                           {file.fileType
@@ -494,7 +495,9 @@ const HrFiles = () => {
                           {/* <input type="checkbox" /> */}
                           <span>{file.fileTitle || file.fileName}</span>
                         </td>
-                        <td className="p-4">{file.dateUploaded}</td>
+                        <td className="p-4">
+                          {file.createdAt ? file.createdAt.split('T')[0] : ''}
+                        </td>
                         <td className="p-4">{file.size}</td>
                         <td className="p-4">
                           {file.fileType
