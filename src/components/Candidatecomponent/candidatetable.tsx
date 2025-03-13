@@ -4,8 +4,11 @@ import { FaChevronRight, FaSearch } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { Pagination } from '../common/Pagination';
 import { AppDispatch, RootState } from '@/store/store';
-
+import { FaDownload } from 'react-icons/fa';
 import ScreenLoader from '../common/ScreenLoader';
+import toast from 'react-hot-toast';
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const CandidateTable = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,6 +38,32 @@ const CandidateTable = () => {
     dispatch(fetchJobApplications(params));
   }, [dispatch, searchQuery, sort, filter, currentPage]);
 
+  const handleDownload = () => {
+    if (!data?.items?.length) {
+      toast.error("No candidate data available to download.");
+      return;
+    }
+  
+    const excelData = data.items.map((job) => ({
+      'Candidate Name': `${job.candidate.firstName} ${job.candidate.lastName}`,
+      'Applied For': job.job.tittle,
+      Status: job.stage,
+      Rating: job.rating || 'No rating yet',
+      'Applied On': new Date(job.createdAt).toLocaleDateString(),
+      Email: job.candidate.email,
+    }));
+  
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Candidates');
+  
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, 'All_Candidates.xlsx');
+  
+    toast.success("Candidate data downloaded successfully!");
+  };
+  
   return (
     <div className="p-4 bg-white rounded-lg border mt-4">
       {/* Search, Sort, and Filter */}
@@ -105,8 +134,16 @@ const CandidateTable = () => {
               <th className="px-6 py-4 text-left text-[14px]">Rating</th>
               <th className="px-6 py-4 text-left text-[14px]">Applied</th>
               <th className="px-6 py-4 text-left text-[14px]">Email</th>
-              <th className="px-6 py-4 text-left text-[14px]">Download</th>
-            </tr>
+              <th className="py-3 px-4 border-b font-medium">
+                <button
+                  onClick={handleDownload}
+                  className="bg-gray-200 p-2 items-center justify-center text-gray-400 rounded flex flex-row gap-2"
+                >
+                  <FaDownload />
+                  Download
+                </button>
+              </th>            
+              </tr>
           </thead>
           <tbody>
             {loading ? (

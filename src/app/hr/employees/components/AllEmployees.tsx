@@ -16,6 +16,10 @@ import { useEffect, useState } from 'react';
 import { CiCirclePlus } from 'react-icons/ci';
 import { FaChevronRight, FaDownload } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+
+
 export const AllEmployees = () => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -120,8 +124,57 @@ export const AllEmployees = () => {
     setFilteredEmployees(updatedList);
   }, [searchTerm, sortOption, filterOption, employees]);
 
-  // if (loading) return <ScreenLoader />;
-  // console.log('employees: ', employees);
+  const handleDownload = async () => {
+    try {
+      let allEmployees: AllEmployeeData['items'] = []; // Explicit type
+      let currentPage = 1;
+      let pageSize = 100; // Adjust based on API limits
+      let totalPages = 1;
+  
+      // Fetch all employees across multiple pages
+      while (currentPage <= totalPages) {
+        const { data }: { data: AllEmployeeData } = await getAllEmployees(currentPage, pageSize, "");
+        if (data.items.length === 0) break; // Stop if no more employees
+  
+        allEmployees = [...allEmployees, ...data.items]; // ✅ No more type errors
+        totalPages = Math.ceil((data.totalItems || 0) / pageSize);
+        currentPage++;
+      }
+  
+      if (allEmployees.length === 0) {
+        alert("No employee data available to download.");
+        return;
+      }
+  
+      // Convert employee data into an array of objects
+      const data = allEmployees.map((emp) => ({
+        "Employee Name": `${emp.firstName} ${emp.lastName}`,
+        "Job Title": emp.tittle || "N/A", // Fixed 'title' field name
+        Department: emp.department?.name || "N/A",
+        Email: emp.email || "N/A",
+        "Hire Date": emp.hireDate
+          ? new Date(emp.hireDate).toLocaleDateString()
+          : "N/A",
+      }));
+  
+      // Create a new workbook and worksheet
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "All Employees");
+  
+      // Write to a binary string
+      const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+  
+      // Create a Blob and trigger download
+      const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+      saveAs(blob, "All_EmployeeData.xlsx");
+    } catch (error) {
+      console.error("Error fetching all employees:", error);
+      alert("Failed to download employee data.");
+    }
+  };
+  
+  
   return (
     <>
       <nav className="flex gap-4 justify-between flex-wrap my-8">
@@ -242,10 +295,13 @@ export const AllEmployees = () => {
                 <th className="py-3 px-4 font-medium border-b">Email</th>
                 <th className="py-3 px-4 font-medium border-b">Hire Date</th>
                 <th className="py-3 px-4 font-medium border-b">
-                  <span className="border bg-gray-200 text-gray-400 p-2 text-[12px] flex flex-row items-center gap-2 rounded-sm">
-                    <FaDownload />
-                    Download
-                  </span>
+                <button
+                  onClick={handleDownload}
+                  className="border bg-gray-200 text-gray-400 p-2 text-[12px] flex flex-row items-center gap-2 rounded-sm cursor-pointer"
+                >
+                  <FaDownload />
+                  Download
+                </button>
                 </th>
               </tr>
             </thead>

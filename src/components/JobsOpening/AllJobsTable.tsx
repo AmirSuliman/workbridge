@@ -7,6 +7,10 @@ import Link from 'next/link';
 import ScreenLoader from '../common/ScreenLoader';
 import { useRouter } from 'next/navigation';
 import { FaDownload } from 'react-icons/fa';
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+
+
 export const AllJobsTable = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -17,7 +21,34 @@ export const AllJobsTable = () => {
   const [sortCriteria, setSortCriteria] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [typeFilter, setTypeFilter] = useState<string>('');
-
+  const handleDownload = () => {
+    if (sortedItems.length === 0) {
+      alert("No job data available to download.");
+      return;
+    }
+  
+    // Prepare data for the Excel file
+    const data = sortedItems.map((job) => ({
+      "Job Opening": job.tittle, // Fix: Should be "title" if API has a typo
+      "Candidates": job.jobApplicationCount,
+      "Job Type": job.employmentType,
+      "Hiring Lead": `${job.hiringLead.firstName} ${job.hiringLead.lastName}`,
+      "Created On": new Date(job.createdAt).toLocaleDateString(),
+      "Status": job.status,
+    }));
+  
+    // Create a new Excel workbook and worksheet
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Job Openings");
+  
+    // Convert to binary format
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+  
+    // Create a Blob and trigger download
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, "Job_Openings.xlsx");
+  };
   useEffect(() => {
     dispatch(fetchOpenPositions());
   }, [dispatch]);
@@ -155,11 +186,15 @@ export const AllJobsTable = () => {
               <th className="py-3 px-4 border-b font-medium">Created on</th>
               <th className="py-3 px-4 border-b font-medium">Status</th>
               <th className="py-3 px-4 border-b font-medium">
-                <span className="bg-gray-200text-gray-400 p-1 rounded flex flex-row gap-2">
+                <button
+                  onClick={handleDownload}
+                  className="bg-gray-200 p-2 items-center justify-center text-gray-400 rounded flex flex-row gap-2"
+                >
                   <FaDownload />
                   Download
-                </span>
+                </button>
               </th>
+              
             </tr>
           </thead>
           <tbody>

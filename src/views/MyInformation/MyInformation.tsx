@@ -49,7 +49,7 @@ const MyInformation = () => {
 
   useEffect(() => {
     const fetchSession = async () => {
-      // const session = await getSession();
+    // const session = await getSession();
       setRole(session?.user?.role);
     };
 
