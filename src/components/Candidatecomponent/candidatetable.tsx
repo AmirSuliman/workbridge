@@ -6,16 +6,16 @@ import { Pagination } from '../common/Pagination';
 import { AppDispatch, RootState } from '@/store/store';
 import { FaDownload } from 'react-icons/fa';
 import ScreenLoader from '../common/ScreenLoader';
+import toast from 'react-hot-toast';
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import toast from  "react-hot-toast";
 
 const CandidateTable = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { data, loading, error } = useSelector(
     (state: RootState) => state.jobApplications
   );
-  const [allCandidates, setAllCandidates] = useState<any[]>([]);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [sort, setSort] = useState('');
@@ -26,47 +26,27 @@ const CandidateTable = () => {
     setCurrentPage(page);
   };
 
-
+  // Fetch job applications on load or filter change
   useEffect(() => {
-    const fetchCandidates = async () => {
-      try {
-        const params = {
-          stage: filter || undefined,
-          sort: sort || undefined,
-          page: 1,
-          size: 10000, // Fetch all candidates
-          name: searchQuery || undefined,
-        };
-  
-        const response = await dispatch(fetchJobApplications(params));
-  
-        if (response.payload?.items) {
-          setAllCandidates(response.payload.items);
-        } else {
-          setAllCandidates([]); 
-        }
-      } catch (error) {
-        console.error("Error fetching candidates:", error);
-        toast.error("Failed to fetch candidates.");
-      }
+    const params = {
+      stage: filter || undefined,
+      sort: sort || undefined,
+      page: currentPage,
+      size: pageSize,
+      name: searchQuery || undefined,
     };
-  
-    fetchCandidates();
-  }, [dispatch, searchQuery, sort, filter]);
-  
-  
-   
+    dispatch(fetchJobApplications(params));
+  }, [dispatch, searchQuery, sort, filter, currentPage]);
+
   const handleDownload = () => {
-    console.log("Candidates before download:", allCandidates); // Debugging log
-  
-    if (!allCandidates.length) {
+    if (!data?.items?.length) {
       toast.error("No candidate data available to download.");
       return;
     }
   
-    const excelData = allCandidates.map((job) => ({
+    const excelData = data.items.map((job) => ({
       'Candidate Name': `${job.candidate.firstName} ${job.candidate.lastName}`,
-      'Applied For': job.job.title, // Fix typo (was "tittle")
+      'Applied For': job.job.tittle,
       Status: job.stage,
       Rating: job.rating || 'No rating yet',
       'Applied On': new Date(job.createdAt).toLocaleDateString(),
@@ -83,7 +63,6 @@ const CandidateTable = () => {
   
     toast.success("Candidate data downloaded successfully!");
   };
-  
   
   return (
     <div className="p-4 bg-white rounded-lg border mt-4">
