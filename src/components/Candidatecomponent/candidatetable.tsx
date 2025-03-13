@@ -8,13 +8,14 @@ import { FaDownload } from 'react-icons/fa';
 import ScreenLoader from '../common/ScreenLoader';
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import toast from  "react-hot-toast";
 
 const CandidateTable = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { data, loading, error } = useSelector(
     (state: RootState) => state.jobApplications
   );
-
+  const [allCandidates, setAllCandidates] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [sort, setSort] = useState('');
@@ -25,67 +26,64 @@ const CandidateTable = () => {
     setCurrentPage(page);
   };
 
-  // Fetch job applications on load or filter change
+
   useEffect(() => {
-    const params = {
-      stage: filter || undefined,
-      sort: sort || undefined,
-      page: currentPage,
-      size: pageSize,
-      name: searchQuery || undefined,
-    };
-    dispatch(fetchJobApplications(params));
-  }, [dispatch, searchQuery, sort, filter, currentPage]);
-  
-  const handleDownload = async () => {
-    try {
-      let allCandidates: any[] = [];
-      let page = 1;
-      let totalPages = 1;
-  
-      while (page <= totalPages) {
+    const fetchCandidates = async () => {
+      try {
         const params = {
           stage: filter || undefined,
           sort: sort || undefined,
-          page: page,
-          size: 100, // Adjust if needed
+          page: 1,
+          size: 10000, // Fetch all candidates
           name: searchQuery || undefined,
         };
   
-        const response = await dispatch(fetchJobApplications(params)).unwrap();
-        if (response?.items?.length) {
-          allCandidates = [...allCandidates, ...response.items];
-          totalPages = Math.ceil(response.totalItems / 100);
+        const response = await dispatch(fetchJobApplications(params));
+  
+        if (response.payload?.items) {
+          setAllCandidates(response.payload.items);
+        } else {
+          setAllCandidates([]); 
         }
-        page++;
+      } catch (error) {
+        console.error("Error fetching candidates:", error);
+        toast.error("Failed to fetch candidates.");
       }
+    };
   
-      if (allCandidates.length === 0) {
-        alert('No candidate data available to download.');
-        return;
-      }
+    fetchCandidates();
+  }, [dispatch, searchQuery, sort, filter]);
   
-      const excelData = allCandidates.map((job) => ({
-        "Candidate Name": `${job.candidate.firstName} ${job.candidate.lastName}`,
-        "Applied For": job.job.tittle,
-        "Status": job.stage,
-        "Rating": job.rating || 'No rating yet',
-        "Applied On": new Date(job.createdAt).toLocaleDateString(),
-        "Email": job.candidate.email,
-      }));
   
-      const worksheet = XLSX.utils.json_to_sheet(excelData);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'Candidates');
+   
+  const handleDownload = () => {
+    console.log("Candidates before download:", allCandidates); // Debugging log
   
-      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-      const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-      saveAs(blob, 'All_Candidates.xlsx');
-    } catch (error) {
-      console.error('Error downloading candidates:', error);
-      alert('Failed to download candidate data.');
+    if (!allCandidates.length) {
+      toast.error("No candidate data available to download.");
+      return;
     }
+  
+    const excelData = allCandidates.map((job) => ({
+      'Candidate Name': `${job.candidate.firstName} ${job.candidate.lastName}`,
+      'Applied For': job.job.title, // Fix typo (was "tittle")
+      Status: job.stage,
+      Rating: job.rating || 'No rating yet',
+      'Applied On': new Date(job.createdAt).toLocaleDateString(),
+      Email: job.candidate.email,
+    }));
+  
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Candidates');
+  
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, 'All_Candidates.xlsx');
+  
+    toast.success("Candidate data downloaded successfully!");
   };
+  
   
   return (
     <div className="p-4 bg-white rounded-lg border mt-4">

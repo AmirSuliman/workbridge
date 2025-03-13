@@ -123,7 +123,7 @@ const Home = () => {
           <UserEvaluation evaluation={evaluation} employeeId={employeeId} />
         )}
         <HomePolicies />
-        <Celebrations />
+        {/*<Celebrations /> */}
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
           <header className="px-4 flex items-center gap-4 justify-between">
             <h1 className="flex items-center gap-4 font-semibold text-xl mb-4">
@@ -141,7 +141,7 @@ const Home = () => {
           </header>
           <SingleAnnouncement />
         </section>
-        <Training />
+       {/*<Training /> */}
         <NewEmployees />
         <Companyinfo />
       </main>
