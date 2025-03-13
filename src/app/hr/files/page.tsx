@@ -131,7 +131,7 @@ const HrFiles = () => {
           axiosInstance.get('/folders'),
           axiosInstance.get('/files'),
         ]);
-
+        console.log('filesResponse', filesResponse.data.data.items);
         setFolders(foldersResponse.data.data.items);
         setAllFiles(filesResponse.data.data.items);
         setIsAllFilesActive(true); // Ensure "All Files" is selected by default
@@ -199,6 +199,8 @@ const HrFiles = () => {
     setError(null);
     try {
       const response = await axiosInstance.get(`/files/${folder.id}`);
+      console.log('all response:', response.data.data.items);
+
       setAllFiles(response.data.data.items);
       folder.files = response.data.data.items;
       setActiveFolder(folder);

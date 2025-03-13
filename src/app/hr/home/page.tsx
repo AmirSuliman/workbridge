@@ -18,8 +18,8 @@ const page = () => {
     <main className="flex flex-col sm:flex-row items-start gap-4 w-full">
       <div className="flex flex-col gap-4 w-full sm:w-[45%]">
         <WhosOut />
-        <Celebrations />
-        <Training />
+        {/* <Celebrations /> */}
+        {/* <Training /> */}
         <Companyinfo />
         <Employeementreport />
       </div>

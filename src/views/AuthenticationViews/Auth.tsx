@@ -48,7 +48,9 @@ const Auth = () => {
       return `${window.location.origin}${url}`;
     }
   };
+
   // Check for existing session when component mounts
+  // If session exist then go to home page without re-login
   useEffect(() => {
     const checkSession = async () => {
       const session = await getSession();
@@ -161,7 +163,11 @@ const Auth = () => {
           toast.success('Login Successful!');
 
           // Check if there's a callback URL to redirect to
-          if (callbackUrl) {
+          // Redirect only if the url starts with hr or user
+          if (
+            callbackUrl.startsWith('/hr/') ||
+            callbackUrl.startsWith('/user/')
+          ) {
             router.replace(absoluteCallbackUrl);
           } else {
             // Default redirect based on role
