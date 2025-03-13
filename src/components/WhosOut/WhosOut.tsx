@@ -82,7 +82,7 @@ const WhosOut = () => {
   });
 
   return (
-    <section className="h-fit bg-white rounded-xl border-[1px] border-[#E0E0E0]">
+    <section className=" bg-white rounded-xl border-[1px] border-[#E0E0E0]">
       <LeaveAndVacationCardsCombined />
       <hr className="my-4" />
       <h2 className="font-medium text-lg px-4">Who’s Out</h2>

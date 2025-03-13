@@ -75,7 +75,7 @@ const CreateEmployee = () => {
 
   const { handleSubmit, reset } = formMethods;
   const onSubmit = async (data) => {
-    console.log('onsubmit data: ', data);
+    // console.log('onsubmit data: ', data);
     const payLoad = {
       firstName: data.firstName,
       lastName: data.lastName,
@@ -88,10 +88,8 @@ const CreateEmployee = () => {
       marritialStatus: data.marritialStatus,
       paymentSchedule: data.paymentSchedule,
       payType: data.payType,
-      effectiveDate: data.effectiveDate,
       overtime: data.overtime,
       note: data.note,
-      // profilePictureUrl: data.profilePictureUrl,
       linkedin: data.linkedin,
       instagram: data.instagram,
       website: data.website,
@@ -113,7 +111,7 @@ const CreateEmployee = () => {
         state: data.location.state,
       },
     };
-    console.log('payload: ', payLoad);
+
     try {
       setLoader(true);
       // handle profile picture to get url from the upload picture

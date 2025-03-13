@@ -15,12 +15,17 @@ export const password = z
   .refine((val) => !val || /\d/.test(val), {
     message: 'Password must contain at least one number',
   })
-  .refine((val) => !val || /[@$!%*?&#|]/.test(val), {
+  .refine((val) => !val || /[!@#$%^&*()_+\[\]{}|;:,.<>?]/.test(val), {
     message:
-      'Password must contain at least one special character - (@$!%*?&#|)',
+      'Password must contain at least one special character: !@#$%^&*()_+[]{}|;:,.<>?',
   });
 
 export const email = z
   .string()
   .trim()
   .email({ message: 'Invalid Email Format' });
+
+export const updatePassword = z.object({
+  oldPassword: password,
+  newPassword: password,
+});

@@ -72,20 +72,20 @@ const MyInformation = () => {
     hireDate: employeeData?.hireDate
       ? new Date(employeeData.hireDate).toISOString().split('T')[0]
       : '',
-    effectiveDate: employeeData?.effectiveDate
-      ? new Date(employeeData.effectiveDate).toISOString().split('T')[0]
-      : '',
+    // effectiveDate: employeeData?.effectiveDate
+    //   ? new Date(employeeData.effectiveDate).toISOString().split('T')[0]
+    //   : '',
     salary: employeeData?.salary ? employeeData.salary : 0,
     location: {
-      zipCode: Number(employeeData?.location?.zipCode) || '',
+      zipCode: employeeData?.location?.zipCode || '',
       street1: employeeData?.location?.street1 || '',
       street2: employeeData?.location?.street2 || '',
       city: employeeData?.location?.city || '',
       country: employeeData?.location?.country || '',
       state: employeeData?.location?.state || '',
     },
-    phoneNumber: Number(employeeData?.phoneNumber) || '',
-    workPhone: Number(employeeData?.workPhone) || '',
+    phoneNumber: employeeData?.phoneNumber || '',
+    workPhone: employeeData?.workPhone || '',
   };
 
   const {
@@ -216,7 +216,6 @@ const MyInformation = () => {
   const onSubmit = async (data: any) => {
     // PUT employee/id needs the following payload.
     // The data parameter ☝ contains extra fields that backend does not expect.
-    console.log('data: ', data);
     const payLoad = {
       firstName: data.firstName,
       lastName: data.lastName,
@@ -224,13 +223,10 @@ const MyInformation = () => {
       departmentId: data.departmentId,
       email: data.email,
       middleName: data.middleName,
-      // salary: data.salary,
       tittle: data.tittle,
       gender: data.gender,
       marritialStatus: data.marritialStatus,
-      // paymentSchedule: data.paymentSchedule,
       payType: data.payType,
-      effectiveDate: data.effectiveDate,
       overtime: data.overtime,
       note: data.note,
       linkedin: data.linkedin,
@@ -252,7 +248,6 @@ const MyInformation = () => {
         state: data.location.state,
       },
     };
-    console.log('payload: ', payLoad);
 
     try {
       setEditLoading(true);
@@ -305,15 +300,15 @@ const MyInformation = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="p-4">Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="p-4">Error: {error}</div>;
   }
 
   if (!employeeData) {
-    return <div>No data available.</div>;
+    return <div className="p-4">No data available.</div>;
   }
   console.log('Form errors: ', schemaErrors);
   return (
@@ -348,6 +343,7 @@ const MyInformation = () => {
             }`}
           />
 
+          {/* If we are editing a user info then hide the following tabs */}
           {!editEmployee && (
             <>
               <TabButton
@@ -390,16 +386,21 @@ const MyInformation = () => {
                     : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=5`
                 }`}
               />
-              <TabButton
-                name="Payments"
-                href={`${
-                  empId
-                    ? `/${
-                        isUserPanel ? 'user' : 'hr'
-                      }/employees/employee-info/${empId}?tab=6`
-                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=6`
-                }`}
-              />
+
+              {/* Superadmin can see all user's payments. Other users can see only thier own payments */}
+
+              {(role === 'SuperAdmin' || !empId) && (
+                <TabButton
+                  name="Payments"
+                  href={`${
+                    empId
+                      ? `/${
+                          isUserPanel ? 'user' : 'hr'
+                        }/employees/employee-info/${empId}?tab=6`
+                      : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=6`
+                  }`}
+                />
+              )}
             </>
           )}
         </div>
@@ -435,9 +436,12 @@ const MyInformation = () => {
           <TabComponent index="5">
             <NotesSection employeeId={empId || myId} />
           </TabComponent>
-          <TabComponent index="6">
-            <PaymentSection employeeId={empId || myId} />
-          </TabComponent>
+          {/* Superadmin can see all user's payments. Other users can see only thier own payments */}
+          {(role === 'SuperAdmin' || !empId) && (
+            <TabComponent index="6">
+              <PaymentSection employeeId={empId || myId} />
+            </TabComponent>
+          )}
         </div>
       </TabsContainer>
     </form>

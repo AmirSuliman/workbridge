@@ -19,20 +19,26 @@ pipeline {
                         env.NODE_LABEL = 'master'
                         env.SERVER_USER = 'jenkins'
                         env.SERVER_IP = '13.48.115.146'
-                        // env.NODE_ENV = 'production'
                         env.ENV_PATH = '/var/lib/jenkins/envFiles/workbridgeFrontendEnv/.env'
                         env.APP_DIR = '/var/www/workbridge-frontend-dev'
+                        env.OWNER_USER = 'jenkins'
                     } else if (env.BRANCH_NAME == 'prod') {
                         env.NODE_LABEL = 'production'
                         env.SERVER_USER = 'jenkins'
                         env.SERVER_IP = '13.48.115.146'  // Replace with actual production IP.
-                        // env.NODE_ENV = 'production'
                         env.ENV_PATH = '/home/jenkins/envFiles/workbridgeFrontendEnv/.env'
                         env.APP_DIR = '/var/www/workbridge-frontend'
+                        env.OWNER_USER = 'ubuntu'
+                    } else if (env.BRANCH_NAME == 'uat') {  // ✅ Added UAT functionality
+                        env.NODE_LABEL = 'uat'
+                        env.SERVER_USER = 'jenkins'
+                        env.SERVER_IP = 'uat-server-ip'  // Replace with actual UAT IP
+                        env.ENV_PATH = '/home/jenkins/envFiles/workbridgeFrontendEnv/.env'
+                        env.APP_DIR = '/var/www/workbridge-frontend-uat'
+                        env.OWNER_USER = 'ubuntu'
                     } else {
                         error "Unsupported branch: ${env.BRANCH_NAME}"
                     }
-                    // echo "🚀 Deploying ${APP_NAME} to ${env.NODE_ENV} at ${env.APP_DIR}"
                 }
             }
         }
@@ -44,7 +50,7 @@ pipeline {
                     sh """
                         echo "🔧 Ensuring deployment directory exists..."
                         sudo mkdir -p ${env.APP_DIR} || exit 1
-                        sudo chown -R jenkins:jenkins ${env.APP_DIR} || exit 1
+                        sudo chown -R ${env.OWNER_USER}:${env.OWNER_USER} ${env.APP_DIR} || exit 1
                         sudo chmod -R 775 ${env.APP_DIR} || exit 1
 
                         echo "🗑️ Cleaning old files..."
@@ -129,7 +135,6 @@ module.exports = {
             args: "start",
             cwd: "${env.APP_DIR}",
             env: {
-
                 PORT: ${env.APP_PORT}
             }
         }

@@ -111,7 +111,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
               )}
             </article>
             <article>
-              <Label text="Hire Date*" />
+              <Label text="Hire Date" />
               <input
                 type="date"
                 className="form-input"
@@ -119,19 +119,6 @@ const Employment = ({ loader }: { loader: boolean }) => {
               />
               {errors.hireDate && (
                 <span className="form-error">{errors.hireDate.message}</span>
-              )}
-            </article>
-            <article>
-              <Label text="Effective Date*" />
-              <input
-                type="date"
-                className="form-input"
-                {...register('effectiveDate')}
-              />
-              {errors.effectiveDate && (
-                <span className="form-error">
-                  {errors.effectiveDate.message}
-                </span>
               )}
             </article>
           </div>

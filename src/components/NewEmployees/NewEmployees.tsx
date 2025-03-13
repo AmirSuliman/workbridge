@@ -39,7 +39,7 @@ const NewEmployees = () => {
   const newEmployees = getNewEmployees();
 
   return (
-    <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4 space-y-4">
+    <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4 space-y-4 ">
       <h1 className="flex items-center gap-4 font-medium text-[18px] mb-4">
         <svg
           width="17"
@@ -72,7 +72,7 @@ const NewEmployees = () => {
       ) : (
         <main className="divide-y-[1px] divide-[#E8E8E8] space-y-4">
           {newEmployees.length === 0 ? (
-            <p>No new employees in the past month</p>
+            <p className="">No new employees in the past month</p>
           ) : (
             newEmployees.map((employee) => (
               <NewEmployeeInfo

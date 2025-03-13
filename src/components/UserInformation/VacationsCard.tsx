@@ -230,8 +230,8 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
                   startDate={startDate}
                   endDate={endDate}
                   minDate={new Date()}
-                  dateFormat="dd/MM/yyyy"
-                  placeholderText="dd/mm/yyyy"
+                  dateFormat="MM/dd/yyyy"
+                  placeholderText="mm/dd/yyyy"
                   className="p-3 border rounded w-full"
                 />
               </label>
@@ -250,8 +250,8 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
                   maxDate={
                     startDate ? addDays(startDate, totalDays - 1) : undefined
                   }
-                  dateFormat="dd/MM/yyyy"
-                  placeholderText="dd/mm/yyyy"
+                  dateFormat="MM/dd/yyyy"
+                  placeholderText="mm/dd/yyyy"
                   className="p-3 border rounded w-full"
                   disabled={!startDate}
                 />

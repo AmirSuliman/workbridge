@@ -1,24 +1,61 @@
-import { password } from '@/validations/common';
+import InputField from '@/components/common/InputField';
+import axiosInstance from '@/lib/axios';
+import { updatePassword } from '@/validations/common';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { isAxiosError } from 'axios';
+import { EyeIcon } from 'lucide-react';
+import { getSession } from 'next-auth/react';
 import Head from 'next/head';
-import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import Footer from './footer';
 import Navbar from './nav';
-import Image from 'next/image';
-import InputField from '@/components/common/InputField';
-import { EyeIcon } from 'lucide-react';
 
 const UpdatePassword = () => {
+  const router = useRouter();
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: zodResolver(password),
+    resolver: zodResolver(updatePassword),
     mode: 'onChange',
   });
+
+  const onSubmit = async (data) => {
+    const payload = {
+      oldPassword: data.oldPassword,
+      newPassword: data.newPassword,
+    };
+    try {
+      const session = await getSession();
+
+      if (session) {
+        console.log('session.user.accessToken', session.user.accessToken);
+        const response = await axiosInstance.put(
+          '/user/changePassword',
+          payload,
+          {
+            headers: { Authorization: `Bearer ${session.user.accessToken}` },
+          }
+        );
+        console.log('put pas: ', response.data);
+      }
+      toast.success('Password updated successfully!');
+      router.replace('/sign-in');
+    } catch (error) {
+      console.log(error);
+      if (isAxiosError(error) && error.response)
+        toast.error(error.response.data.message || 'An error occured');
+      else toast.error('An error occured');
+    }
+  };
 
   return (
     <>
@@ -39,7 +76,7 @@ const UpdatePassword = () => {
         }}
       >
         <div
-          className={` flex flex-col items-center justify-start my-auto  mt-32 `}
+          className={` flex flex-col items-center justify-start my-auto  pt-32 `}
         >
           <div className="min-w-[100%] sm:min-w-[27rem]  z-10 p-4 border rounded-[27px] backdrop-blur-sm bg-white/30 shadow-lg">
             <div className="flex flex-col items-center bg-white rounded-[27px] p-8 h-full shadow-custom-deep pt-[2rem] px-[1rem]">
@@ -53,42 +90,67 @@ const UpdatePassword = () => {
               <h1 className="text-[30px] mt-2">
                 work<span className="font-bold">Bridge</span>
               </h1>
-              <form
-                // onSubmit={handleSubmit(onSubmit)}
-                className="w-full  mt-12 "
-              >
+              <p className="mt-4 max-w-md text-center">
+                This is your 1st time login. Please change your password to
+                proceed.
+              </p>
+              <form onSubmit={handleSubmit(onSubmit)} className="w-full mt-4">
                 <div className="relative w-full mt-6">
-                  <label className="text-[14px] mb-1">Password</label>
+                  <label className="text-[14px] mb-1">Old Password</label>
                   <div className="relative flex items-center">
                     <InputField
-                      name="password"
-                      // type={passwordVisible ? 'text' : 'password'}
+                      name="oldPassword"
+                      type={passwordVisible ? 'text' : 'password'}
                       placeholder="Password"
                       register={register}
-                      error={errors.password?.message && ''}
+                      error={errors.oldPassword?.message && ''}
                     />
                     <button
                       type="button"
-                      // onClick={() => setPasswordVisible(!passwordVisible)}
+                      onClick={() => setPasswordVisible(!passwordVisible)}
                       className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 pointer-events-auto "
                     >
-                      {/* <EyeIcon classNames="w-4" /> */}
+                      <EyeIcon className="w-4" />
                     </button>
                   </div>
-                  {errors.password && (
+                  {errors.oldPassword && (
                     <p className="text-red-500 text-xs mt-1">
-                      {/* {errors.password.message} */}
+                      {String(errors.oldPassword.message)}
                     </p>
                   )}
                 </div>
-                <div className="text-right">
+                <div className="relative w-full mt-6">
+                  <label className="text-[14px] mb-1">New Password</label>
+                  <div className="relative flex items-center">
+                    <InputField
+                      name="newPassword"
+                      type={passwordVisible ? 'text' : 'password'}
+                      placeholder="Password"
+                      register={register}
+                      error={errors.newPassword?.message && ''}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setPasswordVisible(!passwordVisible)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 pointer-events-auto "
+                    >
+                      <EyeIcon className="w-4" />
+                    </button>
+                  </div>
+                  {errors.newPassword && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {String(errors.newPassword.message)}
+                    </p>
+                  )}
+                </div>
+                {/* <div className="text-right">
                   <Link
                     href={'forgot-password'}
                     className="text-black ml-auto font-semibold !text-xs !text-right my-2 w-full hover:cursor-pointer"
                   >
                     Forgot Password?
                   </Link>
-                </div>
+                </div> */}
 
                 <button
                   type="submit"

@@ -18,9 +18,10 @@ const page = () => {
     <main className="flex flex-col sm:flex-row items-start gap-4 w-full">
       <div className="flex flex-col gap-4 w-full sm:w-[45%]">
         <WhosOut />
-        <Celebrations />
-        <Training />
+        {/* <Celebrations /> */}
+        {/* <Training /> */}
         <Companyinfo />
+        <Employeementreport />
       </div>
       <div className="flex flex-col gap-4 flex-1">
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
@@ -43,7 +44,6 @@ const page = () => {
         </section>
         <LeaveRequests />
         <NewEmployees />
-        <Employeementreport />
       </div>
     </main>
   );
