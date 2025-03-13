@@ -220,7 +220,7 @@ const OrgChartWithHoverPositions = ({
       refOrgChart.current
         .container(d3Container.current)
         .data(transformedData)
-        .nodeHeight(() => 82)
+        .nodeHeight(() => 97)
         .nodeWidth(() => 300)
         .setActiveNodeCentered(false)
         .svgHeight(window.innerHeight)
@@ -268,6 +268,7 @@ const OrgChartWithHoverPositions = ({
             border-style: solid;
             padding: .5rem;
             font-size: 11px;
+            min-height: 97px;
           ">
             <div style="display: flex; align-items: center; padding-left: 1rem; height: 35px; ">
               <div style="background-color: #86699D; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 25px;">
