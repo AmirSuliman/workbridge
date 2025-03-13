@@ -20,18 +20,30 @@ const Companyinfo = () => {
 
       <div className="space-y-2 p-4 ">
         <p className="text-gray-400 font-medium text-[14px]">Company</p>
-        <div className="flex flex-row gap-2 items-center text-[14px] ">
+        <Link
+          href="https://isaconsulting.com/"
+          target="_blank"
+          className="flex flex-row gap-2 items-center text-[14px] "
+        >
           <FaGlobe />
           isaconsulting.com
-        </div>
-        <div className="flex flex-row gap-2 items-center text-[14px]">
+        </Link>
+        <Link
+          href="mailto:prosper@isaconsulting.com"
+          target="_blank"
+          className="flex flex-row gap-2 items-center text-[14px]"
+        >
           <FaEnvelope />
           prosper@isaconsulting.com
-        </div>
-        <div className="flex flex-row gap-2 items-center text-[14px] mb-4">
+        </Link>
+        <Link
+          href="tel:(888) 396-1112"
+          target="_blank"
+          className="flex flex-row gap-2 items-center text-[14px] mb-4"
+        >
           <FaPhone style={{ transform: 'rotate(90deg)' }} />
           (888) 396-1112
-        </div>
+        </Link>
       </div>
       <div className="w-full h-[1px] mb-4 bg-[#E8E8E8]" />
 
@@ -44,14 +56,22 @@ const Companyinfo = () => {
           Regional Officer
         </p>
 
-        <div className="flex flex-row gap-2 items-center text-[14px] mb-2">
+        <Link
+          href="mailto:prosper@isaconsulting.com"
+          target="_blank"
+          className="flex flex-row gap-2 items-center text-[14px] mb-2"
+        >
           <FaEnvelope />
           prosper@isaconsulting.com
-        </div>
-        <div className="flex flex-row gap-2 items-center text-[14px] mb-4">
+        </Link>
+        <Link
+          href="tel:(888) 396-1112"
+          target="_blank"
+          className="flex flex-row gap-2 items-center text-[14px] mb-4"
+        >
           <FaPhone style={{ transform: 'rotate(90deg)' }} />
           (888) 396-1112
-        </div>
+        </Link>
       </div>
       <div className="w-full h-[1px] mb-4  bg-[#E8E8E8]" />
 
@@ -71,7 +91,7 @@ const Companyinfo = () => {
           className="flex flex-row gap-2 items-center text-[14px]"
         >
           <FaTwitter />
-          isaconsulting_
+          ISAConsulting_
         </Link>
         <Link
           href="https://www.linkedin.com/company/isaconsulting/mycompany/"
