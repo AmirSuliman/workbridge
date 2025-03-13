@@ -38,7 +38,7 @@ const ProfilePicture = ({ previewUrl, handleFileChange, errors }) => {
         <span className="text-red-500">{errors.profilePictureUrl.message}</span>
       )}
       <p className="text-sm py-8 text-[#abaeb4]">
-        Make sure profile image is a valid image format (.jpg, jpeg, .png)
+        Make sure profile image is a valid image format
       </p>
     </div>
   );
