@@ -13,6 +13,7 @@ import SickCard from './sickCard';
 import VacationsCard from './VacationsCard';
 import toast from 'react-hot-toast';
 import imageLoader from '../../../imageLoader';
+import { useParams } from 'next/navigation';
 
 interface Employee {
   firstName: string;
@@ -38,6 +39,8 @@ const TimeOffSection = ({ employeeData }) => {
   const [selectedTimeOff, setSelectedTimeOff] = useState<TimeOffItem | null>(
     null
   );
+  const { empId } = useParams(); // This id is used to view any employee's info
+
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
@@ -76,8 +79,18 @@ const TimeOffSection = ({ employeeData }) => {
   useEffect(() => {
     const fetchTimeOffData = async () => {
       try {
-        const response = await axiosInstance.get('/timeoffs/my');
-        setTimeOffData(response.data.data.items);
+        // if employee id is not coming from search params then show my timoffs
+        // else show that employee's timeoffs
+        if (!empId) {
+          const response = await axiosInstance.get('/timeoffs/my');
+          setTimeOffData(response.data.data.items);
+        } else {
+          const response = await axiosInstance.get(
+            `/timeoffs?employeeId=${empId}`
+          );
+          // console.log('empId timeoffs: ', response.data.data.items);
+          setTimeOffData(response.data.data.items);
+        }
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
@@ -92,16 +105,16 @@ const TimeOffSection = ({ employeeData }) => {
     fetchTimeOffData();
   }, []);
 
-  const handleEditClick = (item) => {
-    setSelectedTimeOff(item);
-    setLeaveDate(new Date(item.leaveDay).toISOString().split('T')[0]);
-    setReturningDate(new Date(item.returningDay).toISOString().split('T')[0]);
-    calculateDuration(
-      new Date(item.leaveDay).toISOString(),
-      new Date(item.returningDay).toISOString()
-    );
-    setIsModalOpen(true);
-  };
+  // const handleEditClick = (item) => {
+  //   setSelectedTimeOff(item);
+  //   setLeaveDate(new Date(item.leaveDay).toISOString().split('T')[0]);
+  //   setReturningDate(new Date(item.returningDay).toISOString().split('T')[0]);
+  //   calculateDuration(
+  //     new Date(item.leaveDay).toISOString(),
+  //     new Date(item.returningDay).toISOString()
+  //   );
+  //   setIsModalOpen(true);
+  // };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -134,34 +147,36 @@ const TimeOffSection = ({ employeeData }) => {
     }
   };
 
-  const values = timeOffData.map((item, index) => [
-    <LabelWithIcon
-      key={index}
-      icon={
-        item.type === 'Vacation' ? (
-          <UmbrellaIcon classNames="w-4 text-white" />
-        ) : (
-          <SickPersonIcon classNames="w-4 text-white" />
-        )
-      }
-      title={item.type}
-      iconStyles={item.type === 'Vacation' ? 'bg-[#00B87D]' : 'bg-[#F53649]'}
-    />,
-    new Date(item.leaveDay).toLocaleDateString(),
-    new Date(item.returningDay).toLocaleDateString(),
-    <span
-      key={`status-${index}`}
-      className={
-        item.status === 'Pending'
-          ? 'text-black'
-          : item.status === 'Confirmed'
-          ? 'text-[#25A244] font-[500]'
-          : 'text-[#F53649]'
-      }
-    >
-      {item.status === 'Pending' ? 'Waiting for Approval' : item.status}
-    </span>,
-  ]);
+  const values = timeOffData
+    .filter((timeoff, index) => timeoff.status === 'Pending')
+    .map((item, index) => [
+      <LabelWithIcon
+        key={index}
+        icon={
+          item.type === 'Vacation' ? (
+            <UmbrellaIcon classNames="w-4 text-white" />
+          ) : (
+            <SickPersonIcon classNames="w-4 text-white" />
+          )
+        }
+        title={item.type}
+        iconStyles={item.type === 'Vacation' ? 'bg-[#00B87D]' : 'bg-[#F53649]'}
+      />,
+      new Date(item.leaveDay).toLocaleDateString(),
+      new Date(item.returningDay).toLocaleDateString(),
+      <span
+        key={`status-${index}`}
+        className={
+          item.status === 'Pending'
+            ? 'text-black'
+            : item.status === 'Confirmed'
+            ? 'text-[#25A244] font-[500]'
+            : 'text-[#F53649]'
+        }
+      >
+        {item.status === 'Pending' ? 'Waiting for Approval' : item.status}
+      </span>,
+    ]);
 
   return (
     <div className="p-1 rounded-md h-full">
@@ -206,14 +221,29 @@ const TimeOffSection = ({ employeeData }) => {
         ) : (
           <InfoGrid
             headers={['Type', 'Date From', 'Date To', 'Approved By']}
-            values={timeOffData.map((item, index) => [
-              item.type,
-              new Date(item.leaveDay).toLocaleDateString(),
-              new Date(item.returningDay).toLocaleDateString(),
-              `${item.employee.firstName || 'N/A'} ${
-                item.employee.lastName || 'N/A'
-              }`.trim(),
-            ])}
+            values={timeOffData
+              .filter((timeoff, index) => timeoff.status !== 'Pending')
+              .map((item, index) => [
+                <LabelWithIcon
+                  key={index}
+                  icon={
+                    item.type === 'Vacation' ? (
+                      <UmbrellaIcon classNames="w-4 text-white" />
+                    ) : (
+                      <SickPersonIcon classNames="w-4 text-white" />
+                    )
+                  }
+                  title={item.type}
+                  iconStyles={
+                    item.type === 'Vacation' ? 'bg-[#00B87D]' : 'bg-[#F53649]'
+                  }
+                />,
+                new Date(item.leaveDay).toLocaleDateString(),
+                new Date(item.returningDay).toLocaleDateString(),
+                `${item.employee.firstName || 'N/A'} ${
+                  item.employee.lastName || 'N/A'
+                }`.trim(),
+              ])}
           />
         )}
       </div>

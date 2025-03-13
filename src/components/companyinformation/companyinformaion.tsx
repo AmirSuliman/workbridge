@@ -1,9 +1,12 @@
-import { FaGlobe } from 'react-icons/fa';
-import { FaEnvelope } from 'react-icons/fa';
-import { FaPhone } from 'react-icons/fa';
-import { FaInstagram } from 'react-icons/fa';
-import { FaTwitter } from 'react-icons/fa';
-import { FaLinkedin } from 'react-icons/fa';
+import Link from 'next/link';
+import {
+  FaEnvelope,
+  FaGlobe,
+  FaInstagram,
+  FaLinkedin,
+  FaPhone,
+  FaTwitter,
+} from 'react-icons/fa';
 
 const Companyinfo = () => {
   return (
@@ -27,7 +30,7 @@ const Companyinfo = () => {
         </div>
         <div className="flex flex-row gap-2 items-center text-[14px] mb-4">
           <FaPhone style={{ transform: 'rotate(90deg)' }} />
-          +123 456 7890
+          (888) 396-1112
         </div>
       </div>
       <div className="w-full h-[1px] mb-4 bg-[#E8E8E8]" />
@@ -47,25 +50,37 @@ const Companyinfo = () => {
         </div>
         <div className="flex flex-row gap-2 items-center text-[14px] mb-4">
           <FaPhone style={{ transform: 'rotate(90deg)' }} />
-          +123 456 7890
+          (888) 396-1112
         </div>
       </div>
       <div className="w-full h-[1px] mb-4  bg-[#E8E8E8]" />
 
       <div className="space-y-2 p-4 ">
         <p className="text-gray-400 font-medium">Socials</p>
-        <div className="flex flex-row gap-2 items-center text-[14px] ">
+        <Link
+          href="https://www.instagram.com/isaconsultinggroup/"
+          target="_blank"
+          className="flex flex-row gap-2 items-center text-[14px] "
+        >
           <FaInstagram />
           @isaconsultinggroup
-        </div>
-        <div className="flex flex-row gap-2 items-center text-[14px]">
+        </Link>
+        <Link
+          href="https://twitter.com/ISAConsulting_"
+          target="_blank"
+          className="flex flex-row gap-2 items-center text-[14px]"
+        >
           <FaTwitter />
           isaconsulting_
-        </div>
-        <div className="flex flex-row gap-2 items-center text-[14px]">
+        </Link>
+        <Link
+          href="https://www.linkedin.com/company/isaconsulting/mycompany/"
+          target="_blank"
+          className="flex flex-row gap-2 items-center text-[14px]"
+        >
           <FaLinkedin />
           ISA Consulting
-        </div>
+        </Link>
       </div>
     </section>
   );
