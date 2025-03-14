@@ -14,12 +14,16 @@ import { FaUnderline } from 'react-icons/fa6';
 import Image from 'next/image';
 
 interface ToolBarProps {
-  editor: Editor; // Define the editor prop type
-  setAnnouncementType: (type: string) => void;
+  editor: Editor;
+  announcementType: string;
+  setAnnouncementType: (
+    value: 'Miscellaneous' | 'Policy Changes' | 'Company Activity'
+  ) => void;
 }
 
 const CreateAnnouncementToolBar: React.FC<ToolBarProps> = ({
   editor,
+  announcementType,
   setAnnouncementType,
 }) => {
   const setLink = () => {
@@ -159,8 +163,17 @@ const CreateAnnouncementToolBar: React.FC<ToolBarProps> = ({
       >
         <FaRedo size={14} />
       </button>
-      <div className="flex flex-row gap-3 items-center ">
-        <label className="p-2 cursor-pointer bg-[#0F172A] rounded-full">
+      <div className="flex flex-row gap-3 items-center ml-auto mr-0">
+        <label
+          onClick={() => {
+            setAnnouncementType('Company Activity');
+          }}
+          className={`${
+            announcementType === 'Company Activity'
+              ? 'opacity-100'
+              : 'opacity-50'
+          } p-2 cursor-pointer bg-[#0F172A] rounded-full`}
+        >
           <Image
             src="/Union.png"
             alt="Company Activity"
@@ -168,7 +181,14 @@ const CreateAnnouncementToolBar: React.FC<ToolBarProps> = ({
             height={20}
           />
         </label>
-        <label className="p-2 cursor-pointer bg-[#00B87D] rounded-full">
+        <label
+          onClick={() => {
+            setAnnouncementType('Miscellaneous');
+          }}
+          className={`${
+            announcementType === 'Miscellaneous' ? 'opacity-100' : 'opacity-50'
+          } p-2 cursor-pointer bg-[#00B87D] rounded-full`}
+        >
           <Image
             src="/important_details.png"
             alt="Miscellaneous"
@@ -176,7 +196,14 @@ const CreateAnnouncementToolBar: React.FC<ToolBarProps> = ({
             height={20}
           />
         </label>
-        <label className="p-2 cursor-pointer bg-[#F53649] mr-0 sm:mr-4 rounded-full">
+        <label
+          onClick={() => {
+            setAnnouncementType('Policy Changes');
+          }}
+          className={`${
+            announcementType === 'Policy Changes' ? 'opacity-100' : 'opacity-50'
+          } p-2 cursor-pointer bg-[#F53649] mr-0 sm:mr-4 rounded-full`}
+        >
           <Image
             src="/important_details.png"
             alt="Policy Changes"

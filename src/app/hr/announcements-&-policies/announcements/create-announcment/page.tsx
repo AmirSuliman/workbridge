@@ -9,13 +9,12 @@ import { BiLoaderCircle } from 'react-icons/bi';
 import { FaEdit } from 'react-icons/fa';
 import { z } from 'zod';
 
-// Define Zod schema for validation
-
 const CreateAnnouncement = () => {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
-  const [announcementType, setAnnouncementType] = useState('');
-  const [, setStatus] = useState('Draft');
+  const [announcementType, setAnnouncementType] = useState<
+    'Miscellaneous' | 'Policy Changes' | 'Company Activity'
+  >('Company Activity');
   const [body, setBody] = useState('');
   const [errors, setErrors] = useState<{ title?: string; body?: string }>({});
   const [isPreview, setIsPreview] = useState(false);
@@ -37,46 +36,31 @@ const CreateAnnouncement = () => {
       return false;
     }
   };
-
-  const handleSaveDraft = async () => {
-    if (!validateFields()) return; // Validate fields before submission
-    try {
-      setLoading(true);
-      const payload = { title, body, status: 'Draft' };
-      await axiosInstance.post('/announcement/', payload);
-      toast.success('Draft saved successfully!');
-      router.back();
-    } catch (error: any) {
-      console.error('Error saving draft:', error);
-      toast.error('An error occurred while saving the draft.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handlePreviewPost = () => {
     if (!validateFields()) return; // Validate fields before preview
     setIsPreview(true);
   };
 
   const handleCancel = () => {
-    setTitle('');
-    setBody('');
-    setStatus('Draft');
-    setErrors({});
-    toast('Changes discarded.');
-    router.back();
+    setIsPreview(false);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (status: 'Published' | 'Draft') => {
     if (!validateFields()) return; // Validate fields before submission
     try {
       setLoading(true);
-      const payload = { title, body, status: 'Published' };
+      const payload = {
+        title,
+        body,
+        status: status,
+        type: announcementType,
+      };
       await axiosInstance.post('/announcement/', payload);
-      toast.success('Announcement published successfully!');
-      setTitle('');
-      setBody('');
+      toast.success(
+        `${
+          status === 'Published' ? 'Announcement published' : 'Draft saved'
+        } successfully`
+      );
       router.back();
     } catch (error: any) {
       console.error('Error publishing announcement:', error);
@@ -95,8 +79,8 @@ const CreateAnnouncement = () => {
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-2">
           <button
-            className="bg-[#0F172A] rounded-md px-3 p-2 text-white text-[12px]"
-            onClick={handleSaveDraft}
+            className="bg-[#0F172A] rounded px-3 p-2 text-white text-[12px]"
+            onClick={() => handleSubmit('Draft')}
           >
             {loading ? (
               <BiLoaderCircle className="h-4 w-4 animate-spin mx-auto" />
@@ -104,18 +88,21 @@ const CreateAnnouncement = () => {
               'Save Draft'
             )}
           </button>
-          <button
-            className="bg-white rounded-md p-2 px-3 text-[#0F172A] border text-[12px]"
-            onClick={handlePreviewPost}
-          >
-            Preview Post
-          </button>
-          <button
-            className="bg-gray-200 rounded-md p-2 px-3 text-red-500 text-[12px]"
-            onClick={handleCancel}
-          >
-            Cancel
-          </button>
+          {isPreview ? (
+            <button
+              className="rounded p-2 px-3 text-[#0F172A] text-sm"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+          ) : (
+            <button
+              className="bg-white rounded p-2 px-3 text-[#0F172A] border text-[12px]"
+              onClick={handlePreviewPost}
+            >
+              Preview Post
+            </button>
+          )}
         </div>
       </nav>
 
@@ -126,34 +113,28 @@ const CreateAnnouncement = () => {
             className="text-gray-700"
             dangerouslySetInnerHTML={{ __html: body }}
           ></div>
-          <button
-            className="mt-4 bg-gray-300 p-2 rounded-lg"
-            onClick={() => setIsPreview(false)}
-          >
-            Close Preview
-          </button>
         </div>
       ) : (
         <div>
-          <div className="bg-white rounded-lg border">
-            <div className="flex flex-col p-4">
-              <label className="text-[#0F172A] text-[14px] p-2">Title</label>
-              <input
-                type="text"
-                placeholder="Add a title for your post"
-                className={`outline-none p-3 w-full border rounded text-[20px] font-medium text-[#0D1322] ${
-                  errors.title ? 'border-red-500' : ''
-                }`}
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-              {errors.title && (
-                <p className="text-red-500 text-sm mt-1">{errors.title}</p>
-              )}
-            </div>
-            <div className="w-full h-[1px] bg-gray-300 mb-2" />
+          <div className="flex flex-col p-4 bg-white rounded-lg border">
+            <label className="text-[#0F172A] text-[14px] p-2">Title</label>
+            <input
+              type="text"
+              placeholder="Add a title for your post"
+              className={`outline-none p-3 w-full border rounded text-[20px] font-medium text-[#0D1322] ${
+                errors.title ? 'border-red-500' : ''
+              }`}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            {errors.title && (
+              <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+            )}
+          </div>
+          <div className="bg-white rounded-lg border mt-8">
             <CreateAnnouncementTextEditor
               setAnnouncementType={setAnnouncementType}
+              announcementType={announcementType}
               setContent={setBody}
               body={body}
             />
@@ -164,8 +145,8 @@ const CreateAnnouncement = () => {
 
           <div className="flex justify-center items-center mt-4">
             <button
-              onClick={handleSubmit}
-              className="p-3 rounded-lg bg-[#0F172A] text-white text-[16px] flex justify-center w-[300px]"
+              onClick={() => handleSubmit('Published')}
+              className="p-3 rounded bg-[#0F172A] text-white text-[16px] flex justify-center w-[300px]"
             >
               {loading ? (
                 <BiLoaderCircle className="h-4 w-4 animate-spin mx-auto" />

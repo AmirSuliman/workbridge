@@ -75,7 +75,6 @@ const PreviewPolicy = ({ previewData }) => {
             dangerouslySetInnerHTML={{ __html: previewData.description }}
           ></div>
         )}
-        {/* this is when we preview a fetched policy from the backend */}
       </div>
     </div>
   );
