@@ -432,6 +432,7 @@ const CreatePolicy = () => {
                     <CustomTextEditor
                       setContent={field.onChange}
                       body={field.value || ''}
+                      
                     />
                   )}
                 />
