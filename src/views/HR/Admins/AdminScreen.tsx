@@ -21,8 +21,6 @@ const AdminScreen = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState('');
-  const [sortBy, setSortBy] = useState('');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const dispatch = useDispatch();
   const users = useSelector((state: RootState) => state.users);
@@ -61,7 +59,7 @@ const AdminScreen = () => {
 
   const headers = [
     {
-      title: 'Admin Name',
+      title: 'User Name',
       accessor: 'firstName',
       render: (cellValue, { row }) => (
         <ProfileAvatarItem
@@ -70,6 +68,25 @@ const AdminScreen = () => {
           subtitle=""
         />
       ),
+    },
+    {
+      title: 'Role',
+      accessor: 'Role.name',
+      render: (cellValue: any, { row }) => {
+        switch (row.roleId) {
+          case 1:
+            return 'Admin';
+          case 2:
+            return 'SuperAdmin';
+          case 3:
+            return 'Employee';
+          case 4:
+            return 'Manager';
+          default:
+            '';
+            break;
+        }
+      },
     },
     {
       title: 'Status',
@@ -85,13 +102,6 @@ const AdminScreen = () => {
         </Link>
       ),
     },
-    // {
-    //   title: '',
-    //   accessor: 'actions',
-    //   render: () => (
-    //     <MdOutlineKeyboardArrowRight className="w-6 h-6 border border-gray-border rounded-sm hover:cursor-pointer hover:bg-gray-100" />
-    //   ),
-    // },
   ];
 
   useEffect(() => {
@@ -141,7 +151,7 @@ const AdminScreen = () => {
             isLoading={users.status === 'loading'}
             headers={headers}
             values={users.users}
-            tableConfig={{ rowBorder: true, selectable: true }}
+            tableConfig={{ rowBorder: true, selectable: false }}
           />
           <Pagination
             styles={{ container: 'mt-5 gap-x-2 !justify-end' }}

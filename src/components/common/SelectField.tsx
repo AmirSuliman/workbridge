@@ -8,6 +8,7 @@ interface SelectFieldProps {
   placeholder?: string;
   register: any; // Assuming React Hook Form is used
   error?: string;
+  onChange?: (e: any) => void; // ✅ Added this
   styles?: {
     label?: string;
     input?: string;

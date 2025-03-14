@@ -1,27 +1,30 @@
 'use client';
 
 import Button from '@//components/Button';
-import Celebrations from '@//components/Celebrations/Celebrations';
 import Companyinfo from '@//components/companyinformation/companyinformaion';
 import Employeementreport from '@//components/Employementreport/employmentreport';
 import LeaveRequests from '@//components/LeaveRequests/LeaveRequests';
 import NewEmployees from '@//components/NewEmployees/NewEmployees';
 import SingleAnnouncement from '@//components/SingleAnnouncement/SingleAnnouncement';
-import Training from '@//components/Training/Training';
 import WhosOut from '@//components/WhosOut/WhosOut';
+import Evaluation from '@/app/user/home/components/evaluation';
+import UserEvaluation from '@/app/user/home/components/userevaulation';
+import axiosInstance from '@/lib/axios';
+import { getSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { HiSpeakerphone } from 'react-icons/hi';
 import { PiArrowUpRightThin } from 'react-icons/pi';
-import { getSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import Evaluation from '@/app/user/home/components/evaluation';
-import axiosInstance from '@/lib/axios';
-import UserEvaluation from '@/app/user/home/components/userevaulation';
 
+import { Session } from 'next-auth';
+
+interface Employee {
+  employeeId: Number | null;
+}
 const Page = () => {
   const [role, setRole] = useState<string>();
   const [evaluation, setEvaluation] = useState<any[]>([]);
-  const [employeeId, setEmployeeId] = useState<User>();
+  const [employeeId, setEmployeeId] = useState<Employee | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchSession = async (): Promise<Session | null> => {
