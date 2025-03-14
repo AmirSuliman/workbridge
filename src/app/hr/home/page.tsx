@@ -16,13 +16,15 @@ import { getSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import Evaluation from '@/app/user/home/components/evaluation';
 import axiosInstance from '@/lib/axios';
+import UserEvaluation from '@/app/user/home/components/userevaulation';
+
 
 const Page = () => {
   const [role, setRole] = useState<string>();
   const [evaluation, setEvaluation] = useState<any[]>([]);
   const [employeeId, setEmployeeId] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
-
+  
   const fetchSession = async (): Promise<Session | null> => {
     const session = await getSession();
     return session;
@@ -55,7 +57,7 @@ const Page = () => {
       if (employeeId?.employeeId && role) {
         setLoading(true);
         try {
-          const roleParam = role ===  'Manager' ? 'Manager' : 'Employee';
+          const roleParam = role === 'Admin' ? 'Manager' : role === 'Manager' ? 'Manager' : 'Employee';
           const response = await axiosInstance.get(
             `/survey/notification/employee/${employeeId.employeeId}?role=${roleParam}`
           );
@@ -86,6 +88,7 @@ const Page = () => {
   }, [employeeId, role]);
 
   const isViewOnly = role === 'ViewOnly';
+  const isSuperadmin = role === 'SuperAdmin';
   const isHR = role === 'Admin'; 
   const isManager = role === 'Manager'; 
   return (
@@ -96,9 +99,12 @@ const Page = () => {
         <Employeementreport />
       </div>
       <div className="flex flex-col gap-4 flex-1">
-      {(isHR || isManager || !isViewOnly)  && (
+      {isHR && evaluation.length > 0 && (
             <Evaluation evaluation={evaluation} employeeId={employeeId} />
           )}
+        {isHR && evaluation.length > 0 && !evaluation.some(item => item.status === "In Progress") && (
+  <UserEvaluation evaluation={evaluation} employeeId={employeeId} />
+)}
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
           
           <header className="px-4 flex items-center gap-4 justify-between">

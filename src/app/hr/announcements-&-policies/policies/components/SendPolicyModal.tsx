@@ -6,6 +6,7 @@ import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
 import PolicyToEmployees from './PolicyToEmployees';
 
 const SendPolicyModal = ({ onClose, postPolicy }) => {
+  
   return (
     <Modal onClose={onClose}>
       <div className="w-full">

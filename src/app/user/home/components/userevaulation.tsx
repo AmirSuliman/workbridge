@@ -18,7 +18,7 @@ const Evaluation = ({ evaluation, employeeId }) => {
           width={30}
           height={30}
         />
-        Evaluation
+        View Evaluation
       </p>
       {evaluation.map((item) => {
         const baseRoute = userRole === 'Admin' ? '/hr/home' : '/user/home';

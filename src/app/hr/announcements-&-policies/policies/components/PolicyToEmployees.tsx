@@ -28,44 +28,54 @@ const PolicyToEmployees: React.FC<PolicyToEmployeesProps> = ({
         setLoading(true);
         const { data } = await getAllEmployees(1, 1000000);
         setEmployees(data.items);
-        setLoading(false);
       } catch (error) {
         console.error(error);
+      } finally {
         setLoading(false);
       }
     };
     fetchEmployees();
   }, []);
 
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
       employeeIds: [] as number[],
     },
   });
+
+  const selectedEmployeeIds = watch("employeeIds");
+  const isAllSelected = employees.length > 0 && selectedEmployeeIds.length === employees.length;
+
+  const handleSelectAll = () => {
+    if (isAllSelected) {
+      setValue("employeeIds", []);
+    } else {
+      setValue("employeeIds", employees.map((emp) => emp.id));
+    }
+  };
 
   const onSubmit = async (data) => {
     try {
       setLoading(true);
       await postPolicy();
 
-      const response = await axiosInstance.post('/policy/send/', {
+      await axiosInstance.post('/policy/send/', {
         policyId: sessionStorage.getItem('policy'),
         employeeIds: data.employeeIds,
       });
 
       toast.success('Policy sent successfully!');
-      setLoading(false);
       onClose();
       router.back();
-      console.log('Send policy response:', response.data);
     } catch (error) {
       console.error(error);
+      toast.error(
+        isAxiosError(error) && error.response
+          ? error.response.data.message
+          : 'Failed to send policy.'
+      );
+    } finally {
       setLoading(false);
-      if (isAxiosError(error) && error.response) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error('Failed to send policy.');
-      }
     }
   };
 
@@ -76,11 +86,28 @@ const PolicyToEmployees: React.FC<PolicyToEmployeesProps> = ({
           <label className="block text-sm font-medium text-gray-700 mt-4">
             Select Employees
           </label>
+          
+          {/* Select All Checkbox */}
+          {employees.length > 0 && (
+            <div className="flex items-center mb-3">
+              <input
+                type="checkbox"
+                id="selectAll"
+                checked={isAllSelected}
+                onChange={handleSelectAll}
+                className="mr-2"
+              />
+              <label htmlFor="selectAll" className="text-sm font-semibold">
+                Select All
+              </label>
+            </div>
+          )}
+
           <Controller
             name="employeeIds"
             control={control}
             render={({ field }) => (
-              <div>
+              <div className="max-h-60 overflow-y-auto">
                 {employees.map((employee) => (
                   <div key={employee.id} className="flex items-center mb-2">
                     <input
@@ -90,16 +117,9 @@ const PolicyToEmployees: React.FC<PolicyToEmployeesProps> = ({
                       onChange={(e) => {
                         const selectedIds = field.value;
                         if (e.target.checked) {
-                          field.onChange([
-                            ...selectedIds,
-                            Number(e.target.value),
-                          ]);
+                          field.onChange([...selectedIds, Number(e.target.value)]);
                         } else {
-                          field.onChange(
-                            selectedIds.filter(
-                              (id) => id !== Number(e.target.value)
-                            )
-                          );
+                          field.onChange(selectedIds.filter((id) => id !== Number(e.target.value)));
                         }
                       }}
                       id={`employee-${employee.id}`}
@@ -120,19 +140,10 @@ const PolicyToEmployees: React.FC<PolicyToEmployeesProps> = ({
             type="submit"
             disabled={loading}
             name={loading ? '' : 'Confirm'}
-            icon={
-              loading && (
-                <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
-              )
-            }
+            icon={loading && <BiLoaderCircle className="h-5 w-5 animate-spin" />}
             className="disabled:cursor-not-allowed"
           />
-          <Button
-            onClick={onClose}
-            bg="transparent"
-            textColor="black"
-            name="Cancel"
-          />
+          <Button onClick={onClose} bg="transparent" textColor="black" name="Cancel" />
         </div>
       </form>
     </div>

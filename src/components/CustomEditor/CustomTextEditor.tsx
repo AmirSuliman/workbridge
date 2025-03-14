@@ -48,7 +48,7 @@ const CustomTextEditor = ({
   }
 
   return (
-    <div className="p-4 w-full">
+    <div className="p-2 w-full">
       {/* Toolbar */}
       <ToolBar editor={editor} />
       {/* Editor */}

@@ -11,13 +11,16 @@ const UserProfileInfo: React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement>
 > = ({ ...props }) => {
   const [showDropdown, setShowDropdown] = useState(false);
-
   const [role, setRole] = useState<string>();
   const { data: session } = useSession();
-  const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(
-    sessionStorage.getItem('profilePictureUrl')
-  );
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Get the profile picture from sessionStorage or session data
+  const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(
+    sessionStorage.getItem('profilePictureUrl') ||
+      session?.user?.user?.profilePictureUrl ||
+      null
+  );
 
   // Handle clicks outside the dropdown
   useEffect(() => {
@@ -48,30 +51,23 @@ const UserProfileInfo: React.FC<
     };
     fetchSession();
 
-    // Add event listener for storage changes
+    // Listen for changes in sessionStorage to update the profile picture
     const handleStorageChange = () => {
-      setProfilePictureUrl(sessionStorage.getItem('profilePictureUrl'));
+      const newProfilePic = sessionStorage.getItem('profilePictureUrl');
+      setProfilePictureUrl(newProfilePic || null);
     };
 
     window.addEventListener('storage', handleStorageChange);
 
-    // Additional check to update profile picture
-    const checkProfilePicture = setInterval(() => {
-      const currentPicture = sessionStorage.getItem('profilePictureUrl');
-      if (currentPicture !== profilePictureUrl) {
-        setProfilePictureUrl(currentPicture);
-      }
-    }, 1000);
-
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      clearInterval(checkProfilePicture);
     };
-  }, [profilePictureUrl]);
+  }, []);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
+
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 
   return (
@@ -85,20 +81,16 @@ const UserProfileInfo: React.FC<
       >
         <Image
           loader={imageLoader}
-          src={
-            profilePictureUrl ||
-            session?.user.user.profilePictureUrl ||
-            IMAGES.placeholderAvatar
-          }
-          alt="user avatar"
+          src={profilePictureUrl || IMAGES.placeholderAvatar}
+          alt="User Avatar"
           height={2000}
           width={2000}
           className="size-12 rounded-full"
         />
         <div>
           <h4 className="text-lg font-medium">{`${
-            session?.user.user.firstName || ''
-          } ${session?.user.user.lastName || ''}`}</h4>
+            session?.user?.user?.firstName || ''
+          } ${session?.user?.user?.lastName || ''}`}</h4>
           <p className="text-xs opacity-60 text-left">
             {session?.user?.user?.role || ''}
           </p>
@@ -109,7 +101,7 @@ const UserProfileInfo: React.FC<
           }`}
         />
         {showDropdown && (
-          <nav className="absolute right-0 mt-4 top-[100%] w-[150px] z-10 flex flex-col py-4 rounded-md  shadow-md bg-white">
+          <nav className="absolute right-0 mt-4 top-[100%] w-[150px] z-10 flex flex-col py-4 rounded-md shadow-md bg-white">
             <Link
               href={`${
                 isUserPanel ? '/user/my-information' : '/hr/my-information'
