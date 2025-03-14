@@ -16,7 +16,7 @@ const PolicyToDepartments = ({ onClose, postPolicy }) => {
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
-      departmentIds: [],
+      departmentId: [],
     },
   });
 
@@ -80,15 +80,17 @@ const PolicyToDepartments = ({ onClose, postPolicy }) => {
             control={control}
             render={({ field }) => (
               <Select
-              {...field}
-              isMulti
-              options={departments.map((dept) => ({
-                value: dept.id,
-                label: dept.name,
-              }))}
-              className="mt-1 block w-full"
-              isDisabled={loading}
-            />
+                {...field}
+                isMulti
+                options={
+                  departments.map((dept) => ({
+                    value: dept.id,
+                    label: dept.name,
+                  })) as any
+                }
+                className="mt-1 block w-full"
+                isDisabled={loading}
+              />
             )}
           />
         </div>

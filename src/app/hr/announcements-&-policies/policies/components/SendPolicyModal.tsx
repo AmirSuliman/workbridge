@@ -6,10 +6,9 @@ import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
 import PolicyToEmployees from './PolicyToEmployees';
 
 const SendPolicyModal = ({ onClose, postPolicy }) => {
-  
   return (
     <Modal onClose={onClose}>
-      <div className="w-full">
+      <div className="w-full lg:min-w-[500px]">
         <TabsContainer containerClasses="p-8 min-h-80 flex flex-col w-full">
           <div className="flex gap-4 border-b-2 border-b-gray-50">
             <Tab

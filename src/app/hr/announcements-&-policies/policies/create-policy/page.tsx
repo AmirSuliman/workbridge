@@ -100,10 +100,10 @@ const CreatePolicy = () => {
   const handleFileChange = (event) => {
     if (event.target.files) {
       const file = event.target.files[0];
-      const fileType = file.type;
-      if (!['image/png', 'image/jpeg'].includes(fileType)) {
-        console.log('selected file type: ', fileType);
-        return toast.error('Only jpeg, jpg and png files are allowed!');
+      // const fileType = file.type;
+      if (!file.type.startsWith('image/')) {
+        console.log('Selected file type: ', file.type);
+        return toast.error('Only image files are allowed!');
       }
       setSelectedFile(file);
       const blobUrl = URL.createObjectURL(file);
@@ -420,10 +420,7 @@ const CreatePolicy = () => {
             <h1 className="text-[18px] font-medium">Policy Description</h1>
             <label className="flex flex-col gap-2 mt-8">
               <span className="text-[13px] text-gray-400">Description</span>
-              <div
-                onClick={(e) => e.preventDefault()}
-                className="border rounded"
-              >
+              <div onClick={(e) => e.preventDefault()} className="">
                 <Controller
                   name="description"
                   control={control}
@@ -432,7 +429,6 @@ const CreatePolicy = () => {
                     <CustomTextEditor
                       setContent={field.onChange}
                       body={field.value || ''}
-                      
                     />
                   )}
                 />
