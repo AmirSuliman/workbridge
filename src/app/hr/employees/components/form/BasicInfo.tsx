@@ -1,43 +1,24 @@
 'use client';
 import Button from '@/components/Button';
 import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
+import FormHeading from '@/components/UserInformation/FormHeading';
 import { EmployeeData } from '@/types/employee';
 import { useRouter } from 'next/navigation';
 import { useFormContext } from 'react-hook-form';
 import { AiFillContacts } from 'react-icons/ai';
+import { FaPhoneAlt } from 'react-icons/fa';
 import { Heading, Label } from '../Helpers';
 import ProfilePicture from '../ProfilePicture';
-import FormHeading from '@/components/UserInformation/FormHeading';
-import { FaPhoneAlt } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
-import axiosInstance from '@/lib/axios';
 
-interface Country {
-  id: number;
-  country: string;
-  code: string;
-}
+// interface Country {
+//   id: number;
+//   country: string;
+//   code: string;
+// }
 
-const BasicInfo = ({ previewUrl, handleFileChange }) => {
+const BasicInfo = ({ countries, previewUrl, handleFileChange }) => {
   const router = useRouter();
   const { activeTab, setActiveTab } = useTabsContext();
-  const [countries, setCountries] = useState<Country[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const countriesResponse = await axiosInstance.get('/countries');
-        if (countriesResponse.data?.data?.items) {
-          setCountries(countriesResponse.data.data.items);
-        }
-        console.log('countries: ', countriesResponse.data?.data?.items);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const {
     register,
@@ -182,13 +163,7 @@ const BasicInfo = ({ previewUrl, handleFileChange }) => {
             </article>
             <article>
               <Label text="Country*" />
-              <select
-                {...register('countryId', {
-                  valueAsNumber: true,
-                  required: 'Country is required',
-                })}
-                className="border p-2 rounded  focus:outline-none"
-              >
+              <select {...register('countryId')} className="form-input">
                 <option value="">Select a country</option>
                 {countries.map((country) => (
                   <option key={country.id} value={country.id}>
