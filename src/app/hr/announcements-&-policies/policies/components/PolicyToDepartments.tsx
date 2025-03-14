@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
+import Select from 'react-select';
 
 const PolicyToDepartments = ({ onClose, postPolicy }) => {
   const router = useRouter();
@@ -15,7 +16,7 @@ const PolicyToDepartments = ({ onClose, postPolicy }) => {
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
-      departmentId: '',
+      departmentIds: [],
     },
   });
 
@@ -45,7 +46,7 @@ const PolicyToDepartments = ({ onClose, postPolicy }) => {
       const response = await axiosInstance.post(`/policy/send/`, {
         policyId: sessionStorage.getItem('policy'),
         employeeIds: [],
-        departmentId: data.departmentId,
+        departmentId: data.departmentIds,
       });
 
       toast.success('Policy sent successfully!');
@@ -78,19 +79,16 @@ const PolicyToDepartments = ({ onClose, postPolicy }) => {
             name="departmentId"
             control={control}
             render={({ field }) => (
-              <select
-                {...field}
-                id="departmentId"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                disabled={loading}
-              >
-                <option value="">Select a Department</option>
-                {departments.map((department) => (
-                  <option key={department.id} value={String(department.id)}>
-                    {department.name}
-                  </option>
-                ))}
-              </select>
+              <Select
+              {...field}
+              isMulti
+              options={departments.map((dept) => ({
+                value: dept.id,
+                label: dept.name,
+              }))}
+              className="mt-1 block w-full"
+              isDisabled={loading}
+            />
             )}
           />
         </div>
