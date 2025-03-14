@@ -44,12 +44,12 @@ const Companyinfo = () => {
           isaconsulting.com
         </Link>
         <Link
-          href="mailto:prosper@isaconsulting.com"
+          href="mailto:info@isaworkbridge.com"
           target="_blank"
           className="flex flex-row gap-2 items-center text-[14px]"
         >
           <FaEnvelope />
-          prosper@isaconsulting.com
+          info@isaworkbridge.com
         </Link>
         <Link
           href="tel:(888) 396-1112"
