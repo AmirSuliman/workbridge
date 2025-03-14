@@ -17,12 +17,15 @@ import { useEffect, useState } from 'react';
 import Evaluation from '@/app/user/home/components/evaluation';
 import axiosInstance from '@/lib/axios';
 import UserEvaluation from '@/app/user/home/components/userevaulation';
+import { Session } from 'next-auth';
 
-
+interface Employee {
+  employeeId: Number | null;
+}
 const Page = () => {
   const [role, setRole] = useState<string>();
   const [evaluation, setEvaluation] = useState<any[]>([]);
-  const [employeeId, setEmployeeId] = useState<User>();
+  const [employeeId, setEmployeeId] = useState<Employee | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   
   const fetchSession = async (): Promise<Session | null> => {
