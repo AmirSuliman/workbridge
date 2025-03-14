@@ -19,6 +19,7 @@ import { TbEdit } from 'react-icons/tb';
 import { useDispatch, useSelector } from 'react-redux';
 import BasicInfo from '../components/form/BasicInfo';
 import Employment from '../components/form/Employement';
+import EmployeesDropdown from '@/components/DropDowns/EmployeesDropdown';
 
 const CreateEmployee = () => {
   const [loader, setLoader] = useState(false);

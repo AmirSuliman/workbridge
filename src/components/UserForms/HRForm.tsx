@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import { z } from 'zod';
+import EmployeesDropdown from '@/components/DropDowns/EmployeesDropdown';
 import InputField from '../common/InputField';
 import SelectField from '../common/SelectField';
 import EyeIcon from '../icons/eye-icon';
@@ -32,6 +33,7 @@ const HRForm = ({ onClose }) => {
     handleSubmit,
     setValue,
     watch, 
+    resetField,
     formState: { errors },
   } = useForm<HRFormInputs>({
     resolver: zodResolver(hrFormSchema),
@@ -131,7 +133,14 @@ const HRForm = ({ onClose }) => {
   </div>
 )}
 </div>
-
+           <article>
+             <EmployeesDropdown
+                reportingManagerId={null}
+                resetField={resetField}
+                register={register}
+                errors={errors}
+              />
+            </article>
 
         <article className="w-full">
           {/* <Label text="Country*" /> */}
