@@ -15,4 +15,5 @@ export const hrFormSchema = z.object({
     .int('Country ID must be an integer')
     .positive('Country ID must be a positive number')
     .nullable(),
+    reportingManagerId: z.number().nullable(), 
 });

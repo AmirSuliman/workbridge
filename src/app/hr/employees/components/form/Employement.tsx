@@ -1,15 +1,15 @@
 import Button from '@/components/Button';
-import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
 import DepratmentDropdown from '@/components/DropDowns/DepratmentsDropdown';
 import EmployeesDropdown from '@/components/DropDowns/EmployeesDropdown';
 import { EmployeeData } from '@/types/employee';
+import { useRouter } from 'next/navigation';
 import { useFormContext } from 'react-hook-form';
 import { AiFillContacts } from 'react-icons/ai';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { Heading, Label } from '../Helpers';
 
 const Employment = ({ loader }: { loader: boolean }) => {
-  const { activeTab, setActiveTab } = useTabsContext();
+  const router = useRouter();
 
   const {
     register,
@@ -131,7 +131,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
           bg="white"
           textColor="black"
           className=" !px-16 !w-[200px] !text-[14px] !p-2"
-          onClick={() => setActiveTab(activeTab - 1)}
+          onClick={() => router.push('/hr/employees/create-employee?tab=0')}
         />
         <Button
           // onClick={handleNext}

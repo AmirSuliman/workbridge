@@ -38,30 +38,58 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
       if (start > end) {
         return 0;
       }
-
+  
       let count = 0;
-      const current = new Date(start);
-
+      let current = new Date(start);
+  
       // Loop through each day and only count weekdays
-      while (current <= end) {
-        // getDay() returns 0 for Sunday and 6 for Saturday
+      while (current < end) { // Change "<=" to "<" to exclude endDate
         const dayOfWeek = current.getDay();
         if (dayOfWeek !== 0 && dayOfWeek !== 6) {
           count++;
         }
-
-        // Move to the next day
         current.setDate(current.getDate() + 1);
       }
+  
       return count > 0 ? count : 0;
     }
     return 0;
-  }, [endDate, startDate]);
-
+  }, [startDate, endDate]);
+  
+  const calculateReturningDate = (start: Date | null, days: number, totalDays: number) => {
+    if (!start || days <= 0 || totalDays <= 0) return null;
+  
+    let count = 0;
+    let current = new Date(start);
+  
+    while (count < days && count < totalDays) {
+      current.setDate(current.getDate() + 1);
+      const dayOfWeek = current.getDay();
+  
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+        count++;
+      }
+    }
+  
+    return current;
+  };
+ 
   useEffect(() => {
-    const duration = calculateDuration();
-    setVacationDaysUsed(duration);
+    if (startDate) {
+      setVacationDaysUsed(calculateDuration());
+    }
   }, [startDate, endDate, calculateDuration]);
+  
+  
+  useEffect(() => {
+    if (startDate && !endDate) { 
+      // Only auto-calculate if endDate hasn't been set by the user
+      const newEndDate = calculateReturningDate(startDate, vacationDaysUsed, totalDays);
+      setEndDate(newEndDate);
+    }
+  }, [startDate, vacationDaysUsed, totalDays, endDate]);
+  
+  
 
   const formatDate = (date) => {
     if (!date) return '';
@@ -221,16 +249,19 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">Leaving Date</span>
                 <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  selectsStart
-                  startDate={startDate}
-                  endDate={endDate}
-                  minDate={new Date()}
-                  dateFormat="MM/dd/yyyy"
-                  placeholderText="mm/dd/yyyy"
-                  className="p-3 border rounded w-full"
-                />
+                                  selected={startDate}
+                                  onChange={(date) => setStartDate(date)}
+                                  selectsStart
+                                  startDate={startDate}
+                                  endDate={endDate}
+                                  minDate={new Date()}
+                                  dateFormat="MM/dd/yyyy"
+                                  placeholderText="mm/dd/yyyy"
+                                  className="p-3 border rounded w-full"
+                                  filterDate={(date) => {
+                                    const day = date.getDay();
+                                    return day !== 0 && day !== 6; 
+                                  }}/>
               </label>
 
               <label className="flex flex-col w-full">
@@ -238,20 +269,23 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                   Returning Date
                 </span>
                 <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                  minDate={startDate || undefined}
-                  maxDate={
-                    startDate ? addDays(startDate, totalDays - 1) : undefined
-                  }
-                  dateFormat="MM/dd/yyyy"
-                  placeholderText="mm/dd/yyyy"
-                  className="p-3 border rounded w-full"
-                  disabled={!startDate} // Disable when no Leaving Date is selected
-                />
+                 selected={endDate}
+                 onChange={(date) => setEndDate(date)}
+                 selectsEnd
+                 startDate={startDate}
+                 endDate={endDate}
+                 minDate={startDate || undefined}
+                maxDate={startDate ? calculateReturningDate(startDate, totalDays, totalDays) || undefined : undefined}
+               
+                 dateFormat="MM/dd/yyyy"
+                 placeholderText="mm/dd/yyyy"
+                 className="p-3 border rounded w-full"
+                 disabled={!startDate}
+                 filterDate={(date) => {
+                   const day = date.getDay();
+                   return day !== 0 && day !== 6;
+                 }}
+               />
               </label>
               <label className="flex flex-col w-full col-span-full">
                 <span className="text-gray-400 text-[12px]">Note</span>

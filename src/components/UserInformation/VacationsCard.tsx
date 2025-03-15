@@ -32,7 +32,7 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
   const [vacationDaysUsed, setVacationDaysUsed] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-
+  
   const calculateDuration = useCallback(() => {
     if (startDate && endDate) {
       const start = new Date(startDate);
@@ -40,32 +40,58 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
       if (start > end) {
         return 0;
       }
-
+  
       let count = 0;
-      const current = new Date(start);
-
+      let current = new Date(start);
+  
       // Loop through each day and only count weekdays
-      while (current <= end) {
-        // getDay() returns 0 for Sunday and 6 for Saturday
+      while (current < end) { // Change "<=" to "<" to exclude endDate
         const dayOfWeek = current.getDay();
         if (dayOfWeek !== 0 && dayOfWeek !== 6) {
           count++;
         }
-
-        // Move to the next day
         current.setDate(current.getDate() + 1);
       }
-
+  
       return count > 0 ? count : 0;
     }
     return 0;
-  }, [endDate, startDate]);
-
+  }, [startDate, endDate]);
+  
+  const calculateReturningDate = (start: Date | null, days: number, totalDays: number) => {
+    if (!start || days <= 0 || totalDays <= 0) return null;
+  
+    let count = 0;
+    let current = new Date(start);
+  
+    while (count < days && count < totalDays) {
+      current.setDate(current.getDate() + 1);
+      const dayOfWeek = current.getDay();
+  
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+        count++;
+      }
+    }
+  
+    return current;
+  };
+ 
   useEffect(() => {
-    const duration = calculateDuration();
-    setVacationDaysUsed(duration);
+    if (startDate) {
+      setVacationDaysUsed(calculateDuration());
+    }
   }, [startDate, endDate, calculateDuration]);
-
+  
+  
+  useEffect(() => {
+    if (startDate && !endDate) { 
+      // Only auto-calculate if endDate hasn't been set by the user
+      const newEndDate = calculateReturningDate(startDate, vacationDaysUsed, totalDays);
+      setEndDate(newEndDate);
+    }
+  }, [startDate, vacationDaysUsed, totalDays, endDate]);
+  
+  
   const formatDate = (date) => {
     if (!date) return '';
     const day = String(date.getDate()).padStart(2, '0');
@@ -233,6 +259,10 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
                   dateFormat="MM/dd/yyyy"
                   placeholderText="mm/dd/yyyy"
                   className="p-3 border rounded w-full"
+                  filterDate={(date) => {
+                    const day = date.getDay();
+                    return day !== 0 && day !== 6; 
+                  }}
                 />
               </label>
 
@@ -241,20 +271,24 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
                   Returning Date
                 </span>
                 <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                  minDate={startDate || undefined}
-                  maxDate={
-                    startDate ? addDays(startDate, totalDays - 1) : undefined
-                  }
-                  dateFormat="MM/dd/yyyy"
-                  placeholderText="mm/dd/yyyy"
-                  className="p-3 border rounded w-full"
-                  disabled={!startDate}
-                />
+  selected={endDate}
+  onChange={(date) => setEndDate(date)}
+  selectsEnd
+  startDate={startDate}
+  endDate={endDate}
+  minDate={startDate || undefined}
+ maxDate={startDate ? calculateReturningDate(startDate, totalDays, totalDays) || undefined : undefined}
+
+  dateFormat="MM/dd/yyyy"
+  placeholderText="mm/dd/yyyy"
+  className="p-3 border rounded w-full"
+  disabled={!startDate}
+  filterDate={(date) => {
+    const day = date.getDay();
+    return day !== 0 && day !== 6;
+  }}
+/>
+
               </label>
 
               <label className="flex flex-col w-full col-span-full">

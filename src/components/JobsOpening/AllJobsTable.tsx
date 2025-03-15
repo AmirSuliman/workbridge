@@ -31,7 +31,9 @@ export const AllJobsTable = () => {
       'Job Opening': job.tittle, // Fix: Should be "title" if API has a typo
       Candidates: job.jobApplicationCount,
       'Job Type': job.employmentType,
-      'Hiring Lead': `${job.hiringLead.firstName} ${job.hiringLead.lastName}`,
+      'Hiring Lead': `${job.hiringLead?.firstName || ''} ${
+        job.hiringLead?.lastName || ''
+      }`,
       'Created On': new Date(job.createdAt).toLocaleDateString(),
       Status: job.status,
     }));

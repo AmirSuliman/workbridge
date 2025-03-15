@@ -46,7 +46,7 @@ const EmployeesDropdown = ({
           </option>
         ))}
       </select>
-      {errors.reportingManagerId && (
+      {errors?.reportingManagerId && (
         <span className="form-error">{errors.reportingManagerId.message}</span>
       )}
     </>
