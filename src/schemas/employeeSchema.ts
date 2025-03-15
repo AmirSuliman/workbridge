@@ -93,7 +93,10 @@ export const employeeSchema = z.object({
   payType: z
     .string({ message: 'Paytype is required' })
     .min(1, 'Paytype is required'),
-  countryId: z.union([z.number().optional(), z.null()]).optional(),
+  countryId: z.preprocess(
+    (val) => Number(val), // Convert string to number
+    z.number({ message: 'Country is required' }).min(1, 'Country is required')
+  ),
   isManager: z.boolean().optional(),
   profilePictureUrl: z.union([z.string().optional(), z.null()]).optional(),
 

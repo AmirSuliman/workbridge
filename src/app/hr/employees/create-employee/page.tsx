@@ -3,23 +3,28 @@ import Button from '@/components/Button';
 import Tab from '@/components/common/TabsComponent/Tab';
 import TabPanel from '@/components/common/TabsComponent/TabPanel';
 import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
-import DocumentSection from '@/components/UserInformation/DocumentSection';
 import axiosInstance from '@/lib/axios';
 import { employeeSchema } from '@/schemas/employeeSchema';
 import { updateEmployeeData } from '@/store/slices/employeeInfoSlice';
-import { AppDispatch, RootState } from '@/store/store';
+import { AppDispatch } from '@/store/store';
 import { EmployeeData } from '@/types/employee';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { TbEdit } from 'react-icons/tb';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import BasicInfo from '../components/form/BasicInfo';
 import Employment from '../components/form/Employement';
 import EmployeesDropdown from '@/components/DropDowns/EmployeesDropdown';
+
+interface Country {
+  id: number;
+  country: string;
+  code: string;
+}
 
 const CreateEmployee = () => {
   const [loader, setLoader] = useState(false);
@@ -27,18 +32,31 @@ const CreateEmployee = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const { data: employeeData } = useSelector(
-    (state: RootState) => state.employee
-  );
+  const [countries, setCountries] = useState<Country[]>([]);
+
+  useMemo(() => {
+    const fetchData = async () => {
+      try {
+        const countriesResponse = await axiosInstance.get('/countries');
+        if (countriesResponse.data?.data?.items) {
+          setCountries(countriesResponse.data.data.items);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   // profile picture
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
-      const fileType = file.type;
 
-      if (!['image/png', 'image/jpeg'].includes(fileType)) {
-        console.log('selected file type: ', fileType);
-        return toast.error('Only jpeg, jpg and png files are allowed!');
+      if (!file.type.startsWith('image/')) {
+        console.log('Selected file type: ', file.type);
+        return toast.error('Only image files are allowed!');
       }
       setSelectedFile(file);
       const blobUrl = URL.createObjectURL(file);
@@ -173,6 +191,7 @@ const CreateEmployee = () => {
           >
             Basic Information
           </Tab>
+
           <Tab
             index={1}
             tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
@@ -180,7 +199,8 @@ const CreateEmployee = () => {
           >
             Employment
           </Tab>
-          {employeeData && (
+
+          {/* {employeeData && (
             <Tab
               index={2}
               tabStyles="text-xs px-[3%] py-3 text-dark-navy whitespace-nowrap"
@@ -188,7 +208,7 @@ const CreateEmployee = () => {
             >
               Documents
             </Tab>
-          )}
+          )} */}
         </div>
         <div>
           {/* using form provider for multi-step form */}
@@ -196,6 +216,7 @@ const CreateEmployee = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <TabPanel index={0}>
                 <BasicInfo
+                  countries={countries}
                   previewUrl={previewUrl}
                   handleFileChange={handleFileChange}
                 />
@@ -203,11 +224,11 @@ const CreateEmployee = () => {
               <TabPanel index={1}>
                 <Employment loader={loader} />
               </TabPanel>
-              {employeeData && (
+              {/* {employeeData && (
                 <TabPanel index={2}>
                   <DocumentSection employeeData={employeeData} />
                 </TabPanel>
-              )}
+              )} */}
             </form>
           </FormProvider>
         </div>

@@ -1,22 +1,21 @@
 'use client';
 
 import Button from '@//components/Button';
-import Celebrations from '@//components/Celebrations/Celebrations';
 import Companyinfo from '@//components/companyinformation/companyinformaion';
 import Employeementreport from '@//components/Employementreport/employmentreport';
 import LeaveRequests from '@//components/LeaveRequests/LeaveRequests';
 import NewEmployees from '@//components/NewEmployees/NewEmployees';
 import SingleAnnouncement from '@//components/SingleAnnouncement/SingleAnnouncement';
-import Training from '@//components/Training/Training';
 import WhosOut from '@//components/WhosOut/WhosOut';
+import Evaluation from '@/app/user/home/components/evaluation';
+import UserEvaluation from '@/app/user/home/components/userevaulation';
+import axiosInstance from '@/lib/axios';
+import { getSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { HiSpeakerphone } from 'react-icons/hi';
 import { PiArrowUpRightThin } from 'react-icons/pi';
-import { getSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import Evaluation from '@/app/user/home/components/evaluation';
-import axiosInstance from '@/lib/axios';
-import UserEvaluation from '@/app/user/home/components/userevaulation';
+
 import { Session } from 'next-auth';
 
 interface Employee {
@@ -27,7 +26,7 @@ const Page = () => {
   const [evaluation, setEvaluation] = useState<any[]>([]);
   const [employeeId, setEmployeeId] = useState<Employee | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  
+
   const fetchSession = async (): Promise<Session | null> => {
     const session = await getSession();
     return session;
@@ -60,7 +59,12 @@ const Page = () => {
       if (employeeId?.employeeId && role) {
         setLoading(true);
         try {
-          const roleParam = role === 'Admin' ? 'Manager' : role === 'Manager' ? 'Manager' : 'Employee';
+          const roleParam =
+            role === 'Admin'
+              ? 'Manager'
+              : role === 'Manager'
+              ? 'Manager'
+              : 'Employee';
           const response = await axiosInstance.get(
             `/survey/notification/employee/${employeeId.employeeId}?role=${roleParam}`
           );
@@ -92,8 +96,8 @@ const Page = () => {
 
   const isViewOnly = role === 'ViewOnly';
   const isSuperadmin = role === 'SuperAdmin';
-  const isHR = role === 'Admin'; 
-  const isManager = role === 'Manager'; 
+  const isHR = role === 'Admin';
+  const isManager = role === 'Manager';
   return (
     <main className="flex flex-col sm:flex-row items-start gap-4 w-full">
       <div className="flex flex-col gap-4 w-full sm:w-[45%]">
@@ -102,14 +106,15 @@ const Page = () => {
         <Employeementreport />
       </div>
       <div className="flex flex-col gap-4 flex-1">
-      {isHR && evaluation.length > 0 && (
-            <Evaluation evaluation={evaluation} employeeId={employeeId} />
+        {isHR && evaluation.length > 0 && (
+          <Evaluation evaluation={evaluation} employeeId={employeeId} />
+        )}
+        {isHR &&
+          evaluation.length > 0 &&
+          !evaluation.some((item) => item.status === 'In Progress') && (
+            <UserEvaluation evaluation={evaluation} employeeId={employeeId} />
           )}
-        {isHR && evaluation.length > 0 && !evaluation.some(item => item.status === "In Progress") && (
-  <UserEvaluation evaluation={evaluation} employeeId={employeeId} />
-)}
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
-          
           <header className="px-4 flex items-center gap-4 justify-between">
             <h1 className="flex items-center gap-4 font-medium text-[18px] mb-4">
               <HiSpeakerphone />

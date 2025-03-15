@@ -154,7 +154,7 @@ const ToolBar: React.FC<ToolBarProps> = ({ editor }) => {
       >
         <FaRedo size={14} />
       </button>
-      <div className="flex flex-row gap-3 items-center ">
+      {/* <div className="flex flex-row gap-3 items-center ">
         <div className="p-2 bg-[#0F172A] rounded-full">
           <img src="/Union.png" alt="img" className='w-6'/>
         </div>
@@ -164,7 +164,7 @@ const ToolBar: React.FC<ToolBarProps> = ({ editor }) => {
         <div className="p-2 bg-[#F53649] mr-0 sm:mr-4 rounded-full">
           <img src="/important_details.png" alt="img" className='w-6' />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

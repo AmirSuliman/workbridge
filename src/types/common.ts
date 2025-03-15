@@ -18,6 +18,7 @@ export interface Announcement {
   createdAt: string;
   title: string;
   status: 'Published' | 'Draft';
+  type: 'Miscellaneous' | 'Policy Changes' | 'Company Activity' | null;
 }
 
 export interface SurveyProps {

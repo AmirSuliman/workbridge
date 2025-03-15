@@ -13,11 +13,15 @@ import CreateAnnouncementToolBar from './CreateAnnouncementToolBar';
 const CreateAnnouncementTextEditor = ({
   body,
   setContent,
+  announcementType,
   setAnnouncementType,
 }: {
   body: string;
   setContent: (content: string) => void;
-  setAnnouncementType: (type: string) => void;
+  announcementType: string;
+  setAnnouncementType: (
+    value: 'Miscellaneous' | 'Policy Changes' | 'Company Activity'
+  ) => void;
 }) => {
   const editor = useEditor({
     immediatelyRender: false,
@@ -54,6 +58,7 @@ const CreateAnnouncementTextEditor = ({
       {/* Toolbar */}
       <CreateAnnouncementToolBar
         editor={editor}
+        announcementType={announcementType}
         setAnnouncementType={setAnnouncementType}
       />
       {/* Editor */}

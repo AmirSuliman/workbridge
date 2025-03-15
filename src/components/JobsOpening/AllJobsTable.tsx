@@ -7,9 +7,8 @@ import Link from 'next/link';
 import ScreenLoader from '../common/ScreenLoader';
 import { useRouter } from 'next/navigation';
 import { FaDownload } from 'react-icons/fa';
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
-
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 export const AllJobsTable = () => {
   const router = useRouter();
@@ -23,31 +22,34 @@ export const AllJobsTable = () => {
   const [typeFilter, setTypeFilter] = useState<string>('');
   const handleDownload = () => {
     if (sortedItems.length === 0) {
-      alert("No job data available to download.");
+      alert('No job data available to download.');
       return;
     }
-  
+
     // Prepare data for the Excel file
     const data = sortedItems.map((job) => ({
-      "Job Opening": job.tittle, // Fix: Should be "title" if API has a typo
-      "Candidates": job.jobApplicationCount,
-      "Job Type": job.employmentType,
-      "Hiring Lead": `${job.hiringLead.firstName} ${job.hiringLead.lastName}`,
-      "Created On": new Date(job.createdAt).toLocaleDateString(),
-      "Status": job.status,
+      'Job Opening': job.tittle, // Fix: Should be "title" if API has a typo
+      Candidates: job.jobApplicationCount,
+      'Job Type': job.employmentType,
+      'Hiring Lead': `${job.hiringLead.firstName} ${job.hiringLead.lastName}`,
+      'Created On': new Date(job.createdAt).toLocaleDateString(),
+      Status: job.status,
     }));
-  
+
     // Create a new Excel workbook and worksheet
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Job Openings");
-  
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Job Openings');
+
     // Convert to binary format
-    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-  
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+
     // Create a Blob and trigger download
-    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
-    saveAs(blob, "Job_Openings.xlsx");
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, 'Job_Openings.xlsx');
   };
   useEffect(() => {
     dispatch(fetchOpenPositions());
@@ -194,7 +196,6 @@ export const AllJobsTable = () => {
                   Download
                 </button>
               </th>
-              
             </tr>
           </thead>
           <tbody>
@@ -213,7 +214,9 @@ export const AllJobsTable = () => {
                 </td>
                 <td className="py-3 px-4 border-b">{job.tittle}</td>
                 <td className="py-3 px-4 border-b">{job.employmentType}</td>
-                <td className="py-3 px-4 border-b">{`${job.hiringLead.firstName} ${job.hiringLead.lastName}`}</td>
+                <td className="py-3 px-4 border-b">{`${
+                  job.hiringLead?.firstName || ''
+                } ${job.hiringLead?.lastName || ''}`}</td>
                 <td className="py-3 px-4 border-b">
                   {new Date(job.createdAt).toLocaleDateString()}
                 </td>

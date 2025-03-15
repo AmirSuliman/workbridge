@@ -1,5 +1,6 @@
 'use client';
 
+import { AnnouncementImage } from '@/components/SingleAnnouncement/AnnouncementImage';
 import axiosInstance from '@/lib/axios';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -9,6 +10,8 @@ type AnnouncementDetail = {
   title: string;
   body: string;
   status: string;
+  type: string;
+  createdAt: string;
   createdBy: number;
   creator: {
     id: number;
@@ -59,8 +62,8 @@ const AnnouncmentScreen = () => {
     }
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="p-4">Loading...</div>;
+  if (error) return <div className="p-4">Error: {error}</div>;
 
   return (
     <main className="space-y-8">
@@ -71,11 +74,7 @@ const AnnouncmentScreen = () => {
         </h1>
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-12 items-start sm:items-center mt-4">
           <div className="flex flex-row items-center gap-2">
-            <img
-              src={announcement?.creator?.profilePictureUrl || '/default.png'}
-              alt="Poster"
-              className="w-8 h-8 rounded-full"
-            />
+            <AnnouncementImage type={announcement?.type} />
             <p>Posted by:</p>
             <p className="font-bold">
               {`${announcement?.creator?.firstName || ''} ${
@@ -84,9 +83,23 @@ const AnnouncmentScreen = () => {
             </p>
           </div>
           <div className="flex flex-row items-center gap-2">
-            <p>Role:</p>
+            <p>Date:</p>
             <p className="font-bold">
-              {announcement?.creator?.Role?.name || 'N/A'}
+              {`${
+                announcement?.createdAt
+                  ? new Date(announcement.createdAt).toDateString()
+                  : ''
+              }`}
+            </p>
+          </div>
+          <div className="flex flex-row items-center gap-2">
+            <p>Time:</p>
+            <p className="font-bold">
+              {`${
+                announcement?.createdAt
+                  ? new Date(announcement.createdAt).toLocaleTimeString()
+                  : ''
+              }`}
             </p>
           </div>
         </div>

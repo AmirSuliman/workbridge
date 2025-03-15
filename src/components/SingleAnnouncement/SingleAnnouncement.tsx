@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
-import IconWithBg from './IconWithBg';
-import { IoCalendarOutline } from 'react-icons/io5';
-import { useRouter } from 'next/navigation';
-import { BiLoaderCircle } from 'react-icons/bi';
-import { getSession } from 'next-auth/react';
 import { Announcement } from '@/types/common';
+import { getSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { BiLoaderCircle } from 'react-icons/bi';
+import { AnnouncementImage } from './AnnouncementImage';
 
 const SingleAnnouncement = () => {
   const router = useRouter();
@@ -30,16 +29,16 @@ const SingleAnnouncement = () => {
     const fetchAnnouncements = async () => {
       try {
         const response = await axiosInstance.get('/announcements');
+        console.log('response: ', response.data.data);
         const data = response.data?.data?.items || [];
 
         if (Array.isArray(data)) {
           const formattedData = data.map((item: any) => ({
             id: item.id,
             description: item.body || 'No description available',
-            icon: <IoCalendarOutline />,
             createdAt: item.createdAt || new Date().toISOString(),
             title: item.title,
-            bgColor: '#00B87D', // Added default bgColor
+            type: item.type,
             status: item.status || 'Draft', // Added status property
           }));
 
@@ -51,7 +50,7 @@ const SingleAnnouncement = () => {
             )
             .slice(0, 8);
 
-          setAnnouncements(sortedData);
+          setAnnouncements(sortedData as Announcement[]);
         } else {
           throw new Error('Invalid response format');
         }
@@ -93,7 +92,7 @@ const SingleAnnouncement = () => {
               }
               className="flex items-center flex-wrap md:flex-nowrap gap-3 py-3 px-4 cursor-pointer hover:bg-background"
             >
-              <IconWithBg icon={announcement.icon} />
+              <AnnouncementImage type={announcement.type} />
               <div className="flex flex-row  items-center justify-between gap-1 w-full">
                 <p className="text-sm">{announcement.title}</p>
                 <p className="opacity-50 font-medium text-[12px]">

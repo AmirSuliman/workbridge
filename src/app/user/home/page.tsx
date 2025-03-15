@@ -115,15 +115,6 @@ const Home = () => {
     <div className="p-6">
       <main className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <WhosOut />
-        {!isViewOnly && evaluation.length > 0 && (
-          <Evaluation evaluation={evaluation} employeeId={employeeId} />
-        )}
-
-        {isViewOnly && (
-          <UserEvaluation evaluation={evaluation} employeeId={employeeId} />
-        )}
-        <HomePolicies />
-        {/*<Celebrations /> */}
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
           <header className="px-4 flex items-center gap-4 justify-between">
             <h1 className="flex items-center gap-4 font-semibold text-xl mb-4">
@@ -141,9 +132,16 @@ const Home = () => {
           </header>
           <SingleAnnouncement />
         </section>
-       {/*<Training /> */}
-        <NewEmployees />
+        {!isViewOnly && evaluation.length > 0 && (
+          <Evaluation evaluation={evaluation} employeeId={employeeId} />
+        )}
+
+        {isViewOnly && (
+          <UserEvaluation evaluation={evaluation} employeeId={employeeId} />
+        )}
+        <HomePolicies />
         <Companyinfo />
+        <NewEmployees />
       </main>
     </div>
   );

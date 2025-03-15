@@ -82,12 +82,14 @@ const HrHeader = () => {
           )}
         </div>
       ) : (
-        <Button
-          onClick={() => router.back()}
-          icon={<FaArrowLeft />}
-          name="Back"
-          className="flex-row-reverse"
-        />
+        <>
+          <Button
+            onClick={() => router.back()}
+            icon={<FaArrowLeft />}
+            name="Back"
+            className="flex-row-reverse"
+          />
+        </>
       )}
 
       <Notifications />

@@ -11,6 +11,10 @@ import { HiSpeakerphone } from 'react-icons/hi';
 import { PiPlusCircleBold } from 'react-icons/pi';
 import Policies from '../policies/components/policies';
 import Vacationpolicies from '../VacationPolicies/page';
+import Image from 'next/image';
+import { AnnouncementImage } from '@/components/SingleAnnouncement/AnnouncementImage';
+import TabButton from '@/components/common/TabsComponent/button';
+import TabComponent from '@/components/common/TabsComponent/TabComponent';
 
 // type Announcement = {
 //   id: string;
@@ -31,7 +35,7 @@ const fetchAnnouncements = async (
         size,
       },
     });
-    // console.log(`Fetched ${status} announcements:`, response.data);
+    console.log(`Fetched ${status} announcements:`, response.data);
     return {
       announcements: response.data.data.items || [],
       total: response.data.data.totalItems || 0,
@@ -47,7 +51,6 @@ const fetchAnnouncements = async (
 
 const Page = () => {
   const router = useRouter();
-  const [currentTab, setCurrentTab] = useState('Announcements'); // Handle active tab
   const [publishedAnnouncements, setPublishedAnnouncements] = useState<
     Announcement[]
   >([]);
@@ -107,45 +110,28 @@ const Page = () => {
   const handleDraftPageChange = (page: number) => {
     setCurrentDraftPage(page);
   };
+
   return (
     <main className="space-y-8">
       {/* Tabs */}
       <div className="flex gap-4 border-b">
-        <button
-          className={`px-4 py-2 ${
-            currentTab === 'Announcements'
-              ? 'border-b-2 border-black font-semibold'
-              : 'opacity-50'
-          }`}
-          onClick={() => setCurrentTab('Announcements')}
-        >
-          Announcements
-        </button>
-        <button
-          className={`px-4 py-2 ${
-            currentTab === 'Policies'
-              ? 'border-b-2 border-black font-semibold'
-              : 'opacity-50'
-          }`}
-          onClick={() => setCurrentTab('Policies')}
-        >
-          Policies
-        </button>
-
-        <button
-          className={`px-4 py-2 ${
-            currentTab === 'Vacation Policies'
-              ? 'border-b-2 border-black font-semibold'
-              : 'opacity-50'
-          }`}
-          onClick={() => setCurrentTab('Vacation Policies')}
-        >
-          Vacation Policies
-        </button>
+        <TabButton
+          isRootTab={true}
+          name="Announcements"
+          href={`/hr/announcements-&-policies/announcements?tab=0`}
+        />
+        <TabButton
+          name="Policies"
+          href={`/hr/announcements-&-policies/announcements?tab=1`}
+        />
+        <TabButton
+          name="Vacation Policies"
+          href={`/hr/announcements-&-policies/announcements?tab=2`}
+        />
       </div>
 
       {/* Tab Content */}
-      {currentTab === 'Announcements' && (
+      <TabComponent index="0" isRootTab={true}>
         <>
           {/* Announcements Section */}
           <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
@@ -161,7 +147,7 @@ const Page = () => {
               </Link>
             </header>
             <h6 className="my-2 opacity-35 font-medium text-sm px-4">
-              This Week
+              Published
             </h6>
             <div className="divide-y">
               {Array.isArray(publishedAnnouncements) &&
@@ -177,7 +163,7 @@ const Page = () => {
                     }
                     className="flex items-center flex-wrap md:flex-nowrap gap-3 py-3 px-4 cursor-pointer hover:bg-background"
                   >
-                    <img src="/announcment.svg" alt="icon" />
+                    <AnnouncementImage type={announcement.type} />
                     <div className="flex flex-row  items-center justify-between gap-1 w-full">
                       <p className="text-sm">{announcement.title}</p>
                       <p className="opacity-50 font-medium text-[12px]">
@@ -216,7 +202,8 @@ const Page = () => {
                   }
                   className="flex items-center flex-wrap md:flex-nowrap gap-3 py-3 px-4 cursor-pointer hover:bg-background"
                 >
-                  <img src="/announcment.svg" alt="icon" />
+                  <AnnouncementImage type={announcement.type} />
+
                   <div className="flex flex-row  items-center justify-between gap-1 w-full">
                     <p className="text-sm">{announcement.title}</p>
                     <p className="opacity-50 font-medium text-[12px]">
@@ -237,19 +224,19 @@ const Page = () => {
             />
           </section>
         </>
-      )}
+      </TabComponent>
 
-      {currentTab === 'Policies' && (
+      <TabComponent index="1">
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 px-4 space-y-4">
           <Policies />
         </section>
-      )}
+      </TabComponent>
 
-      {currentTab === 'Vacation Policies' && (
+      <TabComponent index="2">
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 px-4 space-y-4">
           <Vacationpolicies />
         </section>
-      )}
+      </TabComponent>
     </main>
   );
 };

@@ -52,7 +52,7 @@ const CustomTextEditor = ({
       {/* Toolbar */}
       <ToolBar editor={editor} />
       {/* Editor */}
-      <EditorContent editor={editor} className="bg-white h-[200px] rounded-lg border" />
+      <EditorContent editor={editor} className="bg-white rounded-lg border" />
     </div>
   );
 };
