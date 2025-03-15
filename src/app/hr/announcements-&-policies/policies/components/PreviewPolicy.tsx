@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import axiosInstance from '@/lib/axios';
 import { useState, useEffect } from 'react';
-
+import axios from 'axios';
 const PreviewPolicy = ({ previewData }) => {
   const { data: session } = useSession();
   const { policyId } = useParams();
@@ -36,17 +36,27 @@ const PreviewPolicy = ({ previewData }) => {
     try {
       const response = await axiosInstance.patch(
         `/policy/${policyId}/employees/${employeeId}/respond`,
-        {
-          status: 'accepted',
-        }
+        { status: 'accepted' }
       );
 
-      setResponseStatus(response.data);
-      console.log('Policy response submitted:', response.data);
-    } catch (error) {
-      console.error('Error responding to policy:', error);
-    } finally {
-      setLoading(false);
+      console.log('API Response:', response.data);
+
+      if (response.data && response.data.status) {
+        setResponseStatus(response.data.status);
+      } else {
+        setResponseStatus('accepted');
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          'Error responding to policy:',
+          error.response?.data || error.message
+        );
+      } else if (error instanceof Error) {
+        console.error('Error responding to policy:', error.message);
+      } else {
+        console.error('An unknown error occurred');
+      }
     }
   };
 
