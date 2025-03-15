@@ -46,7 +46,9 @@ export const AllEmployees = () => {
   const [uniqueJobTitles, setUniqueJobTitles] = useState<string[]>([]);
   const [uniqueDepartments, setUniqueDepartments] = useState<string[]>([]);
   const pageSize = 10;
-
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [hasData, setHasData] = useState(false); 
+  
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -303,7 +305,7 @@ export const AllEmployees = () => {
                 <th className="py-3 px-4 font-medium border-b">
                   <button
                     onClick={handleDownload}
-                    className="border bg-gray-200 text-gray-400 p-2 text-[12px] flex flex-row items-center gap-2 rounded-sm cursor-pointer"
+                    className="border bg-[#0F172A] text-white p-2 text-[12px] flex flex-row items-center gap-2 rounded-sm cursor-pointer"
                   >
                     <FaDownload />
                     Download

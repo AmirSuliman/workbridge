@@ -137,7 +137,7 @@ const CandidateTable = () => {
               <th className="py-3 px-4 border-b font-medium">
                 <button
                   onClick={handleDownload}
-                  className="bg-gray-200 p-2 items-center justify-center text-gray-400 rounded flex flex-row gap-2"
+                  className="bg-[#0F172A] p-2 items-center justify-center text-white rounded flex flex-row gap-2 text-[12px]"
                 >
                   <FaDownload />
                   Download
