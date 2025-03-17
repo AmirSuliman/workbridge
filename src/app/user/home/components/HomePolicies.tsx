@@ -28,22 +28,26 @@ const HomePolicies = () => {
         }
   
         const formattedData = allPolicies
-  .filter((item: any) => item.policy !== null)
-  .map((item: any) => ({
-    id: item.policy.id,
-    title: item.policy.title,
-    description: item.policy.description || 'No description available',
-    type: item.policy.type || 'defaultType',
-    status: item.status || 'Not Accepted',
-    createdAt: item.createdAt || new Date().toISOString(),
-    updatedAt: item.updatedAt || new Date().toISOString(),
-    fileId: item.policy.fileId || null,
-    uploadBy: item.policy.uploadBy || 'Unknown',
-    effectiveDate: item.policy.effectiveDate || '',
-    totalEmployees: item.policy.totalEmployees || 0,
-    employeeAccepted: item.policy.employeeAccepted || 0,
-    previewUrl: item.policy.previewUrl || null, 
-  }));
+        .filter((item: any) => item.policy !== null)
+        .map((item: any) => ({
+          id: item.policy.id,
+          title: item.policy.title,
+          description: item.policy.description || 'No description available',
+          type: item.policy.type || 'defaultType',
+          status: item.status || 'Not Accepted',
+          createdAt: item.createdAt || new Date().toISOString(),
+          updatedAt: item.updatedAt || new Date().toISOString(),
+          fileId: item.policy.fileId || null,
+          uploadBy: item.policy.uploadBy || 'Unknown',
+          effectiveDate: item.policy.effectiveDate || '',
+          totalEmployees: item.policy.totalEmployees || 0,
+          employeeAccepted: item.policy.employeeAccepted || 0,
+          previewUrl: item.policy.previewUrl || null,
+          postedBy: item.policy.users
+          ? `${item.policy.users.firstName} ${item.policy.users.lastName}`
+          : 'Unknown',
+          }));
+      
 
         const sortedData = formattedData
           .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
@@ -94,7 +98,7 @@ const HomePolicies = () => {
           <p className="text-[14px] font-semibold">{announcement.title || ''}</p>
           <div className="flex flex-row items-center gap-5">
             <p className="text-[12px]">
-              Posted by: <span className="font-semibold">{announcement?.users ? `${announcement.users.firstName || ''} ${announcement.users.lastName || ''}` : 'Unknown'}</span>
+            Posted by: <span className="font-semibold">{announcement.postedBy}</span>
             </p>
             <p className="text-[12px]">
               Effective Date: <span className="font-semibold">{new Date(announcement.effectiveDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
