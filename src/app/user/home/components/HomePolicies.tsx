@@ -83,6 +83,7 @@ const HomePolicies = () => {
   }
 
   return (
+    <>
     <div className="p-6 bg-white rounded-[10px] border ">
       {' '}
       <h1 className="text-[18px] font-medium flex flex-row items-center gap-2 mb-4">
@@ -118,6 +119,7 @@ const HomePolicies = () => {
 
       </section>
     </div>
+    </>
   );
 };
 

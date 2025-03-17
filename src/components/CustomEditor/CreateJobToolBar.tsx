@@ -1,3 +1,4 @@
+import { Editor } from '@tiptap/react';
 import {
   FaBold,
   FaItalic,
@@ -6,33 +7,15 @@ import {
   FaRedo,
   FaUndo,
 } from 'react-icons/fa';
+import { FaUnderline } from 'react-icons/fa6';
 import { GrTextAlignCenter, GrTextAlignLeft } from 'react-icons/gr';
 import { LuAlignJustify } from 'react-icons/lu';
-import { MdLink, MdLinkOff } from 'react-icons/md';
-import { Editor } from '@tiptap/react';
-import { FaUnderline } from 'react-icons/fa6';
 
 interface ToolBarProps {
   editor: Editor;
 }
 
 const CreateJobToolBar: React.FC<ToolBarProps> = ({ editor }) => {
-  const setLink = () => {
-    const previousUrl = editor.getAttributes('link').href;
-    const url = window.prompt('URL', previousUrl);
-
-    if (url === null) {
-      return;
-    }
-
-    if (url === '') {
-      editor.chain().focus().extendMarkRange('link').unsetLink().run();
-      return;
-    }
-
-    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
-  };
-
   return (
     <div className="flex gap-2 mb-4">
       <button
@@ -144,22 +127,6 @@ const CreateJobToolBar: React.FC<ToolBarProps> = ({ editor }) => {
       >
         <FaListOl size={14} />
       </button>
-      {/* <button
-        type="button"
-        onClick={setLink}
-        className="px-3 py-1 text-sm font-medium rounded bg-gray-200 hover:bg-gray-300"
-      >
-        <MdLink size={14} />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().unsetLink().run()}
-        disabled={!editor.isActive('link')}
-        className="px-3 py-1 text-sm font-medium rounded bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed"
-      >
-        <MdLinkOff size={14} />
-      </button> */}
-
       <button
         type="button"
         onClick={() => editor.chain().focus().undo().run()}

@@ -8,10 +8,12 @@ import { useForm } from 'react-hook-form';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import { z } from 'zod';
-import EmployeesDropdown from '@/components/DropDowns/EmployeesDropdown';
 import InputField from '../common/InputField';
 import SelectField from '../common/SelectField';
 import EyeIcon from '../icons/eye-icon';
+import { getAllEmployees } from '@/services/getAllEmployees';
+import { EmployeeData } from '@/types/employee';
+
 interface Country {
   id: number;
   country: string;
@@ -19,15 +21,17 @@ interface Country {
 }
 
 type HRFormInputs = z.infer<typeof hrFormSchema>;
+
 const HRForm = ({ onClose }) => {
   const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.users);
-
+  const [reportingManagerId, setReportingManagerId] = useState<number | null>(null); // ✅ Track selected reporting manager
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const { items } = useSelector((state: RootState) => state.userRoles.roles);
   const [countries, setCountries] = useState<Country[]>([]);
   const [isManager, setIsManager] = useState(false);
+  
   const {
     register,
     handleSubmit,
@@ -40,6 +44,34 @@ const HRForm = ({ onClose }) => {
     mode: 'onChange',
   });
 
+   const [employees, setEmployees] = useState<EmployeeData[]>([]);
+  
+    useEffect(() => {
+      const fetchEmployees = async () => {
+        try {
+          const response = await getAllEmployees(1, 1000, '', true);
+          const items = response?.data?.items || []; // Ensure items is an array
+          setEmployees(items);
+        } catch (error) {
+          console.error('Error fetching employees: ', error);
+          setEmployees([]); // Ensure employees is always an array
+        }
+      };
+  
+      fetchEmployees();
+    }, []);
+  
+    useEffect(() => {
+      if (reportingManagerId && employees.length > 0) {
+        const matchedDepartment = employees.find(
+          (employee) => employee.id === reportingManagerId
+        );
+        if (matchedDepartment) {
+          resetField('reportingManagerId');
+        }
+      }
+    }, [employees, reportingManagerId, resetField]);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,38 +92,42 @@ const HRForm = ({ onClose }) => {
     value: role.id as string,
   })) ?? [{ label: '', value: '' }];
 
-  
-
-  const style = {
-    label: '',
-    input: 'text-xs',
-    container: '',
-    error: 'text-[9px]',
-  };
   const onSubmit = async (data: HRFormInputs) => {
-    const response = await dispatch(
-      createUser({
-        ...data,
-        isManager, 
-      }) as any
-    );
-    if (response?.type === 'users/createUser/fulfilled') onClose();
+    const selectedManagerId = watch('reportingManagerId'); // ✅ Get value from form state
+    if (!isManager && !selectedManagerId) {
+      console.error("Reporting Manager ID is missing!");
+      return;
+    }
+  
+    const payload = {
+      ...data,
+      isManager,
+      reportingManagerId: watch('reportingManagerId') || null, // Always include selected value
+    };
+    
+  
+    console.log('Submitting Payload:', payload);
+  
+    const response = await dispatch(createUser(payload) as any);
+    if (response?.type === 'users/createUser/fulfilled') {
+      onClose();
+    }
   };
   
-  const selectedRoleId = watch('roleId'); // ✅ Watches roleId changes
+  
+  
+  const selectedRoleId = watch('roleId'); 
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mt-2 grid grid-cols-2 gap-2 gap-y-1">
         <InputField
-          styles={style}
           name="firstName"
           placeholder="First Name"
           register={register}
           error={errors.firstName?.message}
         />
         <InputField
-          styles={style}
           name="lastName"
           placeholder="Last Name"
           register={register}
@@ -101,53 +137,43 @@ const HRForm = ({ onClose }) => {
           name="email"
           placeholder="Email"
           register={register}
-          styles={{ ...style, container: 'col-span-2' }}
+          styles={{ container: 'col-span-2' }}
           error={errors.email?.message}
         />
 
-<div className='flex flex-col gap-1'>
-<SelectField
-  name="roleId"
-  register={register}
-  error={errors.roleId?.message}
-  key={'roleId'}
-  options={roles}
-  onChange={(e) => {
-    const roleId = Number(e.target.value);
-    console.log('Selected Role ID:', roleId); 
-    setValue('roleId', roleId); 
-  }}
-/>
+        <div className='flex flex-col gap-1'>
+          <SelectField
+            name="roleId"
+            register={register}
+            error={errors.roleId?.message}
+            key={'roleId'}
+            options={roles}
+            onChange={(e) => {
+              const roleId = Number(e.target.value);
+              console.log('Selected Role ID:', roleId); 
+              setValue('roleId', roleId); 
+            }}
+          />
 
-{Number(selectedRoleId) === 1 && (  // ✅ Convert string to number for comparison
-  <div className="flex items-center col-span-2 mt-2 mb-3">
-    <input
-  type="checkbox"
-  id="isManager"
-  checked={isManager}
-  onChange={(e) => setIsManager(e.target.checked)} // ✅ Directly use checked state
-  className="mr-2"
-/>
-
-    <label htmlFor="isManager" className="text-sm">Is Manager</label>
-  </div>
-)}
-</div>
-           <article>
-             <EmployeesDropdown
-                reportingManagerId={null}
-                resetField={resetField}
-                register={register}
-                errors={errors}
+          {Number(selectedRoleId) === 1 && (  
+            <div className="flex items-center col-span-2 mt-2 mb-3">
+              <input
+                type="checkbox"
+                id="isManager"
+                checked={isManager}
+                onChange={(e) => setIsManager(e.target.checked)} 
+                className="mr-2"
               />
-            </article>
+              <label htmlFor="isManager" className="text-sm">Is Manager</label>
+            </div>
+          )}
+        </div>
 
         <article className="w-full">
-          {/* <Label text="Country*" /> */}
           <select
             {...register('countryId', {
               valueAsNumber: true,
-              setValueAs: (value) => (value === '' ? null : Number(value)), // Handle empty string
+              setValueAs: (value) => (value === '' ? null : Number(value)), 
             })}
             className="form-input"
           >
@@ -163,19 +189,45 @@ const HRForm = ({ onClose }) => {
           )}
         </article>
 
+        <article className="w-full">
+  {Number(selectedRoleId) !== 2 && (
+   <select
+   {...register('reportingManagerId', { valueAsNumber: true })}
+   className="form-input"
+   onChange={(e) => {
+     const managerId = Number(e.target.value);
+     setReportingManagerId(managerId);
+     setValue('reportingManagerId', managerId, { shouldValidate: true }); // ✅ Ensure it's set in form state
+   }}
+ >
+   <option value="">Select Manager</option>
+   {employees
+     .filter((employee) => employee.isManager)
+     .map((manager) => (
+       <option key={manager.id} value={manager.id}>
+         {manager.firstName} {manager.lastName} 
+       </option>
+     ))}
+ </select>
+  
+  )}
+  {errors.reportingManagerId && (
+    <span className="form-error">{errors.reportingManagerId.message}</span>
+  )}
+</article>
+
         <div className="relative w-full col-span-2">
           <div className="relative flex items-center">
             <InputField
               name="password"
-              type={passwordVisible ? 'text' : 'password'} // Toggle input type based on visibility state
+              type={passwordVisible ? 'text' : 'password'}
               placeholder="Password"
               register={register}
-              styles={style}
               error={errors.password?.message && ''}
             />
             <button
               type="button"
-              onClick={() => setPasswordVisible(!passwordVisible)} // Toggle visibility on click
+              onClick={() => setPasswordVisible(!passwordVisible)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 pointer-events-auto"
             >
               <EyeIcon classNames="w-4" />
@@ -188,6 +240,7 @@ const HRForm = ({ onClose }) => {
           )}
         </div>
       </div>
+
       <div className="flex justify-start mt-4">
         <button
           type="submit"

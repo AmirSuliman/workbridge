@@ -1,6 +1,5 @@
 'use client';
 import Button from '@/components/Button';
-import { useTabsContext } from '@/components/common/TabsComponent/TabsContainer';
 import FormHeading from '@/components/UserInformation/FormHeading';
 import { EmployeeData } from '@/types/employee';
 import { useRouter } from 'next/navigation';
@@ -10,15 +9,8 @@ import { FaPhoneAlt } from 'react-icons/fa';
 import { Heading, Label } from '../Helpers';
 import ProfilePicture from '../ProfilePicture';
 
-// interface Country {
-//   id: number;
-//   country: string;
-//   code: string;
-// }
-
 const BasicInfo = ({ countries, previewUrl, handleFileChange }) => {
   const router = useRouter();
-  const { activeTab, setActiveTab } = useTabsContext();
 
   const {
     register,
@@ -60,7 +52,7 @@ const BasicInfo = ({ countries, previewUrl, handleFileChange }) => {
     ];
     const isValid = await trigger(fieldNamesForTab as (keyof EmployeeData)[]);
     if (isValid) {
-      setActiveTab(activeTab + 1);
+      router.push('/hr/employees/create-employee?tab=1');
     }
   };
 

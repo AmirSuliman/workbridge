@@ -34,7 +34,7 @@ const ProfilePicture = ({ previewUrl, handleFileChange, errors }) => {
           />
         </div>
       )}
-      {errors.profilePictureUrl && (
+      {errors?.profilePictureUrl && (
         <span className="text-red-500">{errors.profilePictureUrl.message}</span>
       )}
       <p className="text-sm py-8 text-[#abaeb4]">

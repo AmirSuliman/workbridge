@@ -1,5 +1,6 @@
 'use client';
 import ProfileCard from '@/components/common/ProfileCard';
+import ScreenLoader from '@/components/common/ScreenLoader';
 import TabButton from '@/components/common/TabsComponent/TabButton';
 import TabComponent from '@/components/common/TabsComponent/TabComponent';
 import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
@@ -19,6 +20,10 @@ import {
 } from '@/store/slices/employeeInfoSlice';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { AppDispatch, RootState } from '@/store/store';
+import {
+  employmentTabValidation,
+  personalTabValidation,
+} from '@/utils/tabValidations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
@@ -49,7 +54,7 @@ const MyInformation = () => {
 
   useEffect(() => {
     const fetchSession = async () => {
-    // const session = await getSession();
+      // const session = await getSession();
       setRole(session?.user?.role);
     };
 
@@ -160,7 +165,6 @@ const MyInformation = () => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files) {
         const file = event.target.files[0];
-        const fileType = file.type;
 
         if (!file.type.startsWith('image/')) {
           console.log('Selected file type: ', file.type);
@@ -206,11 +210,6 @@ const MyInformation = () => {
 
   useEffect(() => {
     setSchemaErrors(errors);
-    if (Object.keys(errors).length > 0) {
-      toast.error(
-        'Some input fields are missing in Personal or Employment tab!'
-      );
-    }
   }, [errors]);
 
   const onSubmit = async (data: any) => {
@@ -281,6 +280,8 @@ const MyInformation = () => {
           'profilePictureUrl',
           response.data.data.profilePictureUrl
         );
+        // Dispatch a custom event to get profilePictureUpdated in the header component
+        window.dispatchEvent(new Event('profilePictureUpdated'));
       }
     } catch (err) {
       console.error('Error updating employee data:', err);
@@ -299,8 +300,12 @@ const MyInformation = () => {
     }
   };
 
-  if (loading) {
-    return <div className="p-4">Loading...</div>;
+  if (loading || myInfoLoading) {
+    return (
+      <div className="p-4">
+        <ScreenLoader />
+      </div>
+    );
   }
 
   if (error) {
@@ -323,6 +328,14 @@ const MyInformation = () => {
         <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
           <TabButton
             isRootTab={true}
+            className={
+              schemaErrors &&
+              Object.keys(schemaErrors).some((key) =>
+                personalTabValidation.includes(key)
+              )
+                ? `!border-red-500 text-red-500`
+                : ''
+            }
             name="Personal"
             href={`${
               empId
@@ -333,6 +346,14 @@ const MyInformation = () => {
             }`}
           />
           <TabButton
+            className={
+              schemaErrors &&
+              Object.keys(schemaErrors).some((key) =>
+                employmentTabValidation.includes(key)
+              )
+                ? `!border-red-500 text-red-500`
+                : ''
+            }
             name="Employment"
             href={`${
               empId

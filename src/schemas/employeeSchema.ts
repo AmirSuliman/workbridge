@@ -137,7 +137,6 @@ export const putEmployeeSchema = z.object({
   email: z.string().email('Invalid email address'),
   middleName: z.string().optional().nullable().or(z.literal('')),
   tittle: z.string().min(1, 'Title is required'),
-
   note: z.string().optional(),
   hireDate: z
     .string()
@@ -186,7 +185,7 @@ export const putEmployeeSchema = z.object({
 
   reportingManagerId: z.preprocess(
     (val) => Number(val), // Convert string to number
-    z.number().optional()
+    z.number().min(1, 'Reporting manager is required')
   ),
   gender: z
     .string({ message: 'Gender is required' })
@@ -231,8 +230,8 @@ export const putEmployeeSchema = z.object({
     .or(z.literal('')),
   employmentType: z
     .string({ message: 'Employment type is required' })
-    // .min(1, 'Employment type is required'),
-    .optional(),
+    .min(1, 'Employment type is required'),
+  // .optional(),
 });
 
 // --------------------------------------------------------------------------------------------

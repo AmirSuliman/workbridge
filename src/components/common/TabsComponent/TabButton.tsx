@@ -1,12 +1,14 @@
+import cn from '@/utils/class-names';
 import { useRouter, useSearchParams } from 'next/navigation';
-
 const TabButton = ({
   name,
   href,
+  className,
   isRootTab = false,
 }: {
   name: string;
   href: string;
+  className?: string;
   isRootTab?: boolean;
 }) => {
   const route = useRouter();
@@ -18,15 +20,18 @@ const TabButton = ({
   return (
     <button
       type="button"
-      className={`px-[4%] text-xs  py-3 text-dark-navy  whitespace-nowrap  ${
-        isRootTab
-          ? !tab || tab === index
+      className={cn(
+        `px-[4%] text-xs  py-3 text-dark-navy  whitespace-nowrap  ${
+          isRootTab
+            ? !tab || tab === index
+              ? 'font-semibold border-b-2 !border-dark-navy'
+              : ''
+            : tab === index
             ? 'font-semibold border-b-2 !border-dark-navy'
             : ''
-          : tab === index
-          ? 'font-semibold border-b-2 !border-dark-navy'
-          : ''
-      }`}
+        }`,
+        className
+      )}
       onClick={(e) => {
         e.preventDefault();
         route.push(href);
