@@ -102,7 +102,7 @@ const HomePolicies = () => {
           </div>
         </div>
       </div>
-      <button onClick={() => router.push(`/user/home/policy/${announcement.id}`)} className="border rounded p-2 flex flex-row items-center gap-3 text-[10px] mt-8">
+      <button onClick={() => router.push(`/hr/home/policy/${announcement.id}`)} className="border rounded p-2 flex flex-row items-center gap-3 text-[10px] mt-8">
         View <PiArrowUpRightThin size={18} />
       </button>
     </div>

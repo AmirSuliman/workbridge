@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { HiSpeakerphone } from 'react-icons/hi';
 import { PiArrowUpRightThin } from 'react-icons/pi';
-
+import HomePolicies from './Homepolicies/Homepolicies';
 import { Session } from 'next-auth';
 
 interface Employee {
@@ -132,6 +132,7 @@ const Page = () => {
           </header>
           <SingleAnnouncement />
         </section>
+        <HomePolicies/>
         <LeaveRequests />
         <NewEmployees />
       </div>

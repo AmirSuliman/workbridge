@@ -80,7 +80,7 @@ export const AllJobsTable = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchOpenPositions());
+    dispatch(fetchOpenPositions({ page: 1, pageSize: 10 }));
   }, [dispatch]);
 
   // Filtering logic
