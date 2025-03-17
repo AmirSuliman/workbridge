@@ -32,7 +32,7 @@ const ViewPolicy = ({ previewData }) => {
   
     setLoading(true);
     try {
-      const response = await axiosInstance.patch(
+      const response = await axiosInstance.put(
         `/policy/${policyId}/employees/${employeeId}/respond`,
         { status: 'accepted' } 
       );
