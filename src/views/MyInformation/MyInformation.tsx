@@ -280,6 +280,8 @@ const MyInformation = () => {
           'profilePictureUrl',
           response.data.data.profilePictureUrl
         );
+        // Dispatch a custom event to get profilePictureUpdated in the header component
+        window.dispatchEvent(new Event('profilePictureUpdated'));
       }
     } catch (err) {
       console.error('Error updating employee data:', err);

@@ -3,7 +3,7 @@ import {
   PiListChecksLight,
   PiListNumbersFill,
 } from 'react-icons/pi';
-import IconWithBg from '../SingleAnnouncement/IconWithBg';
+import IconWithBg from '../Announcements/IconWithBg';
 import StepLine from './StepLine';
 import { IoDocumentTextOutline } from 'react-icons/io5';
 import { FaRegHandshake } from 'react-icons/fa';

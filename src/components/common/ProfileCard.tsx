@@ -93,7 +93,7 @@ const ProfileCard = ({
           <div className="relative w-fit h-fit group rounded-full">
             {/* if User panel then show this button to let the user update their profile picture only */}
             {/* if empId exist then don't show the component  */}
-            {/* {!empId && isUserPanel && <UploadProfilePicture />} */}
+            {!empId && isUserPanel && <UploadProfilePicture />}
 
             <Image
               loader={imageLoader}

@@ -166,6 +166,7 @@ const Createjobopening = () => {
         }));
       }
     };
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -499,19 +500,6 @@ const Createjobopening = () => {
                 </svg>
                 Job Description
               </div>
-              {/* <label className="flex flex-col mb-4  w-full mt-8">
-                <span className="form-label mb-2">Description*</span>
-                <textarea
-                  placeholder="Write job description"
-                  className="form-input resize"
-                  {...register('description')}
-                />
-                {errors.description && (
-                  <span className="form-error">
-                    {errors.description.message}
-                  </span>
-                )}
-              </label> */}
 
               <Controller
                 name="description"
@@ -519,8 +507,8 @@ const Createjobopening = () => {
                 // defaultValue={policyData?.description || ''}
                 render={({ field }) => (
                   <CreateJobTextEditor
-                    setContent={field.onChange} // Pass `field.onChange` for updating form state
-                    body={field.value || ''} // Pass the current content as `body`
+                    setContent={field.onChange}
+                    body={field.value || ''}
                   />
                 )}
               />

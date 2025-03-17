@@ -5,7 +5,7 @@ import Companyinfo from '@//components/companyinformation/companyinformaion';
 import Employeementreport from '@//components/Employementreport/employmentreport';
 import LeaveRequests from '@//components/LeaveRequests/LeaveRequests';
 import NewEmployees from '@//components/NewEmployees/NewEmployees';
-import SingleAnnouncement from '@//components/SingleAnnouncement/SingleAnnouncement';
+import SingleAnnouncement from '@/components/Announcements/SingleAnnouncement';
 import WhosOut from '@//components/WhosOut/WhosOut';
 import Evaluation from '@/app/user/home/components/evaluation';
 import UserEvaluation from '@/app/user/home/components/userevaulation';

@@ -50,17 +50,19 @@ const UserProfileInfo: React.FC<
       setRole(session?.user?.role);
     };
     fetchSession();
+  }, []);
 
-    // Listen for changes in sessionStorage to update the profile picture
-    const handleStorageChange = () => {
+  // this effect is used to check if profilePicture is updated in my info
+  useEffect(() => {
+    // Listen for our custom event profilePictureUpdated
+    const handleProfileUpdate = () => {
       const newProfilePic = sessionStorage.getItem('profilePictureUrl');
       setProfilePictureUrl(newProfilePic || null);
     };
 
-    window.addEventListener('storage', handleStorageChange);
-
+    window.addEventListener('profilePictureUpdated', handleProfileUpdate);
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('profilePictureUpdated', handleProfileUpdate);
     };
   }, []);
 

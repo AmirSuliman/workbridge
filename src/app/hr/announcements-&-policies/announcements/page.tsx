@@ -12,7 +12,7 @@ import { PiPlusCircleBold } from 'react-icons/pi';
 import Policies from '../policies/components/policies';
 import Vacationpolicies from '../VacationPolicies/page';
 import Image from 'next/image';
-import { AnnouncementImage } from '@/components/SingleAnnouncement/AnnouncementImage';
+import { AnnouncementImage } from '@/components/Announcements/AnnouncementImage';
 import TabButton from '@/components/common/TabsComponent/button';
 import TabComponent from '@/components/common/TabsComponent/TabComponent';
 

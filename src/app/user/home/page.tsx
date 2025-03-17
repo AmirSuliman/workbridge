@@ -4,7 +4,7 @@ import Button from '@/components/Button';
 import Celebrations from '@/components/Celebrations/Celebrations';
 import Companyinfo from '@/components/companyinformation/companyinformaion';
 import NewEmployees from '@/components/NewEmployees/NewEmployees';
-import SingleAnnouncement from '@/components/SingleAnnouncement/SingleAnnouncement';
+import SingleAnnouncement from '@/components/Announcements/SingleAnnouncement';
 import Training from '@/components/Training/Training';
 import WhosOut from '@/components/WhosOut/WhosOut';
 import axiosInstance from '@/lib/axios';

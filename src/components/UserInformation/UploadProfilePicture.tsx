@@ -13,6 +13,7 @@ import { AppDispatch, RootState } from '@/store/store';
 import { useSession } from 'next-auth/react';
 import { isAxiosError } from 'axios';
 
+// this component is used to update manager/employee profile picture
 const UploadProfilePicture = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -72,7 +73,7 @@ const UploadProfilePicture = () => {
         },
       });
       const uploadedUrl = response.data.data.url;
-      console.log('Uploaded URL:', uploadedUrl);
+      // console.log('Uploaded URL:', uploadedUrl);
       setPreviewUrl(uploadedUrl);
       return { uploadedUrl, error: null };
     } catch (err) {
@@ -96,12 +97,18 @@ const UploadProfilePicture = () => {
       };
       const response = await axiosInstance.put('/employee/profile/my', payLoad);
 
-      console.log('Image upload response: ', response.data);
+      console.log(
+        'Image upload response: ',
+        response.data.data.profilePictureUrl
+      );
       toast.success('Image updated successfully!');
       sessionStorage.setItem(
         'profilePictureUrl',
         response.data.data.profilePictureUrl
       );
+
+      // Dispatch a custom event to get profilePictureUpdated in the header component
+      window.dispatchEvent(new Event('profilePictureUpdated'));
       getMyInfo();
       setLoader(false);
     } catch (error) {
