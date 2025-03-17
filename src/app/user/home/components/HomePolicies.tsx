@@ -1,13 +1,32 @@
-import { Policy } from '@/types/policy';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { HiSpeakerphone } from 'react-icons/hi';
-import { IoCalendarOutline } from 'react-icons/io5';
 import { PiArrowUpRightThin } from 'react-icons/pi';
 import imageLoader from '../../../../../imageLoader';
 import { getPoliciesById } from '@/services/getAllPolicies';
+
+interface Policy {
+  id: number;
+  title: string;
+  description?: string;
+  type?: string;
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  fileId?: number | null;
+  uploadBy?: string;
+  effectiveDate?: string;
+  totalEmployees?: number;
+  employeeAccepted?: number;
+  previewUrl?: string | null;
+  users?: {
+    firstName: string;
+    lastName: string;
+  };
+  postedBy?: string; // Add this field
+}
 
 const HomePolicies = () => {
   const router = useRouter();
@@ -22,7 +41,7 @@ const HomePolicies = () => {
         const allPolicies = response.data?.data?.rows || [];
 
         if (!Array.isArray(allPolicies) || allPolicies.length === 0) {
-          setError(null); // Clear previous errors
+          setError(null);
           setAnnouncements([]);
           return;
         }
@@ -116,15 +135,17 @@ const HomePolicies = () => {
                         </span>
                       </p>
                       <p className="text-[12px]">
-                        Effective Date:{' '}
+                        Effective Date:
                         <span className="font-semibold">
-                          {new Date(
-                            announcement.effectiveDate
-                          ).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })}
+                          {announcement.effectiveDate
+                            ? new Date(
+                                announcement.effectiveDate
+                              ).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                              })
+                            : 'No Date Available'}
                         </span>
                       </p>
                     </div>

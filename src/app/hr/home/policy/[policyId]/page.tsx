@@ -2,8 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { getPolicy } from '@/services/getPolicy';
-import PreviewPolicy from '@/app/hr/announcements-&-policies/policies/components/PreviewPolicy';
+import { getPolicybyIdempId } from '@/services/getPolicy';
 import ViewPolicy from '@/app/hr/announcements-&-policies/policies/components/Viewpolicy';
 const Page = () => {
   const { policyId } = useParams();
@@ -12,7 +11,7 @@ const Page = () => {
   useEffect(() => {
     const fetchPolicie = async () => {
       try {
-        const response = await getPolicy(policyId);
+        const response = await getPolicybyIdempId(policyId);
         setPolicyData(response.data.data || {});
         console.log('policy res: ', response.data.data);
       } catch (error) {
