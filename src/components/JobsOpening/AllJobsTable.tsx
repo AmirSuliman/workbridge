@@ -44,7 +44,7 @@ export const AllJobsTable = () => {
   
       // Prepare data for Excel
       const data = allJobs.map((job) => ({
-        'Job Opening': job.title, // Fixed field name
+        'Job Opening': job.tittle, // Fixed field name
         Candidates: job.jobApplicationCount,
         'Job Type': job.employmentType,
         'Hiring Lead': `${job.hiringLead?.firstName || ''} ${job.hiringLead?.lastName || ''}`,
@@ -70,8 +70,9 @@ export const AllJobsTable = () => {
   };
   
   useEffect(() => {
-    dispatch(fetchOpenPositions());
+    dispatch(fetchOpenPositions({ page: 1, pageSize: 10 }));
   }, [dispatch]);
+  
 
   // Filtering logic
   const filteredItems = items.filter((job) => {

@@ -1,4 +1,3 @@
-import { getAllPolicies } from '@/services/getAllPolicies';
 import { Policy } from '@/types/policy';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -8,6 +7,7 @@ import { HiSpeakerphone } from 'react-icons/hi';
 import { IoCalendarOutline } from 'react-icons/io5';
 import { PiArrowUpRightThin } from 'react-icons/pi';
 import imageLoader from '../../../../../imageLoader';
+import { getPoliciesById } from '@/services/getAllPolicies';
 
 const HomePolicies = () => {
   const router = useRouter();
@@ -18,8 +18,8 @@ const HomePolicies = () => {
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const response = await getAllPolicies(1, 1000);
-        const allPolicies = response.data?.data?.items || [];
+        const response = await getPoliciesById(1, 1000);
+        const allPolicies = response.data?.data?.rows || [];
   
         if (!Array.isArray(allPolicies) || allPolicies.length === 0) {
           setError(null); // Clear previous errors
@@ -27,32 +27,26 @@ const HomePolicies = () => {
           return;
         }
   
-        const formattedData = allPolicies.map((item: any) => ({
-          id: item.id,
-          description: item.body || 'No description available',
-          icon: <IoCalendarOutline />,
-          createdAt: item.createdAt || new Date().toISOString(),
-          title: item.title,
-          bgColor: '#00B87D',
-          type: item.type || 'defaultType',
-          fileId: item.fileId || 'defaultFileId',
-          status: item.status || 'defaultStatus',
-          uploadBy: item.uploadBy || 'defaultUploadBy',
-          updatedAt: item.updatedAt || new Date().toISOString(),
-          createdBy: item.createdBy || 'defaultCreatedBy',
-          updatedBy: item.updatedBy || 'defaultUpdatedBy',
-          previewUrl: item.previewUrl || 'defaultPreviewUrl',
-          effectiveDate: item.effectiveDate || '',
-          totalEmployees: item.totalEmployees || 0,
-          employeeAccepted: item.employeeAccepted || 0,
-          users: item.users || {},
-        }));
-  
+        const formattedData = allPolicies
+  .filter((item: any) => item.policy !== null)
+  .map((item: any) => ({
+    id: item.policy.id,
+    title: item.policy.title,
+    description: item.policy.description || 'No description available',
+    type: item.policy.type || 'defaultType',
+    status: item.status || 'Not Accepted',
+    createdAt: item.createdAt || new Date().toISOString(),
+    updatedAt: item.updatedAt || new Date().toISOString(),
+    fileId: item.policy.fileId || null,
+    uploadBy: item.policy.uploadBy || 'Unknown',
+    effectiveDate: item.policy.effectiveDate || '',
+    totalEmployees: item.policy.totalEmployees || 0,
+    employeeAccepted: item.policy.employeeAccepted || 0,
+    previewUrl: item.policy.previewUrl || null, 
+  }));
+
         const sortedData = formattedData
-          .sort(
-            (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          )
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
           .slice(0, 8);
   
         setAnnouncements(sortedData);
@@ -60,7 +54,7 @@ const HomePolicies = () => {
       } catch (err) {
         console.error('Error fetching policies:', err);
         setError('Failed to fetch policies. Please try again later.');
-        setAnnouncements([]); 
+        setAnnouncements([]);
       } finally {
         setLoading(false);
       }

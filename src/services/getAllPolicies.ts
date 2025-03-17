@@ -1,5 +1,6 @@
 import axiosInstance from '@/lib/axios';
 import axios from 'axios';
+import { getSession } from 'next-auth/react';
 
 export const getAllPolicies = async (page: number, size: number) => {
   try {
@@ -13,5 +14,34 @@ export const getAllPolicies = async (page: number, size: number) => {
     }
     console.error('Policy error:', error);
     return { data: null, error: error };
+  }
+};
+
+
+export const getPoliciesById = async (page: number, size: number) => {
+  try {
+    const session = await getSession(); 
+    console.log(session, 'session');
+    const employeeId = session?.user?.employeeId; 
+
+    if (!employeeId) {
+      throw new Error('Employee ID not found in session');
+    }
+
+    console.log(employeeId, 'employeeId');
+
+    const response = await axiosInstance.get(`policies/employee/${employeeId}`, {
+      params: { page, size, associations: true },
+    });
+
+    console.log(response, 'policies res');
+
+    return { data: response.data, error: null };
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return { data: null, error };
+    }
+    console.error('Policy error:', error);
+    return { data: null, error };
   }
 };
