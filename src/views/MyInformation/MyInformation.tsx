@@ -239,7 +239,9 @@ const MyInformation = () => {
       birthday: data.birthday,
       phoneNumber: data.phoneNumber,
       workPhone: data.workPhone,
-      reportingManagerId: data.reportingManagerId,
+      // don't send 0 to backend it gives error
+      reportingManagerId:
+        data.reportingManagerId === 0 ? undefined : data.reportingManagerId,
       employmentType: data.employmentType,
       location: {
         street1: data.location.street1,
@@ -250,7 +252,7 @@ const MyInformation = () => {
         state: data.location.state,
       },
     };
-
+    console.log('payload: ', payLoad);
     try {
       setEditLoading(true);
       // handle profile picture to get url from the upload picture

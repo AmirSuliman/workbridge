@@ -2,8 +2,9 @@
 import CreateAnnouncementTextEditor from '@/components/CustomEditor/CreateAnnouncementTextEditor';
 import axiosInstance from '@/lib/axios';
 import { announcementSchema } from '@/schemas/announcementSchema';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { FaEdit } from 'react-icons/fa';
@@ -18,6 +19,8 @@ const CreateAnnouncement = () => {
   const [body, setBody] = useState('');
   const [errors, setErrors] = useState<{ title?: string; body?: string }>({});
   const [isPreview, setIsPreview] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const router = useRouter();
 
   const validateFields = () => {
@@ -45,15 +48,63 @@ const CreateAnnouncement = () => {
     setIsPreview(false);
   };
 
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files) {
+        const file = event.target.files[0];
+
+        if (!file.type.startsWith('image/')) {
+          return toast.error('Only image files are allowed!');
+        }
+        setSelectedFile(file);
+        const blobUrl = URL.createObjectURL(file);
+        setPreviewUrl(blobUrl);
+      }
+    },
+    []
+  );
+
+  // Handle profile picture upload
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      toast.error('Please select a an image.');
+      return;
+    }
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    try {
+      const response = await axiosInstance.post('/file/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      const uploadedId = response.data.data.id;
+      console.log('Uploaded ID:', uploadedId);
+      setPreviewUrl(response.data.data.url);
+      return { uploadedId, error: null };
+    } catch (err) {
+      console.error(err);
+      return { error: err };
+    }
+  };
+
   const handleSubmit = async (status: 'Published' | 'Draft') => {
     if (!validateFields()) return; // Validate fields before submission
     try {
       setLoading(true);
+
+      let uploadResponse: { uploadedId?: string; error?: unknown } | null =
+        null;
+      if (selectedFile) {
+        uploadResponse = (await handleUpload()) || { error: null };
+      }
+      console.log('uploadResponse', uploadResponse);
       const payload = {
         title,
         body,
         status: status,
         type: announcementType,
+        fileId: uploadResponse?.uploadedId || null,
       };
       await axiosInstance.post('/announcement/', payload);
       toast.success(
@@ -113,6 +164,24 @@ const CreateAnnouncement = () => {
             className="text-gray-700"
             dangerouslySetInnerHTML={{ __html: body }}
           ></div>
+          {previewUrl && (
+            <div className="my-4 relative">
+              <button
+                onClick={() => setPreviewUrl(null)}
+                type="button"
+                className="absolute top-2 right-2 px-6 py-1 bg-white rounded-lg text-2xl"
+              >
+                x
+              </button>
+              <Image
+                width={300}
+                height={150}
+                src={previewUrl}
+                alt="Profile Preview"
+                className="w-full mx-auto max-h-[500px] rounded-lg border"
+              />
+            </div>
+          )}
         </div>
       ) : (
         <div>
@@ -135,11 +204,32 @@ const CreateAnnouncement = () => {
             <CreateAnnouncementTextEditor
               setAnnouncementType={setAnnouncementType}
               announcementType={announcementType}
+              handleFileChange={handleFileChange}
               setContent={setBody}
+              previewUrl={previewUrl}
               body={body}
             />
             {errors.body && (
               <p className="text-red-500 text-sm mt-2 px-8">{errors.body}</p>
+            )}
+
+            {previewUrl && (
+              <div className="p-4 relative">
+                <button
+                  onClick={() => setPreviewUrl(null)}
+                  type="button"
+                  className="absolute top-2 right-2 px-6 py-1 bg-white rounded-lg text-2xl"
+                >
+                  x
+                </button>
+                <Image
+                  width={300}
+                  height={150}
+                  src={previewUrl}
+                  alt="Profile Preview"
+                  className="w-full mx-auto max-h-[500px] rounded-lg border"
+                />
+              </div>
             )}
           </div>
 

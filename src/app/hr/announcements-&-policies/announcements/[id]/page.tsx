@@ -6,6 +6,7 @@ import PublishAnnouncement from '@/components/Announcements/PublishAnnouncement'
 import Button from '@/components/Button';
 import axiosInstance from '@/lib/axios';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
@@ -18,6 +19,9 @@ type AnnouncementDetail = {
   type: string;
   createdAt: string;
   createdBy: number;
+  file: {
+    url: string;
+  };
   creator: {
     id: number;
     firstName: string;
@@ -143,6 +147,15 @@ const AnnouncmentScreen = () => {
             className="prose max-w-none"
             dangerouslySetInnerHTML={{ __html: announcement?.body || '' }}
           />
+          {announcement?.file?.url && (
+            <Image
+              width={300}
+              height={150}
+              src={announcement?.file?.url}
+              alt="Profile Preview"
+              className="w-full mx-auto max-h-[500px] rounded-lg border"
+            />
+          )}
         </>
       )}
     </main>

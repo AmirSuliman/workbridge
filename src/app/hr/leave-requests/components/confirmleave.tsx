@@ -98,20 +98,6 @@ const ConfirmLeave = ({ timeOffRequestId, onConfirm, onClose }) => {
             readOnly={true}
           />
         </label>
-        <label className="w-full flex flex-col col-span-full cursor-pointer">
-          <span className="mb-1 text-gray-400 text-[12px]">
-            Add Confirmation Note
-          </span>
-          <textarea
-            placeholder=""
-            className="w-full p-4 rounded border outline-none border-gray-300 text-black "
-            rows={3}
-            value={note}
-            onChange={(e) => {
-              setNote(e.target.value);
-            }}
-          />
-        </label>
       </div>
 
       {/* Note */}
