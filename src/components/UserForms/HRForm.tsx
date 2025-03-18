@@ -25,7 +25,7 @@ type HRFormInputs = z.infer<typeof hrFormSchema>;
 const HRForm = ({ onClose }) => {
   const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.users);
-  const [reportingManagerId, setReportingManagerId] = useState<number | null>(null); // ✅ Track selected reporting manager
+  const [reportingManagerId, setReportingManagerId] = useState<number | null>(null); 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const { items } = useSelector((state: RootState) => state.userRoles.roles);
@@ -93,7 +93,7 @@ const HRForm = ({ onClose }) => {
   })) ?? [{ label: '', value: '' }];
 
   const onSubmit = async (data: HRFormInputs) => {
-    const selectedManagerId = watch('reportingManagerId'); // ✅ Get value from form state
+    const selectedManagerId = watch('reportingManagerId'); 
     if (!isManager && !selectedManagerId) {
       console.error("Reporting Manager ID is missing!");
       return;
@@ -102,7 +102,7 @@ const HRForm = ({ onClose }) => {
     const payload = {
       ...data,
       isManager,
-      reportingManagerId: watch('reportingManagerId') || null, // Always include selected value
+      reportingManagerId: watch('reportingManagerId') || null, 
     };
     
   
@@ -155,18 +155,19 @@ const HRForm = ({ onClose }) => {
             }}
           />
 
-          {Number(selectedRoleId) === 1 && (  
-            <div className="flex items-center col-span-2 mt-2 mb-3">
-              <input
-                type="checkbox"
-                id="isManager"
-                checked={isManager}
-                onChange={(e) => setIsManager(e.target.checked)} 
-                className="mr-2"
-              />
-              <label htmlFor="isManager" className="text-sm">Is Manager</label>
-            </div>
-          )}
+{(Number(selectedRoleId) === 1 || Number(selectedRoleId) === 2) && (  
+  <div className="flex items-center col-span-2 mt-2 mb-3">
+    <input
+      type="checkbox"
+      id="isManager"
+      checked={isManager}
+      onChange={(e) => setIsManager(e.target.checked)} 
+      className="mr-2"
+    />
+    <label htmlFor="isManager" className="text-sm">Is Manager</label>
+  </div>
+)}
+
         </div>
 
         <article className="w-full">

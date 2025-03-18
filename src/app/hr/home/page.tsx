@@ -106,9 +106,10 @@ const Page = () => {
         <Employeementreport />
       </div>
       <div className="flex flex-col gap-4 flex-1">
-        {isHR && evaluation.length > 0 && (
-          <Evaluation evaluation={evaluation} employeeId={employeeId} />
-        )}
+      {(isHR || isSuperadmin) && evaluation.length > 0 && (
+        <Evaluation evaluation={evaluation} employeeId={employeeId} />
+      )}
+      
         {isHR &&
           evaluation.length > 0 &&
           !evaluation.some((item) => item.status === 'In Progress') && (
