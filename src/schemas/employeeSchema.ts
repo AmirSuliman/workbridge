@@ -130,111 +130,6 @@ export const employeeSchema = z.object({
 });
 
 // --------------------------------------------------------------------------------------------
-export const putEmployeeSchema = z.object({
-  location: locationSchema,
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  email: z.string().email('Invalid email address'),
-  middleName: z.string().optional().nullable().or(z.literal('')),
-  tittle: z.string().min(1, 'Title is required'),
-  note: z.string().optional(),
-  hireDate: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in mm/dd/yyyy format')
-    .optional()
-    .or(z.literal(''))
-    .transform((val) => (val === '' ? undefined : val)),
-
-  birthday: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birth date must be in mm/dd/yyyy format')
-    .optional()
-    .or(z.literal(''))
-    .transform((val) => (val === '' ? undefined : val)),
-  phoneNumber: z
-    .string()
-    .trim()
-    .transform((val) => (val === '' ? undefined : Number(val)))
-    .refine((val) => val === undefined || !isNaN(val), {
-      message: 'Must be a valid number',
-    })
-    .refine((val) => val === undefined || val.toString().length >= 7, {
-      message: 'Phone number must be at least 7 digits',
-    })
-    .optional(),
-
-  workPhone: z
-    .string()
-    .trim()
-    .transform((val) => (val === '' ? undefined : Number(val)))
-    .refine((val) => val === undefined || !isNaN(val), {
-      message: 'Must be a valid number',
-    })
-    .refine((val) => val === undefined || val.toString().length >= 7, {
-      message: 'Work phone must be at least 7 digits',
-    })
-    .optional(),
-
-  departmentId: z.preprocess(
-    (val) => Number(val), // Convert string to number
-    z
-      .number({ message: 'Department is required' })
-      .min(1, 'Department is required')
-    // .optional()
-  ),
-
-  reportingManagerId: z.preprocess(
-    (val) => Number(val), // Convert string to number
-    z.number().min(1, 'Reporting manager is required')
-  ),
-  gender: z
-    .string({ message: 'Gender is required' })
-    // .min(1, 'Gender is required'),
-    .optional()
-    .nullable()
-    .or(z.literal('')),
-
-  marritialStatus: z
-    .string({ message: 'Marital status is required' })
-    // .min(1, 'Marital status is required'),
-    .optional()
-    .nullable()
-    .or(z.literal('')),
-
-  countryId: z.union([z.number().optional(), z.null()]).optional(),
-  isManager: z.boolean().optional(),
-  profilePictureUrl: z.union([z.string().optional(), z.null()]).optional(),
-  linkedin: z
-    .string()
-    .url('Invalid LinkedIn URL')
-    .optional()
-    .nullable()
-    .or(z.literal('')),
-  instagram: z
-    .string()
-    .url('Invalid Instagram URL')
-    .optional()
-    .nullable()
-    .or(z.literal('')),
-  website: z
-    .string()
-    .url('Invalid website URL')
-    .optional()
-    .nullable()
-    .or(z.literal('')),
-  facebook: z
-    .string()
-    .url('Invalid Facebook URL')
-    .optional()
-    .nullable()
-    .or(z.literal('')),
-  employmentType: z
-    .string({ message: 'Employment type is required' })
-    .min(1, 'Employment type is required'),
-  // .optional(),
-});
-
-// --------------------------------------------------------------------------------------------
 export const emergencyContactSchema = z.object({
   firstName: z
     .string()
@@ -276,3 +171,114 @@ export const emergencyContactSchema = z.object({
     state: z.string({ message: 'State is required' }).optional(),
   }),
 });
+
+export const getEmployeeSchema = (role, empId) => {
+  // console.log('schema role: ', role);
+  const baseSchema = z.object({
+    location: locationSchema,
+    firstName: z.string().min(1, 'First name is required'),
+    lastName: z.string().min(1, 'Last name is required'),
+    email: z.string().email('Invalid email address'),
+    middleName: z.string().optional().nullable().or(z.literal('')),
+    tittle: z.string().min(1, 'Title is required'),
+    note: z.string().optional(),
+    hireDate: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in mm/dd/yyyy format')
+      .optional()
+      .or(z.literal(''))
+      .transform((val) => (val === '' ? undefined : val)),
+    birthday: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birth date must be in mm/dd/yyyy format')
+      .optional()
+      .or(z.literal(''))
+      .transform((val) => (val === '' ? undefined : val)),
+    phoneNumber: z
+      .string()
+      .trim()
+      .transform((val) => (val === '' ? undefined : Number(val)))
+      .refine((val) => val === undefined || !isNaN(val), {
+        message: 'Must be a valid number',
+      })
+      .refine((val) => val === undefined || val.toString().length >= 7, {
+        message: 'Phone number must be at least 7 digits',
+      })
+      .optional(),
+    workPhone: z
+      .string()
+      .trim()
+      .transform((val) => (val === '' ? undefined : Number(val)))
+      .refine((val) => val === undefined || !isNaN(val), {
+        message: 'Must be a valid number',
+      })
+      .refine((val) => val === undefined || val.toString().length >= 7, {
+        message: 'Work phone must be at least 7 digits',
+      })
+      .optional(),
+    departmentId: z.preprocess(
+      (val) => Number(val), // Convert string to number
+      z
+        .number({ message: 'Department is required' })
+        .min(1, 'Department is required')
+    ),
+    // reportingManagerId will be conditionally added later
+    gender: z
+      .string({ message: 'Gender is required' })
+      .optional()
+      .nullable()
+      .or(z.literal('')),
+    marritialStatus: z
+      .string({ message: 'Marital status is required' })
+      .optional()
+      .nullable()
+      .or(z.literal('')),
+    countryId: z.union([z.number().optional(), z.null()]).optional(),
+    isManager: z.boolean().optional(),
+    profilePictureUrl: z.union([z.string().optional(), z.null()]).optional(),
+    linkedin: z
+      .string()
+      .url('Invalid LinkedIn URL')
+      .optional()
+      .nullable()
+      .or(z.literal('')),
+    instagram: z
+      .string()
+      .url('Invalid Instagram URL')
+      .optional()
+      .nullable()
+      .or(z.literal('')),
+    website: z
+      .string()
+      .url('Invalid website URL')
+      .optional()
+      .nullable()
+      .or(z.literal('')),
+    facebook: z
+      .string()
+      .url('Invalid Facebook URL')
+      .optional()
+      .nullable()
+      .or(z.literal('')),
+    employmentType: z
+      .string({ message: 'Employment type is required' })
+      .min(1, 'Employment type is required'),
+  });
+
+  // Add reportingManagerId field with appropriate validation based on role
+  if (role === 'SuperAdmin' && !empId) {
+    return baseSchema.extend({
+      reportingManagerId: z.preprocess(
+        (val) => (val === '' || val === undefined ? undefined : Number(val)),
+        z.number().optional()
+      ),
+    });
+  } else {
+    return baseSchema.extend({
+      reportingManagerId: z.preprocess(
+        (val) => Number(val),
+        z.number().min(1, 'Reporting manager is required')
+      ),
+    });
+  }
+};

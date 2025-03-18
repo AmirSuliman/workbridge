@@ -3,7 +3,6 @@ import ProfileCard from '@/components/common/ProfileCard';
 import ScreenLoader from '@/components/common/ScreenLoader';
 import TabButton from '@/components/common/TabsComponent/TabButton';
 import TabComponent from '@/components/common/TabsComponent/TabComponent';
-import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
 import DocumentSection from '@/components/UserInformation/DocumentSection';
 import EmergencySection from '@/components/UserInformation/EmergencySection';
 import EmploymentSection from '@/components/UserInformation/EmploymentSection';
@@ -12,7 +11,7 @@ import PaymentSection from '@/components/UserInformation/PaymentSection';
 import TimeOffSection from '@/components/UserInformation/TimeOffSection';
 import UserInfoSection from '@/components/UserInformation/UserInfoSection';
 import axiosInstance from '@/lib/axios';
-import { putEmployeeSchema } from '@/schemas/employeeSchema';
+import { getEmployeeSchema } from '@/schemas/employeeSchema';
 import {
   clearEmployeeData,
   fetchEmployeeData,
@@ -28,7 +27,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FieldErrors, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -93,6 +92,10 @@ const MyInformation = () => {
     workPhone: employeeData?.workPhone || '',
   };
 
+  // conditionaly get schema
+  // if role is superadmin and emplId is not coming from the searchParams
+  // then make the reporignManagerId required
+  const putEmployeeSchema = getEmployeeSchema(role, empId);
   const {
     reset,
     control,

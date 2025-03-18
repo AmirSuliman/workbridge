@@ -25,6 +25,7 @@ interface TimeOffItem {
   returningDay: string;
   type: string;
   status: string;
+  note: string;
   employee: Employee;
   user: {
     firstName: string;
@@ -115,17 +116,6 @@ const TimeOffSection = ({ employeeData }) => {
 
     fetchTimeOffData();
   }, []);
-
-  // const handleEditClick = (item) => {
-  //   setSelectedTimeOff(item);
-  //   setLeaveDate(new Date(item.leaveDay).toISOString().split('T')[0]);
-  //   setReturningDate(new Date(item.returningDay).toISOString().split('T')[0]);
-  //   calculateDuration(
-  //     new Date(item.leaveDay).toISOString(),
-  //     new Date(item.returningDay).toISOString()
-  //   );
-  //   setIsModalOpen(true);
-  // };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -241,7 +231,7 @@ const TimeOffSection = ({ employeeData }) => {
           <p className="text-red-500">{error}</p>
         ) : (
           <InfoGrid
-            headers={['Type', 'Date From', 'Date To', 'Approved By']}
+            headers={['Type', 'Date From', 'Date To', 'Approved By', 'Notes']}
             values={timeOffData
               .filter((timeoff, index) => timeoff.status !== 'Pending')
               .map((item, index) => [
@@ -264,6 +254,7 @@ const TimeOffSection = ({ employeeData }) => {
                 `${item?.user.firstName || 'N/A'} ${
                   item?.user.lastName || 'N/A'
                 }`.trim(),
+                `${item.note || 'N/A'}`,
               ])}
           />
         )}
