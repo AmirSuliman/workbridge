@@ -22,19 +22,19 @@ import imageLoader from '../../../../../../imageLoader';
 const CreatePolicy = () => {
   const [loading, setLoading] = useState(false);
   const [isPreview, setIsPreview] = useState(false);
-  const [openPolicyModa, setOpenPolicyMoad] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  let [fileId, setFileId] = useState(null);
+  const [fileId, setFileId] = useState<string | null>(null);
+  const [selectedAttachment, setSelectedAttachment] = useState<File | null>(null);
+  const [attachmentId, setAttachmentId] = useState<string | null>(null);
+  const [myId, setMyId] = useState<string | null>(null);
+  const [openPolicyModa, setOpenPolicyMoad] = useState(false);
 
   const router = useRouter();
   const { data: session } = useSession();
-  console.log(session, 'session');
   const dispatch = useDispatch<AppDispatch>();
-  useSelector((state: RootState) => state.myInfo);
-  const [myId, setMyId] = useState(null);
 
-  // Fetch user data (and set myId) from your backend using the access token.
+  // Fetch user data and set myId
   useEffect(() => {
     const fetchMyId = async () => {
       if (session?.user?.accessToken) {
@@ -43,11 +43,9 @@ const CreatePolicy = () => {
             headers: { Authorization: `Bearer ${session.user.accessToken}` },
           });
           const userId = response.data.data?.id;
-          console.log(userId, 'id');
           setMyId(userId);
           dispatch(setUser(response.data.data));
         } catch (error) {
-          console.error('Error fetching user data:', error);
           toast.error('Failed to load user data!');
         }
       } else {
@@ -57,34 +55,27 @@ const CreatePolicy = () => {
     fetchMyId();
   }, [dispatch, session?.user?.accessToken]);
 
-  // Initialize the form with default values
-  const {
-    control,
-    handleSubmit,
-    watch,
-    register,
-    reset,
-    formState: { errors },
-  } = useForm({
+  // Initialize form with default values
+  const { control, handleSubmit, watch, register, reset, formState: { errors } } = useForm({
     defaultValues: {
       type: '',
       title: '',
       status: '',
       fileId: fileId,
       uploadBy: myId,
-      description: '', // description field default value
+      description: '', // description default value
       effectiveDate: '',
+      attachmentId: attachmentId,
     },
   });
 
-  // Watch form fields (including description)
+  // Watch form fields
   const type = watch('type');
   const title = watch('title');
   const status = watch('status');
-  const description = watch('description'); // get description from the form
+  const description = watch('description');
   const effectiveDate = watch('effectiveDate');
 
-  // Construct preview data from the form
   const previewData = {
     type,
     title,
@@ -93,17 +84,25 @@ const CreatePolicy = () => {
     previewUrl,
     effectiveDate,
     uploadBy: myId,
-    description, // description from form state
+    description,
+    attachment: selectedAttachment
+      ? {
+          file: {
+            name: selectedAttachment.name,
+            url: URL.createObjectURL(selectedAttachment), // Create preview URL
+          },
+        }
+      : null, // Ensure null if no attachment is selected
   };
+  
 
   // Handle image selection and preview
   const handleFileChange = (event) => {
     if (event.target.files) {
       const file = event.target.files[0];
-      // const fileType = file.type;
       if (!file.type.startsWith('image/')) {
-        console.log('Selected file type: ', file.type);
-        return toast.error('Only image files are allowed!');
+        toast.error('Only image files are allowed!');
+        return;
       }
       setSelectedFile(file);
       const blobUrl = URL.createObjectURL(file);
@@ -111,79 +110,109 @@ const CreatePolicy = () => {
     }
   };
 
-  // Handle file upload
+  // Handle image file upload
   const handleUpload = async () => {
+    if (!selectedFile) return null;
     const formData = new FormData();
-    formData.append('file', selectedFile || '');
+    formData.append('file', selectedFile);
     try {
       const response = await axiosInstance.post('/file/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      const uploadedUrl = response.data.data.url;
       setFileId(response.data.data.id);
-      setPreviewUrl(uploadedUrl);
+      setPreviewUrl(response.data.data.url);
       return response.data.data.id;
     } catch (err) {
-      console.error(err);
+      toast.error('Failed to upload image');
       return null;
     }
   };
 
-  // Save draft – description is included in ...data (form payload)
+  // Handle attachment selection
+  const handleAttachmentChange = (event) => {
+    const file = event.target.files?.[0];
+    if (file && !file.type.startsWith('image/')) {
+      setSelectedAttachment(file);
+    } else {
+      toast.error('Please upload non-image files as attachments!');
+    }
+  };
+
+  // Handle attachment file upload
+  const handleAttachmentUpload = async () => {
+    if (!selectedAttachment) return null;
+    const formData = new FormData();
+    formData.append('file', selectedAttachment);
+    try {
+      const response = await axiosInstance.post('/file/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setAttachmentId(response.data.data.id);
+      return response.data.data.id;
+    } catch (err) {
+      toast.error('Failed to upload attachment');
+      return null;
+    }
+  };
+
+  // Save draft
   const handleSaveDraft = async (data) => {
-    let uploadedFileId = null;
     try {
       setLoading(true);
-      if (previewUrl && selectedFile) {
-        uploadedFileId = await handleUpload();
-      }
+      let uploadedFileId = null;
+      let uploadedAttachmentId = null;
+
+      if (selectedFile) uploadedFileId = await handleUpload();
+      if (selectedAttachment) uploadedAttachmentId = await handleAttachmentUpload();
+
       const payload = {
         ...data,
         fileId: uploadedFileId,
+        attachmentId: uploadedAttachmentId,
         status: 'Draft',
         uploadBy: myId,
       };
+
       await axiosInstance.post('/policy/', payload);
       toast.success('Draft saved successfully!');
     } catch (error) {
-      console.error('Error saving draft:', error);
-      toast.error('An error occurred while saving the draft.');
+      toast.error('Error saving draft');
     } finally {
       setLoading(false);
     }
   };
 
-  // Publish policy – description is part of the payload
+  // Publish policy
   const handlePublish = async (data) => {
-    let uploadedFileId = null;
     try {
       setLoading(true);
-      if (previewUrl && selectedFile) {
-        uploadedFileId = await handleUpload();
-      }
+      let uploadedFileId = null;
+      let uploadedAttachmentId = null;
+
+      if (selectedFile) uploadedFileId = await handleUpload();
+      if (selectedAttachment) uploadedAttachmentId = await handleAttachmentUpload();
+
       const payload = {
         ...data,
+        fileId: uploadedFileId,
+        attachmentId: uploadedAttachmentId,
         status: 'Published',
         uploadBy: myId,
-        fileId: uploadedFileId,
       };
+
       const postedPolicy = await dispatch(publishPolicy(payload)).unwrap();
-      if (postedPolicy.id !== null) {
+      if (postedPolicy.id) {
         sessionStorage.setItem('policy', postedPolicy.id.toString());
       }
       return postedPolicy.id;
     } catch (error) {
-      console.error('Error publishing policy:', error);
-      if (axios.isAxiosError(error) && error.response) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error('An unexpected error occurred.');
-      }
+      toast.error('Error publishing policy');
     } finally {
       setLoading(false);
     }
   };
 
+  // Form submission handlers
   const handlePreviewPost = () => {
     setIsPreview(true);
   };
@@ -377,45 +406,80 @@ const CreatePolicy = () => {
             <div className="w-full h-[1.5px] bg-gray-300 mt-12 mb-8" />
             {/* Image Upload / Preview */}
             {!previewUrl ? (
-              <div>
-                <label
-                  htmlFor="policyImg"
-                  className="cursor-pointer flex flex-col gap-1 text-gray-400 mb-8 max-w-xs"
-                >
-                  Upload image (Optional)
-                  <div className="px-6 py-3 bg-black rounded-md flex gap-2 items-center justify-between text-white">
-                    Upload Image
-                    <HiOutlineUpload />
-                  </div>
-                  <input
-                    onChange={handleFileChange}
-                    type="file"
-                    accept="image/*"
-                    name="fileId"
-                    id="policyImg"
-                    className="hidden"
-                  />
-                </label>
-              </div>
-            ) : (
-              <div className="my-4 relative">
-                <button
-                  onClick={() => setPreviewUrl(null)}
-                  type="button"
-                  className="absolute top-2 right-2 px-6 py-1 bg-white rounded-lg text-2xl"
-                >
-                  x
-                </button>
-                <Image
-                  loader={imageLoader}
-                  width={300}
-                  height={150}
-                  src={previewUrl}
-                  alt="Profile Preview"
-                  className="w-full mx-auto max-h-[500px] rounded-lg border"
-                />
-              </div>
-            )}
+  <div>
+    <label
+      htmlFor="policyImg"
+      className="cursor-pointer flex flex-col gap-1 text-gray-400 mb-8 max-w-xs"
+    >
+      Upload Image (Optional)
+      <div className="px-6 py-3 bg-black rounded-md flex gap-2 items-center justify-between text-white">
+        Upload Image
+        <HiOutlineUpload />
+      </div>
+      <input
+        onChange={handleFileChange}
+        type="file"
+        accept="image/*"
+        name="fileId"
+        id="policyImg"
+        className="hidden"
+      />
+    </label>
+  </div>
+) : (
+  <div className="my-4 relative">
+    <button
+      onClick={() => setPreviewUrl(null)}
+      type="button"
+      className="absolute top-2 right-2 px-6 py-1 bg-white rounded-lg text-2xl"
+    >
+      x
+    </button>
+    <Image
+      loader={imageLoader}
+      width={300}
+      height={150}
+      src={previewUrl}
+      alt="Profile Preview"
+      className="w-full mx-auto max-h-[500px] rounded-lg border"
+    />
+  </div>
+)}
+
+{!selectedAttachment ? (
+  <div>
+    <label
+      htmlFor="policyAttachment"
+      className="cursor-pointer flex flex-col gap-1 text-gray-400 mb-8 max-w-xs"
+    >
+      Upload Attachment (Optional)
+      <div className="px-6 py-3 bg-black rounded-md flex gap-2 items-center justify-between text-white">
+        Upload Attachment
+        <HiOutlineUpload />
+      </div>
+      <input
+        onChange={handleAttachmentChange}
+        type="file"
+        accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt"
+        name="attachmentId"
+        id="policyAttachment"
+        className="hidden"
+      />
+    </label>
+  </div>
+) : (
+  <div className="my-4 relative">
+    <button
+      onClick={() => setSelectedAttachment(null)}
+      type="button"
+      className="absolute top-2 right-2 px-6 py-1 bg-white rounded-lg text-2xl"
+    >
+      x
+    </button>
+    <p className="text-center text-gray-600">{selectedAttachment.name}</p>
+  </div>
+)}
+
             {/* Policy Description */}
             <h1 className="text-[18px] font-medium">Policy Description</h1>
             <label className="flex flex-col gap-2 mt-8">

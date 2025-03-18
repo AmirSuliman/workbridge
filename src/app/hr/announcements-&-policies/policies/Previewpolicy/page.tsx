@@ -2,6 +2,7 @@
 import Modal from '@/components/modal/Modal';
 import { useState } from 'react';
 import Workfromhome from '../components/PreviewPolicy';
+
 const Previewpolicy = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 

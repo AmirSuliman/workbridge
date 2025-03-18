@@ -2,6 +2,7 @@
 export interface Policy {
   id: number | null;
   type: string;
+  attachmentId?: string | null; // ✅ Add this
   title: string;
   fileId: number | null;
   status: string;

@@ -3,7 +3,6 @@ import CustomTextEditor from '@/components/CustomEditor/CustomTextEditor';
 import axiosInstance from '@/lib/axios';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
-
 import { getPolicy } from '@/services/getPolicy';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { AppDispatch, RootState } from '@/store/store';
@@ -30,6 +29,11 @@ const Addnewpolicies = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
+  const [attachment, setAttachment] = useState<{ id: string | null; url: string | null }>({
+    id: null,
+    url: null,
+  });
+  const [selectedAttachment, setSelectedAttachment] = useState<File | null>(null);
 
   const dispatch = useDispatch<AppDispatch>();
   useSelector((state: RootState) => state.myInfo);
@@ -41,6 +45,7 @@ const Addnewpolicies = () => {
     title: '',
     status: '',
     fileId: null,
+    attachmentId:null,
     previewUrl: null,
     description: '',
     effectiveDate: '',
@@ -116,7 +121,9 @@ const Addnewpolicies = () => {
     effectiveDate: policyData?.effectiveDate
       ? new Date(policyData?.effectiveDate).toISOString().split('T')[0]
       : '',
+      attachmentId: policyData?.attachmentId || attachment.id, 
   };
+  
 
   const {
     control,
@@ -177,24 +184,66 @@ const Addnewpolicies = () => {
     }
   };
 
+   const handleAttachmentChange = (event) => {
+      const file = event.target.files?.[0];
+      if (file && !file.type.startsWith('image/')) {
+        setSelectedAttachment(file);
+      } else {
+        toast.error('Please upload non-image files as attachments!');
+      }
+    };
+
+  const handleAttachmentUpload = async () => {
+    if (!selectedAttachment) return null;
+  
+    const formData = new FormData();
+    formData.append('file', selectedAttachment);
+  
+    try {
+      const response = await axiosInstance.post('/file/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+  
+      const uploadedAttachment = response.data.data;
+      setAttachment({
+        id: uploadedAttachment.id,
+        url: uploadedAttachment.url,
+      });
+  
+      return uploadedAttachment;
+    } catch (err) {
+      console.error('Attachment upload failed:', err);
+      toast.error('Attachment upload failed. Please try again.');
+      return null;
+    }
+  };
+  
+
   const handleSaveDraft = async (data) => {
     try {
       setLoading(true);
-      let uploadedFileId = fileId || policyData.fileId; // Use existing fileId if available
-
-      // Upload only if a new file is selected
+  
+      let uploadedFileId = fileId || policyData.fileId;
+      let uploadedAttachment = attachment || (policyData.attachmentId ? { id: policyData.attachmentId, url: null } : null);
+  
       if (selectedFile) {
         uploadedFileId = await handleUpload();
       }
-
+  
+      if (selectedAttachment) {
+        uploadedAttachment = await handleAttachmentUpload();
+      }
+  
       const payload = {
         ...data,
-        fileId: uploadedFileId, // Ensure correct fileId is sent
+        fileId: uploadedFileId,
+        attachmentId: uploadedAttachment ? uploadedAttachment.id : null,
+        attachmentUrl: uploadedAttachment ? uploadedAttachment.url : null,
         status: 'Draft',
       };
-
-      const response = await axiosInstance.put(`/policy/${id}`, payload);
-      console.log('put policy res: ', response.data);
+      
+  
+      await axiosInstance.put(`/policy/${id}`, payload);
       toast.success('Draft saved successfully!');
       router.back();
     } catch (error) {
@@ -204,30 +253,38 @@ const Addnewpolicies = () => {
       setLoading(false);
     }
   };
-
+  
   const handlePublish = async (data) => {
     try {
       setLoading(true);
-      let uploadedFileId = fileId || policyData.fileId; // Use existing fileId if available
-
-      // Upload only if a new file is selected
+  
+      let uploadedFileId = fileId || policyData.fileId;
+      let uploadedAttachment = attachment || (policyData.attachmentId ? { id: policyData.attachmentId, url: null } : null);
+  
       if (selectedFile) {
         uploadedFileId = await handleUpload();
       }
-
+  
+      if (selectedAttachment) {
+        uploadedAttachment = await handleAttachmentUpload();
+      }
+  
       const payload = {
         ...data,
+        fileId: uploadedFileId,
+        attachmentId: uploadedAttachment?.id || null,
+        attachmentUrl: uploadedAttachment?.url || null,
         status: 'Published',
         uploadBy: myId,
-        fileId: uploadedFileId, // Ensure correct fileId is sent
       };
-
+  
       const response = await axiosInstance.put(`/policy/${id}`, payload);
       console.log('put policy res: ', response.data);
+  
       if (id) {
         sessionStorage.setItem('policy', id);
       }
-
+  
       toast.success('Policy published successfully!');
       reset();
       return response.data.id;
@@ -238,7 +295,7 @@ const Addnewpolicies = () => {
       setLoading(false);
     }
   };
-
+  
   const handlePreviewPost = () => {
     setIsPreview(true);
   };
@@ -469,6 +526,49 @@ const Addnewpolicies = () => {
                 </label>
               </div>
             )}
+
+{attachment.url ? (
+  <div className="my-4 relative">
+    <button
+      onClick={() => setAttachment({ id: null, url: null })}
+      type="button"
+      className="absolute top-2 right-2 px-6 py-1 bg-white rounded-lg text-2xl"
+    >
+      x
+    </button>
+    <a
+      href={attachment.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block p-4 bg-gray-100 border rounded-lg"
+    >
+      View Attachment
+    </a>
+  </div>
+) : (
+  <div>
+    <label
+      htmlFor="policyAttachment"
+      className="cursor-pointer flex flex-col gap-1 text-gray-400 mb-8 max-w-xs"
+    >
+      Upload Attachment (Optional)
+      <div className="px-6 py-3 bg-black rounded-md flex gap-2 items-center justify-between text-white">
+        Upload File
+        <HiOutlineUpload />
+      </div>
+      <input
+        onChange={handleAttachmentChange}
+        type="file"
+        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+        name="attachmentId"
+        id="policyAttachment"
+        className="hidden"
+      />
+    </label>
+  </div>
+)}
+
+
 
             <h1 className="text-[18px] font-medium">Policy Description</h1>
             <label className="flex flex-col gap-2 mt-8">
