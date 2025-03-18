@@ -67,30 +67,32 @@ const ViewPolicy = ({ previewData }) => {
         <div className="mt-8 p-4">
           <h2 className="text-[22px] font-semibold mb-2">{previewData?.policy?.title}</h2>
 
-          {previewData.file?.url && (
+          {previewData?.policy?.file?.url && (
             <Image
-              src={previewData.file.url}
-              alt="policy"
+              src={previewData.policy.file.url}
+              alt="Policy File"
               width={1200}
               height={20}
               className="my-6"
             />
           )}
-{previewData?.attachment?.file?.url ? (
-  <div className="mt-4">
-    <p className="text-[16px] font-semibold">Attachment:</p>
-    <a
-      href={previewData.attachment.file.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-blue-600 underline"
-    >
-      {previewData.attachment.file.name || 'Download Attachment'}
-    </a>
-  </div>
-) : (
-  <p className="text-gray-500"></p>
-)}
+
+          {/* Display Attachment */}
+          {previewData?.policy?.attachment?.url ? (
+            <div className="mt-4">
+              <p className="text-[16px] font-semibold">Attachment:</p>
+              <a
+                href={previewData.policy.attachment.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline"
+              >
+                {previewData.policy.attachment.fileName || 'Download Attachment'}
+              </a>
+            </div>
+          ) : (
+            <p className="text-gray-500"></p>
+          )}
           {previewData?.policy?.description && (
             <div
               className="text-black"

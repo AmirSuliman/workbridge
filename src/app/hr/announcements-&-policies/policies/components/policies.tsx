@@ -39,12 +39,12 @@ const Policies = () => {
 
   const filterPolicies = (status: 'Draft' | 'Published') => {
     const filtered = policies.filter((policy) => policy.status === status);
-    setFilteredPolicies(filtered); // Update the filtered policies
+    setFilteredPolicies(filtered); 
   };
 
   const handleFilterClick = (status: 'Draft' | 'Published') => {
-    setActiveFilter(status); // Set the active filter
-    filterPolicies(status); // Filter the policies by the selected status
+    setActiveFilter(status);
+    filterPolicies(status); 
   };
 
   console.log('Filtered Policies: ', filteredPolicies);

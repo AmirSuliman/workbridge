@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import axiosInstance from '@/lib/axios';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+
 const PreviewPolicy = ({ previewData }) => {
   const { data: session } = useSession();
   const { policyId } = useParams(); 
@@ -79,21 +80,23 @@ const PreviewPolicy = ({ previewData }) => {
               className="my-6"
             />
           )}
-{previewData?.attachment?.file?.url ? (
+{previewData?.attachment?.url ? (
   <div className="mt-4">
     <p className="text-[16px] font-semibold">Attachment:</p>
     <a
-      href={previewData.attachment.file.url}
+      href={previewData.attachment.url}
       target="_blank"
       rel="noopener noreferrer"
       className="text-blue-600 underline"
     >
-      {previewData.attachment.file.name || 'Download Attachment'}
+      {previewData.attachment.fileName || 'Download Attachment'}
     </a>
   </div>
 ) : (
-  <p className="text-gray-500"></p>
+  <p className="text-gray-500">No attachment available</p>
 )}
+
+
           {previewData.description && (
             <div
               className="text-black"
