@@ -14,7 +14,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { TbEdit } from 'react-icons/tb';
@@ -100,6 +100,14 @@ const CreateEmployee = () => {
     formState: { errors },
   } = formMethods;
 
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      toast.error(
+        'Some input fields are missing in Personal or Employment tab!'
+      );
+    }
+  }, [errors]);
+
   const onSubmit = async (data) => {
     // console.log('onsubmit data: ', data);
     const payLoad = {
@@ -170,6 +178,24 @@ const CreateEmployee = () => {
     }
   };
 
+  // Check if schemaErrors exist for each tab
+  const hasPersonalErrors = errors
+    ? Object.keys(errors).some((key) => personalTabValidation.includes(key))
+    : false;
+
+  const hasEmploymentErrors = errors
+    ? Object.keys(errors).some((key) => employmentTabValidation.includes(key))
+    : false;
+
+  useEffect(() => {
+    if (hasPersonalErrors) {
+      toast.error('Some input fields are missing in the Personal tab!');
+    }
+    if (hasEmploymentErrors) {
+      toast.error('Some input fields are missing in the Employment tab!');
+    }
+  }, [hasPersonalErrors, hasEmploymentErrors]);
+
   console.log('Form errors: ', errors);
 
   return (
@@ -193,25 +219,13 @@ const CreateEmployee = () => {
         <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
           <TabButton
             isRootTab={true}
-            className={
-              errors &&
-              Object.keys(errors).some((key) =>
-                personalTabValidation.includes(key)
-              )
-                ? `!border-red-500 text-red-500`
-                : ''
-            }
+            className={hasPersonalErrors ? `!border-red-500 text-red-500` : ''}
             name="Basic Information"
             href={`/hr/employees/create-employee?tab=0`}
           />
           <TabButton
             className={
-              errors &&
-              Object.keys(errors).some((key) =>
-                employmentTabValidation.includes(key)
-              )
-                ? `!border-red-500 text-red-500`
-                : ''
+              hasEmploymentErrors ? `!border-red-500 text-red-500` : ''
             }
             name="Employment"
             href={`/hr/employees/create-employee?tab=1`}

@@ -9,6 +9,7 @@ export const employmentTabValidation = [
 
 export const personalTabValidation = [
   'email',
+  'gender',
   'website',
   'location',
   'birthday',
@@ -19,4 +20,5 @@ export const personalTabValidation = [
   'countryId',
   'firstName',
   'instagram',
+  'marritialStatus',
 ];

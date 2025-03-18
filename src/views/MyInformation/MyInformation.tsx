@@ -300,6 +300,28 @@ const MyInformation = () => {
     }
   };
 
+  // Check if schemaErrors exist for each tab
+  const hasPersonalErrors = schemaErrors
+    ? Object.keys(schemaErrors).some((key) =>
+        personalTabValidation.includes(key)
+      )
+    : false;
+
+  const hasEmploymentErrors = schemaErrors
+    ? Object.keys(schemaErrors).some((key) =>
+        employmentTabValidation.includes(key)
+      )
+    : false;
+
+  useEffect(() => {
+    if (hasPersonalErrors) {
+      toast.error('Some input fields are missing in the Personal tab!');
+    }
+    if (hasEmploymentErrors) {
+      toast.error('Some input fields are missing in the Employment tab!');
+    }
+  }, [hasPersonalErrors, hasEmploymentErrors]);
+
   if (loading || myInfoLoading) {
     return (
       <div className="p-4">
@@ -316,155 +338,140 @@ const MyInformation = () => {
     return <div className="p-4">No data available.</div>;
   }
   console.log('Form errors: ', schemaErrors);
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={`p-4 h-full`}>
+    <form onSubmit={handleSubmit(onSubmit)} className={`my-1 p-4 h-full`}>
       <ProfileCard
         setEditEmployee={setEditEmployee}
         editEmployee={editEmployee}
         employeeData={employeeData}
         loading={editLoading}
       />
-      <TabsContainer containerClasses="my-1 pb-2 md:pb-4">
-        <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
-          <TabButton
-            isRootTab={true}
-            className={
-              schemaErrors &&
-              Object.keys(schemaErrors).some((key) =>
-                personalTabValidation.includes(key)
-              )
-                ? `!border-red-500 text-red-500`
-                : ''
-            }
-            name="Personal"
-            href={`${
-              empId
-                ? `/${
-                    isUserPanel ? 'user' : 'hr'
-                  }/employees/employee-info/${empId}?tab=0`
-                : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=0`
-            }`}
-          />
-          <TabButton
-            className={
-              schemaErrors &&
-              Object.keys(schemaErrors).some((key) =>
-                employmentTabValidation.includes(key)
-              )
-                ? `!border-red-500 text-red-500`
-                : ''
-            }
-            name="Employment"
-            href={`${
-              empId
-                ? `/${
-                    isUserPanel ? 'user' : 'hr'
-                  }/employees/employee-info/${empId}?tab=1`
-                : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=1`
-            }`}
-          />
+      <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
+        <TabButton
+          isRootTab={true}
+          className={hasPersonalErrors ? `!border-red-500 text-red-500` : ''}
+          name="Personal"
+          href={`${
+            empId
+              ? `/${
+                  isUserPanel ? 'user' : 'hr'
+                }/employees/employee-info/${empId}?tab=0`
+              : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=0`
+          }`}
+        />
+        <TabButton
+          className={hasEmploymentErrors ? `!border-red-500 text-red-500` : ''}
+          name="Employment"
+          href={`${
+            empId
+              ? `/${
+                  isUserPanel ? 'user' : 'hr'
+                }/employees/employee-info/${empId}?tab=1`
+              : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=1`
+          }`}
+        />
 
-          {/* If we are editing a user info then hide the following tabs */}
-          {!editEmployee && (
-            <>
-              <TabButton
-                name="Time Off"
-                href={`${
-                  empId
-                    ? `/${
-                        isUserPanel ? 'user' : 'hr'
-                      }/employees/employee-info/${empId}?tab=2`
-                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=2`
-                }`}
-              />
-              <TabButton
-                name="Documents"
-                href={`${
-                  empId
-                    ? `/${
-                        isUserPanel ? 'user' : 'hr'
-                      }/employees/employee-info/${empId}?tab=3`
-                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=3`
-                }`}
-              />
-              <TabButton
-                name="Emergency"
-                href={`${
-                  empId
-                    ? `/${
-                        isUserPanel ? 'user' : 'hr'
-                      }/employees/employee-info/${empId}?tab=4`
-                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=4`
-                }`}
-              />
-              <TabButton
-                name="Notes"
-                href={`${
-                  empId
-                    ? `/${
-                        isUserPanel ? 'user' : 'hr'
-                      }/employees/employee-info/${empId}?tab=5`
-                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=5`
-                }`}
-              />
-
-              {/* Superadmin can see all user's payments. Other users can see only thier own payments */}
-
-              {(role === 'SuperAdmin' || !empId) && (
-                <TabButton
-                  name="Payments"
-                  href={`${
-                    empId
-                      ? `/${
-                          isUserPanel ? 'user' : 'hr'
-                        }/employees/employee-info/${empId}?tab=6`
-                      : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=6`
-                  }`}
-                />
-              )}
-            </>
-          )}
-        </div>
-        <div>
-          <TabComponent index="0" isRootTab={true}>
-            <UserInfoSection
-              control={control}
-              register={register}
-              errors={schemaErrors}
-              previewUrl={previewUrl}
-              editEmployee={editEmployee}
-              handleFileChange={handleFileChange}
+        {/* If we are editing a user info then hide the following tabs */}
+        {!editEmployee && (
+          <>
+            <TabButton
+              name="Time Off"
+              href={`${
+                empId
+                  ? `/${
+                      isUserPanel ? 'user' : 'hr'
+                    }/employees/employee-info/${empId}?tab=2`
+                  : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=2`
+              }`}
             />
-          </TabComponent>
-          <TabComponent index="1">
-            <EmploymentSection
-              register={register}
-              resetField={resetField}
-              errors={schemaErrors}
-              editEmployee={editEmployee}
-              employeeData={employeeData}
+            <TabButton
+              name="Documents"
+              href={`${
+                empId
+                  ? `/${
+                      isUserPanel ? 'user' : 'hr'
+                    }/employees/employee-info/${empId}?tab=3`
+                  : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=3`
+              }`}
             />
+            <TabButton
+              name="Emergency"
+              href={`${
+                empId
+                  ? `/${
+                      isUserPanel ? 'user' : 'hr'
+                    }/employees/employee-info/${empId}?tab=4`
+                  : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=4`
+              }`}
+            />
+            <TabButton
+              name="Notes"
+              href={`${
+                empId
+                  ? `/${
+                      isUserPanel ? 'user' : 'hr'
+                    }/employees/employee-info/${empId}?tab=5`
+                  : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=5`
+              }`}
+            />
+
+            {/* Superadmin can see all user's payments. Other users can see only thier own payments */}
+
+            {(role === 'SuperAdmin' || !empId) && (
+              <TabButton
+                name="Payments"
+                href={`${
+                  empId
+                    ? `/${
+                        isUserPanel ? 'user' : 'hr'
+                      }/employees/employee-info/${empId}?tab=6`
+                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=6`
+                }`}
+              />
+            )}
+          </>
+        )}
+      </div>
+      <div>
+        <TabComponent index="0" isRootTab={true}>
+          <UserInfoSection
+            control={control}
+            register={register}
+            errors={schemaErrors}
+            previewUrl={previewUrl}
+            editEmployee={editEmployee}
+            handleFileChange={handleFileChange}
+          />
+        </TabComponent>
+        <TabComponent index="1">
+          <EmploymentSection
+            register={register}
+            resetField={resetField}
+            errors={schemaErrors}
+            editEmployee={editEmployee}
+            employeeData={employeeData}
+          />
+        </TabComponent>
+        <TabComponent index="2">
+          <TimeOffSection employeeData={employeeData} />
+        </TabComponent>
+        <TabComponent index="3">
+          <DocumentSection employeeData={employeeData} />
+        </TabComponent>
+        <TabComponent index="4">
+          <EmergencySection employeeData={employeeData} />
+        </TabComponent>
+        <TabComponent index="5">
+          <NotesSection employeeId={empId || myId} />
+        </TabComponent>
+        {/* Superadmin can see all user's payments. Other users can see only thier own payments */}
+        {(role === 'SuperAdmin' || !empId) && (
+          <TabComponent index="6">
+            <PaymentSection employeeId={empId || myId} />
           </TabComponent>
-          <TabComponent index="2">
-            <TimeOffSection employeeData={employeeData} />
-          </TabComponent>
-          <TabComponent index="3">
-            <DocumentSection employeeData={employeeData} />
-          </TabComponent>
-          <TabComponent index="4">
-            <EmergencySection employeeData={employeeData} />
-          </TabComponent>
-          <TabComponent index="5">
-            <NotesSection employeeId={empId || myId} />
-          </TabComponent>
-          {/* Superadmin can see all user's payments. Other users can see only thier own payments */}
-          {(role === 'SuperAdmin' || !empId) && (
-            <TabComponent index="6">
-              <PaymentSection employeeId={empId || myId} />
-            </TabComponent>
-          )}
-        </div>
-      </TabsContainer>
+        )}
+      </div>
     </form>
   );
 };

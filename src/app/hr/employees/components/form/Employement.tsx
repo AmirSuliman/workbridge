@@ -12,6 +12,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
   const router = useRouter();
 
   const {
+    watch,
     register,
     resetField,
     formState: { errors },
@@ -38,7 +39,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
             <article>
               <Label text="Department*" />
               <DepratmentDropdown
-                departmentId={null}
+                departmentId={watch('departmentId')}
                 resetField={resetField}
                 register={register}
                 errors={errors}
@@ -47,7 +48,7 @@ const Employment = ({ loader }: { loader: boolean }) => {
             <article>
               <Label text="Reporting Manager*" />
               <EmployeesDropdown
-                reportingManagerId={null}
+                reportingManagerId={watch('reportingManagerId')}
                 resetField={resetField}
                 register={register}
                 errors={errors}

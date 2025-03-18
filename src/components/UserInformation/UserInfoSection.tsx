@@ -14,8 +14,6 @@ const UserInfoSection = ({
   editEmployee,
   handleFileChange,
 }) => {
-  console.log('Form errors user info: ', errors);
-
   return (
     <main className="p-4 rounded-md border-[1px] border-gray-border bg-white h-full">
       {/* Basic Information */}
