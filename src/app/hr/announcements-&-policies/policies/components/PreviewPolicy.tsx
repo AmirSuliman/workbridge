@@ -79,7 +79,21 @@ const PreviewPolicy = ({ previewData }) => {
               className="my-6"
             />
           )}
-
+{previewData?.attachment?.file?.url ? (
+  <div className="mt-4">
+    <p className="text-[16px] font-semibold">Attachment:</p>
+    <a
+      href={previewData.attachment.file.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 underline"
+    >
+      {previewData.attachment.file.name || 'Download Attachment'}
+    </a>
+  </div>
+) : (
+  <p className="text-gray-500"></p>
+)}
           {previewData.description && (
             <div
               className="text-black"
