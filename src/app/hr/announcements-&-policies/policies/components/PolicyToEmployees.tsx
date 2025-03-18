@@ -8,6 +8,7 @@ import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import Button from '@/components/Button';
+import Select from 'react-select';
 
 interface PolicyToEmployeesProps {
   onClose: () => void;
@@ -16,8 +17,8 @@ interface PolicyToEmployeesProps {
 
 const PolicyToEmployees: React.FC<PolicyToEmployeesProps> = ({ onClose, postPolicy }) => {
   const router = useRouter();
-  const [loadingEmployees, setLoadingEmployees] = useState(true); // State for fetching employees
-  const [submitting, setSubmitting] = useState(false); // State for form submission
+  const [loadingEmployees, setLoadingEmployees] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [employees, setEmployees] = useState<EmployeeData[]>([]);
 
   useEffect(() => {
@@ -42,13 +43,23 @@ const PolicyToEmployees: React.FC<PolicyToEmployeesProps> = ({ onClose, postPoli
   });
 
   const selectedEmployeeIds = watch("employeeIds");
+
+  const employeeOptions = employees.map((emp) => ({
+    value: emp.id,
+    label: `${emp.firstName} ${emp.lastName}`,
+  }));
+
   const isAllSelected = employees.length > 0 && selectedEmployeeIds.length === employees.length;
 
   const handleSelectAll = () => {
-    setValue("employeeIds", isAllSelected ? [] : employees.map((emp) => emp.id));
+    if (isAllSelected) {
+      setValue("employeeIds", []);
+    } else {
+      setValue("employeeIds", employeeOptions.map((option) => option.value));
+    }
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: { employeeIds: number[] }) => {
     try {
       setSubmitting(true);
       await postPolicy();
@@ -105,37 +116,27 @@ const PolicyToEmployees: React.FC<PolicyToEmployeesProps> = ({ onClose, postPoli
                 name="employeeIds"
                 control={control}
                 render={({ field }) => (
-                  <div className="max-h-44 overflow-y-auto">
-                    {employees.map((employee) => (
-                      <div key={employee.id} className="flex items-center mb-2">
-                        <input
-                          type="checkbox"
-                          value={employee.id}
-                          checked={field.value.includes(employee.id)}
-                          onChange={(e) => {
-                            const selectedIds = field.value;
-                            if (e.target.checked) {
-                              field.onChange([...selectedIds, Number(e.target.value)]);
-                            } else {
-                              field.onChange(selectedIds.filter((id) => id !== Number(e.target.value)));
-                            }
-                          }}
-                          id={`employee-${employee.id}`}
-                          className="mr-2"
-                        />
-                        <label htmlFor={`employee-${employee.id}`}>
-                          {employee.firstName} {employee.lastName}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
+                  <Select
+                    {...field}
+                    options={employeeOptions}
+                    isMulti
+                    closeMenuOnSelect={false}
+                    placeholder="Select employees..."
+                    className="basic-multi-select"
+                    classNamePrefix="select"
+                    onChange={(selectedOptions) =>
+                      field.onChange(selectedOptions.map((option) => option.value))
+                    }
+                    value={employeeOptions.filter((option) =>
+                      selectedEmployeeIds.includes(option.value)
+                    )}
+                  />
                 )}
               />
             </>
           )}
         </div>
 
-        
         <div className="flex items-center gap-4 justify-center mt-4 mb-0">
           <Button
             type="submit"
