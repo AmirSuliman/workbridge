@@ -36,19 +36,27 @@ const PolicyToDepartments = ({ onClose, postPolicy }) => {
 
   const onSubmit = async (data) => {
     try {
+      if (!data.departmentId || data.departmentId.length === 0) {
+        toast.error("Please select at least one department.");
+        return;
+      }
+  
       setLoading(true);
       await postPolicy();
-
+  
       console.log(
         'postedPolicyId in modal: ',
         sessionStorage.getItem('policy')
       );
+  
+      const departmentIds = data.departmentId.map((dept) => dept.value);
+  
       const response = await axiosInstance.post(`/policy/send/`, {
         policyId: sessionStorage.getItem('policy'),
         employeeIds: [],
-        departmentId: data.departmentIds,
+        departmentId: departmentIds,
       });
-
+  
       toast.success('Policy sent successfully!');
       setLoading(false);
       onClose();
@@ -64,6 +72,7 @@ const PolicyToDepartments = ({ onClose, postPolicy }) => {
       }
     }
   };
+  
 
   return (
     <div>
