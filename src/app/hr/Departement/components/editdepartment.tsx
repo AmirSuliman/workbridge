@@ -4,7 +4,7 @@ import axiosInstance from "@/lib/axios";  // Assuming axiosInstance is set up co
 import * as yup from 'yup';
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-
+import toast from 'react-hot-toast'
 interface EditDepartmentProps {
   setIsModalOpen1: (isOpen: boolean) => void;
 }
@@ -72,7 +72,7 @@ const EditDepartment: React.FC<EditDepartmentProps> = ({ setIsModalOpen1 }) => {
         name: departmentName,
         employeeId: selectedEmployeeId,
       });
-      alert('Department updated successfully!');
+      toast.success('Department updated successfully!');
       setIsModalOpen1(false);
     } catch (error: any) {
       if (error.name === 'ValidationError') {
