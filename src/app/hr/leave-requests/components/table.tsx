@@ -76,14 +76,6 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
         const response = await axiosInstance.get('/timeoffs', { params });
         const fetchedData = response.data.data.items || [];
 
-        // const filteredData =
-        //   filter !== 'All'
-        //     ? fetchedData.filter(
-        //         (employee) =>
-        //           employee.type.toLowerCase() === filter.toLowerCase()
-        //       )
-        //     : fetchedData;
-
         setEmployeeData(fetchedData);
         setTotalPages(response.data.data.totalPages || 1);
       } catch (err) {

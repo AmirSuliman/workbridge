@@ -1,8 +1,8 @@
 'use client';
 import ProfileCard from '@/components/common/ProfileCard';
+import ScreenLoader from '@/components/common/ScreenLoader';
 import TabButton from '@/components/common/TabsComponent/TabButton';
 import TabComponent from '@/components/common/TabsComponent/TabComponent';
-import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
 import DocumentSection from '@/components/UserInformation/DocumentSection';
 import EmergencySection from '@/components/UserInformation/EmergencySection';
 import EmploymentSection from '@/components/UserInformation/EmploymentSection';
@@ -11,7 +11,7 @@ import PaymentSection from '@/components/UserInformation/PaymentSection';
 import TimeOffSection from '@/components/UserInformation/TimeOffSection';
 import UserInfoSection from '@/components/UserInformation/UserInfoSection';
 import axiosInstance from '@/lib/axios';
-import { putEmployeeSchema } from '@/schemas/employeeSchema';
+import { getEmployeeSchema } from '@/schemas/employeeSchema';
 import {
   clearEmployeeData,
   fetchEmployeeData,
@@ -19,11 +19,15 @@ import {
 } from '@/store/slices/employeeInfoSlice';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { AppDispatch, RootState } from '@/store/store';
+import {
+  employmentTabValidation,
+  personalTabValidation,
+} from '@/utils/tabValidations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FieldErrors, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,7 +53,7 @@ const MyInformation = () => {
 
   useEffect(() => {
     const fetchSession = async () => {
-    // const session = await getSession();
+      // const session = await getSession();
       setRole(session?.user?.role);
     };
 
@@ -88,6 +92,10 @@ const MyInformation = () => {
     workPhone: employeeData?.workPhone || '',
   };
 
+  // conditionaly get schema
+  // if role is superadmin and emplId is not coming from the searchParams
+  // then make the reporignManagerId required
+  const putEmployeeSchema = getEmployeeSchema(role, empId);
   const {
     reset,
     control,
@@ -160,7 +168,6 @@ const MyInformation = () => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       if (event.target.files) {
         const file = event.target.files[0];
-        const fileType = file.type;
 
         if (!file.type.startsWith('image/')) {
           console.log('Selected file type: ', file.type);
@@ -206,11 +213,6 @@ const MyInformation = () => {
 
   useEffect(() => {
     setSchemaErrors(errors);
-    if (Object.keys(errors).length > 0) {
-      toast.error(
-        'Some input fields are missing in Personal or Employment tab!'
-      );
-    }
   }, [errors]);
 
   const onSubmit = async (data: any) => {
@@ -237,7 +239,9 @@ const MyInformation = () => {
       birthday: data.birthday,
       phoneNumber: data.phoneNumber,
       workPhone: data.workPhone,
-      reportingManagerId: data.reportingManagerId,
+      // don't send 0 to backend it gives error
+      reportingManagerId:
+        data.reportingManagerId === 0 ? undefined : data.reportingManagerId,
       employmentType: data.employmentType,
       location: {
         street1: data.location.street1,
@@ -248,7 +252,7 @@ const MyInformation = () => {
         state: data.location.state,
       },
     };
-
+    console.log('payload: ', payLoad);
     try {
       setEditLoading(true);
       // handle profile picture to get url from the upload picture
@@ -281,6 +285,8 @@ const MyInformation = () => {
           'profilePictureUrl',
           response.data.data.profilePictureUrl
         );
+        // Dispatch a custom event to get profilePictureUpdated in the header component
+        window.dispatchEvent(new Event('profilePictureUpdated'));
       }
     } catch (err) {
       console.error('Error updating employee data:', err);
@@ -299,8 +305,34 @@ const MyInformation = () => {
     }
   };
 
-  if (loading) {
-    return <div className="p-4">Loading...</div>;
+  // Check if schemaErrors exist for each tab
+  const hasPersonalErrors = schemaErrors
+    ? Object.keys(schemaErrors).some((key) =>
+        personalTabValidation.includes(key)
+      )
+    : false;
+
+  const hasEmploymentErrors = schemaErrors
+    ? Object.keys(schemaErrors).some((key) =>
+        employmentTabValidation.includes(key)
+      )
+    : false;
+
+  useEffect(() => {
+    if (hasPersonalErrors) {
+      toast.error('Some input fields are missing in the Personal tab!');
+    }
+    if (hasEmploymentErrors) {
+      toast.error('Some input fields are missing in the Employment tab!');
+    }
+  }, [hasPersonalErrors, hasEmploymentErrors]);
+
+  if (loading || myInfoLoading) {
+    return (
+      <div className="p-4">
+        <ScreenLoader />
+      </div>
+    );
   }
 
   if (error) {
@@ -311,139 +343,140 @@ const MyInformation = () => {
     return <div className="p-4">No data available.</div>;
   }
   console.log('Form errors: ', schemaErrors);
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={`p-4 h-full`}>
+    <form onSubmit={handleSubmit(onSubmit)} className={`my-1 p-4 h-full`}>
       <ProfileCard
         setEditEmployee={setEditEmployee}
         editEmployee={editEmployee}
         employeeData={employeeData}
         loading={editLoading}
       />
-      <TabsContainer containerClasses="my-1 pb-2 md:pb-4">
-        <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
-          <TabButton
-            isRootTab={true}
-            name="Personal"
-            href={`${
-              empId
-                ? `/${
-                    isUserPanel ? 'user' : 'hr'
-                  }/employees/employee-info/${empId}?tab=0`
-                : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=0`
-            }`}
-          />
-          <TabButton
-            name="Employment"
-            href={`${
-              empId
-                ? `/${
-                    isUserPanel ? 'user' : 'hr'
-                  }/employees/employee-info/${empId}?tab=1`
-                : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=1`
-            }`}
-          />
+      <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
+        <TabButton
+          isRootTab={true}
+          className={hasPersonalErrors ? `!border-red-500 text-red-500` : ''}
+          name="Personal"
+          href={`${
+            empId
+              ? `/${
+                  isUserPanel ? 'user' : 'hr'
+                }/employees/employee-info/${empId}?tab=0`
+              : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=0`
+          }`}
+        />
+        <TabButton
+          className={hasEmploymentErrors ? `!border-red-500 text-red-500` : ''}
+          name="Employment"
+          href={`${
+            empId
+              ? `/${
+                  isUserPanel ? 'user' : 'hr'
+                }/employees/employee-info/${empId}?tab=1`
+              : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=1`
+          }`}
+        />
 
-          {/* If we are editing a user info then hide the following tabs */}
-          {!editEmployee && (
-            <>
-              <TabButton
-                name="Time Off"
-                href={`${
-                  empId
-                    ? `/${
-                        isUserPanel ? 'user' : 'hr'
-                      }/employees/employee-info/${empId}?tab=2`
-                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=2`
-                }`}
-              />
-              <TabButton
-                name="Documents"
-                href={`${
-                  empId
-                    ? `/${
-                        isUserPanel ? 'user' : 'hr'
-                      }/employees/employee-info/${empId}?tab=3`
-                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=3`
-                }`}
-              />
-              <TabButton
-                name="Emergency"
-                href={`${
-                  empId
-                    ? `/${
-                        isUserPanel ? 'user' : 'hr'
-                      }/employees/employee-info/${empId}?tab=4`
-                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=4`
-                }`}
-              />
-              <TabButton
-                name="Notes"
-                href={`${
-                  empId
-                    ? `/${
-                        isUserPanel ? 'user' : 'hr'
-                      }/employees/employee-info/${empId}?tab=5`
-                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=5`
-                }`}
-              />
-
-              {/* Superadmin can see all user's payments. Other users can see only thier own payments */}
-
-              {(role === 'SuperAdmin' || !empId) && (
-                <TabButton
-                  name="Payments"
-                  href={`${
-                    empId
-                      ? `/${
-                          isUserPanel ? 'user' : 'hr'
-                        }/employees/employee-info/${empId}?tab=6`
-                      : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=6`
-                  }`}
-                />
-              )}
-            </>
-          )}
-        </div>
-        <div>
-          <TabComponent index="0" isRootTab={true}>
-            <UserInfoSection
-              control={control}
-              register={register}
-              errors={schemaErrors}
-              previewUrl={previewUrl}
-              editEmployee={editEmployee}
-              handleFileChange={handleFileChange}
+        {/* If we are editing a user info then hide the following tabs */}
+        {!editEmployee && (
+          <>
+            <TabButton
+              name="Time Off"
+              href={`${
+                empId
+                  ? `/${
+                      isUserPanel ? 'user' : 'hr'
+                    }/employees/employee-info/${empId}?tab=2`
+                  : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=2`
+              }`}
             />
-          </TabComponent>
-          <TabComponent index="1">
-            <EmploymentSection
-              register={register}
-              resetField={resetField}
-              errors={schemaErrors}
-              editEmployee={editEmployee}
-              employeeData={employeeData}
+            <TabButton
+              name="Documents"
+              href={`${
+                empId
+                  ? `/${
+                      isUserPanel ? 'user' : 'hr'
+                    }/employees/employee-info/${empId}?tab=3`
+                  : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=3`
+              }`}
             />
+            <TabButton
+              name="Emergency"
+              href={`${
+                empId
+                  ? `/${
+                      isUserPanel ? 'user' : 'hr'
+                    }/employees/employee-info/${empId}?tab=4`
+                  : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=4`
+              }`}
+            />
+            <TabButton
+              name="Notes"
+              href={`${
+                empId
+                  ? `/${
+                      isUserPanel ? 'user' : 'hr'
+                    }/employees/employee-info/${empId}?tab=5`
+                  : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=5`
+              }`}
+            />
+
+            {/* Superadmin can see all user's payments. Other users can see only thier own payments */}
+
+            {(role === 'SuperAdmin' || !empId) && (
+              <TabButton
+                name="Payments"
+                href={`${
+                  empId
+                    ? `/${
+                        isUserPanel ? 'user' : 'hr'
+                      }/employees/employee-info/${empId}?tab=6`
+                    : `/${isUserPanel ? 'user' : 'hr'}/my-information?tab=6`
+                }`}
+              />
+            )}
+          </>
+        )}
+      </div>
+      <div>
+        <TabComponent index="0" isRootTab={true}>
+          <UserInfoSection
+            control={control}
+            register={register}
+            errors={schemaErrors}
+            previewUrl={previewUrl}
+            editEmployee={editEmployee}
+            handleFileChange={handleFileChange}
+          />
+        </TabComponent>
+        <TabComponent index="1">
+          <EmploymentSection
+            register={register}
+            resetField={resetField}
+            errors={schemaErrors}
+            editEmployee={editEmployee}
+            employeeData={employeeData}
+          />
+        </TabComponent>
+        <TabComponent index="2">
+          <TimeOffSection employeeData={employeeData} />
+        </TabComponent>
+        <TabComponent index="3">
+          <DocumentSection employeeData={employeeData} />
+        </TabComponent>
+        <TabComponent index="4">
+          <EmergencySection employeeData={employeeData} />
+        </TabComponent>
+        <TabComponent index="5">
+          <NotesSection employeeId={empId || myId} />
+        </TabComponent>
+        {/* Superadmin can see all user's payments. Other users can see only thier own payments */}
+        {(role === 'SuperAdmin' || !empId) && (
+          <TabComponent index="6">
+            <PaymentSection employeeId={empId || myId} />
           </TabComponent>
-          <TabComponent index="2">
-            <TimeOffSection employeeData={employeeData} />
-          </TabComponent>
-          <TabComponent index="3">
-            <DocumentSection employeeData={employeeData} />
-          </TabComponent>
-          <TabComponent index="4">
-            <EmergencySection employeeData={employeeData} />
-          </TabComponent>
-          <TabComponent index="5">
-            <NotesSection employeeId={empId || myId} />
-          </TabComponent>
-          {/* Superadmin can see all user's payments. Other users can see only thier own payments */}
-          {(role === 'SuperAdmin' || !empId) && (
-            <TabComponent index="6">
-              <PaymentSection employeeId={empId || myId} />
-            </TabComponent>
-          )}
-        </div>
-      </TabsContainer>
+        )}
+      </div>
     </form>
   );
 };

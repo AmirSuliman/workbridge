@@ -100,10 +100,24 @@ const Deny = ({ timeOffRequestId, onClose, onDeny }) => {
         <label className="w-full flex flex-col col-span-full">
           <span className="mb-1 text-gray-400 text-[12px]">Note</span>
           <textarea
-            className="w-full p-4 rounded border border-gray-300 text-black resize-none"
-            rows={5}
+            className="w-full p-4 outline-none rounded border border-gray-300 text-black "
+            rows={3}
             value={timeOffRequest?.note || 'No note provided'}
             readOnly={true}
+          />
+        </label>
+        <label className="w-full flex flex-col col-span-full cursor-pointer">
+          <span className="mb-1 text-gray-400 text-[12px]">
+            Add Rejection Note
+          </span>
+          <textarea
+            placeholder=""
+            className="w-full p-4 rounded border outline-none border-gray-300 text-black "
+            rows={3}
+            value={note}
+            onChange={(e) => {
+              setNote(e.target.value);
+            }}
           />
         </label>
       </div>

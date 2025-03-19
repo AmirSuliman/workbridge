@@ -120,20 +120,22 @@ const ForgotPassword = () => {
                 </h3>
                 <p className="w-full text-md mb-6 text-center text-dark-gray ">
                   {step == 'confirmation'
-                    ? 'Please Enter New Password'
+                    ? ''
                     : `Enter your work email and we will send you instructions to reset
               your password.`}
                 </p>
                 <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-                  <label className="text-[14px] mb-1">Email</label>
                   {step == 'email' && (
-                    <InputField
-                      error={errors.email?.message as string}
-                      register={register}
-                      placeholder="Work email"
-                      name="email"
-                      type="text"
-                    />
+                    <>
+                      <label className="text-[14px] mb-1">Email</label>
+                      <InputField
+                        error={errors.email?.message as string}
+                        register={register}
+                        placeholder="Work email"
+                        name="email"
+                        type="text"
+                      />
+                    </>
                   )}
 
                   {step == 'confirmation' && (
@@ -162,7 +164,7 @@ const ForgotPassword = () => {
                         )}
                       </div>
                       <div className="relative w-full">
-                        <label className="text-[14px]">Password</label>
+                        <label className="text-[14px]">Confirm Password</label>
                         <div className="relative flex items-center">
                           <InputField
                             register={register}

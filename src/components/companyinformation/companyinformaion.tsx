@@ -32,61 +32,63 @@ const Companyinfo = () => {
           <Contact />
         </div>
       </section>
-      <div className="w-full h-[1px] mb-4 bg-[#E8E8E8]" />
-      <div className="space-y-2 p-4 ">
-        <p className="text-gray-400 font-medium text-[14px]">Company</p>
-        <Link
-          href="https://isaconsulting.com/"
-          target="_blank"
-          className="flex flex-row gap-2 items-center text-[14px] "
-        >
-          <FaGlobe />
-          isaconsulting.com
-        </Link>
-        <Link
-          href="mailto:info@isaworkbridge.com"
-          target="_blank"
-          className="flex flex-row gap-2 items-center text-[14px]"
-        >
-          <FaEnvelope />
-          info@isaworkbridge.com
-        </Link>
-        <Link
-          href="tel:(888) 396-1112"
-          target="_blank"
-          className="flex flex-row gap-2 items-center text-[14px] mb-4"
-        >
-          <FaPhone style={{ transform: 'rotate(90deg)' }} />
-          (888) 396-1112
-        </Link>
-      </div>
-      <div className="w-full h-[1px] mb-4 bg-[#E8E8E8]" />
-      <div className="space-y-2 p-4 ">
-        <p className="text-gray-400 font-medium">Socials</p>
-        <Link
-          href="https://www.instagram.com/isaconsultinggroup/"
-          target="_blank"
-          className="flex flex-row gap-2 items-center text-[14px] "
-        >
-          <FaInstagram />
-          @isaconsultinggroup
-        </Link>
-        <Link
-          href="https://twitter.com/ISAConsulting_"
-          target="_blank"
-          className="flex flex-row gap-2 items-center text-[14px]"
-        >
-          <FaTwitter />
-          ISAConsulting_
-        </Link>
-        <Link
-          href="https://www.linkedin.com/company/isaconsulting/mycompany/"
-          target="_blank"
-          className="flex flex-row gap-2 items-center text-[14px]"
-        >
-          <FaLinkedin />
-          ISA Consulting
-        </Link>
+      <div className="w-full h-[1px] my-4 bg-[#E8E8E8]" />
+      <div className="w-full overflow-auto grid grid-cols-2 gap-x-8 max-h-[400px] pr-2">
+        <div className="space-y-2 p-4 ">
+          <p className="text-gray-400 font-medium text-[14px]">Company</p>
+          <Link
+            href="https://isaconsulting.com/"
+            target="_blank"
+            className="flex flex-row gap-2 items-center text-[14px] "
+          >
+            <FaGlobe />
+            isaconsulting.com
+          </Link>
+          <Link
+            href="mailto:info@isaworkbridge.com"
+            target="_blank"
+            className="flex flex-row gap-2 items-center text-[14px]"
+          >
+            <FaEnvelope />
+            info@isaworkbridge.com
+          </Link>
+          <Link
+            href="tel:(888) 396-1112"
+            target="_blank"
+            className="flex flex-row gap-2 items-center text-[14px] mb-4"
+          >
+            <FaPhone style={{ transform: 'rotate(90deg)' }} />
+            (888) 396-1112
+          </Link>
+        </div>
+        {/* <div className="w-full h-[1px] mb-4 bg-[#E8E8E8]" /> */}
+        <div className="space-y-2 p-4 ">
+          <p className="text-gray-400 font-medium">Socials</p>
+          <Link
+            href="https://www.instagram.com/isaconsultinggroup/"
+            target="_blank"
+            className="flex flex-row gap-2 items-center text-[14px] "
+          >
+            <FaInstagram />
+            @isaconsultinggroup
+          </Link>
+          <Link
+            href="https://twitter.com/ISAConsulting_"
+            target="_blank"
+            className="flex flex-row gap-2 items-center text-[14px]"
+          >
+            <FaTwitter />
+            ISAConsulting_
+          </Link>
+          <Link
+            href="https://www.linkedin.com/company/isaconsulting/mycompany/"
+            target="_blank"
+            className="flex flex-row gap-2 items-center text-[14px]"
+          >
+            <FaLinkedin />
+            ISA Consulting
+          </Link>
+        </div>
       </div>
     </section>
   );

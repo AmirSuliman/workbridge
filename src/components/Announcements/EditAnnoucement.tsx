@@ -1,46 +1,57 @@
-'use client';
-import CreateAnnouncementTextEditor from '@/components/CustomEditor/CreateAnnouncementTextEditor';
 import axiosInstance from '@/lib/axios';
-import { announcementSchema } from '@/schemas/announcementSchema';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
-import { FaEdit } from 'react-icons/fa';
 import { z } from 'zod';
+import CreateAnnouncementTextEditor from '../CustomEditor/CreateAnnouncementTextEditor';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Image from 'next/image';
 
-const CreateAnnouncement = () => {
+const announcementSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  body: z.string().min(1, 'Content is required'),
+  type: z.enum(['Miscellaneous', 'Policy Changes', 'Company Activity']),
+  fileId: z.union([z.number().optional(), z.null()]).optional(),
+});
+
+type AnnouncementType = z.infer<typeof announcementSchema>['type'];
+type AnnouncementFormValues = z.infer<typeof announcementSchema>;
+
+const EditAnnouncement = ({ announcement, setIsEditible }) => {
+  const imgUrl = announcement?.file?.url || null;
+  const { id } = useParams();
   const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState('');
-  const [announcementType, setAnnouncementType] = useState<
-    'Miscellaneous' | 'Policy Changes' | 'Company Activity'
-  >('Company Activity');
-  const [body, setBody] = useState('');
-  const [errors, setErrors] = useState<{ title?: string; body?: string }>({});
   const [isPreview, setIsPreview] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(imgUrl);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const router = useRouter();
 
-  const validateFields = () => {
-    try {
-      announcementSchema.parse({ title, body });
-      setErrors({}); // Clear errors if validation passes
-      return true;
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        const fieldErrors = err.errors.reduce((acc, curr) => {
-          acc[curr.path[0] as string] = curr.message;
-          return acc;
-        }, {} as { title?: string; body?: string });
-        setErrors(fieldErrors);
-      }
-      return false;
-    }
-  };
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<AnnouncementFormValues>({
+    resolver: zodResolver(announcementSchema),
+    mode: 'all',
+    defaultValues: {
+      title: announcement.title || '',
+      body: announcement.body || '',
+      type: announcement.type || 'Company Activity',
+      fileId: announcement.fileId || null,
+    },
+  });
+
+  // Watch form values for preview
+  const watchedTitle = watch('title');
+  const watchedBody = watch('body');
+  const watchedType = watch('type');
+  const watchedPreviewUrl = watch('fileId');
+
   const handlePreviewPost = () => {
-    if (!validateFields()) return; // Validate fields before preview
     setIsPreview(true);
   };
 
@@ -87,9 +98,7 @@ const CreateAnnouncement = () => {
       return { error: err };
     }
   };
-
-  const handleSubmit = async (status: 'Published' | 'Draft') => {
-    if (!validateFields()) return; // Validate fields before submission
+  const onSubmit = async (data) => {
     try {
       setLoading(true);
 
@@ -98,20 +107,22 @@ const CreateAnnouncement = () => {
       if (selectedFile) {
         uploadResponse = (await handleUpload()) || { error: null };
       }
-      console.log('uploadResponse', uploadResponse);
+      let existingFileId;
+      if (previewUrl && uploadResponse?.uploadedId) {
+        existingFileId = data.fileId;
+      }
+
       const payload = {
-        title,
-        body,
-        status: status,
-        type: announcementType,
-        fileId: uploadResponse?.uploadedId || null,
+        title: data.title,
+        body: data.body,
+        status: 'Published',
+        type: data.type,
+        fileId: uploadResponse?.uploadedId || existingFileId || null,
       };
-      await axiosInstance.post('/announcement/', payload);
-      toast.success(
-        `${
-          status === 'Published' ? 'Announcement published' : 'Draft saved'
-        } successfully`
-      );
+      console.log('put payload: ', payload);
+      const response = await axiosInstance.put(`/announcement/${id}`, payload);
+      console.log('Put Announcement res: ', response.data);
+      toast.success(`Announcement updated successfully`);
       router.back();
     } catch (error: any) {
       console.error('Error publishing announcement:', error);
@@ -123,68 +134,42 @@ const CreateAnnouncement = () => {
 
   return (
     <main className="space-y-4">
-      <nav className="flex flex-row items-center justify-between mb-4">
-        <div className="flex flex-row items-center gap-2">
-          <FaEdit size={22} />
-          <h1 className="font-bold text-[22px]">Create Announcement</h1>
-        </div>
-        <div className="flex flex-col sm:flex-row items-center gap-2">
+      <nav className="flex flex-wrap gap-4 justify-end mb-4 w-full">
+        {isPreview ? (
           <button
-            className="bg-[#0F172A] rounded px-3 p-2 text-white text-[12px]"
-            onClick={() => handleSubmit('Draft')}
+            className="rounded p-2 px-3 text-[#0F172A] text-sm"
+            onClick={handleCancel}
           >
-            {loading ? (
-              <BiLoaderCircle className="h-4 w-4 animate-spin mx-auto" />
-            ) : (
-              'Save Draft'
-            )}
+            Cancel
           </button>
-          {isPreview ? (
-            <button
-              className="rounded p-2 px-3 text-[#0F172A] text-sm"
-              onClick={handleCancel}
-            >
-              Cancel
-            </button>
-          ) : (
+        ) : (
+          <>
             <button
               className="bg-white rounded p-2 px-3 text-[#0F172A] border text-[12px]"
               onClick={handlePreviewPost}
             >
               Preview Post
             </button>
-          )}
-        </div>
+            <button
+              className="bg-white rounded p-2 px-3 text-[#0F172A] border text-[12px]"
+              onClick={() => setIsEditible(false)}
+            >
+              Cancel edit
+            </button>
+          </>
+        )}
       </nav>
 
       {isPreview ? (
         <div className="bg-white p-6 rounded-lg border">
-          <h2 className="text-2xl font-bold mb-4">{title}</h2>
+          <h2 className="text-2xl font-bold mb-4">{watchedTitle}</h2>
           <div
             className="text-gray-700"
-            dangerouslySetInnerHTML={{ __html: body }}
+            dangerouslySetInnerHTML={{ __html: watchedBody }}
           ></div>
-          {previewUrl && (
-            <div className="my-4 relative">
-              <button
-                onClick={() => setPreviewUrl(null)}
-                type="button"
-                className="absolute top-2 right-2 px-6 py-1 bg-white rounded-lg text-2xl"
-              >
-                x
-              </button>
-              <Image
-                width={300}
-                height={150}
-                src={previewUrl}
-                alt="Profile Preview"
-                className="w-full mx-auto max-h-[500px] rounded-lg border"
-              />
-            </div>
-          )}
         </div>
       ) : (
-        <div>
+        <form onSubmit={(e) => e.preventDefault()}>
           <div className="flex flex-col p-4 bg-white rounded-lg border">
             <label className="text-[#0F172A] text-[14px] p-2">Title</label>
             <input
@@ -193,26 +178,31 @@ const CreateAnnouncement = () => {
               className={`outline-none p-3 w-full border rounded text-[20px] font-medium text-[#0D1322] ${
                 errors.title ? 'border-red-500' : ''
               }`}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              {...register('title')}
             />
             {errors.title && (
-              <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.title.message}
+              </p>
             )}
           </div>
+
           <div className="bg-white rounded-lg border mt-8">
             <CreateAnnouncementTextEditor
-              setAnnouncementType={setAnnouncementType}
-              announcementType={announcementType}
+              setAnnouncementType={(type: AnnouncementType) =>
+                setValue('type', type)
+              }
+              announcementType={watchedType}
               handleFileChange={handleFileChange}
-              setContent={setBody}
               previewUrl={previewUrl}
-              body={body}
+              setContent={(content: string) => setValue('body', content)}
+              body={watchedBody}
             />
             {errors.body && (
-              <p className="text-red-500 text-sm mt-2 px-8">{errors.body}</p>
+              <p className="text-red-500 text-sm mt-2 px-8">
+                {errors.body.message}
+              </p>
             )}
-
             {previewUrl && (
               <div className="p-4 relative">
                 <button
@@ -235,7 +225,8 @@ const CreateAnnouncement = () => {
 
           <div className="flex justify-center items-center mt-4">
             <button
-              onClick={() => handleSubmit('Published')}
+              type="submit"
+              onClick={handleSubmit(onSubmit)}
               className="p-3 rounded bg-[#0F172A] text-white text-[16px] flex justify-center w-[300px]"
             >
               {loading ? (
@@ -245,10 +236,10 @@ const CreateAnnouncement = () => {
               )}
             </button>
           </div>
-        </div>
+        </form>
       )}
     </main>
   );
 };
 
-export default CreateAnnouncement;
+export default EditAnnouncement;

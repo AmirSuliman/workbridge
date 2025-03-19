@@ -20,59 +20,68 @@ export const AllJobsTable = () => {
   const [sortCriteria, setSortCriteria] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [typeFilter, setTypeFilter] = useState<string>('');
-  const handleDownload = async () => {
+
+  const handleDownload = async (allJobs) => {
     try {
-      let allJobs: typeof items = [];
-      let currentPage = 1;
-      let pageSize = 100; // Adjust based on API limits
-      let totalPages = 1;
-  
-      // Fetch all job data across multiple pages
-      while (currentPage <= totalPages) {
-        const response = await dispatch(fetchOpenPositions({ page: currentPage, pageSize })).unwrap();
-        if (response.items.length === 0) break;
-  
-        allJobs = [...allJobs, ...response.items];
-        totalPages = Math.ceil((response.totalItems || 0) / pageSize);
-        currentPage++;
-      }
-  
+      // let allJobs: typeof items = [];
+      // let currentPage = 1;
+      // let pageSize = 100; // Adjust based on API limits
+      // let totalPages = 1;
+
+      // // Fetch all job data across multiple pages
+      // while (currentPage <= totalPages) {
+      //   const response = await dispatch(
+      //     fetchOpenPositions()
+      //   ).unwrap();
+      //   if (response.items.length === 0) break;
+
+      //   allJobs = [...allJobs, ...response.items];
+      //   totalPages = Math.ceil((response.totalItems || 0) / pageSize);
+      //   currentPage++;
+      // }
+
       if (allJobs.length === 0) {
         alert('No job data available to download.');
         return;
       }
-  
+
       // Prepare data for Excel
       const data = allJobs.map((job) => ({
-        'Job Opening': job.tittle, // Fixed field name
+        'Job Opening': job.tittle,
         Candidates: job.jobApplicationCount,
         'Job Type': job.employmentType,
-        'Hiring Lead': `${job.hiringLead?.firstName || ''} ${job.hiringLead?.lastName || ''}`,
+        'Hiring Lead': `${job.hiringLead?.firstName || ''} ${
+          job.hiringLead?.lastName || ''
+        }`,
         'Created On': new Date(job.createdAt).toLocaleDateString(),
         Status: job.status,
       }));
-  
+
       // Create Excel file
       const worksheet = XLSX.utils.json_to_sheet(data);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Job Openings');
-  
+
       // Convert to binary format
-      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array',
+      });
+
       // Create Blob and trigger download
-      const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+      const blob = new Blob([excelBuffer], {
+        type: 'application/octet-stream',
+      });
       saveAs(blob, 'Job_Openings.xlsx');
     } catch (error) {
       console.error('Error fetching all job data:', error);
       alert('Failed to download job data.');
     }
   };
-  
+
   useEffect(() => {
     dispatch(fetchOpenPositions({ page: 1, pageSize: 10 }));
   }, [dispatch]);
-  
 
   // Filtering logic
   const filteredItems = items.filter((job) => {
@@ -208,7 +217,7 @@ export const AllJobsTable = () => {
               <th className="py-3 px-4 border-b font-medium">Status</th>
               <th className="py-3 px-4 border-b font-medium">
                 <button
-                  onClick={handleDownload}
+                  onClick={() => handleDownload(sortedItems)}
                   className="bg-[#0F172A] p-2 items-center justify-center text-white text-[12px] rounded flex flex-row gap-2"
                 >
                   <FaDownload />

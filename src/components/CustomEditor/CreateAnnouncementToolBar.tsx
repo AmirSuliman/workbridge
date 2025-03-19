@@ -1,5 +1,6 @@
 import {
   FaBold,
+  FaImage,
   FaItalic,
   FaListOl,
   FaListUl,
@@ -12,9 +13,12 @@ import { MdLink, MdLinkOff } from 'react-icons/md';
 import { Editor } from '@tiptap/react'; // Import the Editor type from TipTap
 import { FaUnderline } from 'react-icons/fa6';
 import Image from 'next/image';
+import { ChangeEventHandler } from 'react';
 
 interface ToolBarProps {
   editor: Editor;
+  previewUrl: string | null;
+  handleFileChange: ChangeEventHandler<HTMLInputElement>;
   announcementType: string;
   setAnnouncementType: (
     value: 'Miscellaneous' | 'Policy Changes' | 'Company Activity'
@@ -23,6 +27,8 @@ interface ToolBarProps {
 
 const CreateAnnouncementToolBar: React.FC<ToolBarProps> = ({
   editor,
+  previewUrl,
+  handleFileChange,
   announcementType,
   setAnnouncementType,
 }) => {
@@ -163,6 +169,22 @@ const CreateAnnouncementToolBar: React.FC<ToolBarProps> = ({
       >
         <FaRedo size={14} />
       </button>
+      <label
+        htmlFor="policyImg"
+        className={`px-3 py-1 grow-0 shrink-0 rounded flex items-center justify-center ${
+          previewUrl ? 'bg-blue-500 text-white' : 'hover:bg-gray-300'
+        } disabled:bg-gray-100 disabled:cursor-not-allowed`}
+      >
+        <FaImage size={18} />
+        <input
+          onChange={handleFileChange}
+          type="file"
+          accept="image/*"
+          name="fileId"
+          id="policyImg"
+          className="hidden"
+        />
+      </label>
       <div className="flex flex-row gap-3 items-center ml-auto mr-0">
         <label
           onClick={() => {

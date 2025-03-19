@@ -1,5 +1,5 @@
 import { HiTrophy } from 'react-icons/hi2';
-import IconWithBg from '../SingleAnnouncement/IconWithBg';
+import IconWithBg from '../Announcements/IconWithBg';
 import { FaRegCalendar } from 'react-icons/fa';
 
 const SingleTraining = ({

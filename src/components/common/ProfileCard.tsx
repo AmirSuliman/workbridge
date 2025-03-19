@@ -19,8 +19,9 @@ import LinkedinIcon from '../icons/linkedin-icon';
 import ProfileInfoItem from './ProfileInfoItem';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import imageLoader from '../../../imageLoader';
+import UploadProfilePicture from '../UserInformation/UploadProfilePicture';
 
 const ProfileCard = ({
   setEditEmployee,
@@ -35,6 +36,8 @@ const ProfileCard = ({
 }) => {
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
+  const { empId } = useParams(); // This id is used to view any employee's info
+
   const hireDate = employeeData?.hireDate
     ? new Date(employeeData.hireDate).toLocaleDateString()
     : '';
@@ -87,17 +90,23 @@ const ProfileCard = ({
     >
       <div className="flex gap-4">
         <div className="flex flex-col items-center">
-          <Image
-            loader={imageLoader}
-            src={imgSrc}
-            alt="Avatar"
-            width={700}
-            height={700}
-            className=" w-32 h-28 shrink-0 grow-0 rounded-full object-cover"
-            onError={() => {
-              setImgSrc(IMAGES.placeholderAvatar);
-            }}
-          />
+          <div className="relative w-fit h-fit group rounded-full">
+            {/* if User panel then show this button to let the user update their profile picture only */}
+            {/* if empId exist then don't show the component  */}
+            {!empId && isUserPanel && <UploadProfilePicture />}
+
+            <Image
+              loader={imageLoader}
+              src={imgSrc}
+              alt="Avatar"
+              width={700}
+              height={700}
+              className=" w-32 h-28 shrink-0 grow-0 rounded-full object-cover"
+              onError={() => {
+                setImgSrc(IMAGES.placeholderAvatar);
+              }}
+            />
+          </div>
           {/* social Icons */}
           <div className="mt-2 flex gap-1 items-center ">
             {employeeData?.facebook && (

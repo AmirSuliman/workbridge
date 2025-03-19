@@ -8,24 +8,24 @@ import axios from 'axios';
 
 const PreviewPolicy = ({ previewData }) => {
   const { data: session } = useSession();
-  const { policyId } = useParams(); 
+  const { policyId } = useParams();
   const [loading, setLoading] = useState(false);
-  const [responseStatus, setResponseStatus] = useState<string | null>(null); 
+  const [responseStatus, setResponseStatus] = useState<string | null>(null);
 
-  const employeeId = session?.user?.employeeId; 
+  const employeeId = session?.user?.employeeId;
   const role = session?.user?.role as string | undefined;
   console.log(role, 'role');
 
   console.log({ policyId, employeeId, role }, 'Identifiers');
- 
+
   useEffect(() => {
     if (previewData?.employees && employeeId) {
-      const userPolicy = previewData.employees.find(emp => emp.id === employeeId);
+      const userPolicy = previewData.employees.find(
+        (emp) => emp.id === employeeId
+      );
       setResponseStatus(userPolicy?.PolicyEmployee?.status || 'Not Accepted');
     }
   }, [previewData, employeeId]);
-
- 
 
   return (
     <>
@@ -59,7 +59,9 @@ const PreviewPolicy = ({ previewData }) => {
         </div>
 
         <div className="mt-8 p-4">
-          <h2 className="text-[22px] font-semibold mb-2">{previewData.title}</h2>
+          <h2 className="text-[22px] font-semibold mb-2">
+            {previewData.title}
+          </h2>
 
           {previewData.previewUrl && (
             <Image
@@ -105,8 +107,6 @@ const PreviewPolicy = ({ previewData }) => {
           )}
         </div>
       </div>
-
-      
     </>
   );
 };

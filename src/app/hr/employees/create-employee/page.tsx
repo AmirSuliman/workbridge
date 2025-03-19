@@ -1,24 +1,26 @@
 'use client';
 import Button from '@/components/Button';
-import Tab from '@/components/common/TabsComponent/Tab';
-import TabPanel from '@/components/common/TabsComponent/TabPanel';
-import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
+import TabButton from '@/components/common/TabsComponent/TabButton';
+import TabComponent from '@/components/common/TabsComponent/TabComponent';
 import axiosInstance from '@/lib/axios';
 import { employeeSchema } from '@/schemas/employeeSchema';
 import { updateEmployeeData } from '@/store/slices/employeeInfoSlice';
 import { AppDispatch } from '@/store/store';
 import { EmployeeData } from '@/types/employee';
+import {
+  employmentTabValidation,
+  personalTabValidation,
+} from '@/utils/tabValidations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { TbEdit } from 'react-icons/tb';
 import { useDispatch } from 'react-redux';
 import BasicInfo from '../components/form/BasicInfo';
 import Employment from '../components/form/Employement';
-import EmployeesDropdown from '@/components/DropDowns/EmployeesDropdown';
 
 interface Country {
   id: number;
@@ -92,7 +94,20 @@ const CreateEmployee = () => {
     mode: 'onChange',
   });
 
-  const { handleSubmit, reset } = formMethods;
+  const {
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = formMethods;
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      toast.error(
+        'Some input fields are missing in Personal or Employment tab!'
+      );
+    }
+  }, [errors]);
+
   const onSubmit = async (data) => {
     // console.log('onsubmit data: ', data);
     const payLoad = {
@@ -163,7 +178,25 @@ const CreateEmployee = () => {
     }
   };
 
-  console.log('Form errors: ', formMethods.formState.errors);
+  // Check if schemaErrors exist for each tab
+  const hasPersonalErrors = errors
+    ? Object.keys(errors).some((key) => personalTabValidation.includes(key))
+    : false;
+
+  const hasEmploymentErrors = errors
+    ? Object.keys(errors).some((key) => employmentTabValidation.includes(key))
+    : false;
+
+  useEffect(() => {
+    if (hasPersonalErrors) {
+      toast.error('Some input fields are missing in the Personal tab!');
+    }
+    if (hasEmploymentErrors) {
+      toast.error('Some input fields are missing in the Employment tab!');
+    }
+  }, [hasPersonalErrors, hasEmploymentErrors]);
+
+  console.log('Form errors: ', errors);
 
   return (
     <main>
@@ -182,57 +215,40 @@ const CreateEmployee = () => {
         </div>
       </div>
       {/* tabs */}
-      <TabsContainer containerClasses="my-1 pb-2 md:pb-4">
+      <div className="my-1 pb-2 md:pb-4">
         <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
-          <Tab
-            index={0}
-            tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-            activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-          >
-            Basic Information
-          </Tab>
-
-          <Tab
-            index={1}
-            tabStyles="text-xs px-[3%] py-3 text-dark-navy  whitespace-nowrap "
-            activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-          >
-            Employment
-          </Tab>
-
-          {/* {employeeData && (
-            <Tab
-              index={2}
-              tabStyles="text-xs px-[3%] py-3 text-dark-navy whitespace-nowrap"
-              activeTabStyle="font-semibold border-b-2 !border-dark-navy"
-            >
-              Documents
-            </Tab>
-          )} */}
+          <TabButton
+            isRootTab={true}
+            className={hasPersonalErrors ? `!border-red-500 text-red-500` : ''}
+            name="Basic Information"
+            href={`/hr/employees/create-employee?tab=0`}
+          />
+          <TabButton
+            className={
+              hasEmploymentErrors ? `!border-red-500 text-red-500` : ''
+            }
+            name="Employment"
+            href={`/hr/employees/create-employee?tab=1`}
+          />
         </div>
         <div>
           {/* using form provider for multi-step form */}
           <FormProvider {...formMethods}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <TabPanel index={0}>
+              <TabComponent index="0" isRootTab={true}>
                 <BasicInfo
                   countries={countries}
                   previewUrl={previewUrl}
                   handleFileChange={handleFileChange}
                 />
-              </TabPanel>
-              <TabPanel index={1}>
+              </TabComponent>
+              <TabComponent index="1">
                 <Employment loader={loader} />
-              </TabPanel>
-              {/* {employeeData && (
-                <TabPanel index={2}>
-                  <DocumentSection employeeData={employeeData} />
-                </TabPanel>
-              )} */}
+              </TabComponent>
             </form>
           </FormProvider>
         </div>
-      </TabsContainer>
+      </div>
     </main>
   );
 };

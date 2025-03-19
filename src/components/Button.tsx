@@ -1,5 +1,5 @@
+import cn from '@/utils/class-names';
 import React from 'react';
-import cn from 'classnames';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   name: string;

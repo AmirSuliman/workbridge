@@ -1,10 +1,7 @@
-import { useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
-import { IoCalendarOutline } from 'react-icons/io5';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { BiLoaderCircle } from 'react-icons/bi';
-import IconWithBg from '@/components/SingleAnnouncement/IconWithBg';
-import { getTimeAgo } from '@/utils/timeAgo';
 
 interface Announcement {
   id: number;
@@ -27,22 +24,10 @@ const Announcements = () => {
       try {
         const response = await axiosInstance.get('/announcements');
         const data = response.data?.data?.items || [];
-        console.log(response, 'res');
-        setAnnouncements(data);
-
-        // if (Array.isArray(data)) {
-        //   const formattedData = data.map((item: any) => ({
-        //     id: item.id,
-        //     description: item.body || 'No description available',
-        //     icon: <IoCalendarOutline />,
-        //     createdAt: item.createdAt || new Date().toISOString(),
-        //     title: item.title,
-        //     bgColor: '#00B87D', // Added default bgColor
-        //   }));
-
-        // } else {
-        //   throw new Error('Invalid response format');
-        // }
+        const publishedAnnouncements = data.filter(
+          (item) => item.status === 'Published'
+        );
+        setAnnouncements(publishedAnnouncements);
       } catch (err) {
         console.error('Error fetching announcements:', err);
         setError('Failed to fetch announcements. Please try again later.');

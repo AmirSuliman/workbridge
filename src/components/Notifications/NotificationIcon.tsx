@@ -4,6 +4,7 @@ import { HiCake, HiDatabase, HiFolder, HiSpeakerphone } from 'react-icons/hi';
 import { SiLimesurvey } from 'react-icons/si';
 import { HiArrowTrendingUp, HiUsers } from 'react-icons/hi2';
 import { MdOutlineSick } from 'react-icons/md';
+import { FaStarOfLife } from 'react-icons/fa';
 interface Props {
   type: NotificationType;
 }
@@ -14,6 +15,12 @@ const NotificationIcon = ({ type }: Props) => {
       return (
         <div className="bg-gray-100 text-black border-[1px] rounded-full size-12 flex items-center justify-center shrink-0 grow-0">
           <HiSpeakerphone size={22} />
+        </div>
+      );
+    case NotificationType.Policy:
+      return (
+        <div className="bg-[rgb(245,54,73)] text-white border-[1px] rounded-full size-12 flex items-center justify-center shrink-0 grow-0">
+          <FaStarOfLife size={22} />
         </div>
       );
     case NotificationType.Birthday:

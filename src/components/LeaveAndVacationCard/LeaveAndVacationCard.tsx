@@ -1,4 +1,4 @@
-import IconWithBg from '../SingleAnnouncement/IconWithBg';
+import IconWithBg from '../Announcements/IconWithBg';
 import DaysCard from './DaysCard';
 import Button from '../Button';
 import React, { useEffect, useState } from 'react';

@@ -9,15 +9,20 @@ import Underline from '@tiptap/extension-underline';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import CreateAnnouncementToolBar from './CreateAnnouncementToolBar';
+import { ChangeEventHandler } from 'react';
 
 const CreateAnnouncementTextEditor = ({
   body,
+  previewUrl,
   setContent,
+  handleFileChange,
   announcementType,
   setAnnouncementType,
 }: {
   body: string;
+  previewUrl: string | null;
   setContent: (content: string) => void;
+  handleFileChange: ChangeEventHandler<HTMLInputElement>;
   announcementType: string;
   setAnnouncementType: (
     value: 'Miscellaneous' | 'Policy Changes' | 'Company Activity'
@@ -58,6 +63,8 @@ const CreateAnnouncementTextEditor = ({
       {/* Toolbar */}
       <CreateAnnouncementToolBar
         editor={editor}
+        previewUrl={previewUrl}
+        handleFileChange={handleFileChange}
         announcementType={announcementType}
         setAnnouncementType={setAnnouncementType}
       />

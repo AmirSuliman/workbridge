@@ -20,9 +20,7 @@ const Policies = () => {
     const fetchPolicies = async () => {
       try {
         const response = await getAllPolicies(1, 1000);
-        console.log('API Response:', response);
         const allPolicies = response.data.data.items || [];
-        console.log('Extracted Policies:', allPolicies);
 
         setPolicies(allPolicies);
         setFilteredPolicies(
@@ -39,15 +37,13 @@ const Policies = () => {
 
   const filterPolicies = (status: 'Draft' | 'Published') => {
     const filtered = policies.filter((policy) => policy.status === status);
-    setFilteredPolicies(filtered); 
+    setFilteredPolicies(filtered);
   };
 
   const handleFilterClick = (status: 'Draft' | 'Published') => {
     setActiveFilter(status);
-    filterPolicies(status); 
+    filterPolicies(status);
   };
-
-  console.log('Filtered Policies: ', filteredPolicies);
 
   return (
     <div className="w-full p-4">

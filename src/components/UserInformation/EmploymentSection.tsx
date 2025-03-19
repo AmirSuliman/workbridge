@@ -150,10 +150,12 @@ const EmploymentSection = ({
                   : `${employeeData?.location?.country || ''}, ${
                       employeeData?.location?.state || ''
                     }`,
-                `${employeeData?.location?.country}`,
+                `${employeeData?.location?.country || 'N/A'}`,
                 `${employeeData?.department?.name || 'N/A'}`,
                 `${employeeData?.tittle || 'N/A'}`,
-                `${employeeData?.manager?.firstName} ${employeeData?.manager?.lastName}`,
+                `${employeeData?.manager?.firstName || ''} ${
+                  employeeData?.manager?.lastName || ''
+                }`,
               ],
             ]}
           />
