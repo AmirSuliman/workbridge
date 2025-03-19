@@ -112,7 +112,7 @@ const Page = () => {
       
         {isHR &&
           evaluation.length > 0 &&
-          !evaluation.some((item) => item.status === 'In Progress') && (
+          evaluation.some((item) => item.status === 'In Progress') && (
             <UserEvaluation evaluation={evaluation} employeeId={employeeId} />
           )}
         <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
