@@ -12,16 +12,15 @@ import imageLoader from '../../../../../imageLoader';
 
 const AllPolicies = () => {
   const router = useRouter();
-  const [announcements, setAnnouncements] = useState<Policy[]>([]);
+  const [policies, setPolicies] = useState<Policy[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchAnnouncements = async () => {
+    const fetchPolicies = async () => {
       try {
         const response = await getAllPolicies(1, 1000);
         const allPolicies = response.data.data.items || [];
-        console.log('policies: ', allPolicies);
         if (Array.isArray(allPolicies)) {
           const formattedData = allPolicies.map((item: any) => ({
             id: item.id,
@@ -44,7 +43,7 @@ const AllPolicies = () => {
             users: item.users || {},
           }));
 
-          setAnnouncements(formattedData);
+          setPolicies(formattedData);
         } else {
           throw new Error('Invalid response format');
         }
@@ -56,7 +55,7 @@ const AllPolicies = () => {
       }
     };
 
-    fetchAnnouncements();
+    fetchPolicies();
   }, []);
 
   if (loading) {
@@ -78,18 +77,18 @@ const AllPolicies = () => {
         <HiSpeakerphone size={22} />
         New Policies Update
       </h1>
-      {announcements.length > 0 ? (
-        announcements.map((announcement) => (
+      {policies.length > 0 ? (
+        policies.map((policy) => (
           <div
-            key={announcement.id}
+            key={policy.id}
             className="flex flex-col gap-6 p-4 rounded border mt-8 "
           >
             <div className="flex flex-row items-center justify-between">
               <h1 className="text-[14px] font-semibold uppercase">
-                {announcement.title || ''}
+                {policy.title || ''}
               </h1>
               <p className="text-[12px] text-gray-400">
-                {getTimeAgo(announcement.updatedAt || '')}
+                {getTimeAgo(policy.updatedAt || '')}
               </p>
             </div>
 
@@ -105,9 +104,9 @@ const AllPolicies = () => {
                 <p className="text-[12px]">
                   Posted by:{' '}
                   <span className="font-semibold">
-                    {announcement?.users
-                      ? `${announcement.users.firstName || ''} ${
-                          announcement.users.lastName || ''
+                    {policy?.users
+                      ? `${policy.users.firstName || ''} ${
+                          policy.users.lastName || ''
                         }`
                       : 'Unknown'}
                   </span>
@@ -115,7 +114,7 @@ const AllPolicies = () => {
                 <p className="text-[12px]">
                   Effective Date:{' '}
                   <span className="font-semibold">
-                    {new Date(announcement.effectiveDate).toLocaleDateString(
+                    {new Date(policy.effectiveDate).toLocaleDateString(
                       'en-US',
                       {
                         year: 'numeric',
@@ -127,9 +126,7 @@ const AllPolicies = () => {
                 </p>
               </div>
               <button
-                onClick={() =>
-                  router.push(`/user/home/policy/${announcement.id}`)
-                }
+                onClick={() => router.push(`/user/home/policy/${policy.id}`)}
                 className="border p-2 px-3 text-[12px] rounded flex flex-row items-center gap-2 "
               >
                 View <FaArrowUp style={{ transform: 'rotate(45deg)' }} />
@@ -138,7 +135,7 @@ const AllPolicies = () => {
           </div>
         ))
       ) : (
-        <div>No announcements available.</div>
+        <div>No policies available.</div>
       )}
     </div>
   );

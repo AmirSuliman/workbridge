@@ -35,7 +35,6 @@ const fetchAnnouncements = async (
         size,
       },
     });
-    console.log(`Fetched ${status} announcements:`, response.data);
     return {
       announcements: response.data.data.items || [],
       total: response.data.data.totalItems || 0,
