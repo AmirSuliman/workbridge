@@ -25,6 +25,7 @@ const PolicyToDepartments = ({ onClose, postPolicy }) => {
     const fetchDepartments = async () => {
       try {
         const { data } = await axiosInstance.get('/departments');
+        console.log(data, 'deptres');
         setDepartments(data.data.items);
       } catch (error) {
         console.error(error);
