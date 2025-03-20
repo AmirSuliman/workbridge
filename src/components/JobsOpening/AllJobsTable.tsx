@@ -9,37 +9,23 @@ import { useRouter } from 'next/navigation';
 import { FaDownload } from 'react-icons/fa';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { Pagination } from '../common/Pagination';
 
 export const AllJobsTable = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { items, loading, error } = useSelector(
+  const { items, loading, error, totalItems } = useSelector(
     (state: RootState) => state.jobs
   );
+  console.log('totalItems', totalItems);
   const [sortCriteria, setSortCriteria] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [typeFilter, setTypeFilter] = useState<string>('');
 
   const handleDownload = async (allJobs) => {
     try {
-      // let allJobs: typeof items = [];
-      // let currentPage = 1;
-      // let pageSize = 100; // Adjust based on API limits
-      // let totalPages = 1;
-
-      // // Fetch all job data across multiple pages
-      // while (currentPage <= totalPages) {
-      //   const response = await dispatch(
-      //     fetchOpenPositions()
-      //   ).unwrap();
-      //   if (response.items.length === 0) break;
-
-      //   allJobs = [...allJobs, ...response.items];
-      //   totalPages = Math.ceil((response.totalItems || 0) / pageSize);
-      //   currentPage++;
-      // }
-
       if (allJobs.length === 0) {
         alert('No job data available to download.');
         return;
@@ -79,9 +65,15 @@ export const AllJobsTable = () => {
     }
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const pageSize = 10;
+
   useEffect(() => {
-    dispatch(fetchOpenPositions({ page: 1, pageSize: 10 }));
-  }, [dispatch]);
+    dispatch(fetchOpenPositions({ page: currentPage, size: pageSize }));
+  }, [dispatch, currentPage]);
 
   // Filtering logic
   const filteredItems = items.filter((job) => {
@@ -258,6 +250,14 @@ export const AllJobsTable = () => {
             ))}
           </tbody>
         </table>
+        <Pagination
+          styles={{ container: 'mt-5 gap-x-2 !justify-end' }}
+          totalItems={totalItems || 0}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          maxPagesToShow={3} // Adjust if needed
+          setCurrentPage={handlePageChange}
+        />
       </div>
     </div>
   );

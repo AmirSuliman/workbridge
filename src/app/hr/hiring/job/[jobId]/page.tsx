@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
 import FullJobPreview from '../FullJobPreview';
 import imageLoader from '../../../../../../imageLoader';
+import { calculateJobDuration } from '@/lib/calculateJobDuration';
 
 const SingleJob = () => {
   const route = useRouter();
@@ -38,6 +39,11 @@ const SingleJob = () => {
     };
     fetchSingleJob();
   }, [jobId]);
+  const jobDuration = calculateJobDuration(
+    singleJobData?.data.dateOpened,
+    singleJobData?.data.dateEnd,
+    singleJobData?.data.status
+  );
 
   if (loading) {
     return <ScreenLoader />;
@@ -73,9 +79,15 @@ const SingleJob = () => {
       <div className="flex flex-row items-start justify-between gap-6 w-full">
         <div className="flex flex-col gap-2 p-4 border bg-white w-[70%] rounded-lg">
           <p className="text-[12px] text-gray-400">Description</p>
-          <h1 className="text-[#0F172A] text-[16px] mb-6">
+          {/* <h1 className="text-[#0F172A] text-[16px] mb-6">
             {singleJobData?.data.description || 'N/A'}
-          </h1>
+          </h1> */}
+          <div
+            className="prose max-w-none"
+            dangerouslySetInnerHTML={{
+              __html: singleJobData?.data.description || '',
+            }}
+          />
           <hr />
           <div className="flex flex-row items-center justify-between mt-6">
             <div className="flex flex-row gap-10 items-center">
@@ -88,7 +100,7 @@ const SingleJob = () => {
               <div className="flex flex-col ">
                 <p className="text-[12px] text-gray-400">Open for</p>
                 <h1 className="text-[#0F172A] text-[16px] font-medium">
-                  21 days
+                  {jobDuration} {jobDuration === 1 ? 'day' : 'days'}
                 </h1>
               </div>
             </div>
@@ -101,7 +113,7 @@ const SingleJob = () => {
           </div>
         </div>
 
-        <div className="flex flex-col p-4 border bg-white w-[30%] h-auto rounded-lg h-[27vh]">
+        <div className="flex flex-col p-4 border bg-white w-[30%] rounded-lg h-[27vh]">
           <div className="flex flex-row gap-3 items-center mb-4">
             <Image
               loader={imageLoader}

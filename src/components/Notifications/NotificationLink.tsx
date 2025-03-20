@@ -33,6 +33,19 @@ const NotificationLink = ({ notification, children }: Props) => {
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 
   switch (notification.notification?.notificationType) {
+    case NotificationType.Policy:
+      return (
+        <Link
+          href={
+            isUserPanel
+              ? `/user/home/policy/${notification.notification.issueId}`
+              : `/hr/home/policy/${notification.notification.issueId}`
+          }
+          onClick={_clickHandler}
+        >
+          {children}
+        </Link>
+      );
     case NotificationType.Announcement:
       return (
         <Link
