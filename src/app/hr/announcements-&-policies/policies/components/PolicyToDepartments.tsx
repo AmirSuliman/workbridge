@@ -54,7 +54,6 @@ const PolicyToDepartments = ({ onClose, postPolicy }) => {
   
       const response = await axiosInstance.post(`/policy/send/`, {
         policyId: sessionStorage.getItem('policy'),
-        employeeIds: [],
         departmentId: departmentIds,
       });
   

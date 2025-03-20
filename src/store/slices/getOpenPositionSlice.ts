@@ -42,12 +42,15 @@ const initialState: JobsState = {
 
 export const fetchOpenPositions = createAsyncThunk(
   'jobs/fetchOpenPositions',
-  async ({ page, pageSize }: { page: number; pageSize: number }, { rejectWithValue }) => {
+  async (
+    { page, size }: { page: number; size: number },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axiosInstance.get(API_ROUTES.GET_JOBS, {
-        params: { page, pageSize },
+        params: { page, size },
       });
-      return response.data.data; 
+      return response.data.data;
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || 'Failed to fetch jobs'
@@ -55,7 +58,6 @@ export const fetchOpenPositions = createAsyncThunk(
     }
   }
 );
-
 
 const jobsSlice = createSlice({
   name: 'jobs',

@@ -42,9 +42,12 @@ const FullJobPreview = ({ jobData }: { jobData: JobListing }) => {
       {/* Job Description */}
       <div className="flex flex-col mt-8">
         <p className="text-gray-400 text-[12px]">Description</p>
-        <h1 className="text-[#0F172A] text-[16px] font-medium">
-          {jobData.data.description}
-        </h1>
+        <div
+          className="prose max-w-none"
+          dangerouslySetInnerHTML={{
+            __html: jobData?.data.description || '',
+          }}
+        />
       </div>
 
       {/* Compensation */}
