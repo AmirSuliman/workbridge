@@ -9,6 +9,8 @@ export interface JobFormFields {
   reportingToEmployeeId: string;
   minYearsExperience: string;
   description: string;
+  dateOpened: string;
+  dateEnd: string;
   location: {
     id: number;
     street1: string;
@@ -47,6 +49,7 @@ export interface JobListing {
     minYearsExperience: number;
     status: string;
     dateOpened: string;
+    dateEnd: string;
     createdAt: string;
     location: {
       id: number;
@@ -92,31 +95,33 @@ export interface JobListing {
   };
 }
 
-type JobFormFields = {
-  tittle: string;
-  departmentId: string;
-  employmentType: string;
-  hiringLeadId: string;
-  reportingToEmployeeId: string;
-  minYearsExperience: string;
-  description: string;
-  location: {
-    id: number;
-    street1: string;
-    street2?: string;
-    zipCode: string;
-    city: string;
-    country: string;
-    state: string;
-  };
-  salary: string;
-  Resume: string | boolean;
-  Address: string | boolean;
-  linkedin: string | boolean;
-  companyWebsite: string | boolean;
-  glassdoor: string | boolean;
-  indeed: string | boolean;
-};
+// type JobFormFields = {
+//   tittle: string;
+//   departmentId: string;
+//   employmentType: string;
+//   hiringLeadId: string;
+//   reportingToEmployeeId: string;
+//   minYearsExperience: string;
+//   description: string;
+//   dateOpened: string;
+//   dateEnd: string;
+//   location: {
+//     id: number;
+//     street1: string;
+//     street2?: string;
+//     zipCode: string;
+//     city: string;
+//     country: string;
+//     state: string;
+//   };
+//   salary: string;
+//   Resume: string | boolean;
+//   Address: string | boolean;
+//   linkedin: string | boolean;
+//   companyWebsite: string | boolean;
+//   glassdoor: string | boolean;
+//   indeed: string | boolean;
+// };
 
 interface JobPreviewData {
   tittle: string;

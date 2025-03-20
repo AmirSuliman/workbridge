@@ -28,6 +28,8 @@ const Createjobopening = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
   const [employees, setEmployees] = useState<EmployeeData[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
+
   const [jobPreviewData, setJobPreviewData] = useState<
     JobPreviewData | undefined
   >(undefined);
@@ -37,8 +39,9 @@ const Createjobopening = () => {
     required: false,
     id: 0,
   });
+
   const [questions, setQuestions] = useState<question[]>([]);
-  const [departments, setDepartments] = useState<Department[]>([]);
+
   const handleToggleQuestion = () => {
     setIsRequired(!isRequired);
     setQuestion({ ...question, required: !question.required });
@@ -48,6 +51,7 @@ const Createjobopening = () => {
     setIsRequired(false);
     setQuestion({ title: '', required: false, id: 0 });
   };
+
   // this will remove question from array
   const removeQuestion = (index: number) => {
     const remainingQuestions = questions.filter(
@@ -55,6 +59,7 @@ const Createjobopening = () => {
     );
     setQuestions(remainingQuestions);
   };
+
   const toggleRequired = (id: number) => {
     const updatedQuestions = questions.map((question) => {
       if (question.id == id) {
@@ -64,23 +69,7 @@ const Createjobopening = () => {
     });
     setQuestions(updatedQuestions);
   };
-  // Fetch departments
-  useEffect(() => {
-    const getAllDepartments = async () => {
-      try {
-        const {
-          data: {
-            data: { items },
-          },
-        } = await axiosInstance.get(API_ROUTES.GET_DEPARTMENTS);
-        setDepartments(items);
-      } catch (error) {
-        toast.error('Failed to load all departments');
-        console.log(error);
-      }
-    };
-    getAllDepartments();
-  }, []);
+
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -115,7 +104,6 @@ const Createjobopening = () => {
 
   const formValues = watch();
 
-  console.log('job form errors: ', errors);
   const [checkboxStates, setCheckboxStates] = useState({
     Resume: false,
     Address: false,
@@ -169,16 +157,14 @@ const Createjobopening = () => {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
+  console.log('form errors: ', errors);
   const onSubmit = handleSubmit(async (data) => {
+    console.log('submit data: ', data);
     setLoading(true);
-
-    const requirements = Object.keys(toggleStates)
-      .filter((key) => data[key])
-      .map((key) => ({
-        name: key,
-        required: toggleStates[key],
-      }));
+    const requirements = Object.keys(checkboxStates).map((key) => ({
+      name: key,
+      required: toggleStates[key],
+    }));
 
     const location = {
       street1: data.location.street1,
@@ -196,39 +182,28 @@ const Createjobopening = () => {
       'companyWebsite',
     ].filter((key) => data[key]);
 
-    let jobData = {};
-    [
-      'tittle',
-      'description',
-      'departmentId',
-      'salary',
-      'employmentType',
-      'hiringLeadId',
-      'reportingToEmployeeId',
-      'minYearsExperience',
-    ].forEach((item) => {
-      jobData[item] = [
-        'departmentId',
-        'salary',
-        'hiringLeadId',
-        'reportingToEmployeeId',
-        'minYearsExperience',
-      ].includes(item)
-        ? Number(data[item] || 0)
-        : data[item] || '';
-    });
-
-    jobData = {
-      ...jobData,
-      requirements,
+    const jobData = {
+      tittle: data.tittle || '',
+      description: data.description || '',
+      departmentId: Number(data.departmentId || 0),
+      salary: Number(data.salary || 0),
+      employmentType: data.employmentType || '',
+      hiringLeadId: Number(data.hiringLeadId || 0),
+      reportingToEmployeeId: Number(data.reportingToEmployeeId || 0),
+      minYearsExperience: Number(data.minYearsExperience || 0),
+      dateOpened: data.dateOpened || new Date().toISOString().split('T')[0], // Adding missing dateOpened
+      dateEnd: data.dateEnd || '', // Adding missing dateEnd
       location,
+      requirements,
       shareWebsites,
       questions: questions.map((question) => ({
         question: question.title,
         required: question.required,
       })),
-      status: jobStatus, // Dynamically set status
+      status: jobStatus || 'Draft', // Ensure status is never empty
     };
+
+    console.log('payload: ', jobData);
 
     try {
       await axiosInstance.post(API_ROUTES.POST_JOB, jobData);
@@ -569,7 +544,7 @@ const Createjobopening = () => {
                     type="text"
                     placeholder="Add Zip"
                     className="form-input"
-                    {...register('location.zipCode', { valueAsNumber: true })}
+                    {...register('location.zipCode')}
                   />
                   {errors?.location?.zipCode && (
                     <p className="form-error">
@@ -626,8 +601,8 @@ const Createjobopening = () => {
             </div>
             <div className="w-full h-[0.7px] bg-gray-200 " />
 
-            <div className="p-8">
-              <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium ">
+            <section className="p-8 grid grid-cols-2 la:grid-cols-3 gap-4">
+              <h2 className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium col-span-full">
                 <svg
                   width="17"
                   height="15"
@@ -643,8 +618,8 @@ const Createjobopening = () => {
                   />
                 </svg>
                 Compensation
-              </div>
-              <label className="flex flex-col mb-4 sm:w-1/3 w-full mt-8">
+              </h2>
+              <label className="flex flex-col ">
                 <span className="form-label mb-2">Compensation</span>
                 <input
                   placeholder="Add annual compensation amount"
@@ -655,7 +630,31 @@ const Createjobopening = () => {
                   <span className="form-error">{errors.salary.message}</span>
                 )}
               </label>
-            </div>
+              <label className="flex flex-col ">
+                <span className="form-label mb-2">Open date</span>
+                <input
+                  type="date"
+                  className="form-input"
+                  {...register('dateOpened')}
+                />
+                {errors.dateOpened && (
+                  <span className="form-error">
+                    {errors.dateOpened.message}
+                  </span>
+                )}
+              </label>
+              <label className="flex flex-col ">
+                <span className="form-label mb-2">End date</span>
+                <input
+                  type="date"
+                  className="form-input"
+                  {...register('dateEnd')}
+                />
+                {errors.dateEnd && (
+                  <span className="form-error">{errors.dateEnd.message}</span>
+                )}
+              </label>
+            </section>
             <div className="w-full h-[0.7px] bg-gray-200 " />
 
             <div className="p-8">
@@ -711,7 +710,7 @@ const Createjobopening = () => {
               </div>
               {/* Existing Questions */}
               {questions.map((q, index) => (
-                <div key={index} className="mb-6">
+                <div key={index} className="">
                   <div className="flex flex-col items-start sm:items-center gap-1 sm:gap-8 sm:flex-row">
                     <label className="flex flex-col mb-4 sm:w-1/3 w-full">
                       <span className="form-label mb-2">Question Title</span>
@@ -750,7 +749,7 @@ const Createjobopening = () => {
                 </div>
               ))}
               <div className="flex flex-col items-start sm:items-center gap-1 sm:gap-8 sm:flex-row">
-                <label className="flex flex-col mb-4 sm:w-1/3 w-full mt-8">
+                <label className="flex flex-col mb-4 sm:w-1/3 w-full">
                   <span className="form-label mb-2">Question Title</span>
                   <input
                     placeholder="Add question"
@@ -778,7 +777,7 @@ const Createjobopening = () => {
                   Required
                 </span>
 
-                <div className="flex flex-row gap-3 mt-0 sm:mt-8">
+                <div className="flex flex-row gap-3 ">
                   <button
                     type="button"
                     className="text-[14px] bg-[#0F172A] text-white rounded-lg p-2 px-4"
