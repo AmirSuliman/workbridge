@@ -49,7 +49,6 @@ interface User {
 const Home = () => {
   const [evaluation, setEvaluation] = useState<any[]>([]);
   const [employeeId, setEmployeeId] = useState<User>();
-  const [role, setRole] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch<AppDispatch>();
   const { data: session } = useSession();
@@ -58,17 +57,6 @@ const Home = () => {
     console.log(session, 'session');
     return session;
   };
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      // console.log('session: ', session);
-      setRole(session?.user?.role);
-    };
-
-    fetchSession();
-  }, []);
-
-  const isViewOnly = role === 'ViewOnly';
 
   useEffect(() => {
     const fetchSessionAndSetEmployeeId = async () => {
@@ -105,17 +93,20 @@ const Home = () => {
     (state: RootState) => state.employee
   );
   console.log('employeeData:', employeeData);
+
   useEffect(() => {
     const getEvaluationNotification = async () => {
-      if (employeeId?.employeeId && role) {
+      if (employeeId?.employeeId && employeeData) { // Ensure employeeData is available
         setLoading(true); // Start loading while fetching
         try {
-          const roleParam = role === 'Manager' ? 'Manager' : 'Employee';
+          // Determine roleParam based on isManager
+          const roleParam = employeeData.isManager ? 'Manager' : 'Employee';
+  
           const response = await axiosInstance.get(
             `/survey/notification/employee/${employeeId.employeeId}?role=${roleParam}`
           );
-          console.log(response, 'resnotification');
-
+          console.log('resnotification', response);
+  
           const updatedEvaluations = response.data.data.notifications.map(
             (item) => ({
               ...item,
@@ -125,7 +116,7 @@ const Home = () => {
               surveyType: item.surveyType || '',
             })
           );
-
+  
           setEvaluation(updatedEvaluations);
         } catch (error) {
           console.log(error);
@@ -134,13 +125,14 @@ const Home = () => {
         }
       }
     };
-
-    if (employeeId && role) {
+  
+    if (employeeId && employeeData) { // Ensure employeeData is available
       getEvaluationNotification();
     }
-  }, [employeeId, role]);
+  }, [employeeId, employeeData]); 
 
-  // console.log('surveys: ');
+  const isManager = employeeData?.isManager;
+  console.log(isManager, 'manager');
 
   return (
     <div className="p-6">
@@ -163,13 +155,16 @@ const Home = () => {
           </header>
           <SingleAnnouncement />
         </section>
-        {!isViewOnly && evaluation.length > 0 && (
+
+        {isManager && (
           <Evaluation evaluation={evaluation} employeeId={employeeId} />
         )}
 
-        {isViewOnly && (
+        {!isManager && (
           <UserEvaluation evaluation={evaluation} employeeId={employeeId} />
         )}
+
+
         <HomePolicies />
         <Companyinfo />
         <NewEmployees />
@@ -177,4 +172,5 @@ const Home = () => {
     </div>
   );
 };
+
 export default Home;
