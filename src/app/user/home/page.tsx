@@ -8,7 +8,7 @@ import SingleAnnouncement from '@/components/Announcements/SingleAnnouncement';
 import Training from '@/components/Training/Training';
 import WhosOut from '@/components/WhosOut/WhosOut';
 import axiosInstance from '@/lib/axios';
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { HiSpeakerphone } from 'react-icons/hi';
@@ -16,6 +16,12 @@ import { PiArrowUpRightThin } from 'react-icons/pi';
 import Evaluation from './components/evaluation';
 import HomePolicies from './components/HomePolicies';
 import UserEvaluation from './components/userevaulation';
+import {
+  clearEmployeeData,
+  fetchEmployeeData,
+} from '@/store/slices/employeeInfoSlice';
+import { AppDispatch, RootState } from '@/store/store';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface InnerUser {
   active: boolean;
@@ -45,6 +51,8 @@ const Home = () => {
   const [employeeId, setEmployeeId] = useState<User>();
   const [role, setRole] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
+  const dispatch = useDispatch<AppDispatch>();
+  const { data: session } = useSession();
   const fetchSession = async (): Promise<Session | null> => {
     const session = await getSession();
     console.log(session, 'session');
@@ -75,6 +83,28 @@ const Home = () => {
     fetchSessionAndSetEmployeeId();
   }, []);
 
+  useEffect(() => {
+    // Fetch employee data if session and empId are valid
+    if (session?.user.accessToken && session?.user?.employeeId) {
+      dispatch(
+        fetchEmployeeData({
+          accessToken: session.user.accessToken,
+          userId: session?.user?.employeeId,
+        })
+      );
+    } else {
+      console.log('Invalid session or user ID');
+    }
+
+    return () => {
+      dispatch(clearEmployeeData());
+    };
+  }, [dispatch, session?.user.accessToken, session?.user?.employeeId]);
+
+  const { data: employeeData } = useSelector(
+    (state: RootState) => state.employee
+  );
+  console.log('employeeData:', employeeData);
   useEffect(() => {
     const getEvaluationNotification = async () => {
       if (employeeId?.employeeId && role) {
