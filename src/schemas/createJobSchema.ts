@@ -49,7 +49,7 @@ export const createJobSchema = z.object({
   employmentType: z.enum(
     [
       'Fulltime',
-      'Parttime',
+      'Part Time',
       'Contract',
       'Temporary',
       'Internship',
