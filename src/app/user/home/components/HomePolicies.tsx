@@ -25,24 +25,24 @@ interface Policy {
     firstName: string;
     lastName: string;
   };
-  postedBy?: string; // Add this field
+  postedBy?: string;
 }
 
 const HomePolicies = () => {
   const router = useRouter();
-  const [announcements, setAnnouncements] = useState<Policy[]>([]);
+  const [policies, setPolicies] = useState<Policy[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchAnnouncements = async () => {
+    const fetchPolicies = async () => {
       try {
         const response = await getPoliciesById(1, 1000);
         const allPolicies = response.data?.data?.rows || [];
 
         if (!Array.isArray(allPolicies) || allPolicies.length === 0) {
           setError(null);
-          setAnnouncements([]);
+          setPolicies([]);
           return;
         }
 
@@ -74,18 +74,18 @@ const HomePolicies = () => {
           )
           .slice(0, 8);
 
-        setAnnouncements(sortedData);
+        setPolicies(sortedData);
         setError(null);
       } catch (err) {
         console.error('Error fetching policies:', err);
         setError('Failed to fetch policies. Please try again later.');
-        setAnnouncements([]);
+        setPolicies([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAnnouncements();
+    fetchPolicies();
   }, []);
 
   if (loading) {
@@ -109,10 +109,10 @@ const HomePolicies = () => {
           New Policies Update
         </h1>
         <section className="divide-y">
-          {announcements.length > 0 ? (
-            announcements.map((announcement) => (
+          {policies.length > 0 ? (
+            policies.map((policy, index) => (
               <div
-                key={announcement.id}
+                key={index}
                 className="flex flex-row items-center mb-4 justify-between w-full"
               >
                 <div className="flex flex-row items-center gap-2">
@@ -125,26 +125,25 @@ const HomePolicies = () => {
                   />
                   <div className="flex flex-col">
                     <p className="text-[14px] font-semibold">
-                      {announcement.title || ''}
+                      {policy.title || ''}
                     </p>
                     <div className="flex flex-row items-center gap-5">
                       <p className="text-[12px]">
                         Posted by:{' '}
-                        <span className="font-semibold">
-                          {announcement.postedBy}
-                        </span>
+                        <span className="font-semibold">{policy.postedBy}</span>
                       </p>
                       <p className="text-[12px]">
                         Effective Date:
                         <span className="font-semibold">
-                          {announcement.effectiveDate
-                            ? new Date(
-                                announcement.effectiveDate
-                              ).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                              })
+                          {policy.effectiveDate
+                            ? new Date(policy.effectiveDate).toLocaleDateString(
+                                'en-US',
+                                {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric',
+                                }
+                              )
                             : 'No Date Available'}
                         </span>
                       </p>
@@ -152,9 +151,7 @@ const HomePolicies = () => {
                   </div>
                 </div>
                 <button
-                  onClick={() =>
-                    router.push(`/user/home/policy/${announcement.id}`)
-                  }
+                  onClick={() => router.push(`/user/home/policy/${policy.id}`)}
                   className="border rounded p-2 flex flex-row items-center gap-3 text-[10px] mt-8"
                 >
                   View <PiArrowUpRightThin size={18} />

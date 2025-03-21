@@ -60,6 +60,11 @@ const PolicyToEmployees: React.FC<PolicyToEmployeesProps> = ({ onClose, postPoli
   };
 
   const onSubmit = async (data: { employeeIds: number[] }) => {
+    if (!data.employeeIds || data.employeeIds.length === 0) {
+      toast.error("Please select at least one employee.");
+      return;
+    }
+  
     try {
       setSubmitting(true);
       await postPolicy();
@@ -67,7 +72,7 @@ const PolicyToEmployees: React.FC<PolicyToEmployeesProps> = ({ onClose, postPoli
         policyId: sessionStorage.getItem('policy'),
         employeeIds: data.employeeIds,
       });
-
+  
       toast.success('Policy sent successfully!');
       onClose();
       router.back();
@@ -82,6 +87,7 @@ const PolicyToEmployees: React.FC<PolicyToEmployeesProps> = ({ onClose, postPoli
       setSubmitting(false);
     }
   };
+  
 
   return (
     <div>

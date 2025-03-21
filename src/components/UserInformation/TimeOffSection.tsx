@@ -14,6 +14,7 @@ import VacationsCard from './VacationsCard';
 import toast from 'react-hot-toast';
 import imageLoader from '../../../imageLoader';
 import { useParams } from 'next/navigation';
+import SickLeaveAttachments from './SickLeaveAttachments';
 
 interface Employee {
   firstName: string;
@@ -251,8 +252,8 @@ const TimeOffSection = ({ employeeData }) => {
                 />,
                 new Date(item.leaveDay).toLocaleDateString(),
                 new Date(item.returningDay).toLocaleDateString(),
-                `${item?.user.firstName || 'N/A'} ${
-                  item?.user.lastName || 'N/A'
+                `${item?.user?.firstName || 'N/A'} ${
+                  item?.user?.lastName || 'N/A'
                 }`.trim(),
                 `${item.note || 'N/A'}`,
               ])}

@@ -5,18 +5,16 @@ import { SurveyProps } from '@/types/common';
 import { useSearchParams, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-
-
 const Evaluationsurvey = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [survey, setSurvey] = useState<SurveyProps | null>(null);
   
   const searchParams = useSearchParams();
   const surveyId = searchParams.get('survey');
-  const { managerId } = useParams();
+  const { departmentId } = useParams();
 
   console.log('Survey ID:', surveyId);
-  console.log('Manager ID:', managerId);
+  console.log('Department ID:', departmentId);
 
   useEffect(() => {
     const getSurvey = async () => {
@@ -36,9 +34,9 @@ const Evaluationsurvey = () => {
     if (surveyId) getSurvey();
   }, [surveyId]);
 
-  // Find the manager matching `managerId`
-  const selectedManager = survey?.managers?.find(
-    (manager) => String(manager.id) === String(managerId)
+  // Find the department matching `departmentId`
+  const selectedDepartment = survey?.departments?.find(
+    (department) => String(department.id) === String(departmentId)
   );
 
   return (
@@ -50,15 +48,14 @@ const Evaluationsurvey = () => {
           <div className="flex flex-row items-center justify-between w-full">
             <h1 className="font-medium text-[18px]">Evaluation Survey</h1>
             <button
-  className={`${
-    selectedManager?.SurveyEmployee?.status === 'Completed'
-      ? 'text-[#00B87D] bg-[#D5F6DD]'
-      : 'text-black bg-[#0F172A1A]'
-  } p-1 px-3 text-[12px] font-medium rounded`}
->
-  {selectedManager?.SurveyEmployee?.status || 'N/A'}
-</button>
-
+              className={`${
+                survey?.status === 'Completed'
+                  ? 'text-[#00B87D] bg-[#D5F6DD]'
+                  : 'text-black bg-[#0F172A1A]'
+              } p-1 px-3 text-[12px] font-medium rounded`}
+            >
+              {survey?.status}
+            </button>
           </div>
 
           <div className="flex flex-row w-full sm:w-[70%] mt-10 gap-4">
@@ -78,26 +75,28 @@ const Evaluationsurvey = () => {
             </label>
           </div>
 
-          {selectedManager ? (
+          {selectedDepartment ? (
             <div className="flex flex-row w-full sm:w-[70%] mt-6 gap-4 mb-10">
               <label className="flex flex-col gap-1 w-full">
                 <span className="text-gray-400 text-[14px]">Department</span>
                 <div className="p-3 w-full border rounded text-[14px]">
-                  {selectedManager.department?.name || 'N/A'}
+                  {selectedDepartment.name || 'N/A'}
                 </div>
               </label>
               <label className="flex flex-col gap-1 w-full">
                 <span className="text-gray-400 text-[14px]">
-                  Manager
+                  Department Head
                 </span>
                 <div className="p-3 w-full border rounded text-[14px]">
-                  {`${selectedManager.firstName} ${selectedManager.lastName}`}
+                  {selectedDepartment.department_head_data
+                    ? `${selectedDepartment.department_head_data.firstName} ${selectedDepartment.department_head_data.lastName}`
+                    : 'N/A'}
                 </div>
               </label>
             </div>
           ) : (
             <div className="p-3 mt-6 border rounded text-[14px] text-red-500">
-              No matching manager found.
+              No matching department found.
             </div>
           )}
         </>

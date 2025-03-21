@@ -18,6 +18,7 @@ import { FaChevronRight, FaDownload } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { calculateDuration } from '@/lib/calculateDuration';
 
 export const AllEmployees = () => {
   const router = useRouter();
@@ -47,8 +48,8 @@ export const AllEmployees = () => {
   const [uniqueDepartments, setUniqueDepartments] = useState<string[]>([]);
   const pageSize = 10;
   const [isDownloading, setIsDownloading] = useState(false);
-  const [hasData, setHasData] = useState(false); 
-  
+  const [hasData, setHasData] = useState(false);
+
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -59,7 +60,7 @@ export const AllEmployees = () => {
           searchTerm
         );
         dispatch(addEmployees(data.items));
-        console.log('employees: ', data);
+
         // Extract unique job titles and departments
         const jobTitles: string[] = Array.from(
           new Set(data.items.map((employee) => employee.tittle))
@@ -316,34 +317,18 @@ export const AllEmployees = () => {
             {!loading ? (
               <tbody className="w-full">
                 {filteredEmployees?.map((employee) => {
-                  const hireDate = employee?.hireDate
-                    ? new Date(employee.hireDate).toLocaleDateString()
+                  const hireDateObj = employee?.hireDate
+                    ? new Date(employee.hireDate)
+                    : undefined;
+
+                  // Format the date for display
+                  const hireDateFormatted = hireDateObj
+                    ? hireDateObj.toLocaleDateString()
                     : 'N/A';
 
-                  const calculateDuration = (
-                    startDate: string | undefined
-                  ): string => {
-                    if (!startDate) return 'N/A';
-                    const start = new Date(startDate);
-                    const now = new Date();
-                    const differenceInMilliseconds =
-                      now.getTime() - start.getTime();
-                    const days = Math.floor(
-                      differenceInMilliseconds / (1000 * 60 * 60 * 24)
-                    );
-                    const months =
-                      now.getMonth() -
-                      start.getMonth() +
-                      12 * (now.getFullYear() - start.getFullYear());
-                    if (months < 1) return `${days} d`;
-                    if (months < 12) return `${months} m`;
-                    const years = Math.floor(months / 12);
-                    const remainingMonths = months % 12;
-                    return `${years} y ${remainingMonths} m`;
-                  };
-                  const duration = employee?.hireDate
-                    ? calculateDuration(hireDate)
-                    : '';
+                  const duration = hireDateObj
+                    ? calculateDuration(hireDateObj)
+                    : 'N/A';
 
                   return (
                     <tr
@@ -379,7 +364,7 @@ export const AllEmployees = () => {
                         </a>
                       </td>
                       <td className="py-3 px-4 border-b">
-                        {hireDate}
+                        {hireDateFormatted}
                         <br />
                         <span className="text-[10px] mt-2">{duration}</span>
                       </td>

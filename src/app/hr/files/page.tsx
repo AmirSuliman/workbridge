@@ -331,7 +331,7 @@ const HrFiles = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row items-start gap-6 w-full mt-8">
-        <div className="flex flex-col bg-white border rounded-[10px] w-fit whitespace-nowrap h-full">
+        <div className="flex flex-col bg-white border rounded-[10px] whitespace-nowrap min-h-[600px] w-[400px]">
           <h1 className="mt-6 px-4 font-medium text-[18px] text-[#0F172A] mb-4">
             Folders
           </h1>

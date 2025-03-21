@@ -3,7 +3,7 @@ import React from 'react';
 
 const JobPreview = ({ jobData }: { jobData: JobPreviewData }) => {
   return (
-    <div className=" p-4 border border-gray-300 rounded shadow-md w-full sm:w-[700px] overflow-y-auto" >
+    <div className=" p-4 border border-gray-300 rounded shadow-md w-full sm:w-[700px] overflow-y-auto">
       <div>
         {/* <p>
         <strong>Hiring Lead:</strong> {jobData.hiringLead}
@@ -56,16 +56,19 @@ const JobPreview = ({ jobData }: { jobData: JobPreviewData }) => {
         {/* Job Description */}
         <div className="flex flex-col mt-8">
           <p className="text-gray-400 text-[12px]">Description</p>
-          <h1 className="text-[#0F172A] text-[16px] font-medium">
-            {jobData.description}
-          </h1>
+          <div
+            className="prose max-w-none"
+            dangerouslySetInnerHTML={{
+              __html: jobData?.description || '',
+            }}
+          />
         </div>
 
         {/* Compensation */}
         <div className="flex flex-col mt-8">
           <p className="text-gray-400 text-[12px]">Compensation</p>
           <h1 className="text-[#0F172A] text-[16px] font-medium">
-            {jobData.salary}
+            {jobData.salary || ''}
           </h1>
         </div>
 

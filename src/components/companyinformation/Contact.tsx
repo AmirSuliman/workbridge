@@ -13,9 +13,9 @@ const Contact = () => {
       <Link
         href={`mailto:${contact.email}`}
         target="_blank"
-        className="flex flex-row gap-2 truncate text-[14px]"
+        className="flex flex-row gap-2 break-all text-[14px]"
       >
-        <FaEnvelope className="mt-2" />
+        <FaEnvelope size={15} className="mt-2 shrink-0" />
         {contact.email}
       </Link>
       <Link
@@ -23,7 +23,11 @@ const Contact = () => {
         target="_blank"
         className="flex flex-row gap-2 items-center text-[14px] mb-4"
       >
-        <FaPhone style={{ transform: 'rotate(90deg)' }} />
+        <FaPhone
+          size={15}
+          className=" shrink-0"
+          style={{ transform: 'rotate(90deg)' }}
+        />
         {contact.phone}
       </Link>
     </div>

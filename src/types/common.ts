@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Department, EmployeeData, Location } from './employee';
+import {  EmployeeData, Location } from './employee';
 
 export interface IconProps {
   classNames?: string;
@@ -20,6 +20,12 @@ export interface Announcement {
   status: 'Published' | 'Draft';
   type: 'Miscellaneous' | 'Policy Changes' | 'Company Activity' | null;
 }
+interface LocalDepartment {
+  id: number;
+  name: string;
+  department_head_data?: { firstName: string; lastName: string };
+}
+
 
 export interface SurveyProps {
   createdAt: string;
@@ -34,11 +40,12 @@ export interface SurveyProps {
     lastName: string;
   };
   employee: EmployeeData;
-  department: Department;
+  departments: LocalDepartment[];
   managers: {
     id: string;
     firstName: string;
     lastName: string;
+    SurveyEmployee?: { status: string }; 
     department: {
       name: string;
     };
