@@ -31,7 +31,14 @@ const DepartmentTable = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+ 
+  const handleDepartmentAdded = (updatedDepartments) => {
+    setDepartments(updatedDepartments);
+    setFilteredDepartments(updatedDepartments);
+  };
+  
+  
+  
   useEffect(() => {
     const fetchDepartments = async () => {
       setLoading(true);
@@ -78,10 +85,11 @@ const DepartmentTable = () => {
 
   useEffect(() => {
     const filtered = departments.filter((dept) =>
-      dept.name.toLowerCase().includes(searchQuery.toLowerCase())
+      dept.name?.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredDepartments(filtered);
   }, [searchQuery, departments]);
+  
 
   return (
     <div className="mt-4 p-2 z-10">
@@ -214,10 +222,12 @@ const DepartmentTable = () => {
 
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-          <CreateDepartment
-            isModalOpen={isModalOpen}
-            setIsModalOpen={setIsModalOpen}
-          />
+<CreateDepartment
+  isModalOpen={isModalOpen}
+  setIsModalOpen={setIsModalOpen}
+  onDepartmentAdded={handleDepartmentAdded}
+/>
+
         </Modal>
       )}
     </div>

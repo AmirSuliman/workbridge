@@ -45,6 +45,7 @@ export interface SurveyProps {
     id: string;
     firstName: string;
     lastName: string;
+    SurveyEmployee?: { status: string }; 
     department: {
       name: string;
     };

@@ -45,7 +45,19 @@ const OpendepartmentTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortType, setSortType] = useState<string>('');
+ 
 
+  const handleEmployeeAdded = (newEmployees: EmployeeData[]) => {
+    setEmployees((prevEmployees) => {
+      const updatedEmployees = [...prevEmployees, ...newEmployees];
+      setFilteredEmployees(updatedEmployees);
+      return updatedEmployees;
+    });
+  };
+  
+  
+  
+  
   useEffect(() => {
     if (id) {
       const fetchDepartmentData = async () => {
@@ -173,6 +185,7 @@ const OpendepartmentTable: React.FC = () => {
     }
   };
 
+ 
   return (
     <div className="h-full p-2">
       <div className="flex justify-between items-center gap-4 mb-4">
@@ -309,7 +322,10 @@ const OpendepartmentTable: React.FC = () => {
 
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-          <Addemployee setIsModalOpen={setIsModalOpen} />
+      <Addemployee 
+  setIsModalOpen={setIsModalOpen} 
+  onEmployeeAdded={handleEmployeeAdded}
+/>
         </Modal>
       )}
       {isModalOpen1 && (
