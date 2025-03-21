@@ -198,9 +198,9 @@ const EvaluationList = () => {
           ))}
         </tbody>
       </table>
-<div className='mt-6 flex items-center justify-between w-full'>
+<div className='mt-6 flex items-center justify-end w-full'>
 <Pagination
-            styles={{ container: 'mt-5 gap-x-2 !justify-end' }}
+            styles={{ container: 'mt-5 gap-x-2 justify-end' }}
 
   totalItems={data?.totalItems || 0}
   pageSize={pageSize}
