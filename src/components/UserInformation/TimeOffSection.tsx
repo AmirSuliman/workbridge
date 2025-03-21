@@ -14,6 +14,7 @@ import VacationsCard from './VacationsCard';
 import toast from 'react-hot-toast';
 import imageLoader from '../../../imageLoader';
 import { useParams } from 'next/navigation';
+import SickLeaveAttachments from './SickLeaveAttachments';
 
 interface Employee {
   firstName: string;

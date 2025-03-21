@@ -1,8 +1,9 @@
 'use client';
-import { FaTimes } from 'react-icons/fa';
+import { FaDownload, FaTimes } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
 import { isAxiosError } from 'axios';
+import Link from 'next/link';
 
 interface DenyProps {
   timeOffRequestId: number;
@@ -120,6 +121,21 @@ const Deny = ({ timeOffRequestId, onClose, onDeny }) => {
             }}
           />
         </label>
+        {timeOffRequest?.files && (
+          <section className="flex flex-col gap-2 col-span-full">
+            {timeOffRequest?.files.map((file, index) => (
+              <Link
+                href={file.file.url}
+                target="_blank"
+                key={index}
+                className="px-4 py-2 bg-[#0F172A] text-white flex justify-between gap-4 rounded"
+              >
+                {file.file.fileName.replace(/^\d+-/, '')}
+                <FaDownload />
+              </Link>
+            ))}
+          </section>
+        )}
       </div>
 
       {/* Action Buttons */}

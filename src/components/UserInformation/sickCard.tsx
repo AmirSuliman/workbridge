@@ -9,6 +9,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { isAxiosError } from 'axios';
 import imageLoader from '../../../imageLoader';
+import SickLeaveAttachments from './SickLeaveAttachments';
 interface SickCardProps {
   onButtonClick?: () => void;
   totalDays: number;
@@ -27,6 +28,7 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
   const [vacationDaysUsed, setVacationDaysUsed] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [fileIds, setFileIds] = useState([]);
   const [holidaysErrors, setHolidaysErrors] = useState<HolidaysErrorsProps[]>(
     []
   );
@@ -38,58 +40,64 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
       if (start > end) {
         return 0;
       }
-  
+
       let count = 0;
       let current = new Date(start);
-  
+
       // Loop through each day and only count weekdays
-      while (current < end) { // Change "<=" to "<" to exclude endDate
+      while (current < end) {
+        // Change "<=" to "<" to exclude endDate
         const dayOfWeek = current.getDay();
         if (dayOfWeek !== 0 && dayOfWeek !== 6) {
           count++;
         }
         current.setDate(current.getDate() + 1);
       }
-  
+
       return count > 0 ? count : 0;
     }
     return 0;
   }, [startDate, endDate]);
-  
-  const calculateReturningDate = (start: Date | null, days: number, totalDays: number) => {
+
+  const calculateReturningDate = (
+    start: Date | null,
+    days: number,
+    totalDays: number
+  ) => {
     if (!start || days <= 0 || totalDays <= 0) return null;
-  
+
     let count = 0;
     let current = new Date(start);
-  
+
     while (count < days && count < totalDays) {
       current.setDate(current.getDate() + 1);
       const dayOfWeek = current.getDay();
-  
+
       if (dayOfWeek !== 0 && dayOfWeek !== 6) {
         count++;
       }
     }
-  
+
     return current;
   };
- 
+
   useEffect(() => {
     if (startDate) {
       setVacationDaysUsed(calculateDuration());
     }
   }, [startDate, endDate, calculateDuration]);
-  
-  
+
   useEffect(() => {
-    if (startDate && !endDate) { 
+    if (startDate && !endDate) {
       // Only auto-calculate if endDate hasn't been set by the user
-      const newEndDate = calculateReturningDate(startDate, vacationDaysUsed, totalDays);
+      const newEndDate = calculateReturningDate(
+        startDate,
+        vacationDaysUsed,
+        totalDays
+      );
       setEndDate(newEndDate);
     }
   }, [startDate, vacationDaysUsed, totalDays, endDate]);
-  
-  
 
   const formatDate = (date) => {
     if (!date) return '';
@@ -111,8 +119,11 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
       returningDay: formatDate(endDate),
       duration: duration,
       type: 'Sick',
+      fileIds,
       note: note,
     };
+
+    console.log('sick leave payload: ', payload);
 
     try {
       setLoading(true);
@@ -249,19 +260,20 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
               <label className="flex flex-col w-full">
                 <span className="text-gray-400 text-[12px]">Leaving Date</span>
                 <DatePicker
-                                  selected={startDate}
-                                  onChange={(date) => setStartDate(date)}
-                                  selectsStart
-                                  startDate={startDate}
-                                  endDate={endDate}
-                                  minDate={new Date()}
-                                  dateFormat="MM/dd/yyyy"
-                                  placeholderText="mm/dd/yyyy"
-                                  className="p-3 border rounded w-full"
-                                  filterDate={(date) => {
-                                    const day = date.getDay();
-                                    return day !== 0 && day !== 6; 
-                                  }}/>
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  selectsStart
+                  startDate={startDate}
+                  endDate={endDate}
+                  minDate={new Date()}
+                  dateFormat="MM/dd/yyyy"
+                  placeholderText="mm/dd/yyyy"
+                  className="p-3 border rounded w-full"
+                  filterDate={(date) => {
+                    const day = date.getDay();
+                    return day !== 0 && day !== 6;
+                  }}
+                />
               </label>
 
               <label className="flex flex-col w-full">
@@ -269,23 +281,30 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                   Returning Date
                 </span>
                 <DatePicker
-                 selected={endDate}
-                 onChange={(date) => setEndDate(date)}
-                 selectsEnd
-                 startDate={startDate}
-                 endDate={endDate}
-                 minDate={startDate || undefined}
-                maxDate={startDate ? calculateReturningDate(startDate, totalDays, totalDays) || undefined : undefined}
-               
-                 dateFormat="MM/dd/yyyy"
-                 placeholderText="mm/dd/yyyy"
-                 className="p-3 border rounded w-full"
-                 disabled={!startDate}
-                 filterDate={(date) => {
-                   const day = date.getDay();
-                   return day !== 0 && day !== 6;
-                 }}
-               />
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  minDate={startDate || undefined}
+                  maxDate={
+                    startDate
+                      ? calculateReturningDate(
+                          startDate,
+                          totalDays,
+                          totalDays
+                        ) || undefined
+                      : undefined
+                  }
+                  dateFormat="MM/dd/yyyy"
+                  placeholderText="mm/dd/yyyy"
+                  className="p-3 border rounded w-full"
+                  disabled={!startDate}
+                  filterDate={(date) => {
+                    const day = date.getDay();
+                    return day !== 0 && day !== 6;
+                  }}
+                />
               </label>
               <label className="flex flex-col w-full col-span-full">
                 <span className="text-gray-400 text-[12px]">Note</span>
@@ -309,6 +328,8 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                 {vacationDaysUsed} days
               </div>
             </div>
+            <br />
+            <SickLeaveAttachments fileIds={fileIds} setFileIds={setFileIds} />
 
             <div className="flex flex-row  px-6 w-full gap-4 mt-16">
               <button
