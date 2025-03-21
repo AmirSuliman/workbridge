@@ -15,8 +15,19 @@ interface Employee {
 interface ErrorDetails {
   [key: string]: string;
 }
+interface Department {
+  id: string;
+  name: string;
+  employeeCount: number;
+  head: string;
+  openPositions: any[];
+  department_head_data: {
+    firstName: string;
+    lastName: string;
+  };
+}
 
-const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
+const CreateDepartment = ({ isModalOpen, setIsModalOpen, onDepartmentAdded }) => {
   const [departmentName, setDepartmentName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -56,64 +67,59 @@ const CreateDepartment = ({ isModalOpen, setIsModalOpen }) => {
 
   const handleAddDepartment = async () => {
     try {
-      console.log('Form Data:', {
-        name: departmentName,
-        employeeId: selectedEmployeeId,
-      });
-
       await departmentSchema.validate(
         { name: departmentName, headId: selectedEmployeeId },
         { abortEarly: false }
       );
       setErrorMessage('');
       setEmployeeError('');
-
+  
       if (!selectedEmployeeId) {
         setEmployeeError('Please select a department head.');
         return;
       }
-
+  
       setIsLoading(true);
-
-      console.log('Selected Employee ID:', selectedEmployeeId);
-
-      const response = await axiosInstance.post('/department', {
+  
+      await axiosInstance.post('/department', {
         name: departmentName,
         employeeId: selectedEmployeeId,
       });
-
-      console.log('Department created successfully:', response.data);
-
+  
+      // Refetch departments after creation
+      const response = await axiosInstance.get('/departments', {
+        params: { associations: true },
+      });
+  
+      const items = response.data.data?.items;
+      if (items) {
+        const processedDepartments: Department[] = items.map((dept: any) => ({
+          id: dept.id,
+          name: dept.name,
+          employeeCount: dept.employees?.length || 0,
+          head: dept.openPositions?.[0]?.hiringLeadId || 'N/A',
+          openPositions: dept.openPositions || [],
+          department_head_data: dept.department_head_data || {
+            firstName: '',
+            lastName: 'N/A',
+          },
+        }));
+  
+        onDepartmentAdded(processedDepartments); // Update state with full department list
+      }
+  
       setDepartmentName('');
       setSelectedEmployeeId('');
-      setSelectedEmployeeName('');
       setIsModalOpen(false);
     } catch (error) {
-      if (error instanceof yup.ValidationError) {
-        const errorDetails: ErrorDetails = error.inner.reduce(
-          (acc: ErrorDetails, curr) => {
-            acc[curr.path as string] = curr.message;
-            return acc;
-          },
-          {}
-        );
-        if (errorDetails.name) setErrorMessage(errorDetails.name);
-        if (errorDetails.headId) setEmployeeError(errorDetails.headId);
-      } else if (axios.isAxiosError(error) && error.response) {
-        console.error('Server error:', error.response?.data || error.message);
-        setErrorMessage(
-          error.response.data.message ||
-            'An error occurred while creating the department. Please try again.'
-        );
-      } else {
-        console.error('Unexpected error:', error);
-        setErrorMessage('An unexpected error occurred.');
-      }
+      console.error('Error:', error);
+      setErrorMessage('Failed to create department.');
     } finally {
       setIsLoading(false);
     }
   };
-
+  
+  
   if (!isModalOpen) return null;
 
   return (

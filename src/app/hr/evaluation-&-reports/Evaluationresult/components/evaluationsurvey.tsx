@@ -5,6 +5,8 @@ import { SurveyProps } from '@/types/common';
 import { useSearchParams, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+
+
 const Evaluationsurvey = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [survey, setSurvey] = useState<SurveyProps | null>(null);
@@ -48,14 +50,15 @@ const Evaluationsurvey = () => {
           <div className="flex flex-row items-center justify-between w-full">
             <h1 className="font-medium text-[18px]">Evaluation Survey</h1>
             <button
-              className={`${
-                survey?.status === 'Completed'
-                  ? 'text-[#00B87D] bg-[#D5F6DD]'
-                  : 'text-black bg-[#0F172A1A]'
-              } p-1 px-3 text-[12px] font-medium rounded`}
-            >
-              {survey?.status}
-            </button>
+  className={`${
+    selectedManager?.SurveyEmployee?.status === 'Completed'
+      ? 'text-[#00B87D] bg-[#D5F6DD]'
+      : 'text-black bg-[#0F172A1A]'
+  } p-1 px-3 text-[12px] font-medium rounded`}
+>
+  {selectedManager?.SurveyEmployee?.status || 'N/A'}
+</button>
+
           </div>
 
           <div className="flex flex-row w-full sm:w-[70%] mt-10 gap-4">
