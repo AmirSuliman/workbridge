@@ -158,13 +158,16 @@ const Createjobopening = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   console.log('form errors: ', errors);
+
   const onSubmit = handleSubmit(async (data) => {
     console.log('submit data: ', data);
     setLoading(true);
-    const requirements = Object.keys(checkboxStates).map((key) => ({
-      name: key,
-      required: toggleStates[key],
-    }));
+    const requirements = Object.keys(checkboxStates)
+      .filter((key) => checkboxStates[key]) // Only include checked items
+      .map((key) => ({
+        name: key,
+        required: toggleStates[key],
+      }));
 
     const location = {
       street1: data.location.street1,
@@ -206,7 +209,8 @@ const Createjobopening = () => {
     console.log('payload: ', jobData);
 
     try {
-      await axiosInstance.post(API_ROUTES.POST_JOB, jobData);
+      const response = await axiosInstance.post(API_ROUTES.POST_JOB, jobData);
+      console.log('response: ', response.data);
       toast.success(
         jobStatus === 'Published'
           ? 'Job published successfully'
@@ -795,7 +799,7 @@ const Createjobopening = () => {
               </div>
             </div>
 
-            <div className="h-[1px] w-full bg-gray-300" />
+            {/* <div className="h-[1px] w-full bg-gray-300" />
             <div className="p-8">
               <div className="flex flex-row items-center gap-2 text-[#0F172A] text-[18px] font-medium mb-8">
                 <svg
@@ -864,7 +868,7 @@ const Createjobopening = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           <div
             onClick={handlePublish}

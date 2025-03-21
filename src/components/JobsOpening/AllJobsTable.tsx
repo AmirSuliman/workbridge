@@ -19,7 +19,6 @@ export const AllJobsTable = () => {
   const { items, loading, error, totalItems } = useSelector(
     (state: RootState) => state.jobs
   );
-  console.log('totalItems', totalItems);
   const [sortCriteria, setSortCriteria] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [typeFilter, setTypeFilter] = useState<string>('');
