@@ -232,7 +232,14 @@ const TimeOffSection = ({ employeeData }) => {
           <p className="text-red-500">{error}</p>
         ) : (
           <InfoGrid
-            headers={['Type', 'Date From', 'Date To', 'Approved By', 'Notes']}
+            headers={[
+              'Type',
+              'Date From',
+              'Date To',
+              'Status',
+              'Approved/Denied By',
+              'Notes',
+            ]}
             values={timeOffData
               .filter((timeoff, index) => timeoff.status !== 'Pending')
               .map((item, index) => [
@@ -252,6 +259,11 @@ const TimeOffSection = ({ employeeData }) => {
                 />,
                 new Date(item.leaveDay).toLocaleDateString(),
                 new Date(item.returningDay).toLocaleDateString(),
+                item?.status === 'Confirmed' ? (
+                  <p className="text-[#00B87D]">Confirmed</p>
+                ) : (
+                  <p className="text-[#F53649]">Denied</p>
+                ),
                 `${item?.user?.firstName || 'N/A'} ${
                   item?.user?.lastName || 'N/A'
                 }`.trim(),

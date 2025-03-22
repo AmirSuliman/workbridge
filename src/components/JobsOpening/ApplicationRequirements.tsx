@@ -15,7 +15,7 @@ export const ApplicationRequirements = ({
             value="Resume"
             className="form-checkbox h-5 w-5  accent-black cursor-pointer mr-3"
             {...register('Resume')}
-            onChange={handleCheckboxChange('Resume')} // Add onChange handler
+            onChange={handleCheckboxChange('Resume')}
             checked={checkboxStates.Resume}
           />
           Resume
@@ -47,7 +47,7 @@ export const ApplicationRequirements = ({
             value="Portfolio"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Portfolio')}
-            onChange={handleCheckboxChange('Portfolio')} // Add onChange handler
+            onChange={handleCheckboxChange('Portfolio')}
             checked={checkboxStates.Portfolio}
           />
           Portfolio
@@ -78,7 +78,7 @@ export const ApplicationRequirements = ({
             value="CoverLetter"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('CoverLetter')}
-            onChange={handleCheckboxChange('CoverLetter')} // Add onChange handler
+            onChange={handleCheckboxChange('CoverLetter')}
             checked={checkboxStates.CoverLetter}
           />
           Cover Letter
@@ -111,7 +111,7 @@ export const ApplicationRequirements = ({
             value="Address"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Address')}
-            onChange={handleCheckboxChange('Address')} // Add onChange handler
+            onChange={handleCheckboxChange('Address')}
             checked={checkboxStates.Address}
           />
           Address
@@ -142,7 +142,7 @@ export const ApplicationRequirements = ({
             value="DesiredSalary"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('DesiredSalary')}
-            onChange={handleCheckboxChange('DesiredSalary')} // Add onChange handler
+            onChange={handleCheckboxChange('DesiredSalary')}
             checked={checkboxStates.DesiredSalary}
           />
           Desired Salary
@@ -175,7 +175,7 @@ export const ApplicationRequirements = ({
             value="Education"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Education')}
-            onChange={handleCheckboxChange('Education')} // Add onChange handler
+            onChange={handleCheckboxChange('Education')}
             checked={checkboxStates.Education}
           />
           Education
@@ -206,7 +206,7 @@ export const ApplicationRequirements = ({
             value="LinkedInProfile"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('LinkedInProfile')}
-            onChange={handleCheckboxChange('LinkedInProfile')} // Add onChange handler
+            onChange={handleCheckboxChange('LinkedInProfile')}
             checked={checkboxStates.LinkedInProfile}
           />
           LinkedIn Profile
@@ -239,7 +239,7 @@ export const ApplicationRequirements = ({
             value="Website"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Website')}
-            onChange={handleCheckboxChange('Website')} // Add onChange handler
+            onChange={handleCheckboxChange('Website')}
             checked={checkboxStates.Website}
           />
           Website
@@ -270,7 +270,7 @@ export const ApplicationRequirements = ({
             value="Referral"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
             {...register('Referral')}
-            onChange={handleCheckboxChange('Referral')} // Add onChange handler
+            onChange={handleCheckboxChange('Referral')}
             checked={checkboxStates.Referral}
           />
           Referral

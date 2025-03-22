@@ -491,6 +491,9 @@ const Createjobopening = () => {
                   />
                 )}
               />
+              {errors.description && (
+                <span className="form-error">{errors.description.message}</span>
+              )}
             </div>
             <div className="w-full h-[0.7px] bg-gray-200 " />
 

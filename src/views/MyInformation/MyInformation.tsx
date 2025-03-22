@@ -76,9 +76,6 @@ const MyInformation = () => {
     hireDate: employeeData?.hireDate
       ? new Date(employeeData.hireDate).toISOString().split('T')[0]
       : '',
-    // effectiveDate: employeeData?.effectiveDate
-    //   ? new Date(employeeData.effectiveDate).toISOString().split('T')[0]
-    //   : '',
     salary: employeeData?.salary ? employeeData.salary : 0,
     location: {
       zipCode: employeeData?.location?.zipCode || '',
@@ -99,8 +96,8 @@ const MyInformation = () => {
   const {
     reset,
     control,
-    resetField,
     register,
+    resetField,
     handleSubmit,
     formState: { errors },
   } = useForm({

@@ -10,7 +10,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
@@ -18,12 +18,17 @@ import { useDispatch } from 'react-redux';
 import { z } from 'zod';
 import Footer from './footer';
 import Navbar from './nav';
+import ScreenLoader from '@/components/common/ScreenLoader';
 
 type AuthFormInputs = z.infer<typeof authSchema>;
 
 const Auth = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const callbackUrl = searchParams.get('callbackUrl') || '';
 
   const {
     register,
@@ -34,11 +39,9 @@ const Auth = () => {
     mode: 'onChange',
   });
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '';
+  const getAbsoluteUrl = useCallback((url: string) => {
+    if (!url) return '';
 
-  const getAbsoluteUrl = (url: string) => {
     try {
       // If the URL is already absolute, return it
       new URL(url);
@@ -47,92 +50,89 @@ const Auth = () => {
       // If the URL is relative, prepend the base URL
       return `${window.location.origin}${url}`;
     }
-  };
+  }, []);
+
+  const handleRedirect = useCallback(
+    (userData: any, token: string) => {
+      if (userData?.firstTime) {
+        router.replace('/update-password');
+        return;
+      }
+
+      const decodedCallbackUrl = callbackUrl
+        ? decodeURIComponent(callbackUrl)
+        : '';
+      const absoluteCallbackUrl = getAbsoluteUrl(decodedCallbackUrl);
+
+      if (
+        decodedCallbackUrl &&
+        (decodedCallbackUrl.startsWith('/hr/') ||
+          decodedCallbackUrl.startsWith('/user/'))
+      ) {
+        router.replace(absoluteCallbackUrl);
+      } else {
+        // Default redirect based on role
+        router.replace(
+          userData.role === 'Manager' || userData.role === 'ViewOnly'
+            ? '/user/home'
+            : '/hr/home'
+        );
+      }
+    },
+    [callbackUrl, getAbsoluteUrl, router]
+  );
 
   // Check for existing session when component mounts
   // If session exist then go to home page without re-login
   useEffect(() => {
-    const checkSession = async () => {
-      const session = await getSession();
-      if (session?.user?.accessToken) {
-        try {
-          // Fetch user data with the existing token
-          const userData = await fetchUserData(session.user.accessToken);
-          dispatch(setUser(userData));
+    let isMounted = true;
 
-          // Check if there's a callback URL to redirect to
-          if (callbackUrl) {
-            const absoluteCallbackUrl = getAbsoluteUrl(callbackUrl);
-            console.log('auth-callbackUrl: ', absoluteCallbackUrl);
-            router.replace(absoluteCallbackUrl);
-          } else {
-            // Default redirect based on role
-            if (userData.role === 'Manager' || userData.role === 'ViewOnly') {
-              router.replace('/user/home');
-            } else {
-              router.replace('/hr/home');
-            }
+    const checkSession = async () => {
+      try {
+        const session = await getSession();
+
+        if (!isMounted) return;
+
+        if (session?.user?.accessToken) {
+          try {
+            const userData = await fetchUserData(session.user.accessToken);
+
+            if (!isMounted) return;
+
+            dispatch(setUser(userData));
+            handleRedirect(userData, session.user.accessToken);
+          } catch (error) {
+            // Token invalid - just continue to login page
+            setIsLoading(false);
           }
-        } catch (error) {
-          // If token is invalid or expired, sign out
-          signOut({ redirect: false });
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setIsLoading(false);
         }
       }
     };
 
-    checkSession();
-
-    // Add event listener to prevent using the back button after logout
-    const handlePopState = (event: PopStateEvent) => {
-      const session = getSession();
-      if (!session) {
-        // Prevent going back to authorized pages after logout
-        window.history.pushState(null, '', window.location.pathname);
-      }
+    // Add event listener for back button
+    const handlePopState = () => {
+      window.history.pushState(null, '', window.location.pathname);
     };
 
     window.addEventListener('popstate', handlePopState);
+    checkSession();
 
     return () => {
+      isMounted = false;
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [dispatch, router, callbackUrl]);
+  }, [dispatch, handleRedirect]);
 
   // Add cache control headers
-  useEffect(() => {
-    // Set cache control headers
-    const setNoCache = () => {
-      // For modern browsers
-      if (typeof window !== 'undefined') {
-        document
-          .getElementsByTagName('meta')[0]
-          .setAttribute('http-equiv', 'Cache-Control');
-        document
-          .getElementsByTagName('meta')[0]
-          .setAttribute(
-            'content',
-            'no-store, no-cache, must-revalidate, max-age=0'
-          );
-        document
-          .getElementsByTagName('meta')[1]
-          .setAttribute('http-equiv', 'Pragma');
-        document
-          .getElementsByTagName('meta')[1]
-          .setAttribute('content', 'no-cache');
-
-        document
-          .getElementsByTagName('meta')[2]
-          .setAttribute('http-equiv', 'Expires');
-        document.getElementsByTagName('meta')[2].setAttribute('content', '0');
-      }
-    };
-
-    setNoCache();
-  }, []);
-
   const onSubmit = async (data: AuthFormInputs) => {
     try {
-      // Attempt to sign in with the callbackUrl included
+      setIsLoading(true);
       const decodedCallbackUrl = decodeURIComponent(callbackUrl);
       const absoluteCallbackUrl = getAbsoluteUrl(decodedCallbackUrl);
 
@@ -145,54 +145,40 @@ const Auth = () => {
 
       if (!res?.ok) {
         toast.error('Invalid Email or Password!');
+        setIsLoading(false);
         return;
       }
 
-      // Get session after sign-in
+      // Get session after successful sign-in
       const session = await getSession();
 
       if (session?.user?.accessToken) {
         try {
-          // Fetch user data
           const userData = await fetchUserData(session.user.accessToken);
-          console.log('user/my: ', userData);
           dispatch(setUser(userData));
-          if (userData?.firstTime) {
-            return router.replace('/update-password');
-          }
           toast.success('Login Successful!');
-
-          // Check if there's a callback URL to redirect to
-          // Redirect only if the url starts with hr or user
-          if (
-            callbackUrl.startsWith('/hr/') ||
-            callbackUrl.startsWith('/user/')
-          ) {
-            router.replace(absoluteCallbackUrl);
-          } else {
-            // Default redirect based on role
-            if (userData.role === 'Manager' || userData.role === 'ViewOnly') {
-              router.replace('/user/home');
-            } else {
-              router.replace('/hr/home');
-            }
-          }
+          handleRedirect(userData, session.user.accessToken);
         } catch (error) {
           console.error('Error fetching user data:', error);
           toast.error(
             error instanceof Error ? error.message : 'Failed to load user data!'
           );
+          setIsLoading(false);
         }
       } else {
         toast.error('Authentication failed. Please try again.');
+        setIsLoading(false);
       }
     } catch (error) {
       console.error('Login error:', error);
       toast.error('An unexpected error occurred.');
-    } finally {
+      setIsLoading(false);
     }
   };
 
+  if (isLoading && !isSubmitting) {
+    return <ScreenLoader />;
+  }
   return (
     <>
       <Head>
