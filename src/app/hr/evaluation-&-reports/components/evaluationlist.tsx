@@ -3,7 +3,7 @@ import axiosInstance from '@/lib/axios';
 import { BiChevronRight, BiChevronLeft } from 'react-icons/bi';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
+import { Pagination } from '@/components/common/Pagination';
 interface SurveyData {
   items: {
     id: number;
@@ -22,9 +22,10 @@ interface SurveyData {
     createdAt: string;
   }[];
   totalPages: number;
+  totalItems:number;
 }
 
-const EvaluationList = ({ pageSize = 10 }: { pageSize?: number }) => {
+const EvaluationList = () => {
   const [activeTab, setActiveTab] = useState<'employee' | 'department'>('employee');
   const [data, setData] = useState<SurveyData | null>(null);
   const [loading, setLoading] = useState(false);
@@ -32,6 +33,7 @@ const EvaluationList = ({ pageSize = 10 }: { pageSize?: number }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const router = useRouter();
+  const pageSize = 10;
 
   useEffect(() => {
     const fetchSurveys = async () => {
@@ -59,7 +61,7 @@ const EvaluationList = ({ pageSize = 10 }: { pageSize?: number }) => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="bg-white p-6 rounded-[10px] border">
+    <div className="bg-white p-6 rounded-[10px] border w-full">
       <div className="flex flex-row items-center justify-between w-full">
         <div className="flex flex-row items-center gap-2">Evaluations List</div>
         <div className="flex flex-row items-center gap-4">
@@ -196,32 +198,18 @@ const EvaluationList = ({ pageSize = 10 }: { pageSize?: number }) => {
           ))}
         </tbody>
       </table>
+<div className='mt-6 flex items-center justify-end w-full'>
+<Pagination
+            styles={{ container: 'mt-5 gap-x-2 justify-end' }}
 
-      {/* Pagination Controls */}
-      <div className="flex justify-end gap-2 items-center mt-4">
-        <button
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          className={`p-2 px-2 border rounded ${
-            currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : ''
-          }`}
-        >
-          <BiChevronLeft size={20} />
-        </button>
-        <p>
-          Page {currentPage} of {totalPages}
-        </p>
-        <button
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-          className={`p-2 px-4 border rounded ${
-            currentPage === totalPages ? 'text-gray-400 cursor-not-allowed' : ''
-          }`}
-        >
-          <BiChevronRight size={20} />
-        </button>
-      </div>
-    </div>
+  totalItems={data?.totalItems || 0}
+  pageSize={pageSize}
+  currentPage={currentPage}
+  setCurrentPage={setCurrentPage}
+/>
+</div>
+     
+        </div>
   );
 };
 
