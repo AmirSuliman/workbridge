@@ -60,6 +60,7 @@ const DocumentSection = ({
 }) => {
   const [documentId, setDocumentId] = useState<number | null>(null);
   const [openModal, setOpenModal] = useState(false);
+  const { empId } = useParams();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [sortOption, setSortOption] = useState<'size' | 'date'>('size');
   const [documents, setDocuments] = useState<DocumentType[]>(
@@ -84,7 +85,6 @@ const DocumentSection = ({
   }, []);
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
-  const { empId } = useParams();
 
   const handleDocumentDelete = (deletedDocumentId: number) => {
     setDocuments((prevDocuments) =>

@@ -131,7 +131,6 @@ const HrFiles = () => {
           axiosInstance.get('/folders'),
           axiosInstance.get('/files'),
         ]);
-        console.log('filesResponse', filesResponse.data.data.items);
         setFolders(foldersResponse.data.data.items);
         setAllFiles(filesResponse.data.data.items);
         setIsAllFilesActive(true); // Ensure "All Files" is selected by default
@@ -335,7 +334,7 @@ const HrFiles = () => {
           <h1 className="mt-6 px-4 font-medium text-[18px] text-[#0F172A] mb-4">
             Folders
           </h1>
-          
+
           {loading && (
             <p className="text-center text-gray-500">Loading folders...</p>
           )}
@@ -403,7 +402,7 @@ const HrFiles = () => {
                 </tr>
               </thead>
               <tbody>
-                { activeFolder ? (
+                {activeFolder ? (
                   activeFolder?.files?.length > 0 ? (
                     activeFolder.files.map((file, index) => (
                       <tr

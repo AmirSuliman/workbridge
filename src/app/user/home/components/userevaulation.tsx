@@ -4,10 +4,9 @@ import imageLoader from '../../../../../imageLoader';
 import { useSession } from 'next-auth/react';
 
 const Evaluation = ({ evaluation, employeeId }) => {
-    const { data: session } = useSession();
-    const userRole = session?.user?.role; 
-    console.log(userRole, 'role');
-  
+  const { data: session } = useSession();
+  const userRole = session?.user?.role;
+
   return (
     <div className="w-full p-6 bg-white rounded-[10px] border ">
       <p className="text-[18px] font-medium flex flex-row items-center gap-2">
@@ -29,7 +28,9 @@ const Evaluation = ({ evaluation, employeeId }) => {
             className="flex flex-row items-center justify-between w-full"
           >
             <div className="flex flex-col mt-8">
-              <p className="text-[14px] font-semibold">Yearly Evaluation Form</p>
+              <p className="text-[14px] font-semibold">
+                Yearly Evaluation Form
+              </p>
               <p className="text-[11px] font-bold">
                 <span className="font-normal">Date:</span>{' '}
                 {item.createdAt

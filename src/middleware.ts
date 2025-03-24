@@ -3,67 +3,106 @@ import { withAuth } from 'next-auth/middleware';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-enum Routes {
-  USER_HOME = '/user/home',
-  HR_HOME = '/hr/home',
-  SIGN_IN = '/sign-in',
+// Define routes as constants for better maintainability
+const ROUTES = {
+  USER_HOME: '/user/home',
+  HR_HOME: '/hr/home',
+  SIGN_IN: '/sign-in',
+};
+
+// Define roles for better type safety
+type UserRole = 'Admin' | 'SuperAdmin' | 'Manager' | 'ViewOnly';
+
+interface CustomToken {
+  user?: {
+    user?: {
+      role?: UserRole;
+    };
+  };
 }
+
+// Define role access map to simplify permission checks
+const ROLE_ACCESS = {
+  Admin: {
+    canAccessUserRoutes: false,
+    canAccessHrRoutes: true,
+    defaultRedirect: ROUTES.HR_HOME,
+  },
+  SuperAdmin: {
+    canAccessUserRoutes: false,
+    canAccessHrRoutes: true,
+    defaultRedirect: ROUTES.HR_HOME,
+  },
+  Manager: {
+    canAccessUserRoutes: true,
+    canAccessHrRoutes: false,
+    defaultRedirect: ROUTES.USER_HOME,
+  },
+  ViewOnly: {
+    canAccessUserRoutes: true,
+    canAccessHrRoutes: false,
+    defaultRedirect: ROUTES.USER_HOME,
+  },
+};
 
 export default withAuth(
   async function middleware(request: NextRequest) {
-    const token: any = await getToken({
+    const token = (await getToken({
       req: request,
       secret: process.env.NEXTAUTH_SECRET,
-    });
-    console.log('req.url: ', request.url);
+    })) as CustomToken | null;
+
     const pathname = request.nextUrl.pathname;
-    const userRole = token?.user?.user?.role;
+    const userRole = token?.user?.user?.role as UserRole | undefined;
 
-    // Redirect to /sign-in if user is not authenticated on protected routes
-    if (!token && pathname !== '/sign-in') {
-      return NextResponse.redirect(new URL('/sign-in', request.url));
-    }
-
-    // Handle role-based redirects if user is authenticated and accessing /sign-in
-    if (token && pathname === '/sign-in') {
-      console.log('inside sign in');
-      // Redirect based on user role
-      if (userRole === 'Admin') {
-        return NextResponse.redirect(new URL(Routes.HR_HOME, request.url));
-      }
-      if (userRole === 'ViewOnly') {
-        return NextResponse.redirect(new URL(Routes.USER_HOME, request.url));
-      }
+    // Handle unauthenticated users
+    if (!token && pathname !== ROUTES.SIGN_IN) {
+      return NextResponse.redirect(new URL(ROUTES.SIGN_IN, request.url));
     }
 
-    // Enforce role-based access to specific protected routes
-    if (token && pathname.startsWith('/user') && userRole === 'Admin') {
-      console.log('inside  user path');
-      return NextResponse.redirect(new URL(Routes.HR_HOME, request.url));
-    }
-    if (token && pathname.startsWith('/user') && userRole === 'SuperAdmin') {
-      console.log('inside  user path');
-      return NextResponse.redirect(new URL(Routes.HR_HOME, request.url));
+    // Skip further processing if no token or no role
+    if (!token || !userRole) {
+      return NextResponse.next();
     }
 
-    if (token && pathname.startsWith('/hr') && userRole === 'ViewOnly') {
-      console.log('inside  HR path');
-      return NextResponse.redirect(new URL(Routes.USER_HOME, request.url));
-    }
-    if (token && pathname.startsWith('/hr') && userRole === 'Manager') {
-      console.log('inside  HR path');
-      return NextResponse.redirect(new URL(Routes.USER_HOME, request.url));
+    // Get role access configuration
+    const roleAccess = ROLE_ACCESS[userRole];
+
+    // Handle unknown roles gracefully
+    if (!roleAccess) {
+      return NextResponse.next();
     }
 
-    return NextResponse.next(); // Allow to proceed to requested route
+    // Authenticated user trying to access sign-in page
+    if (pathname === ROUTES.SIGN_IN) {
+      return NextResponse.redirect(
+        new URL(roleAccess.defaultRedirect, request.url)
+      );
+    }
+
+    // Role-based path restrictions
+    if (pathname.startsWith('/user') && !roleAccess.canAccessUserRoutes) {
+      return NextResponse.redirect(
+        new URL(roleAccess.defaultRedirect, request.url)
+      );
+    }
+
+    if (pathname.startsWith('/hr') && !roleAccess.canAccessHrRoutes) {
+      return NextResponse.redirect(
+        new URL(roleAccess.defaultRedirect, request.url)
+      );
+    }
+
+    return NextResponse.next();
   },
   {
     pages: {
-      signIn: '/sign-in',
+      signIn: ROUTES.SIGN_IN,
     },
   }
 );
 
 export const config = {
+  // Be specific about what paths to match to avoid unnecessary middleware execution
   matcher: ['/', '/sign-in', '/user/:path*', '/hr/:path*'],
 };

@@ -37,8 +37,11 @@ interface ErrorResponse {
 }
 
 const MyInformation = () => {
+  const [role, setRole] = useState<string>();
   const [myInfoLoading, setMyInfoLoading] = useState(true);
   const [editLoading, setEditLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.myInfo);
   const myId = user?.user?.employeeId; // This id is used to view the current logged in user's info
@@ -48,8 +51,6 @@ const MyInformation = () => {
   const [schemaErrors, setSchemaErrors] = useState<FieldErrors | undefined>(
     undefined
   );
-
-  const [role, setRole] = useState<string>();
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -156,9 +157,6 @@ const MyInformation = () => {
     myId,
     myInfoLoading,
   ]);
-
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // profile picture
   const handleFileChange = useCallback(

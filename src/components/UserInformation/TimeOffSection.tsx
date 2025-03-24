@@ -2,7 +2,10 @@
 import Modal from '@/components/modal/Modal';
 import axiosInstance from '@/lib/axios';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import imageLoader from '../../../imageLoader';
 import LabelWithIcon from '../common/LabelWithIcon';
 import ClockRotateIcon from '../icons/clock-rotate-icon';
 import SickPersonIcon from '../icons/sick-person-icon';
@@ -11,10 +14,6 @@ import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import SickCard from './sickCard';
 import VacationsCard from './VacationsCard';
-import toast from 'react-hot-toast';
-import imageLoader from '../../../imageLoader';
-import { useParams } from 'next/navigation';
-import SickLeaveAttachments from './SickLeaveAttachments';
 
 interface Employee {
   firstName: string;
@@ -91,7 +90,6 @@ const TimeOffSection = ({ employeeData }) => {
           const response = await axiosInstance.get('/timeoffs/my', {
             params: { associations: true },
           });
-          console.log('my timeoffs: ', response.data.data.items);
 
           setTimeOffData(response.data.data.items);
         } else {
@@ -101,7 +99,6 @@ const TimeOffSection = ({ employeeData }) => {
               params: { associations: true },
             }
           );
-          console.log('empId timeoffs: ', response.data.data.items);
           setTimeOffData(response.data.data.items);
         }
       } catch (err) {

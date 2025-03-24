@@ -68,7 +68,6 @@ const Page = () => {
           const response = await axiosInstance.get(
             `/survey/notification/employee/${employeeId.employeeId}?role=${roleParam}`
           );
-          console.log(response, 'resnotification');
 
           const updatedEvaluations = response.data.data.notifications.map(
             (item) => ({
@@ -106,10 +105,10 @@ const Page = () => {
         <Employeementreport />
       </div>
       <div className="flex flex-col gap-4 flex-1">
-      {(isHR || isSuperadmin) && evaluation.length > 0 && (
-        <Evaluation evaluation={evaluation} employeeId={employeeId} />
-      )}
-      
+        {(isHR || isSuperadmin) && evaluation.length > 0 && (
+          <Evaluation evaluation={evaluation} employeeId={employeeId} />
+        )}
+
         {isHR &&
           evaluation.length > 0 &&
           !evaluation.some((item) => item.status === 'In Progress') && (
@@ -133,7 +132,7 @@ const Page = () => {
           </header>
           <SingleAnnouncement />
         </section>
-        <HomePolicies/>
+        <HomePolicies />
         <LeaveRequests />
         <NewEmployees />
       </div>

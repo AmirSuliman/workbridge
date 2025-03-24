@@ -12,16 +12,14 @@ interface Folder {
 
 const UploadFiles = ({ setIsModalOpen1 }) => {
   const { data: session } = useSession();
-  const userId = session?.user?.userId; 
-  console.log(userId, 'id');
-  console.log(session);
+  const userId = session?.user?.userId;
   const [progress, setProgress] = useState(0);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [folders, setFolders] = useState<Folder[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [folderId, setFolderId] = useState<string>('');
-  const [title, setTitle] = useState<string>(''); 
+  const [title, setTitle] = useState<string>('');
 
   useEffect(() => {
     const fetchFolders = async () => {
@@ -69,15 +67,21 @@ const UploadFiles = ({ setIsModalOpen1 }) => {
       setLoading(true);
 
       // Step 1: Upload the file
-      const uploadResponse = await axiosInstance.post('/file/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        onUploadProgress: (progressEvent) => {
-          if (progressEvent.total) {
-            const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-            setProgress(percentage);
-          }
-        },
-      });
+      const uploadResponse = await axiosInstance.post(
+        '/file/upload',
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const percentage = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              );
+              setProgress(percentage);
+            }
+          },
+        }
+      );
 
       const fileId = uploadResponse.data?.data?.id;
       if (!fileId) {
@@ -87,10 +91,13 @@ const UploadFiles = ({ setIsModalOpen1 }) => {
       console.log('File uploaded:', uploadResponse.data);
 
       // Step 2: Call /adminfile/upload API
-      const adminUploadResponse = await axiosInstance.post('/adminfile/upload', {
-        fileId,
-        uploadedBy: userId,
-      });
+      const adminUploadResponse = await axiosInstance.post(
+        '/adminfile/upload',
+        {
+          fileId,
+          uploadedBy: userId,
+        }
+      );
 
       console.log('Admin file uploaded:', adminUploadResponse.data);
 
@@ -117,20 +124,22 @@ const UploadFiles = ({ setIsModalOpen1 }) => {
       <h2 className="font-semibold text-xl mb-4">Upload File</h2>
 
       {/* File Select */}
-      <label className="text-gray-400 block text-sm mb-2 mt-8">Upload file</label>
+      <label className="text-gray-400 block text-sm mb-2 mt-8">
+        Upload file
+      </label>
       <label className="border-dashed border-2 border-gray-300 rounded-lg h-32 w-full flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition text-gray-400">
-  <span className="text-black flex flex-row items-center gap-2 mt-2">Choose a file <FaUpload/></span>
-  <input
-    type="file"
-    onChange={handleFileSelect}
-    className="hidden"
-  />
-</label>
-
+        <span className="text-black flex flex-row items-center gap-2 mt-2">
+          Choose a file <FaUpload />
+        </span>
+        <input type="file" onChange={handleFileSelect} className="hidden" />
+      </label>
 
       <div className="w-full mt-2">
         <div className="h-2 bg-gray-200 rounded">
-          <div className="h-2 bg-gray-400 rounded" style={{ width: `${progress}%` }}></div>
+          <div
+            className="h-2 bg-gray-400 rounded"
+            style={{ width: `${progress}%` }}
+          ></div>
         </div>
         <div className="text-gray-500 text-xs mt-1 text-right">{progress}%</div>
       </div>

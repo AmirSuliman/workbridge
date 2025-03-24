@@ -5,16 +5,11 @@ import imageLoader from '../../../../../../imageLoader';
 
 const PreviewPolicy = ({ previewData }) => {
   const { data: session } = useSession();
-  console.log(session, 'session');
-  console.log(previewData, 'previewData'); // Debugging log
 
   const username =
     session?.user?.user?.firstName + ' ' + session?.user?.user?.lastName;
-  console.log(username, 'username');
-  console.log(previewData.attachment?.file, 'Attachment File Data');
 
   return (
-
     <div className="bg-white mt-8">
       <div className="p-6 border rounded-[10px]">
         <h1 className="text-[32px] font-medium">{previewData.title}</h1>
@@ -57,25 +52,22 @@ const PreviewPolicy = ({ previewData }) => {
           />
         )}
 
-{/* Attachment Preview */}
-{previewData?.attachment?.file?.url ? (
-  <div className="mt-4">
-    <p className="text-[16px] font-semibold">Attachment:</p>
-    <a
-      href={previewData.attachment.file.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-blue-600 underline"
-    >
-      {previewData.attachment.file.name || 'Download Attachment'}
-    </a>
-  </div>
-) : (
-  <p className="text-gray-500">No attachment available</p>
-)}
-
-
-
+        {/* Attachment Preview */}
+        {previewData?.attachment?.file?.url ? (
+          <div className="mt-4">
+            <p className="text-[16px] font-semibold">Attachment:</p>
+            <a
+              href={previewData.attachment.file.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline"
+            >
+              {previewData.attachment.file.name || 'Download Attachment'}
+            </a>
+          </div>
+        ) : (
+          <p className="text-gray-500">No attachment available</p>
+        )}
 
         {/* Policy Description */}
         {previewData.description && (

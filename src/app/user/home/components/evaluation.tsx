@@ -6,8 +6,6 @@ import imageLoader from '../../../../../imageLoader';
 const Evaluation = ({ evaluation, employeeId }) => {
   const { data: session } = useSession();
   const userRole = session?.user?.role;
-  console.log(userRole, 'role');
-
   const baseRoute = userRole === 'Admin' ? '/hr/home' : '/user/home';
 
   return (
