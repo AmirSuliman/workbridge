@@ -204,7 +204,7 @@ const OrgChartWithHoverPositions = ({
     [expandedEmployeeIds]
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!d3Container.current || !employees) return;
 
     if (!refOrgChart.current) {
@@ -212,45 +212,45 @@ const OrgChartWithHoverPositions = ({
     }
 
     const transformedData = getTransformedData(employees);
-    if (
-      refOrgChart.current &&
-      d3Container.current &&
-      !hasMultiRoots &&
-      !hasCycle
-    ) {
-      refOrgChart.current
-        .container(d3Container.current)
-        .data(transformedData)
-        .nodeHeight(() => 97)
-        .nodeWidth(() => 300)
-        .setActiveNodeCentered(false)
-        .svgHeight(window.innerHeight)
-        .compact(compact)
-        .childrenMargin(() => 60)
-        .compactMarginBetween(() => 25)
-        .compactMarginPair(() => 40)
-        .neighbourMargin(() => 20)
-        .onNodeClick((node: any) => {
-          if (node.data._upToTheRootHighlighted) {
-            refOrgChart.current.clearHighlighting();
-          } else {
-            refOrgChart.current.setUpToTheRootHighlighted(node.id).render();
-          }
-        })
-        .nodeContent((d) => {
-          // console.log('openPositions: ', d.data.openPositions);
-          const directSubordinatesCount = actualSubordinates[d.data.id] || 0;
-          const isSelected = d.data.selectedEmployees?.includes(d.data.id);
-          const color = isSelected
-            ? '#230E37'
-            : d.data.isOpenPosition
-            ? '#00B87D'
-            : '#97959980';
+    setTimeout(() => {
+      if (
+        refOrgChart.current &&
+        d3Container.current &&
+        !hasMultiRoots &&
+        !hasCycle
+      ) {
+        refOrgChart.current
+          .container(d3Container.current)
+          .data(transformedData)
+          .nodeHeight(() => 97)
+          .nodeWidth(() => 300)
+          .setActiveNodeCentered(false)
+          .svgHeight(window.innerHeight)
+          .compact(compact)
+          .childrenMargin(() => 60)
+          .compactMarginBetween(() => 25)
+          .compactMarginPair(() => 40)
+          .neighbourMargin(() => 20)
+          .onNodeClick((node: any) => {
+            if (node.data._upToTheRootHighlighted) {
+              refOrgChart.current.clearHighlighting();
+            } else {
+              refOrgChart.current.setUpToTheRootHighlighted(node.id).render();
+            }
+          })
+          .nodeContent((d) => {
+            const directSubordinatesCount = actualSubordinates[d.data.id] || 0;
+            const isSelected = d.data.selectedEmployees?.includes(d.data.id);
+            const color = isSelected
+              ? '#230E37'
+              : d.data.isOpenPosition
+              ? '#00B87D'
+              : '#97959980';
 
-          const hasOpenPositions =
-            d.data.openPositions?.length > 0 || checkForOpenPositions(d);
+            const hasOpenPositions =
+              d.data.openPositions?.length > 0 || checkForOpenPositions(d);
 
-          return `
+            return `
           <div class="profile-${d.data.id}" style="
             background-color: ${
               d.data._highlighted || d.data._upToTheRootHighlighted
@@ -393,64 +393,65 @@ const OrgChartWithHoverPositions = ({
             </div>
           </div>
         `;
-        })
-        .nodeUpdate(function (node) {
-          const id = node.data.id;
+          })
+          .nodeUpdate(function (node) {
+            const id = node.data.id;
 
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          // Handle select button click
-          d3.select(this)
-            .select(`.${BTN_SELECT}`)
-            .on('click', (e) => {
-              e.stopPropagation();
-              onSelectedEmployees(id);
-            });
-
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          // Handle open positions button click
-          d3.select(this)
-            .select(`.${BTN_HOVER_OPEN_POSITIONS}`)
-            .on('click', (e) => {
-              e.stopPropagation();
-              toggleOpenPositions(id);
-            });
-
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          // Update node highlighting
-          d3.select(this)
-            .select('.node-rect')
-            .attr('stroke', (d) =>
-              d.data._highlighted || d.data._upToTheRootHighlighted
-                ? '#00B87D'
-                : 'none'
-            )
-            .attr(
-              'stroke-width',
-              node.data._highlighted || node.data._upToTheRootHighlighted
-                ? 5
-                : 1
-            );
-        })
-        .linkUpdate(function (d) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          d3.select(this)
-            .attr('stroke', () =>
-              d.data._upToTheRootHighlighted ? '#00B87D' : '#E4E2E9'
-            )
-            .attr('stroke-width', d.data._upToTheRootHighlighted ? 3 : 1);
-
-          if (d.data._upToTheRootHighlighted) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            d3.select(this).raise();
-          }
-        })
-        .render();
-    }
+            // Handle select button click
+            d3.select(this)
+              .select(`.${BTN_SELECT}`)
+              .on('click', (e) => {
+                e.stopPropagation();
+                onSelectedEmployees(id);
+              });
+
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            // Handle open positions button click
+            d3.select(this)
+              .select(`.${BTN_HOVER_OPEN_POSITIONS}`)
+              .on('click', (e) => {
+                e.stopPropagation();
+                toggleOpenPositions(id);
+              });
+
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            // Update node highlighting
+            d3.select(this)
+              .select('.node-rect')
+              .attr('stroke', (d) =>
+                d.data._highlighted || d.data._upToTheRootHighlighted
+                  ? '#00B87D'
+                  : 'none'
+              )
+              .attr(
+                'stroke-width',
+                node.data._highlighted || node.data._upToTheRootHighlighted
+                  ? 5
+                  : 1
+              );
+          })
+          .linkUpdate(function (d) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            d3.select(this)
+              .attr('stroke', () =>
+                d.data._upToTheRootHighlighted ? '#00B87D' : '#E4E2E9'
+              )
+              .attr('stroke-width', d.data._upToTheRootHighlighted ? 3 : 1);
+
+            if (d.data._upToTheRootHighlighted) {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              d3.select(this).raise();
+            }
+          })
+          .render();
+      }
+    }, 100);
   }, [
     employees,
     compact,

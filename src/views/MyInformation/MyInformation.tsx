@@ -72,10 +72,10 @@ const MyInformation = () => {
   const formattedData = {
     ...employeeData,
     birthday: employeeData?.birthday
-      ? new Date(employeeData.birthday).toISOString().split('T')[0]
+      ? new Date(employeeData?.birthday).toISOString().split('T')[0]
       : '',
     hireDate: employeeData?.hireDate
-      ? new Date(employeeData.hireDate).toISOString().split('T')[0]
+      ? new Date(employeeData?.hireDate).toISOString().split('T')[0]
       : '',
     salary: employeeData?.salary ? employeeData.salary : 0,
     location: {
@@ -133,8 +133,8 @@ const MyInformation = () => {
     // Fetch employee data if session and empId are valid
     if (
       !myInfoLoading &&
-      session?.user.accessToken &&
-      (empId || session?.user.userId)
+      session?.user?.accessToken &&
+      (empId || session?.user?.userId)
     ) {
       dispatch(
         fetchEmployeeData({

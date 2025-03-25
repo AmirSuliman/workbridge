@@ -7,23 +7,45 @@ import ScreenLoader from '@/components/common/ScreenLoader';
 import SearchInput from '@/components/common/SearchBar';
 import { IMAGES } from '@/constants/images';
 import { getAllEmployees } from '@/services/getAllEmployees';
-import { addEmployees } from '@/store/slices/allEmployeesSlice';
+import {
+  fetchEmployees,
+  openDeleteModal,
+  setCurrentPage,
+} from '@/store/slices/allEmployeesSlice';
 import { AllEmployeeData } from '@/types/employee';
 import { getSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { CiCirclePlus } from 'react-icons/ci';
-import { FaChevronRight, FaDownload } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
+import { FaChevronRight, FaDownload, FaTrash } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { calculateDuration } from '@/lib/calculateDuration';
+import DeleteEmployeeMoadal from './DeleteEmployeeModal';
+import { AppDispatch, RootState } from '@/store/store';
 
 export const AllEmployees = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const {
+    items: employees,
+    loading,
+    uniqueJobTitles,
+    uniqueDepartments,
+    currentPage,
+    totalItems,
+  } = useSelector((state: RootState) => state.employees);
+
   const [role, setRole] = useState<string>();
+  const [filteredEmployees, setFilteredEmployees] = useState<
+    AllEmployeeData['items'] | undefined
+  >([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOption, setSortOption] = useState('');
+  const [filterOption, setFilterOption] = useState('');
+  const pageSize = 10;
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -33,63 +55,17 @@ export const AllEmployees = () => {
     fetchSession();
   }, []);
 
-  const [employees, setEmployeesState] = useState<
-    AllEmployeeData | undefined
-  >();
-  const [filteredEmployees, setFilteredEmployees] = useState<
-    AllEmployeeData['items'] | undefined
-  >([]);
-  const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortOption, setSortOption] = useState('');
-  const [filterOption, setFilterOption] = useState('');
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [uniqueJobTitles, setUniqueJobTitles] = useState<string[]>([]);
-  const [uniqueDepartments, setUniqueDepartments] = useState<string[]>([]);
-  const pageSize = 10;
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [hasData, setHasData] = useState(false);
+  const handlePageChange = useCallback((page: number) => {
+    dispatch(setCurrentPage(page));
+  }, []);
 
   useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        setLoading(true);
-        const { data } = await getAllEmployees(
-          currentPage,
-          pageSize,
-          searchTerm
-        );
-        dispatch(addEmployees(data.items));
+    dispatch(fetchEmployees({ page: currentPage, pageSize, searchTerm }));
+  }, [dispatch, currentPage, searchTerm]);
 
-        // Extract unique job titles and departments
-        const jobTitles: string[] = Array.from(
-          new Set(data.items.map((employee) => employee.tittle))
-        );
-        const departments: string[] = Array.from(
-          new Set(data.items.map((employee) => employee.department?.name))
-        );
-
-        setEmployeesState(data);
-        setFilteredEmployees(data.items);
-        setUniqueJobTitles(jobTitles);
-        setUniqueDepartments(departments);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-      }
-    };
-    fetchEmployees();
-  }, [currentPage, dispatch, searchTerm]);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
+  // Apply filters and sorting
   useEffect(() => {
-    if (!employees) return;
-
-    let updatedList = [...employees.items];
+    let updatedList = [...employees];
 
     if (searchTerm) {
       updatedList = updatedList.filter((employee) =>
@@ -127,9 +103,9 @@ export const AllEmployees = () => {
 
   const handleDownload = async () => {
     try {
-      let allEmployees: AllEmployeeData['items'] = []; // Explicit type
+      let allEmployees: AllEmployeeData['items'] = [];
       let currentPage = 1;
-      let pageSize = 100; // Adjust based on API limits
+      let pageSize = 100;
       let totalPages = 1;
 
       // Fetch all employees across multiple pages
@@ -303,6 +279,7 @@ export const AllEmployees = () => {
                 <th className="py-3 px-4 font-medium border-b">Department</th>
                 <th className="py-3 px-4 font-medium border-b">Email</th>
                 <th className="py-3 px-4 font-medium border-b">Hire Date</th>
+                <th className="py-3 px-4 font-medium border-b"></th>
                 <th className="py-3 px-4 font-medium border-b">
                   <button
                     onClick={handleDownload}
@@ -332,12 +309,8 @@ export const AllEmployees = () => {
 
                   return (
                     <tr
-                      onClick={() => {
-                        if (role !== 'ViewOnly')
-                          router.push(`employees/employee-info/${employee.id}`);
-                      }}
                       key={employee.id}
-                      className="hover:bg-gray-50 text-[#0F172A] text-[14px] w-full cursor-pointer"
+                      className="hover:bg-gray-50 text-[#0F172A] text-[14px] w-full "
                     >
                       <td className="py-3 px-4 border-b min-w-fit w-full lg:w-fit">
                         <ProfileAvatarItem
@@ -369,6 +342,24 @@ export const AllEmployees = () => {
                         <span className="text-[10px] mt-2">{duration}</span>
                       </td>
                       <td className="py-3 px-4 border-b ">
+                        {role === 'SuperAdmin' && (
+                          <FaTrash
+                            onClick={() => dispatch(openDeleteModal(employee))}
+                            size={14}
+                            className="cursor-pointer"
+                          />
+                        )}
+                      </td>
+                      <td
+                        onClick={() => {
+                          // employee cannot see another employee's information
+                          if (role !== 'ViewOnly')
+                            router.push(
+                              `employees/employee-info/${employee.id}`
+                            );
+                        }}
+                        className="py-3 px-4 border-b cursor-pointer"
+                      >
                         {role !== 'ViewOnly' && (
                           <span className="p-2 border w-8 rounded-md flex items-center justify-center hover:bg-black hover:text-white">
                             <FaChevronRight size={12} />
@@ -382,7 +373,7 @@ export const AllEmployees = () => {
             ) : (
               <tbody className="w-full">
                 <tr>
-                  <td colSpan={6}>
+                  <td colSpan={7}>
                     <ScreenLoader />
                   </td>
                 </tr>
@@ -391,13 +382,14 @@ export const AllEmployees = () => {
           </table>
           <Pagination
             styles={{ container: 'mt-5 gap-x-2 !justify-end' }}
-            totalItems={employees?.totalItems || 0}
+            totalItems={totalItems || 0}
             pageSize={pageSize}
             currentPage={currentPage}
             maxPagesToShow={3} // Adjust if needed
             setCurrentPage={handlePageChange}
           />
         </div>
+        <DeleteEmployeeMoadal />
       </main>
     </>
   );
