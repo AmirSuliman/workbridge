@@ -271,6 +271,9 @@ const OrgChartWithHoverPositions = ({
             padding: .5rem;
             font-size: 11px;
             min-height: 97px;
+            WebkitOverflowScrolling: 'touch';
+            overflow: 'auto';
+            willChange: 'transform';
           ">
             <div style="display: flex; align-items: center; padding-left: 1rem; height: 35px; ">
               <div style="background-color: #86699D; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 25px;">
