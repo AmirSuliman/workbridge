@@ -224,7 +224,7 @@ const OrgChartWithHoverPositions = ({
         .nodeHeight(() => 97)
         .nodeWidth(() => 300)
         .setActiveNodeCentered(false)
-        .svgHeight(window.innerHeight)
+        // .svgHeight(window.innerHeight)
         .compact(compact)
         .childrenMargin(() => 60)
         .compactMarginBetween(() => 25)
@@ -238,7 +238,6 @@ const OrgChartWithHoverPositions = ({
           }
         })
         .nodeContent((d) => {
-          // console.log('openPositions: ', d.data.openPositions);
           const directSubordinatesCount = actualSubordinates[d.data.id] || 0;
           const isSelected = d.data.selectedEmployees?.includes(d.data.id);
           const color = isSelected
@@ -246,19 +245,21 @@ const OrgChartWithHoverPositions = ({
             : d.data.isOpenPosition
             ? '#00B87D'
             : '#97959980';
-
+          const bgColor =
+            d.data._highlighted || d.data._upToTheRootHighlighted
+              ? '#D5F6DD'
+              : d.data.isOpenPosition
+              ? '#D5F6DD'
+              : 'white';
           const hasOpenPositions =
             d.data.openPositions?.length > 0 || checkForOpenPositions(d);
 
           return `
-          <div class="profile-${d.data.id}" style="
-            background-color: ${
-              d.data._highlighted || d.data._upToTheRootHighlighted
-                ? '#D5F6DD'
-                : d.data.isOpenPosition
-                ? '#D5F6DD'
-                : 'white'
-            }; 
+          <foreignObject width="300" height="97">
+          <div xmlns="http://www.w3.org/1999/xhtml" class="profile-${
+            d.data.id
+          }" style="width:${d.width}px;height:${d.height}px;
+            background-color: ${bgColor}; 
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
             display: flex;
             flex-direction: column;
@@ -270,6 +271,9 @@ const OrgChartWithHoverPositions = ({
             padding: .5rem;
             font-size: 11px;
             min-height: 97px;
+            WebkitOverflowScrolling: 'touch';
+            overflow: 'auto';
+            willChange: 'transform';
           ">
             <div style="display: flex; align-items: center; padding-left: 1rem; height: 35px; ">
               <div style="background-color: #86699D; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 25px;">
@@ -392,6 +396,7 @@ const OrgChartWithHoverPositions = ({
             }
             </div>
           </div>
+          </foreignObject>
         `;
         })
         .nodeUpdate(function (node) {

@@ -6,9 +6,22 @@ import { CiLogout } from 'react-icons/ci';
 
 const Logout = () => {
   const router = useRouter();
-  const onLogout = async () => {
-    await signOut();
-    router.replace('/sign-in');
+
+  const onLogout = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Call signOut with the redirect parameter set to false
+      await signOut({ redirect: false });
+
+      // Force a refresh to ensure all state is cleared
+      router.refresh();
+
+      // Manually redirect after successful signOut
+      router.push('/sign-in');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (

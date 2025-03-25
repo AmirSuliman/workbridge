@@ -2,7 +2,10 @@
 import Modal from '@/components/modal/Modal';
 import axiosInstance from '@/lib/axios';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import imageLoader from '../../../imageLoader';
 import LabelWithIcon from '../common/LabelWithIcon';
 import ClockRotateIcon from '../icons/clock-rotate-icon';
 import SickPersonIcon from '../icons/sick-person-icon';
@@ -11,10 +14,6 @@ import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import SickCard from './sickCard';
 import VacationsCard from './VacationsCard';
-import toast from 'react-hot-toast';
-import imageLoader from '../../../imageLoader';
-import { useParams } from 'next/navigation';
-import SickLeaveAttachments from './SickLeaveAttachments';
 
 interface Employee {
   firstName: string;
@@ -91,7 +90,6 @@ const TimeOffSection = ({ employeeData }) => {
           const response = await axiosInstance.get('/timeoffs/my', {
             params: { associations: true },
           });
-          console.log('my timeoffs: ', response.data.data.items);
 
           setTimeOffData(response.data.data.items);
         } else {
@@ -101,7 +99,6 @@ const TimeOffSection = ({ employeeData }) => {
               params: { associations: true },
             }
           );
-          console.log('empId timeoffs: ', response.data.data.items);
           setTimeOffData(response.data.data.items);
         }
       } catch (err) {
@@ -232,7 +229,14 @@ const TimeOffSection = ({ employeeData }) => {
           <p className="text-red-500">{error}</p>
         ) : (
           <InfoGrid
-            headers={['Type', 'Date From', 'Date To', 'Approved By', 'Notes']}
+            headers={[
+              'Type',
+              'Date From',
+              'Date To',
+              'Status',
+              'Approved/Denied By',
+              'Notes',
+            ]}
             values={timeOffData
               .filter((timeoff, index) => timeoff.status !== 'Pending')
               .map((item, index) => [
@@ -252,6 +256,11 @@ const TimeOffSection = ({ employeeData }) => {
                 />,
                 new Date(item.leaveDay).toLocaleDateString(),
                 new Date(item.returningDay).toLocaleDateString(),
+                item?.status === 'Confirmed' ? (
+                  <p className="text-[#00B87D]">Confirmed</p>
+                ) : (
+                  <p className="text-[#F53649]">Denied</p>
+                ),
                 `${item?.user?.firstName || 'N/A'} ${
                   item?.user?.lastName || 'N/A'
                 }`.trim(),

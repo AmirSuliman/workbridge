@@ -52,9 +52,9 @@ const Home = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch<AppDispatch>();
   const { data: session } = useSession();
+
   const fetchSession = async (): Promise<Session | null> => {
     const session = await getSession();
-    console.log(session, 'session');
     return session;
   };
 
@@ -92,21 +92,20 @@ const Home = () => {
   const { data: employeeData } = useSelector(
     (state: RootState) => state.employee
   );
-  console.log('employeeData:', employeeData);
 
   useEffect(() => {
     const getEvaluationNotification = async () => {
-      if (employeeId?.employeeId && employeeData) { // Ensure employeeData is available
+      if (employeeId?.employeeId && employeeData) {
+        // Ensure employeeData is available
         setLoading(true); // Start loading while fetching
         try {
           // Determine roleParam based on isManager
           const roleParam = employeeData.isManager ? 'Manager' : 'Employee';
-  
+
           const response = await axiosInstance.get(
             `/survey/notification/employee/${employeeId.employeeId}?role=${roleParam}`
           );
-          console.log('resnotification', response);
-  
+
           const updatedEvaluations = response.data.data.notifications.map(
             (item) => ({
               ...item,
@@ -116,7 +115,7 @@ const Home = () => {
               surveyType: item.surveyType || '',
             })
           );
-  
+
           setEvaluation(updatedEvaluations);
         } catch (error) {
           console.log(error);
@@ -125,14 +124,14 @@ const Home = () => {
         }
       }
     };
-  
-    if (employeeId && employeeData) { // Ensure employeeData is available
+
+    if (employeeId && employeeData) {
+      // Ensure employeeData is available
       getEvaluationNotification();
     }
-  }, [employeeId, employeeData]); 
+  }, [employeeId, employeeData]);
 
   const isManager = employeeData?.isManager;
-  console.log(isManager, 'manager');
 
   return (
     <div className="p-6">
@@ -163,7 +162,6 @@ const Home = () => {
         {!isManager && (
           <UserEvaluation evaluation={evaluation} employeeId={employeeId} />
         )}
-
 
         <HomePolicies />
         <Companyinfo />

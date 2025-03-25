@@ -3,6 +3,7 @@ import './globals.css';
 import Providers from '../Providers/Providers';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/auth-options';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 export const metadata: Metadata = {
   title: 'ISA WorkBridge',
@@ -22,7 +23,9 @@ export default async function RootLayout({
         className={`antialiased h-[100vh]  bg-[#f5f6fa]`}
         suppressHydrationWarning
       >
-        <Providers session={session}>{children}</Providers>
+        <Providers session={session}>
+          <ErrorBoundary>{children}</ErrorBoundary>
+        </Providers>
       </body>
     </html>
   );

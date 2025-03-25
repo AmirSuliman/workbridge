@@ -17,9 +17,16 @@ const UserProfileInfo: React.FC<
 
   // Get the profile picture from sessionStorage or session data
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(
-    sessionStorage.getItem('profilePictureUrl') ||
-      session?.user?.user?.profilePictureUrl ||
-      null
+    () => {
+      if (typeof window !== 'undefined') {
+        return (
+          sessionStorage.getItem('profilePictureUrl') ||
+          session?.user?.user?.profilePictureUrl ||
+          null
+        );
+      }
+      return session?.user?.user?.profilePictureUrl || null;
+    }
   );
 
   // Handle clicks outside the dropdown

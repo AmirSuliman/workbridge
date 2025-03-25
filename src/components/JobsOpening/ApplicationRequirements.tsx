@@ -12,11 +12,11 @@ export const ApplicationRequirements = ({
         <div className="p-4 text-[14px] items-center flex font-medium">
           <input
             type="checkbox"
-            value="Resume"
+            value="resume"
             className="form-checkbox h-5 w-5  accent-black cursor-pointer mr-3"
-            {...register('Resume')}
-            onChange={handleCheckboxChange('Resume')} // Add onChange handler
-            checked={checkboxStates.Resume}
+            {...register('resume')}
+            onChange={handleCheckboxChange('resume')}
+            checked={checkboxStates.resume}
           />
           Resume
         </div>
@@ -24,14 +24,14 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('Resume', checkboxStates.Resume)}
+            onClick={() => handleToggle('resume', checkboxStates.resume)}
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-              toggleStates.Resume ? 'bg-gray-800' : 'bg-gray-300'
+              toggleStates.resume ? 'bg-gray-800' : 'bg-gray-300'
             }`}
           >
             <div
               className={`w-4 h-4 bg-white rounded-full transform transition-transform ${
-                toggleStates.Resume ? 'translate-x-4' : 'translate-x-0'
+                toggleStates.resume ? 'translate-x-4' : 'translate-x-0'
               }`}
             />
           </button>
@@ -44,11 +44,11 @@ export const ApplicationRequirements = ({
         <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
-            value="Portfolio"
+            value="portfolio"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
-            {...register('Portfolio')}
-            onChange={handleCheckboxChange('Portfolio')} // Add onChange handler
-            checked={checkboxStates.Portfolio}
+            {...register('portfolio')}
+            onChange={handleCheckboxChange('portfolio')}
+            checked={checkboxStates.portfolio}
           />
           Portfolio
         </div>
@@ -56,14 +56,14 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('Portfolio', checkboxStates.Portfolio)}
+            onClick={() => handleToggle('portfolio', checkboxStates.portfolio)}
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-              toggleStates.Portfolio ? 'bg-gray-800' : 'bg-gray-300'
+              toggleStates.portfolio ? 'bg-gray-800' : 'bg-gray-300'
             }`}
           >
             <div
               className={`w-4 h-4 bg-white rounded-full transform transition-transform ${
-                toggleStates.Portfolio ? 'translate-x-4' : 'translate-x-0'
+                toggleStates.portfolio ? 'translate-x-4' : 'translate-x-0'
               }`}
             />
           </button>
@@ -75,11 +75,11 @@ export const ApplicationRequirements = ({
         <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
-            value="CoverLetter"
+            value="coverLetter"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
-            {...register('CoverLetter')}
-            onChange={handleCheckboxChange('CoverLetter')} // Add onChange handler
-            checked={checkboxStates.CoverLetter}
+            {...register('coverLetter')}
+            onChange={handleCheckboxChange('coverLetter')}
+            checked={checkboxStates.coverLetter}
           />
           Cover Letter
         </div>
@@ -88,15 +88,15 @@ export const ApplicationRequirements = ({
           <button
             type="button"
             onClick={() =>
-              handleToggle('CoverLetter', checkboxStates.CoverLetter)
+              handleToggle('coverLetter', checkboxStates.coverLetter)
             }
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-              toggleStates.CoverLetter ? 'bg-gray-800' : 'bg-gray-300'
+              toggleStates.coverLetter ? 'bg-gray-800' : 'bg-gray-300'
             }`}
           >
             <div
               className={`w-4 h-4 bg-white rounded-full transform transition-transform ${
-                toggleStates.CoverLetter ? 'translate-x-4' : 'translate-x-0'
+                toggleStates.coverLetter ? 'translate-x-4' : 'translate-x-0'
               }`}
             />
           </button>
@@ -108,11 +108,11 @@ export const ApplicationRequirements = ({
         <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
-            value="Address"
+            value="address"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
-            {...register('Address')}
-            onChange={handleCheckboxChange('Address')} // Add onChange handler
-            checked={checkboxStates.Address}
+            {...register('address')}
+            onChange={handleCheckboxChange('address')}
+            checked={checkboxStates.address}
           />
           Address
         </div>
@@ -120,14 +120,14 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('Address', checkboxStates.Address)}
+            onClick={() => handleToggle('address', checkboxStates.address)}
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-              toggleStates.Address ? 'bg-gray-800' : 'bg-gray-300'
+              toggleStates.address ? 'bg-gray-800' : 'bg-gray-300'
             }`}
           >
             <div
               className={`w-4 h-4 bg-white rounded-full transform transition-transform ${
-                toggleStates.Address ? 'translate-x-4' : 'translate-x-0'
+                toggleStates.address ? 'translate-x-4' : 'translate-x-0'
               }`}
             />
           </button>
@@ -139,11 +139,11 @@ export const ApplicationRequirements = ({
         <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
-            value="DesiredSalary"
+            value="desiredSalary"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
-            {...register('DesiredSalary')}
-            onChange={handleCheckboxChange('DesiredSalary')} // Add onChange handler
-            checked={checkboxStates.DesiredSalary}
+            {...register('desiredSalary')}
+            onChange={handleCheckboxChange('desiredSalary')}
+            checked={checkboxStates.desiredSalary}
           />
           Desired Salary
         </div>
@@ -152,15 +152,15 @@ export const ApplicationRequirements = ({
           <button
             type="button"
             onClick={() =>
-              handleToggle('DesiredSalary', checkboxStates.DesiredSalary)
+              handleToggle('desiredSalary', checkboxStates.desiredSalary)
             }
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-              toggleStates.DesiredSalary ? 'bg-gray-800' : 'bg-gray-300'
+              toggleStates.desiredSalary ? 'bg-gray-800' : 'bg-gray-300'
             }`}
           >
             <div
               className={`w-4 h-4 bg-white rounded-full transform transition-transform ${
-                toggleStates.DesiredSalary ? 'translate-x-4' : 'translate-x-0'
+                toggleStates.desiredSalary ? 'translate-x-4' : 'translate-x-0'
               }`}
             />
           </button>
@@ -172,11 +172,11 @@ export const ApplicationRequirements = ({
         <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
-            value="Education"
+            value="education"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
-            {...register('Education')}
-            onChange={handleCheckboxChange('Education')} // Add onChange handler
-            checked={checkboxStates.Education}
+            {...register('education')}
+            onChange={handleCheckboxChange('education')}
+            checked={checkboxStates.education}
           />
           Education
         </div>
@@ -184,14 +184,14 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('Education', checkboxStates.Education)}
+            onClick={() => handleToggle('education', checkboxStates.education)}
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-              toggleStates.Education ? 'bg-gray-800' : 'bg-gray-300'
+              toggleStates.education ? 'bg-gray-800' : 'bg-gray-300'
             }`}
           >
             <div
               className={`w-4 h-4 bg-white rounded-full transform transition-transform ${
-                toggleStates.Education ? 'translate-x-4' : 'translate-x-0'
+                toggleStates.education ? 'translate-x-4' : 'translate-x-0'
               }`}
             />
           </button>
@@ -203,11 +203,11 @@ export const ApplicationRequirements = ({
         <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
-            value="LinkedInProfile"
+            value="linkedin"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
-            {...register('LinkedInProfile')}
-            onChange={handleCheckboxChange('LinkedInProfile')} // Add onChange handler
-            checked={checkboxStates.LinkedInProfile}
+            {...register('linkedin')}
+            onChange={handleCheckboxChange('linkedin')}
+            checked={checkboxStates.linkedin}
           />
           LinkedIn Profile
         </div>
@@ -215,16 +215,14 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() =>
-              handleToggle('LinkedInProfile', checkboxStates.LinkedInProfile)
-            }
+            onClick={() => handleToggle('linkedin', checkboxStates.linkedin)}
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-              toggleStates.LinkedInProfile ? 'bg-gray-800' : 'bg-gray-300'
+              toggleStates.linkedin ? 'bg-gray-800' : 'bg-gray-300'
             }`}
           >
             <div
               className={`w-4 h-4 bg-white rounded-full transform transition-transform ${
-                toggleStates.LinkedInProfile ? 'translate-x-4' : 'translate-x-0'
+                toggleStates.linkedin ? 'translate-x-4' : 'translate-x-0'
               }`}
             />
           </button>
@@ -236,11 +234,11 @@ export const ApplicationRequirements = ({
         <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
-            value="Website"
+            value="website"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
-            {...register('Website')}
-            onChange={handleCheckboxChange('Website')} // Add onChange handler
-            checked={checkboxStates.Website}
+            {...register('website')}
+            onChange={handleCheckboxChange('website')}
+            checked={checkboxStates.website}
           />
           Website
         </div>
@@ -248,14 +246,14 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('Website', checkboxStates.Website)}
+            onClick={() => handleToggle('website', checkboxStates.website)}
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-              toggleStates.Website ? 'bg-gray-800' : 'bg-gray-300'
+              toggleStates.website ? 'bg-gray-800' : 'bg-gray-300'
             }`}
           >
             <div
               className={`w-4 h-4 bg-white rounded-full transform transition-transform ${
-                toggleStates.Website ? 'translate-x-4' : 'translate-x-0'
+                toggleStates.website ? 'translate-x-4' : 'translate-x-0'
               }`}
             />
           </button>
@@ -267,11 +265,11 @@ export const ApplicationRequirements = ({
         <div className="p-4 items-center flex font-medium text-[14px]">
           <input
             type="checkbox"
-            value="Referral"
+            value="referral"
             className="form-checkbox h-5 w-5 accent-black cursor-pointer mr-3"
-            {...register('Referral')}
-            onChange={handleCheckboxChange('Referral')} // Add onChange handler
-            checked={checkboxStates.Referral}
+            {...register('referral')}
+            onChange={handleCheckboxChange('referral')}
+            checked={checkboxStates.referral}
           />
           Referral
         </div>
@@ -279,14 +277,14 @@ export const ApplicationRequirements = ({
         <div className="flex flex-row gap-5 p-3 items-center">
           <button
             type="button"
-            onClick={() => handleToggle('Referral', checkboxStates.Referral)}
+            onClick={() => handleToggle('referral', checkboxStates.referral)}
             className={`w-10 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-              toggleStates.Referral ? 'bg-gray-800' : 'bg-gray-300'
+              toggleStates.referral ? 'bg-gray-800' : 'bg-gray-300'
             }`}
           >
             <div
               className={`w-4 h-4 bg-white rounded-full transform transition-transform ${
-                toggleStates.Referral ? 'translate-x-4' : 'translate-x-0'
+                toggleStates.referral ? 'translate-x-4' : 'translate-x-0'
               }`}
             />
           </button>

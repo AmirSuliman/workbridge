@@ -9,7 +9,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { addDays } from 'date-fns';
 import { isAxiosError } from 'axios';
 import imageLoader from '../../../imageLoader';
-import SickLeaveAttachments from './SickLeaveAttachments';
+import SickLeaveAttachments, { uploadFiles } from './SickLeaveAttachments';
+import { BiLoaderCircle } from 'react-icons/bi';
 interface SickCardProps {
   onButtonClick?: () => void;
   totalDays: number;
@@ -22,13 +23,13 @@ interface HolidaysErrorsProps {
 }
 
 const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
   const [vacationDaysUsed, setVacationDaysUsed] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [fileIds, setFileIds] = useState([]);
   const [holidaysErrors, setHolidaysErrors] = useState<HolidaysErrorsProps[]>(
     []
   );
@@ -114,6 +115,19 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
       return;
     }
 
+    let fileIds: string[] = [];
+    if (selectedFiles.length > 0) {
+      toast.loading('Uploading attachments...');
+      fileIds = await uploadFiles(selectedFiles);
+      toast.dismiss();
+
+      if (fileIds.length !== selectedFiles.length) {
+        toast.error(
+          `Only ${fileIds.length} out of ${selectedFiles.length} files were uploaded successfully.`
+        );
+        // You can decide whether to continue or abort here
+      }
+    }
     const payload = {
       leaveDay: formatDate(startDate),
       returningDay: formatDate(endDate),
@@ -123,12 +137,8 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
       note: note,
     };
 
-    console.log('sick leave payload: ', payload);
-
     try {
       setLoading(true);
-      console.log('Payload:', payload);
-
       const response = await axiosInstance.post('/timeoff', payload);
       if (response.status === 200) {
         toast.success('Request timeoff made successfuly!');
@@ -329,18 +339,36 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
               </div>
             </div>
             <br />
-            <SickLeaveAttachments fileIds={fileIds} setFileIds={setFileIds} />
+            <SickLeaveAttachments
+              selectedFiles={selectedFiles}
+              setSelectedFiles={setSelectedFiles}
+            />
 
             <div className="flex flex-row  px-6 w-full gap-4 mt-16">
-              <button
+              {/* <button
                 type="button"
                 onClick={handleRequestVacation}
                 className="mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full"
                 disabled={loading}
               >
                 {loading ? 'Submitting...' : 'Request Sick Leave'}
+              </button> */}
+              <button
+                type="button"
+                onClick={handleRequestVacation}
+                className="mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full"
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <BiLoaderCircle className="h-5 w-5 animate-spin" />
+                  </span>
+                ) : (
+                  'Request Sick Leave'
+                )}
               </button>
               <button
+                disabled={loading}
                 type="button"
                 onClick={() => setIsModalOpen(false)}
                 className="mt-4 px-4 py-3 border rounded w-full"

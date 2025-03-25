@@ -17,24 +17,21 @@ export const getAllPolicies = async (page: number, size: number) => {
   }
 };
 
-
 export const getPoliciesById = async (page: number, size: number) => {
   try {
-    const session = await getSession(); 
-    console.log(session, 'session');
-    const employeeId = session?.user?.employeeId; 
+    const session = await getSession();
+    const employeeId = session?.user?.employeeId;
 
     if (!employeeId) {
       throw new Error('Employee ID not found in session');
     }
 
-    console.log(employeeId, 'employeeId');
-
-    const response = await axiosInstance.get(`policies/employee/${employeeId}`, {
-      params: { page, size, associations: true },
-    });
-
-    console.log(response, 'policies res');
+    const response = await axiosInstance.get(
+      `policies/employee/${employeeId}`,
+      {
+        params: { page, size, associations: true },
+      }
+    );
 
     return { data: response.data, error: null };
   } catch (error) {

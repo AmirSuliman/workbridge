@@ -29,7 +29,6 @@ const SingleAnnouncement = () => {
     const fetchAnnouncements = async () => {
       try {
         const response = await axiosInstance.get('/announcements');
-        console.log('response: ', response.data.data);
         const data = response.data?.data?.items || [];
 
         if (Array.isArray(data)) {

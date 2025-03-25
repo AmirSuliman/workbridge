@@ -31,14 +31,12 @@ const DepartmentTable = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
- 
+
   const handleDepartmentAdded = (updatedDepartments) => {
     setDepartments(updatedDepartments);
     setFilteredDepartments(updatedDepartments);
   };
-  
-  
-  
+
   useEffect(() => {
     const fetchDepartments = async () => {
       setLoading(true);
@@ -89,7 +87,6 @@ const DepartmentTable = () => {
     );
     setFilteredDepartments(filtered);
   }, [searchQuery, departments]);
-  
 
   return (
     <div className="mt-4 p-2 z-10">
@@ -190,7 +187,7 @@ const DepartmentTable = () => {
                     <tr key={dept.id} className="border-b">
                       <td className="px-4 py-3">{dept.name}</td>
                       <td className="px-4 py-3 flex items-center gap-2">
-                        <EmployeesIcon classNames='w-4 ' /> {dept.employeeCount}
+                        <EmployeesIcon classNames="w-4 " /> {dept.employeeCount}
                       </td>
                       <td className="px-4 py-3">
                         {dept.department_head_data
@@ -222,12 +219,11 @@ const DepartmentTable = () => {
 
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-<CreateDepartment
-  isModalOpen={isModalOpen}
-  setIsModalOpen={setIsModalOpen}
-  onDepartmentAdded={handleDepartmentAdded}
-/>
-
+          <CreateDepartment
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            onDepartmentAdded={handleDepartmentAdded}
+          />
         </Modal>
       )}
     </div>
