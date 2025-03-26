@@ -5,8 +5,8 @@ const XIcon: React.FC<IconProps> = ({ classNames }) => {
   return (
     <svg
       className={classNames}
-      // width={11}
-      // height={12}
+      width="11px"
+      height="12px"
       viewBox="0 0 11 12"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

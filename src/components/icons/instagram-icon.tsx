@@ -5,13 +5,13 @@ const InstagramIcon: React.FC<IconProps> = ({ classNames }) => {
   return (
     <svg
       className={classNames}
-      // width={21}
-      // height={21}
+      width="21px"
+      height="21px"
       viewBox="0 0 21 21"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx="10.3452" cy="10.7653" r={10} fill="#0F172A" />
+      <circle cx="10.3452" cy="10.7653" r="10" fill="#0F172A" />
       <path
         fillRule="evenodd"
         clipRule="evenodd"

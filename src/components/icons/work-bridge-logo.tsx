@@ -5,8 +5,8 @@ const WorkBridgeLogo: React.FC<IconProps> = ({ classNames }) => {
   return (
     <svg
       className={classNames}
-      // width={316}
-      // height={57}
+      width="316px"
+      height="57px"
       viewBox="0 0 316 57"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

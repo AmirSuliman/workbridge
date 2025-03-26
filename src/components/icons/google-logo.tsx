@@ -5,8 +5,8 @@ const GoogleLogo: React.FC<IconProps> = ({ classNames }) => {
   return (
     <svg
       className={classNames}
-      // width={30}
-      // height={30}
+      width="30px"
+      height="30px"
       viewBox="0 0 30 30"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -15,8 +15,8 @@ const GoogleLogo: React.FC<IconProps> = ({ classNames }) => {
         id="mask0_99_1984"
         style={{ maskType: 'luminance' }}
         maskUnits="userSpaceOnUse"
-        x={1}
-        y={1}
+        x="1"
+        y="1"
         width="28px"
         height="28px"
       >
@@ -32,8 +32,8 @@ const GoogleLogo: React.FC<IconProps> = ({ classNames }) => {
         id="mask1_99_1984"
         style={{ maskType: 'luminance' }}
         maskUnits="userSpaceOnUse"
-        x={1}
-        y={1}
+        x="1"
+        y="1"
         width="28px"
         height="28px"
       >
@@ -52,8 +52,8 @@ const GoogleLogo: React.FC<IconProps> = ({ classNames }) => {
         id="mask2_99_1984"
         style={{ maskType: 'luminance' }}
         maskUnits="userSpaceOnUse"
-        x={1}
-        y={1}
+        x="1"
+        y="1"
         width="28px"
         height="28px"
       >
@@ -72,8 +72,8 @@ const GoogleLogo: React.FC<IconProps> = ({ classNames }) => {
         id="mask3_99_1984"
         style={{ maskType: 'luminance' }}
         maskUnits="userSpaceOnUse"
-        x={1}
-        y={1}
+        x="1"
+        y="1"
         width="28px"
         height="28px"
       >
