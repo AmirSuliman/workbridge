@@ -224,7 +224,8 @@ const OrgChartWithHoverPositions = ({
         .nodeHeight(() => 97)
         .nodeWidth(() => 300)
         .setActiveNodeCentered(false)
-        // .svgHeight(window.innerHeight)
+        .svgWidth(window.innerWidth)
+        .svgHeight(window.innerHeight)
         .compact(compact)
         .childrenMargin(() => 60)
         .compactMarginBetween(() => 25)
@@ -255,10 +256,10 @@ const OrgChartWithHoverPositions = ({
             d.data.openPositions?.length > 0 || checkForOpenPositions(d);
 
           return `
-          <foreignObject width="300" height="97">
-          <div xmlns="http://www.w3.org/1999/xhtml" class="profile-${
-            d.data.id
-          }" style="width:${d.width}px;height:${d.height}px;
+     
+          <div class="profile-${d.data.id}" style="width:${d.width}px;height:${
+            d.height
+          }px;
             background-color: ${bgColor}; 
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
             display: flex;
@@ -271,9 +272,7 @@ const OrgChartWithHoverPositions = ({
             padding: .5rem;
             font-size: 11px;
             min-height: 97px;
-            WebkitOverflowScrolling: 'touch';
-            overflow: 'auto';
-            willChange: 'transform';
+           
           ">
             <div style="display: flex; align-items: center; padding-left: 1rem; height: 35px; ">
               <div style="background-color: #86699D; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 25px;">
@@ -346,7 +345,11 @@ const OrgChartWithHoverPositions = ({
             
                     <span style="font-size: 10px; color: #000; margin-right: 20px; margin-left: 2px;" >${
                       d.data?.location
-                        ? `${d.data?.location?.city}, ${d.data?.location?.country}`
+                        ? `${
+                            d.data?.location?.city
+                              ? d.data?.location?.city + ','
+                              : ''
+                          } ${d.data?.location?.country}`
                         : ''
                     }
                     </span>
@@ -396,7 +399,6 @@ const OrgChartWithHoverPositions = ({
             }
             </div>
           </div>
-          </foreignObject>
         `;
         })
         .nodeUpdate(function (node) {

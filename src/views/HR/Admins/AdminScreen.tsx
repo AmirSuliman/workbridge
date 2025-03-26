@@ -9,13 +9,14 @@ import CreateUserForm from '@/components/UserForms/CreateUserForm';
 import FormHeading from '@/components/UserInformation/FormHeading';
 import Table from '@/components/UserInformation/Table';
 import { fetchUserRoles } from '@/store/slices/userRolesSlice';
-import { getUsers } from '@/store/slices/userSlice';
+import { getUsers, openDeleteModal } from '@/store/slices/userSlice';
 import { RootState } from '@/store/store';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { FaTrash } from 'react-icons/fa';
 import { IoIosAddCircleOutline } from 'react-icons/io';
-import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
+import DeleteAdminUser from './DeleteAdminUser';
 
 const AdminScreen = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,6 +45,9 @@ const AdminScreen = () => {
     );
   }, [currentPage, filter, searchQuery]);
 
+  const handleOpenDeleteModal = (user) => {
+    dispatch(openDeleteModal(user));
+  };
   // Search handler
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -100,6 +104,19 @@ const AdminScreen = () => {
         <Link href={`mailto:${value}`} className="text-blue-500">
           {value}
         </Link>
+      ),
+    },
+    {
+      title: '',
+      accessor: 'id',
+      render: (userId, { row }) => (
+        <FaTrash
+          onClick={() => {
+            handleOpenDeleteModal(row);
+          }}
+          size={14}
+          className="cursor-pointer"
+        />
       ),
     },
   ];
@@ -168,6 +185,8 @@ const AdminScreen = () => {
           <CreateUserForm onClose={() => setIsModalOpen(false)} />
         </Modal>
       )}
+
+      <DeleteAdminUser />
     </div>
   );
 };

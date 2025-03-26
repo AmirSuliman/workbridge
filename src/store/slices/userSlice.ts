@@ -1,10 +1,21 @@
 // src/store/usersSlice.ts
+import axiosInstance from '@/lib/axios';
 import { addUser, fetchUsers } from '@/services/userService';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
 // Define the state interface
+interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  roleId: number;
+  active: boolean;
+  profilePictureUrl?: string;
+}
+
 interface UserState {
-  users: Array<object>;
+  users: User[];
   total: number;
   currentPage: number;
   pageSize: number;
@@ -13,6 +24,8 @@ interface UserState {
   status: 'idle' | 'loading' | 'success' | 'failed';
   createStatus: 'idle' | 'loading' | 'success' | 'failed';
   filter: string | null; // Example filter, e.g., a search term
+  deleteModalOpen: boolean;
+  employeeToDelete: Array<object> | null;
 }
 
 const initialState: UserState = {
@@ -25,6 +38,8 @@ const initialState: UserState = {
   status: 'idle',
   createStatus: 'idle',
   filter: null,
+  deleteModalOpen: false,
+  employeeToDelete: null,
 };
 export const getUsers = createAsyncThunk(
   'users/fetchUsers',
@@ -73,6 +88,21 @@ export const createUser = createAsyncThunk(
   }
 );
 
+// Add delete user action
+export const removeUser = createAsyncThunk(
+  'users/removeUser',
+  async (userId: number, { rejectWithValue }) => {
+    try {
+      await axiosInstance.delete(`user/${userId}`);
+      return userId; // Return userId so we can remove it from state
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to delete user'
+      );
+    }
+  }
+);
+
 const usersSlice = createSlice({
   name: 'users',
   initialState,
@@ -82,6 +112,14 @@ const usersSlice = createSlice({
     },
     setFilter: (state, action) => {
       state.filter = action.payload;
+    },
+    openDeleteModal: (state, action) => {
+      state.deleteModalOpen = true;
+      state.employeeToDelete = action.payload;
+    },
+    closeDeleteModal: (state) => {
+      state.deleteModalOpen = false;
+      state.employeeToDelete = null;
     },
   },
   extraReducers: (builder) => {
@@ -113,10 +151,19 @@ const usersSlice = createSlice({
       .addCase(createUser.rejected, (state, action) => {
         state.createStatus = 'failed';
         state.error = action.payload as string; // Error message
+      })
+      // Handle user deletion
+      .addCase(removeUser.fulfilled, (state, action) => {
+        state.users = state.users.filter((user) => user.id !== action.payload);
+        state.total -= 1;
+      })
+      .addCase(removeUser.rejected, (state, action) => {
+        state.error = action.payload as string;
       });
   },
 });
 
-export const { setCurrentPage, setFilter } = usersSlice.actions;
+export const { setCurrentPage, setFilter, openDeleteModal, closeDeleteModal } =
+  usersSlice.actions;
 
 export default usersSlice.reducer;

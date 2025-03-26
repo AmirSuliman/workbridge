@@ -14,7 +14,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { TbEdit } from 'react-icons/tb';
@@ -36,7 +36,7 @@ const CreateEmployee = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [countries, setCountries] = useState<Country[]>([]);
 
-  useMemo(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const countriesResponse = await axiosInstance.get('/countries');
@@ -52,22 +52,25 @@ const CreateEmployee = () => {
   }, []);
 
   // profile picture
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const file = event.target.files[0];
+  const handleFileChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.files) {
+        const file = event.target.files[0];
 
-      if (!file.type.startsWith('image/')) {
-        console.log('Selected file type: ', file.type);
-        return toast.error('Only image files are allowed!');
+        if (!file.type.startsWith('image/')) {
+          console.log('Selected file type: ', file.type);
+          return toast.error('Only image files are allowed!');
+        }
+        setSelectedFile(file);
+        const blobUrl = URL.createObjectURL(file);
+        setPreviewUrl(blobUrl);
       }
-      setSelectedFile(file);
-      const blobUrl = URL.createObjectURL(file);
-      setPreviewUrl(blobUrl);
-    }
-  };
+    },
+    []
+  );
 
   // Handle profile picture upload
-  const handleUpload = async () => {
+  const handleUpload = useCallback(async () => {
     if (!selectedFile) {
       toast.error('Please select a profile picture.');
       return;
@@ -87,7 +90,7 @@ const CreateEmployee = () => {
     } catch (err) {
       console.error(err);
     }
-  };
+  }, []);
 
   const formMethods = useForm<EmployeeData>({
     resolver: zodResolver(employeeSchema),
@@ -100,13 +103,13 @@ const CreateEmployee = () => {
     formState: { errors },
   } = formMethods;
 
-  useEffect(() => {
-    if (Object.keys(errors).length > 0) {
-      toast.error(
-        'Some input fields are missing in Personal or Employment tab!'
-      );
-    }
-  }, [errors]);
+  // useEffect(() => {
+  //   if (Object.keys(errors).length > 0) {
+  //     toast.error(
+  //       'Some input fields are missing in Personal or Employment tab!'
+  //     );
+  //   }
+  // }, [errors]);
 
   const onSubmit = async (data) => {
     // console.log('onsubmit data: ', data);

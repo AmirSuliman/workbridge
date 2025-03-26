@@ -8,7 +8,8 @@ import { useEffect, useState } from 'react';
 import { BiChevronRight } from 'react-icons/bi';
 import { CiCirclePlus } from 'react-icons/ci';
 import { FaSearch } from 'react-icons/fa';
-import CreateDepartment from '../../Departement/components/createdepartment';
+import CreateDepartment from '../department/components/createdepartment';
+import { useSession } from 'next-auth/react';
 
 interface Department {
   id: string;
@@ -31,6 +32,9 @@ const DepartmentTable = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { data: session } = useSession();
+  const role = session?.user?.user?.role;
+  const isUserpanel = role === 'ViewOnly' || role === 'Manager';
 
   const handleDepartmentAdded = (updatedDepartments) => {
     setDepartments(updatedDepartments);
@@ -156,13 +160,15 @@ const DepartmentTable = () => {
           </div>
 
           {/* Add Button */}
-          <button
-            className="flex flex-row text-[12px] items-center gap-2 bg-[#0F172A] p-3 px-4 text-white rounded-lg"
-            onClick={() => setIsModalOpen(true)}
-          >
-            Add new Department
-            <CiCirclePlus className="text-white" size={18} />
-          </button>
+          {!isUserpanel && (
+            <button
+              className="flex flex-row text-[12px] items-center gap-2 bg-[#0F172A] p-3 px-4 text-white rounded-lg"
+              onClick={() => setIsModalOpen(true)}
+            >
+              Add new Department
+              <CiCirclePlus className="text-white" size={18} />
+            </button>
+          )}
         </div>
 
         {/* Responsive Table */}
@@ -196,7 +202,13 @@ const DepartmentTable = () => {
                       </td>
 
                       <td className="px-4 py-3">
-                        <Link href={`/hr/Departement/${dept.id}`}>
+                        <Link
+                          href={`${
+                            isUserpanel
+                              ? `/user/employees/department/${dept.id}`
+                              : `/hr/employees/department/${dept.id}`
+                          }`}
+                        >
                           <div className="p-1 border rounded-lg w-[30px] flex justify-center items-center">
                             <BiChevronRight size={20} />
                           </div>

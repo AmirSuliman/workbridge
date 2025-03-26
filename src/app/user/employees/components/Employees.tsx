@@ -2,8 +2,8 @@ import Tab from '@/components/common/TabsComponent/Tab';
 import TabPanel from '@/components/common/TabsComponent/TabPanel';
 import TabsContainer from '@/components/common/TabsComponent/TabsContainer';
 // import { AllEmployees } from './AllEmployees';
-import DepartmentTable from './DepartmentTable';
 import { AllEmployees } from '@/app/hr/employees/components/AllEmployees';
+import DepartmentTable from '@/app/hr/employees/components/DepartmentTable';
 
 const Employees = () => {
   return (

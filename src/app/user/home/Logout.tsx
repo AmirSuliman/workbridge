@@ -18,7 +18,7 @@ const Logout = () => {
       router.refresh();
 
       // Manually redirect after successful signOut
-      router.push('/sign-in');
+      // router.push('/sign-in');
     } catch (error) {
       console.error('Logout error:', error);
     }
