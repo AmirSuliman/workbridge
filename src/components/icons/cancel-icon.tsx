@@ -11,7 +11,7 @@ const CancelIcon: React.FC<IconProps> = ({ classNames }) => {
       viewBox="0 0 24 24"
       fill="currentColor"
       stroke="currentColor"
-      strokeWidth={2}
+      strokeWidth="2px"
       strokeLinecap="round"
       strokeLinejoin="round"
     >

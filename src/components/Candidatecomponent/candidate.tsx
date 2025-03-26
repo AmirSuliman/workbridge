@@ -65,8 +65,8 @@ const Candidatecomponent = ({ data, jobTitle }) => {
       <div className="flex flex-col sm:flex-row items-start gap-8 mt-8">
         {data?.data?.profilePictureUrl ? (
           <img
-            width={300}
-            height={150}
+            width="300px"
+            height="150px"
             src={data?.data?.profilePictureUrl || IMAGES.placeholderAvatar}
             alt="avatar"
             className="rounded-full size-20"

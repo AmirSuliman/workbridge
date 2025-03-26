@@ -5,8 +5,8 @@ const FacebookIcon: React.FC<IconProps> = ({ classNames }) => {
   return (
     <svg
       className={classNames}
-      width={21}
-      height={21}
+      // width={21}
+      // height={21}
       viewBox="0 0 21 21"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
