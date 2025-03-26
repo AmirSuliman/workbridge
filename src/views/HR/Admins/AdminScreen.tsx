@@ -8,15 +8,20 @@ import Modal from '@/components/modal/Modal';
 import CreateUserForm from '@/components/UserForms/CreateUserForm';
 import FormHeading from '@/components/UserInformation/FormHeading';
 import Table from '@/components/UserInformation/Table';
-import { fetchUserRoles } from '@/store/slices/userRolesSlice';
-import { getUsers, openDeleteModal } from '@/store/slices/userSlice';
+import {
+  getUsers,
+  openDeleteModal,
+  openEditModal,
+} from '@/store/slices/userSlice';
 import { RootState } from '@/store/store';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 import DeleteAdminUser from './DeleteAdminUser';
+import EditAdminUser from './EditAdminUser';
+import { fetchUserRoles } from '@/store/slices/userRolesSlice';
 
 const AdminScreen = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -119,6 +124,19 @@ const AdminScreen = () => {
         />
       ),
     },
+    {
+      title: '',
+      accessor: '',
+      render: (userId, { row }) => (
+        <FaEdit
+          onClick={() => {
+            dispatch(openEditModal(row));
+          }}
+          size={14}
+          className="cursor-pointer"
+        />
+      ),
+    },
   ];
 
   useEffect(() => {
@@ -185,7 +203,7 @@ const AdminScreen = () => {
           <CreateUserForm onClose={() => setIsModalOpen(false)} />
         </Modal>
       )}
-
+      <EditAdminUser />
       <DeleteAdminUser />
     </div>
   );

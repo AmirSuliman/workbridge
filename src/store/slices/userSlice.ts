@@ -26,6 +26,8 @@ interface UserState {
   filter: string | null; // Example filter, e.g., a search term
   deleteModalOpen: boolean;
   employeeToDelete: Array<object> | null;
+  editModalOpen: boolean;
+  userToEdit: User | null;
 }
 
 const initialState: UserState = {
@@ -40,7 +42,10 @@ const initialState: UserState = {
   filter: null,
   deleteModalOpen: false,
   employeeToDelete: null,
+  editModalOpen: false,
+  userToEdit: null,
 };
+
 export const getUsers = createAsyncThunk(
   'users/fetchUsers',
   async (
@@ -103,6 +108,20 @@ export const removeUser = createAsyncThunk(
   }
 );
 
+export const updateUser = createAsyncThunk(
+  'users/updateUser',
+  async (user: User, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.put(`/user/${user.id}`, user);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to update user'
+      );
+    }
+  }
+);
+
 const usersSlice = createSlice({
   name: 'users',
   initialState,
@@ -120,6 +139,14 @@ const usersSlice = createSlice({
     closeDeleteModal: (state) => {
       state.deleteModalOpen = false;
       state.employeeToDelete = null;
+    },
+    openEditModal: (state, action) => {
+      state.editModalOpen = true;
+      state.userToEdit = action.payload;
+    },
+    closeEditModal: (state) => {
+      state.editModalOpen = false;
+      state.userToEdit = null;
     },
   },
   extraReducers: (builder) => {
@@ -159,11 +186,27 @@ const usersSlice = createSlice({
       })
       .addCase(removeUser.rejected, (state, action) => {
         state.error = action.payload as string;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.users = state.users.map((user) =>
+          user.id === action.payload.id ? action.payload : user
+        );
+        state.editModalOpen = false;
+        state.userToEdit = null;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.error = action.payload as string;
       });
   },
 });
 
-export const { setCurrentPage, setFilter, openDeleteModal, closeDeleteModal } =
-  usersSlice.actions;
+export const {
+  setCurrentPage,
+  setFilter,
+  openDeleteModal,
+  closeDeleteModal,
+  openEditModal,
+  closeEditModal,
+} = usersSlice.actions;
 
 export default usersSlice.reducer;
