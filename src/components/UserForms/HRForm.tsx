@@ -25,18 +25,20 @@ type HRFormInputs = z.infer<typeof hrFormSchema>;
 const HRForm = ({ onClose }) => {
   const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.users);
-  const [reportingManagerId, setReportingManagerId] = useState<number | null>(null); 
+  const [reportingManagerId, setReportingManagerId] = useState<number | null>(
+    null
+  );
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const { items } = useSelector((state: RootState) => state.userRoles.roles);
   const [countries, setCountries] = useState<Country[]>([]);
   const [isManager, setIsManager] = useState(false);
-  
+
   const {
     register,
     handleSubmit,
     setValue,
-    watch, 
+    watch,
     resetField,
     formState: { errors },
   } = useForm<HRFormInputs>({
@@ -44,34 +46,34 @@ const HRForm = ({ onClose }) => {
     mode: 'onChange',
   });
 
-   const [employees, setEmployees] = useState<EmployeeData[]>([]);
-  
-    useEffect(() => {
-      const fetchEmployees = async () => {
-        try {
-          const response = await getAllEmployees(1, 1000, '', true);
-          const items = response?.data?.items || []; // Ensure items is an array
-          setEmployees(items);
-        } catch (error) {
-          console.error('Error fetching employees: ', error);
-          setEmployees([]); // Ensure employees is always an array
-        }
-      };
-  
-      fetchEmployees();
-    }, []);
-  
-    useEffect(() => {
-      if (reportingManagerId && employees.length > 0) {
-        const matchedDepartment = employees.find(
-          (employee) => employee.id === reportingManagerId
-        );
-        if (matchedDepartment) {
-          resetField('reportingManagerId');
-        }
+  const [employees, setEmployees] = useState<EmployeeData[]>([]);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await getAllEmployees(1, 1000, '', true);
+        const items = response?.data?.items || []; // Ensure items is an array
+        setEmployees(items);
+      } catch (error) {
+        console.error('Error fetching employees: ', error);
+        setEmployees([]); // Ensure employees is always an array
       }
-    }, [employees, reportingManagerId, resetField]);
-  
+    };
+
+    fetchEmployees();
+  }, []);
+
+  useEffect(() => {
+    if (reportingManagerId && employees.length > 0) {
+      const matchedDepartment = employees.find(
+        (employee) => employee.id === reportingManagerId
+      );
+      if (matchedDepartment) {
+        resetField('reportingManagerId');
+      }
+    }
+  }, [employees, reportingManagerId, resetField]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -93,30 +95,27 @@ const HRForm = ({ onClose }) => {
   })) ?? [{ label: '', value: '' }];
 
   const onSubmit = async (data: HRFormInputs) => {
-    const selectedManagerId = watch('reportingManagerId'); 
+    const selectedManagerId = watch('reportingManagerId');
     if (!isManager && !selectedManagerId) {
-      console.error("Reporting Manager ID is missing!");
+      console.error('Reporting Manager ID is missing!');
       return;
     }
-  
+
     const payload = {
       ...data,
       isManager,
-      reportingManagerId: watch('reportingManagerId') || null, 
+      reportingManagerId: watch('reportingManagerId') || null,
     };
-    
-  
+
     console.log('Submitting Payload:', payload);
-  
+
     const response = await dispatch(createUser(payload) as any);
     if (response?.type === 'users/createUser/fulfilled') {
       onClose();
     }
   };
-  
-  
-  
-  const selectedRoleId = watch('roleId'); 
+
+  const selectedRoleId = watch('roleId');
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -141,7 +140,7 @@ const HRForm = ({ onClose }) => {
           error={errors.email?.message}
         />
 
-        <div className='flex flex-col gap-1'>
+        <div className="flex flex-col gap-1">
           <SelectField
             name="roleId"
             register={register}
@@ -150,31 +149,32 @@ const HRForm = ({ onClose }) => {
             options={roles}
             onChange={(e) => {
               const roleId = Number(e.target.value);
-              console.log('Selected Role ID:', roleId); 
-              setValue('roleId', roleId); 
+              console.log('Selected Role ID:', roleId);
+              setValue('roleId', roleId);
             }}
           />
 
-{(Number(selectedRoleId) === 1 || Number(selectedRoleId) === 2) && (  
-  <div className="flex items-center col-span-2 mt-2 mb-3">
-    <input
-      type="checkbox"
-      id="isManager"
-      checked={isManager}
-      onChange={(e) => setIsManager(e.target.checked)} 
-      className="mr-2"
-    />
-    <label htmlFor="isManager" className="text-sm">Is Manager</label>
-  </div>
-)}
-
+          {(Number(selectedRoleId) === 1 || Number(selectedRoleId) === 2) && (
+            <div className="flex items-center col-span-2 mt-2 mb-3">
+              <input
+                type="checkbox"
+                id="isManager"
+                checked={isManager}
+                onChange={(e) => setIsManager(e.target.checked)}
+                className="mr-2"
+              />
+              <label htmlFor="isManager" className="text-sm">
+                Is Manager
+              </label>
+            </div>
+          )}
         </div>
 
         <article className="w-full">
           <select
             {...register('countryId', {
               valueAsNumber: true,
-              setValueAs: (value) => (value === '' ? null : Number(value)), 
+              setValueAs: (value) => (value === '' ? null : Number(value)),
             })}
             className="form-input"
           >
@@ -191,31 +191,34 @@ const HRForm = ({ onClose }) => {
         </article>
 
         <article className="w-full">
-  {Number(selectedRoleId) !== 2 && (
-   <select
-   {...register('reportingManagerId', { valueAsNumber: true })}
-   className="form-input"
-   onChange={(e) => {
-     const managerId = Number(e.target.value);
-     setReportingManagerId(managerId);
-     setValue('reportingManagerId', managerId, { shouldValidate: true }); // ✅ Ensure it's set in form state
-   }}
- >
-   <option value="">Select Manager</option>
-   {employees
-     .filter((employee) => employee.isManager)
-     .map((manager) => (
-       <option key={manager.id} value={manager.id}>
-         {manager.firstName} {manager.lastName} 
-       </option>
-     ))}
- </select>
-  
-  )}
-  {errors.reportingManagerId && (
-    <span className="form-error">{errors.reportingManagerId.message}</span>
-  )}
-</article>
+          {Number(selectedRoleId) !== 2 && (
+            <select
+              {...register('reportingManagerId', { valueAsNumber: true })}
+              className="form-input"
+              onChange={(e) => {
+                const managerId = Number(e.target.value);
+                setReportingManagerId(managerId);
+                setValue('reportingManagerId', managerId, {
+                  shouldValidate: true,
+                }); // ✅ Ensure it's set in form state
+              }}
+            >
+              <option value="">Select Manager</option>
+              {employees
+                .filter((employee) => employee.isManager)
+                .map((manager) => (
+                  <option key={manager.id} value={manager.id}>
+                    {manager.firstName} {manager.lastName}
+                  </option>
+                ))}
+            </select>
+          )}
+          {errors.reportingManagerId && (
+            <span className="form-error">
+              {errors.reportingManagerId.message}
+            </span>
+          )}
+        </article>
 
         <div className="relative w-full col-span-2">
           <div className="relative flex items-center">

@@ -15,7 +15,7 @@ const Contact = () => {
         target="_blank"
         className="flex flex-row gap-2 break-all text-[14px]"
       >
-        <FaEnvelope size={15} className="mt-2 shrink-0" />
+        <FaEnvelope size={15} className="mt-[2px] shrink-0" />
         {contact.email}
       </Link>
       <Link

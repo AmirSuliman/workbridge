@@ -114,15 +114,15 @@ const UserLeaveInfo = () => {
                 <div className="flex justify-between items-center gap-4">
                   <div className="p-4 flex gap-4 items-center">
                     <UserImgPlaceholder
-                      name={`${leave.employee.firstName} ${
-                        leave.employee.lastName || ''
+                      name={`${leave.employee?.firstName} ${
+                        leave.employee?.lastName || ''
                       }`}
                     />
                     <p className="text-left">
                       {leave
-                        ? `${leave.employee.firstName} ${
-                            leave.employee.middleName || ''
-                          } ${leave.employee.lastName || ''}`
+                        ? `${leave.employee?.firstName} ${
+                            leave.employee?.middleName || ''
+                          } ${leave.employee?.lastName || ''}`
                         : ''}
                     </p>
                   </div>
@@ -162,7 +162,7 @@ const UserLeaveInfo = () => {
                     </p>
                     <div className="flex items-center gap-2 justify-start">
                       <PiUmbrellaBold className="opacity-50" size={14} />
-                      <p className="text-[12px]">{leave.type}</p>
+                      <p className="text-[12px]">{leave?.type}</p>
                     </div>
                   </div>
                   <div className="p-4">
@@ -171,7 +171,7 @@ const UserLeaveInfo = () => {
                     </p>
                     <div className="flex items-center gap-2 justify-start">
                       <MdCalendarToday className="opacity-50" size={14} />
-                      <p className="text-[12px]">{`${leave.duration} days`}</p>
+                      <p className="text-[12px]">{`${leave?.duration} days`}</p>
                     </div>
                   </div>
                   <div className="p-4 ">
@@ -181,7 +181,7 @@ const UserLeaveInfo = () => {
                     <div className="flex items-center gap-2 justify-start">
                       <LuLogOut className="opacity-50" size={14} />
                       <p className="text-[12px]">
-                        {new Date(leave.leaveDay).toLocaleDateString('en-GB', {
+                        {new Date(leave?.leaveDay).toLocaleDateString('en-GB', {
                           day: '2-digit',
                           month: 'short',
                         })}
@@ -195,7 +195,7 @@ const UserLeaveInfo = () => {
                     <div className="flex items-center gap-2 justify-start">
                       <LuLogIn className="opacity-50" size={14} />
                       <p className="text-[12px]">
-                        {new Date(leave.returningDay).toLocaleDateString(
+                        {new Date(leave?.returningDay).toLocaleDateString(
                           'en-GB',
                           {
                             day: '2-digit',
