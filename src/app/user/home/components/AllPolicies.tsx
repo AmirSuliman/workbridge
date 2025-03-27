@@ -96,7 +96,7 @@ const AllPolicies = () => {
               <div className="flex flex-row items-center gap-5">
                 <Image
                   loader={imageLoader}
-                  src="/Group 1000004576.png"
+                  src="/annoucementIconRed.png"
                   alt="img"
                   width={15}
                   height={15}
