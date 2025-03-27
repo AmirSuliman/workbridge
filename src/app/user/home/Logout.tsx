@@ -19,7 +19,6 @@ const Logout = () => {
       // Force a refresh to clear any cached state
       router.refresh();
 
-      router.push('/sign-in');
 
       // Optional: Clear cookies manually
       document.cookie =
