@@ -11,22 +11,20 @@ const Logout = () => {
     e.preventDefault();
 
     try {
-      // Sign out and clear session
+      // Sign out without redirecting immediately
       await signOut({ redirect: false });
 
-      // Force a refresh to clear any cached state
+      // Force a refresh to clear any cached session state
       router.refresh();
 
-      // Redirect to sign-in page after sign out
-      router.push('/sign-in');
+      // Redirect to the home page manually
+      router.push('/');
 
-      // Optional: Clear cookies manually
+      // Optional: Clear cookies manually to ensure full logout
       document.cookie =
-      'next-auth.session-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure';
-    document.cookie =
-      'next-auth.csrf-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure';
-    
-
+        'next-auth.session-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure';
+      document.cookie =
+        'next-auth.csrf-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure';
     } catch (error) {
       console.error('Logout error:', error);
     }
