@@ -155,7 +155,7 @@ const HRForm = ({ onClose }) => {
             }}
           />
 
-{(Number(selectedRoleId) === 1 || Number(selectedRoleId) === 2) && (  
+{(Number(selectedRoleId) === 1 || Number(selectedRoleId) === 2 || Number(selectedRoleId) === 3) && (  
   <div className="flex items-center col-span-2 mt-2 mb-3">
     <input
       type="checkbox"
@@ -167,6 +167,7 @@ const HRForm = ({ onClose }) => {
     <label htmlFor="isManager" className="text-sm">Is Manager</label>
   </div>
 )}
+
 
         </div>
 
