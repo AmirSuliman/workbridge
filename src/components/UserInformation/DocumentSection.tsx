@@ -11,6 +11,7 @@ import InfoGrid from './InfoGrid';
 import UploadDocumentModal from './UploadDocumentModal';
 import { InnerUser } from '@/types/next-auth';
 import { useParams } from 'next/navigation';
+import { getFileExtension } from '@/lib/getFileExtension';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -35,22 +36,13 @@ const SelectableCell = (text, document, onClick) => {
       className="text-dark-navy text-md items-center justify-start flex gap-2 cursor-pointer"
       onClick={() => onClick(document)}
     >
-      <input
+      {/* <input
         type="checkbox"
         className="h-3 w-3 cursor-pointer text-[#878b94]"
-      />{' '}
+      />{' '} */}
       {text}
     </div>
   );
-};
-
-const getFileExtension = (mimeType) => {
-  const mimeToExtensionMap = {
-    pdf: '.pdf',
-    msword: '.doc',
-    'vnd.openxmlformats-officedocument.wordprocessingml.document': '.docx',
-  };
-  return mimeToExtensionMap[mimeType] || '';
 };
 
 const DocumentSection = ({
@@ -60,6 +52,7 @@ const DocumentSection = ({
 }) => {
   const [documentId, setDocumentId] = useState<number | null>(null);
   const [openModal, setOpenModal] = useState(false);
+  const { empId } = useParams();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [sortOption, setSortOption] = useState<'size' | 'date'>('size');
   const [documents, setDocuments] = useState<DocumentType[]>(
@@ -84,7 +77,6 @@ const DocumentSection = ({
   }, []);
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
-  const { empId } = useParams();
 
   const handleDocumentDelete = (deletedDocumentId: number) => {
     setDocuments((prevDocuments) =>

@@ -61,6 +61,8 @@ const NotesSection = ({ employeeId }) => {
   const [deleteNoteModal, setDeleteNoteModal] = useState<boolean>(false);
   const [createNoteModal, setCreateNoteModal] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const { empId } = useParams();
+  const [role, setRole] = useState<string>();
 
   const dispatch = useAppDispatch();
   const { notes, fetchStatus, crudStatus, error, selectedNote, updatedNote } =
@@ -117,8 +119,6 @@ const NotesSection = ({ employeeId }) => {
     setSelectedNote(null);
   };
 
-  const [role, setRole] = useState<string>();
-
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
@@ -128,7 +128,6 @@ const NotesSection = ({ employeeId }) => {
   }, []);
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
-  const { empId } = useParams();
 
   if (error) {
     return <div className="text-red-500">Error: {error}</div>;

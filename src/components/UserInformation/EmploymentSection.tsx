@@ -18,6 +18,18 @@ const EmploymentSection = ({
   editEmployee,
   employeeData,
 }) => {
+  const [role, setRole] = useState<string>();
+  const { empId } = useParams(); // This id is used to view any employee's info
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      setRole(session?.user?.role);
+    };
+
+    fetchSession();
+  }, []);
+
   const hireDate = employeeData?.hireDate
     ? employeeData.hireDate.split('T')[0]
     : 'N/A';
@@ -41,18 +53,6 @@ const EmploymentSection = ({
     return `${years}y ${remainingMonths}m`;
   };
   const duration = employeeData?.hireDate ? calculateDuration(hireDate) : '';
-
-  const [role, setRole] = useState<string>();
-  const { empId } = useParams(); // This id is used to view any employee's info
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-
-    fetchSession();
-  }, []);
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 

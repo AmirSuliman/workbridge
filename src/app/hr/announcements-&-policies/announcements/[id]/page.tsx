@@ -48,7 +48,6 @@ const AnnouncmentScreen = () => {
   const [isEditible, setIsEditible] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { data: session } = useSession();
-  console.log(session?.user.role);
   const role = session?.user.role;
   const isUserpanel = role === 'Manager' || role === 'ViewOnly';
   // Fetch announcement details from the API
@@ -60,7 +59,6 @@ const AnnouncmentScreen = () => {
             associations: true, // Include associations query parameter
           },
         });
-        console.log('announcement: ', response.data.data);
         setAnnouncement(response.data.data); // Set announcement data from `data` field
       } catch (err: any) {
         setError(

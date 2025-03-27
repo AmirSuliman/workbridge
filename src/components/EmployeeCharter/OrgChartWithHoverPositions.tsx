@@ -224,6 +224,7 @@ const OrgChartWithHoverPositions = ({
         .nodeHeight(() => 97)
         .nodeWidth(() => 300)
         .setActiveNodeCentered(false)
+        .svgWidth(window.innerWidth)
         .svgHeight(window.innerHeight)
         .compact(compact)
         .childrenMargin(() => 60)
@@ -238,7 +239,6 @@ const OrgChartWithHoverPositions = ({
           }
         })
         .nodeContent((d) => {
-          // console.log('openPositions: ', d.data.openPositions);
           const directSubordinatesCount = actualSubordinates[d.data.id] || 0;
           const isSelected = d.data.selectedEmployees?.includes(d.data.id);
           const color = isSelected
@@ -246,19 +246,21 @@ const OrgChartWithHoverPositions = ({
             : d.data.isOpenPosition
             ? '#00B87D'
             : '#97959980';
-
+          const bgColor =
+            d.data._highlighted || d.data._upToTheRootHighlighted
+              ? '#D5F6DD'
+              : d.data.isOpenPosition
+              ? '#D5F6DD'
+              : 'white';
           const hasOpenPositions =
             d.data.openPositions?.length > 0 || checkForOpenPositions(d);
 
           return `
-          <div class="profile-${d.data.id}" style="
-            background-color: ${
-              d.data._highlighted || d.data._upToTheRootHighlighted
-                ? '#D5F6DD'
-                : d.data.isOpenPosition
-                ? '#D5F6DD'
-                : 'white'
-            }; 
+     
+          <div class="profile-${d.data.id}" style="width:${d.width}px;height:${
+            d.height
+          }px;
+            background-color: ${bgColor}; 
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
             display: flex;
             flex-direction: column;
@@ -270,6 +272,7 @@ const OrgChartWithHoverPositions = ({
             padding: .5rem;
             font-size: 11px;
             min-height: 97px;
+           
           ">
             <div style="display: flex; align-items: center; padding-left: 1rem; height: 35px; ">
               <div style="background-color: #86699D; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 25px;">
@@ -342,7 +345,11 @@ const OrgChartWithHoverPositions = ({
             
                     <span style="font-size: 10px; color: #000; margin-right: 20px; margin-left: 2px;" >${
                       d.data?.location
-                        ? `${d.data?.location?.city}, ${d.data?.location?.country}`
+                        ? `${
+                            d.data?.location?.city
+                              ? d.data?.location?.city + ','
+                              : ''
+                          } ${d.data?.location?.country}`
                         : ''
                     }
                     </span>

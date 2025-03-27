@@ -1,0 +1,66 @@
+export const getFileExtension = (mimeType) => {
+  switch (mimeType) {
+    case 'msword':
+      return '.doc';
+    case 'vnd.openxmlformats-officedocument.wordprocessingml.document':
+      return '.docx';
+    case 'vnd.ms-excel':
+      return '.xls';
+    case 'vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+      return '.xlsx';
+    case 'vnd.ms-powerpoint':
+      return '.ppt';
+    case 'vnd.openxmlformats-officedocument.presentationml.presentation':
+      return '.pptx';
+    case 'pdf':
+      return '.pdf';
+    case 'plain':
+      return '.txt';
+    case 'csv':
+      return '.csv';
+    case 'jpeg':
+      return '.jpg';
+    case 'png':
+      return '.png';
+    case 'gif':
+      return '.gif';
+    case 'webp':
+      return '.webp';
+    case 'svg+xml':
+      return '.svg';
+    case 'bmp':
+      return '.bmp';
+    case 'tiff':
+      return '.tiff';
+    case 'mpeg':
+      return '.mp3';
+    case 'ogg':
+      return '.ogg';
+    case 'wav':
+      return '.wav';
+    case 'mp4':
+      return '.mp4';
+    case 'x-msvideo':
+      return '.avi';
+    case 'quicktime':
+      return '.mov';
+    case 'zip':
+      return '.zip';
+    case 'x-rar-compressed':
+      return '.rar';
+    case 'json':
+      return '.json';
+    case 'javascript':
+      return '.js';
+    case 'xml':
+      return '.xml';
+    case 'x-sh':
+      return '.sh';
+    case 'x-tar':
+      return '.tar';
+    case 'x-7z-compressed':
+      return '.7z';
+    default:
+      return mimeType;
+  }
+};

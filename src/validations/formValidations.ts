@@ -8,12 +8,17 @@ export const hrFormSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   roleId: z.coerce
     .number()
-    .int('Role ID must be an integer')
-    .positive('Role ID must be a positive number'),
+    .int('Role is required')
+    .positive('Role is required'),
   countryId: z.coerce
     .number({ message: 'Coutnry is required.' })
     .int('Country ID must be an integer')
-    .positive('Country ID must be a positive number')
+    .positive('Country is required')
     .nullable(),
-    reportingManagerId: z.number().nullable(), 
+  reportingManagerId: z.preprocess(
+    (val) => Number(val), // Convert string to number
+    z
+      .number({ message: 'Reporting manager is required' })
+      .min(1, 'Reporting manager is required')
+  ),
 });

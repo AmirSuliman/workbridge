@@ -37,6 +37,13 @@ const ProfileCard = ({
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
   const { empId } = useParams(); // This id is used to view any employee's info
+  const [imgSrc, setImgSrc] = useState(
+    employeeData?.profilePictureUrl || IMAGES?.placeholderAvatar
+  );
+
+  useEffect(() => {
+    setImgSrc(employeeData?.profilePictureUrl || IMAGES?.placeholderAvatar);
+  }, [employeeData?.profilePictureUrl]);
 
   const hireDate = employeeData?.hireDate
     ? new Date(employeeData.hireDate).toLocaleDateString()
@@ -76,13 +83,6 @@ const ProfileCard = ({
   };
 
   const duration = employeeData?.hireDate ? calculateDuration(hireDate) : '';
-  const [imgSrc, setImgSrc] = useState(
-    employeeData?.profilePictureUrl || IMAGES.placeholderAvatar
-  );
-
-  useEffect(() => {
-    setImgSrc(employeeData?.profilePictureUrl || IMAGES.placeholderAvatar);
-  }, [employeeData?.profilePictureUrl]);
 
   return (
     <article
@@ -103,7 +103,7 @@ const ProfileCard = ({
               height={700}
               className=" w-32 h-28 shrink-0 grow-0 rounded-full object-cover"
               onError={() => {
-                setImgSrc(IMAGES.placeholderAvatar);
+                setImgSrc(IMAGES?.placeholderAvatar);
               }}
             />
           </div>

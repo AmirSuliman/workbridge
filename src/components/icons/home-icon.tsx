@@ -5,8 +5,8 @@ const HomeIcon: React.FC<IconProps> = ({ classNames }) => {
   return (
     <svg
       className={classNames}
-      width={20}
-      height={18}
+      width="20px"
+      height="18px"
       viewBox="0 0 22 23"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"

@@ -6,15 +6,36 @@ import { CiLogout } from 'react-icons/ci';
 
 const Logout = () => {
   const router = useRouter();
-  const onLogout = async () => {
-    await signOut();
-    router.replace('/sign-in');
+
+  const onLogout = async (e) => {
+    e.preventDefault();
+
+    try {
+      router.push('/sign-in');
+
+      // Sign out and clear session
+      await signOut({ redirect: false });
+
+      // Force a refresh to clear any cached state
+      router.refresh();
+
+      router.push('/sign-in');
+
+      // Optional: Clear cookies manually
+      document.cookie =
+        'next-auth.session-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (
     <div
       className="flex gap-4 items-center text-xs px-4 py-2 bg-white hover:bg-opacity-50"
       onClick={onLogout}
+      role="button"
+      tabIndex={0}
+      aria-label="Logout"
     >
       <CiLogout /> Logout
     </div>

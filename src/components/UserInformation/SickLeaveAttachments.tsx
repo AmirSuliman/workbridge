@@ -1,112 +1,87 @@
-import { useCallback, useState } from 'react';
-import Button from '../Button';
-import Modal from '../modal';
+import { useState } from 'react';
 import axiosInstance from '@/lib/axios';
 import toast from 'react-hot-toast';
 import { FaFilePdf, FaImage, FaRegFileWord } from 'react-icons/fa';
 import { BiLoaderCircle } from 'react-icons/bi';
 
-const SickLeaveAttachments = ({ fileIds, setFileIds }) => {
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [showModal, setShowModal] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
+interface UploadResult {
+  id?: string;
+  error?: any;
+}
 
+interface SickLeaveAttachmentsProps {
+  setSelectedFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  selectedFiles: File[];
+}
+
+const SickLeaveAttachments: React.FC<SickLeaveAttachmentsProps> = ({
+  selectedFiles,
+  setSelectedFiles,
+}) => {
   // Handle file selection
-  const handleFileChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files && event.target.files.length > 0) {
-        // Convert FileList to array
-        const filesArray = Array.from(event.target.files);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      // Convert FileList to array
+      const filesArray = Array.from(event.target.files);
 
-        // You can add file type validation here if needed
-        // For example, to allow multiple file types:
-        const validFiles = filesArray.filter((file) => {
-          // Allow images, PDFs, and docs
-          const isValid =
-            file.type.startsWith('image/') ||
-            file.type === 'application/pdf' ||
-            file.type === 'application/msword' ||
-            file.type ===
-              'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      // Filter valid files
+      const validFiles = filesArray.filter((file) => {
+        const isValid =
+          file.type.startsWith('image/') ||
+          file.type === 'application/pdf' ||
+          file.type === 'application/msword' ||
+          file.type ===
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 
-          if (!isValid) {
-            toast.error(
-              `File "${file.name}" is not allowed. Only images, PDFs, and documents are accepted.`
-            );
-          }
-          return isValid;
-        });
-
-        setSelectedFiles(validFiles);
-
-        if (validFiles.length > 0) {
-          setShowModal(true);
+        if (!isValid) {
+          toast.error(
+            `File "${file.name}" is not allowed. Only images, PDFs, and documents are accepted.`
+          );
         }
-      }
-    },
-    []
-  );
-
-  // Upload all selected files
-  const handleUploadAll = async () => {
-    if (selectedFiles.length === 0) {
-      toast.error('Please select files to upload.');
-      return;
-    }
-
-    setIsUploading(true);
-
-    try {
-      const uploadPromises = selectedFiles.map((file) => uploadFile(file));
-      const results = await Promise.all(uploadPromises);
-
-      // Filter out any failed uploads and get just the IDs
-      const newFileIds = results
-        .filter((result) => !result.error)
-        .map((result) => result.id);
-
-      // Update the fileIds array with the new IDs
-      setFileIds((prevFileIds) => [...prevFileIds, ...newFileIds]);
-
-      toast.success(`Successfully uploaded ${newFileIds.length} file(s).`);
-      setShowModal(false);
-      setSelectedFiles([]);
-    } catch (error) {
-      console.error('Upload failed:', error);
-      toast.error('Failed to upload files. Please try again.');
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  // Upload a single file
-  const uploadFile = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await axiosInstance.post('/file/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        return isValid;
       });
-      return { id: response.data.data.id };
-    } catch (err) {
-      console.error(`Error uploading ${file.name}:`, err);
-      return { error: err };
+
+      if (validFiles.length === 0) return;
+
+      // Add to selected files
+      setSelectedFiles((prevFiles) => [...prevFiles, ...validFiles]);
+
+      // Clear the input so the same file can be selected again
+      if (event.target) {
+        event.target.value = '';
+      }
     }
   };
 
-  // Cancel uploads and clear selected files
-  const handleCancel = () => {
-    setSelectedFiles([]);
-    setShowModal(false);
+  // Remove a file
+  const handleRemoveFile = (index: number) => {
+    setSelectedFiles((files) => files.filter((_, i) => i !== index));
+  };
+
+  // Get file icon based on its name
+  const getFileIcon = (fileName: string) => {
+    const lowerName = fileName.toLowerCase();
+    if (lowerName.endsWith('.pdf')) {
+      return <FaFilePdf className="text-red-500" />;
+    } else if (
+      lowerName.endsWith('.jpg') ||
+      lowerName.endsWith('.jpeg') ||
+      lowerName.endsWith('.png') ||
+      lowerName.endsWith('.gif') ||
+      lowerName.endsWith('.webp')
+    ) {
+      return <FaImage className="text-blue-500" />;
+    } else if (lowerName.endsWith('.doc') || lowerName.endsWith('.docx')) {
+      return <FaRegFileWord className="text-blue-700" />;
+    } else {
+      return <FaRegFileWord className="text-gray-500" />;
+    }
   };
 
   return (
-    <>
+    <div className="space-y-4">
       <label className="px-4 py-3 bg-dark-navy text-white rounded w-full cursor-pointer flex items-center justify-center">
-        Add Attachments
+        Select Attachments
         <input
           type="file"
           name="files"
@@ -116,89 +91,68 @@ const SickLeaveAttachments = ({ fileIds, setFileIds }) => {
         />
       </label>
 
-      {showModal && (
-        <Modal onClose={() => !isUploading && handleCancel()}>
-          <div className="p-6 w-full min-h-[80svh] sm:w-[610px]">
-            <h3 className="text-lg font-semibold mb-4">Upload Files</h3>
-
-            <div className="mb-4 max-h-60 overflow-y-auto px-4">
-              {selectedFiles.map((file, index) => (
-                <div
-                  key={index}
-                  className="py-2 border-b flex items-center justify-between"
-                >
-                  <div className="flex items-center">
-                    <span className="mr-2">
-                      {file.type.startsWith('image/') ? (
-                        <FaImage />
-                      ) : file.type === 'application/pdf' ? (
-                        <FaFilePdf />
-                      ) : (
-                        <FaRegFileWord />
-                      )}
-                    </span>
-                    <span className="truncate max-w-xs">{file.name}</span>
-                  </div>
-                  <span className="text-sm text-gray-500">
-                    {(file.size / 1024).toFixed(0)} KB
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex justify-end gap-4 mt-4">
-              <Button
-                bg="white"
-                textColor="black"
-                onClick={handleCancel}
-                name="Cancel"
-                icon=""
-                disabled={isUploading}
-              />
-              <Button
-                onClick={handleUploadAll}
-                name={isUploading ? '' : 'Save'}
-                icon={
-                  isUploading ? (
-                    <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
-                  ) : (
-                    ''
-                  )
-                }
-                disabled={isUploading}
-              />
-            </div>
-          </div>
-        </Modal>
-      )}
-
-      {fileIds.length > 0 && (
-        <div className="mt-4">
+      {selectedFiles.length > 0 && (
+        <div className="mt-2 p-3 border border-gray-200 rounded-md overflow-y-auto">
           <h4 className="font-medium mb-2">
-            Uploaded Files ({fileIds.length})
+            Selected Attachments ({selectedFiles.length})
           </h4>
-          {/* <div className="flex flex-wrap gap-2">
-            {fileIds.map((id, index) => (
+          <div className="space-y-2">
+            {selectedFiles.map((file, index) => (
               <div
-                key={id}
-                className="bg-gray-100 px-3 py-1 rounded-full flex items-center text-sm"
+                key={index}
+                className="flex items-center justify-between p-2 bg-gray-50 rounded"
               >
-                <span>File #{index + 1}</span>
+                <div className="flex items-center gap-2 overflow-hidden">
+                  {getFileIcon(file.name)}
+                  <span className="truncate max-w-xs">{file.name}</span>
+                </div>
                 <button
-                  className="ml-2 text-red-500 hover:text-red-700"
-                  onClick={() =>
-                    setFileIds(fileIds.filter((fileId) => fileId !== id))
-                  }
+                  className="text-red-500 hover:text-red-700 p-1"
+                  onClick={() => handleRemoveFile(index)}
+                  type="button"
                 >
                   ×
                 </button>
               </div>
             ))}
-          </div> */}
+          </div>
         </div>
       )}
-    </>
+    </div>
   );
+};
+
+// Helper function to upload files that can be used in the form submission handler
+export const uploadFiles = async (files: File[]): Promise<string[]> => {
+  if (files.length === 0) return [];
+
+  const uploadPromises = files.map((file) => uploadFile(file));
+  const results = await Promise.all(uploadPromises);
+
+  // Filter successful uploads and get the IDs
+  const fileIds = results
+    .filter((result) => !result.error && result.id)
+    .map((result) => result.id as string);
+
+  return fileIds;
+};
+
+// Upload a single file
+const uploadFile = async (file: File): Promise<UploadResult> => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const response = await axiosInstance.post('/file/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return { id: response.data.data.id };
+  } catch (err) {
+    console.error(`Error uploading ${file.name}:`, err);
+    return { error: err };
+  }
 };
 
 export default SickLeaveAttachments;

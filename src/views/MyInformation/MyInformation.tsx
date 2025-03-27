@@ -37,8 +37,11 @@ interface ErrorResponse {
 }
 
 const MyInformation = () => {
+  const [role, setRole] = useState<string>();
   const [myInfoLoading, setMyInfoLoading] = useState(true);
   const [editLoading, setEditLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.myInfo);
   const myId = user?.user?.employeeId; // This id is used to view the current logged in user's info
@@ -48,8 +51,6 @@ const MyInformation = () => {
   const [schemaErrors, setSchemaErrors] = useState<FieldErrors | undefined>(
     undefined
   );
-
-  const [role, setRole] = useState<string>();
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -71,14 +72,11 @@ const MyInformation = () => {
   const formattedData = {
     ...employeeData,
     birthday: employeeData?.birthday
-      ? new Date(employeeData.birthday).toISOString().split('T')[0]
+      ? new Date(employeeData?.birthday).toISOString().split('T')[0]
       : '',
     hireDate: employeeData?.hireDate
-      ? new Date(employeeData.hireDate).toISOString().split('T')[0]
+      ? new Date(employeeData?.hireDate).toISOString().split('T')[0]
       : '',
-    // effectiveDate: employeeData?.effectiveDate
-    //   ? new Date(employeeData.effectiveDate).toISOString().split('T')[0]
-    //   : '',
     salary: employeeData?.salary ? employeeData.salary : 0,
     location: {
       zipCode: employeeData?.location?.zipCode || '',
@@ -99,8 +97,8 @@ const MyInformation = () => {
   const {
     reset,
     control,
-    resetField,
     register,
+    resetField,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -135,8 +133,8 @@ const MyInformation = () => {
     // Fetch employee data if session and empId are valid
     if (
       !myInfoLoading &&
-      session?.user.accessToken &&
-      (empId || session?.user.userId)
+      session?.user?.accessToken &&
+      (empId || session?.user?.userId)
     ) {
       dispatch(
         fetchEmployeeData({
@@ -159,9 +157,6 @@ const MyInformation = () => {
     myId,
     myInfoLoading,
   ]);
-
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // profile picture
   const handleFileChange = useCallback(

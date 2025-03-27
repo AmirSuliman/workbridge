@@ -26,8 +26,8 @@ const ProfilePicture = ({ previewUrl, handleFileChange, errors }) => {
       ) : (
         <div className="mt-4">
           <img
-            width={300}
-            height={150}
+            width="300"
+            height="150"
             src={previewUrl}
             alt="Profile Preview"
             className="w-24 h-24 rounded-full border"

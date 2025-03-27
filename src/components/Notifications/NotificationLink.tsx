@@ -102,6 +102,15 @@ const NotificationLink = ({ notification, children }: Props) => {
           {children}
         </Link>
       );
+    case NotificationType.NewFile:
+      return (
+        <Link
+          href={isUserPanel ? '/user/files' : `/hr/files`}
+          onClick={_clickHandler}
+        >
+          {children}
+        </Link>
+      );
     //ToDo: Add links for other notification types as pages are not clear yet
     default:
       return children;

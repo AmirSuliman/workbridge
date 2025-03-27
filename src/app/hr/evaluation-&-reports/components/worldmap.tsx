@@ -60,7 +60,7 @@ export const WorldMap = ({
                         : '#ECECEC'
                     }
                     stroke="#000000"
-                    strokeWidth={0.09}
+                    strokeWidth="0.09px"
                     style={{
                       default: { outline: 'none' },
                       hover: { outline: 'none', fill: '#00B87D' },

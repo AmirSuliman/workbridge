@@ -4,7 +4,9 @@ import { setEmergencyContact } from '@/store/slices/emergencyContactSlice';
 import { AppDispatch, RootState } from '@/store/store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isAxiosError } from 'axios';
+import { getSession } from 'next-auth/react';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -19,9 +21,6 @@ import AddEmergencyContact from './AddEmergencyContact';
 import EmergencyDeleteModal from './EmergencyDeleteModal';
 import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
-import imageLoader from '../../../imageLoader';
-import { getSession } from 'next-auth/react';
-import { useParams } from 'next/navigation';
 interface PaymentProps {
   id: number;
   note: string;
@@ -37,6 +36,8 @@ const EmergencySection = ({ employeeData }) => {
   const [isEditPayment, setisEditPayment] = useState<boolean>(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [paymentId, setPaymentId] = useState<number | null>(null);
+  const { empId } = useParams();
+  const [role, setRole] = useState<string>();
   const [addeNew, setAddNew] = useState(false);
   // const [payments, setPayments] = useState<PaymentProps[]>([]);
   const [currentPayment, setCurrentPayment] = useState<PaymentProps | null>(
@@ -129,7 +130,6 @@ const EmergencySection = ({ employeeData }) => {
     setCurrentPayment(payment);
     reset(payment);
   };
-  const [role, setRole] = useState<string>();
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -140,7 +140,7 @@ const EmergencySection = ({ employeeData }) => {
   }, []);
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
-  const { empId } = useParams();
+
   return (
     <>
       <div className="p-3 sm:p-6 rounded-[10px] border-gray-border border-[1px] bg-white my-5">

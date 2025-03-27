@@ -17,8 +17,10 @@ import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import Addemployee from './components/addemployee';
 import EditDepartment from './components/editdepartment';
 import { EmployeeData } from '@/types/employee';
-import DeleteDepartment from '../employees/components/DeleteDepartment';
 import { FaTrash } from 'react-icons/fa6';
+import DeleteDepartment from '../components/DeleteDepartment';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 interface DepartmentData {
   id: string;
@@ -45,7 +47,10 @@ const OpendepartmentTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortType, setSortType] = useState<string>('');
- 
+  const { data: session } = useSession();
+  const role = session?.user?.user?.role;
+  const isUserpanel = role === 'ViewOnly' || role === 'Manager';
+  console.log('role: ', role, 'isurepanel: ', isUserpanel);
 
   const handleEmployeeAdded = (newEmployees: EmployeeData[]) => {
     setEmployees((prevEmployees) => {
@@ -54,10 +59,7 @@ const OpendepartmentTable: React.FC = () => {
       return updatedEmployees;
     });
   };
-  
-  
-  
-  
+
   useEffect(() => {
     if (id) {
       const fetchDepartmentData = async () => {
@@ -132,6 +134,7 @@ const OpendepartmentTable: React.FC = () => {
       },
       hireDate: employee.hireDate?.split('T')[0] || 'N/A',
       jobTitle: employee.tittle || 'N/A',
+      id: employee.id,
     }));
 
   const headers = [
@@ -166,15 +169,23 @@ const OpendepartmentTable: React.FC = () => {
         <div className="text-sm text-dark-navy font-[500] mr-12">{value}</div>
       ),
     },
-    {
-      title: '',
-      accessor: 'actions',
-      render: () => (
-        <div className="flex items-center">
-          <MdOutlineKeyboardArrowRight className="w-6 h-6 border border-gray-border rounded-sm hover:cursor-pointer hover:bg-gray-100 ml-12" />
-        </div>
-      ),
-    },
+
+    ...(!isUserpanel
+      ? [
+          {
+            title: '',
+            accessor: 'id',
+            render: (id: string) => (
+              <Link
+                href={`/hr/employees/employee-info/${id}`}
+                className="flex items-center"
+              >
+                <MdOutlineKeyboardArrowRight className="w-6 h-6 border border-gray-border rounded-sm hover:cursor-pointer hover:bg-gray-100 ml-12" />
+              </Link>
+            ),
+          },
+        ]
+      : []),
   ];
 
   const totalPages = Math.ceil(filteredEmployees.length / ITEMS_PER_PAGE);
@@ -185,7 +196,6 @@ const OpendepartmentTable: React.FC = () => {
     }
   };
 
- 
   return (
     <div className="h-full p-2">
       <div className="flex justify-between items-center gap-4 mb-4">
@@ -195,41 +205,43 @@ const OpendepartmentTable: React.FC = () => {
           icon={<EmployeesIcon classNames="w-6" />}
           text={departmentData?.name || 'Department Name'}
         />
-        <nav className="relative  ">
-          <button
-            onClick={() => setMoreOptions(!moreOptions)}
-            type="button"
-            className="flex items-center justify-center gap-2 p-2 px-4 bg-[#0F172A] text-white rounded text-[12px] border min-w-44"
-          >
-            More Options{' '}
-            <FaAngleDown className={`${moreOptions ? 'rotate-180' : ''}`} />
-          </button>
-          {moreOptions && (
-            <div
-              style={{
-                boxShadow: '0px 4px 4px 0px rgba(15, 23, 42, 0.1)',
-              }}
-              className="absolute right-0 top-[100%] bg-[rgba(255,255,255,1)] border border-gray-border rounded-md divide-y"
+        {!isUserpanel && (
+          <nav className="relative  ">
+            <button
+              onClick={() => setMoreOptions(!moreOptions)}
+              type="button"
+              className="flex items-center justify-center gap-2 p-2 px-4 bg-[#0F172A] text-white rounded text-[12px] border min-w-44"
             >
-              <button
-                type="button"
-                onClick={() => setIsModalOpen1(true)}
-                className="flex items-center gap-2 p-2 px-4 text-black text-sm whitespace-nowrap"
+              More Options{' '}
+              <FaAngleDown className={`${moreOptions ? 'rotate-180' : ''}`} />
+            </button>
+            {moreOptions && (
+              <div
+                style={{
+                  boxShadow: '0px 4px 4px 0px rgba(15, 23, 42, 0.1)',
+                }}
+                className="absolute right-0 top-[100%] bg-[rgba(255,255,255,1)] border border-gray-border rounded-md divide-y"
               >
-                <FaEdit size={14} />
-                Edit Department
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsDeleteModalOpen(true)}
-                className="flex items-center gap-2 p-2 px-4 text-red-500 text-sm whitespace-nowrap"
-              >
-                <FaTrash size={14} />
-                Delete Department
-              </button>
-            </div>
-          )}
-        </nav>
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen1(true)}
+                  className="flex items-center gap-2 p-2 px-4 text-black text-sm whitespace-nowrap"
+                >
+                  <FaEdit size={14} />
+                  Edit Department
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsDeleteModalOpen(true)}
+                  className="flex items-center gap-2 p-2 px-4 text-red-500 text-sm whitespace-nowrap"
+                >
+                  <FaTrash size={14} />
+                  Delete Department
+                </button>
+              </div>
+            )}
+          </nav>
+        )}
       </div>
 
       {isLoading ? (
@@ -266,18 +278,20 @@ const OpendepartmentTable: React.FC = () => {
                 </select>
               </div>
             </div>
-            <Button
-              name="Add new Employee"
-              icon={<CiCirclePlus />}
-              onClick={() => setIsModalOpen(true)}
-              className="!text-[12px]"
-            />
+            {!isUserpanel && (
+              <Button
+                name="Add new Employee"
+                icon={<CiCirclePlus />}
+                onClick={() => setIsModalOpen(true)}
+                className="!text-[12px]"
+              />
+            )}
           </div>
           <div className="overflow-x-auto">
             <Table
               headers={headers}
               values={Tvalues}
-              tableConfig={{ rowBorder: true, selectable: true }}
+              tableConfig={{ rowBorder: true, selectable: false }}
             />
           </div>
           {totalPages > 1 && (
@@ -322,10 +336,10 @@ const OpendepartmentTable: React.FC = () => {
 
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-      <Addemployee 
-  setIsModalOpen={setIsModalOpen} 
-  onEmployeeAdded={handleEmployeeAdded}
-/>
+          <Addemployee
+            setIsModalOpen={setIsModalOpen}
+            onEmployeeAdded={handleEmployeeAdded}
+          />
         </Modal>
       )}
       {isModalOpen1 && (

@@ -105,27 +105,27 @@ const Createjobopening = () => {
   const formValues = watch();
 
   const [checkboxStates, setCheckboxStates] = useState({
-    Resume: false,
-    Address: false,
-    CoverLetter: false,
-    Portfolio: false,
-    DesiredSalary: false,
-    Education: false,
-    LinkedinProfile: false,
-    Referral: false,
-    Website: false,
+    resume: false,
+    address: false,
+    coverLetter: false,
+    portfolio: false,
+    desiredSalary: false,
+    education: false,
+    linkedin: false,
+    referral: false,
+    website: false,
   });
 
   const [toggleStates, setToggleStates] = useState({
-    Resume: false,
-    Address: false,
-    CoverLetter: false,
-    Portfolio: false,
-    DesiredSalary: false,
-    Education: false,
-    LinkedinProfile: false,
-    Referral: false,
-    Website: false,
+    resume: false,
+    address: false,
+    coverLetter: false,
+    portfolio: false,
+    desiredSalary: false,
+    education: false,
+    linkedin: false,
+    referral: false,
+    website: false,
   });
 
   const handleToggle = (name: string, isChecked: boolean) => {
@@ -491,6 +491,9 @@ const Createjobopening = () => {
                   />
                 )}
               />
+              {errors.description && (
+                <span className="form-error">{errors.description.message}</span>
+              )}
             </div>
             <div className="w-full h-[0.7px] bg-gray-200 " />
 

@@ -21,7 +21,6 @@ const SendHolidayNotification = ({ toggleModal, onHolidayAdded }) => {
   const [additionalCountries, setAdditionalCountries] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
-  console.log(session, 'session');
 
   const [selectedCountries, setSelectedCountries] = useState<
     { value: number; label: string }[]

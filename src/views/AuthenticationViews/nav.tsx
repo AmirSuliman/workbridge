@@ -53,7 +53,7 @@ const Navbar = () => {
         <div className="hidden md:flex gap-12">
           <Link
             href="/"
-            className={`text-[#0F172A] hover:text-black hover:text-black  ${
+            className={`text-[#0F172A] hover:text-black  ${
               isActive('/')
                 ? 'font-bold text-black underline underline-offset-8'
                 : ''

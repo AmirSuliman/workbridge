@@ -6,12 +6,12 @@ const CancelIcon: React.FC<IconProps> = ({ classNames }) => {
     <svg
       className={classNames}
       xmlns="http://www.w3.org/2000/svg"
-      width={24}
-      height={24}
+      width="24px"
+      height="24px"
       viewBox="0 0 24 24"
       fill="currentColor"
       stroke="currentColor"
-      strokeWidth={2}
+      strokeWidth="2px"
       strokeLinecap="round"
       strokeLinejoin="round"
     >

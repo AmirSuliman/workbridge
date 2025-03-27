@@ -21,7 +21,9 @@ const WhosOut = () => {
       try {
         setLoading(true);
 
-        const response = await axiosInstance.get('/timeoffs');
+        const response = await axiosInstance.get('/timeoffs', {
+          params: { status: 'Confirmed' },
+        });
         const fetchedTimeoffs = Array.isArray(response.data?.data?.items)
           ? response.data.data.items
           : [];
