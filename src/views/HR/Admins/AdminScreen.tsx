@@ -124,19 +124,19 @@ const AdminScreen = () => {
         />
       ),
     },
-    {
-      title: '',
-      accessor: '',
-      render: (userId, { row }) => (
-        <FaEdit
-          onClick={() => {
-            dispatch(openEditModal(row));
-          }}
-          size={14}
-          className="cursor-pointer"
-        />
-      ),
-    },
+    // {
+    //   title: '',
+    //   accessor: '',
+    //   render: (userId, { row }) => (
+    //     <FaEdit
+    //       onClick={() => {
+    //         dispatch(openEditModal(row));
+    //       }}
+    //       size={14}
+    //       className="cursor-pointer"
+    //     />
+    //   ),
+    // },
   ];
 
   useEffect(() => {
@@ -203,7 +203,7 @@ const AdminScreen = () => {
           <CreateUserForm onClose={() => setIsModalOpen(false)} />
         </Modal>
       )}
-      <EditAdminUser />
+      {/* <EditAdminUser /> */}
       <DeleteAdminUser />
     </div>
   );

@@ -166,7 +166,7 @@ const Auth = () => {
           setIsLoading(false);
         }
       } else {
-        // toast.error('Authentication failed. Please try again.');
+        toast.error('Authentication failed. Please try again.');
         setIsLoading(false);
       }
     } catch (error) {

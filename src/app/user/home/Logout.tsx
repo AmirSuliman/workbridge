@@ -11,14 +11,19 @@ const Logout = () => {
     e.preventDefault();
 
     try {
-      // Call signOut with the redirect parameter set to false
+      router.push('/sign-in');
+
+      // Sign out and clear session
       await signOut({ redirect: false });
 
-      // Force a refresh to ensure all state is cleared
+      // Force a refresh to clear any cached state
       router.refresh();
 
-      // Manually redirect after successful signOut
-      // router.push('/sign-in');
+      router.push('/sign-in');
+
+      // Optional: Clear cookies manually
+      document.cookie =
+        'next-auth.session-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -28,6 +33,9 @@ const Logout = () => {
     <div
       className="flex gap-4 items-center text-xs px-4 py-2 bg-white hover:bg-opacity-50"
       onClick={onLogout}
+      role="button"
+      tabIndex={0}
+      aria-label="Logout"
     >
       <CiLogout /> Logout
     </div>

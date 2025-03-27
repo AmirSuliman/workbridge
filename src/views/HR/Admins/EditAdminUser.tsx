@@ -6,11 +6,7 @@ import Modal from '@/components/modal';
 import axiosInstance from '@/lib/axios';
 import { getAllEmployees } from '@/services/getAllEmployees';
 import { fetchUserRoles } from '@/store/slices/userRolesSlice';
-import {
-  closeEditModal,
-  createUser,
-  updateUser,
-} from '@/store/slices/userSlice';
+import { closeEditModal, updateUser } from '@/store/slices/userSlice';
 import { AppDispatch, RootState } from '@/store/store';
 import { EmployeeData } from '@/types/employee';
 import { hrFormSchema } from '@/validations/formValidations';
@@ -35,7 +31,7 @@ export default function EditAdminUser() {
   const { editModalOpen, userToEdit } = useSelector(
     (state: RootState) => state.users
   );
-
+  console.log('user to edit: ', userToEdit);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const { items } = useSelector((state: RootState) => state.userRoles.roles);
@@ -43,6 +39,15 @@ export default function EditAdminUser() {
   const [isManager, setIsManager] = useState(false);
   const [employees, setEmployees] = useState<EmployeeData[]>([]);
 
+  const prefillUser = {
+    email: userToEdit?.email,
+    roleId: userToEdit?.roleId,
+    // password: userToEdit?.password,
+    lastName: userToEdit?.lastName,
+    firstName: userToEdit?.firstName,
+    // countryId: userToEdit?.employee?.countryId,
+    // reportingManagerId: userToEdit?.employee?.reportingManagerId,
+  };
   const {
     register,
     handleSubmit,
@@ -89,10 +94,11 @@ export default function EditAdminUser() {
   // Prefill form when userToEdit changes
   useEffect(() => {
     if (userToEdit) {
-      reset(userToEdit); // Prefill all fields at once
+      reset(prefillUser); // Prefill all fields at once
       setIsManager((userToEdit as any).isManager || false);
     }
   }, [userToEdit, reset]);
+  console.log('hr from errors: ', errors);
 
   if (!editModalOpen || !userToEdit) return null;
 
@@ -184,10 +190,7 @@ export default function EditAdminUser() {
             </div>
 
             <article className="w-full">
-              <select
-                {...register('countryId', { valueAsNumber: true })}
-                className="form-input"
-              >
+              <select {...register('countryId')} className="form-input">
                 <option value="">Select a country*</option>
                 {countries.map((country) => (
                   <option key={country.id} value={country.id}>
@@ -223,7 +226,7 @@ export default function EditAdminUser() {
               )}
             </article>
 
-            {/* <div className="relative w-full col-span-2">
+            <div className="relative w-full col-span-2">
               <div className="relative flex items-center">
                 <InputField
                   name="password"
@@ -245,7 +248,7 @@ export default function EditAdminUser() {
                   {errors.password.message}
                 </p>
               )}
-            </div> */}
+            </div>
           </div>
 
           <div className="flex justify-start mt-4">

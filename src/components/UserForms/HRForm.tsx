@@ -193,7 +193,7 @@ const HRForm = ({ onClose }) => {
         <article className="w-full">
           {Number(selectedRoleId) !== 2 && (
             <select
-              {...register('reportingManagerId', { valueAsNumber: true })}
+              {...register('reportingManagerId')}
               className="form-input"
               onChange={(e) => {
                 const managerId = Number(e.target.value);
