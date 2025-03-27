@@ -11,19 +11,21 @@ const Logout = () => {
     e.preventDefault();
 
     try {
-      router.push('/sign-in');
-
       // Sign out and clear session
       await signOut({ redirect: false });
 
       // Force a refresh to clear any cached state
       router.refresh();
 
+      // Redirect to sign-in page after sign out
       router.push('/sign-in');
 
       // Optional: Clear cookies manually
       document.cookie =
         'next-auth.session-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      document.cookie =
+        'next-auth.csrf-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
     } catch (error) {
       console.error('Logout error:', error);
     }
