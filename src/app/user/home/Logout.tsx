@@ -11,6 +11,8 @@ const Logout = () => {
     e.preventDefault();
 
     try {
+      router.push('/');
+
       // Sign out without redirecting immediately
       await signOut({ redirect: false });
 
