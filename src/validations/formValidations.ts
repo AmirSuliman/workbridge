@@ -21,4 +21,5 @@ export const hrFormSchema = z.object({
       .number({ message: 'Reporting manager is required' })
       .min(1, 'Reporting manager is required')
   ),
+  isManager: z.boolean().optional(),
 });

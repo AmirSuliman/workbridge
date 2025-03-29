@@ -3,7 +3,7 @@ import cn from 'classnames';
 // heading helper for different sections of form
 export const Heading = ({ icon, text }: { text: string; icon: ReactNode }) => {
   return (
-    <h1 className="flex items-center gap-x-2 font-medium text-lg mb-16">
+    <h1 className='flex items-center gap-x-2 font-medium text-lg mb-16'>
       {icon}
       {text}
     </h1>

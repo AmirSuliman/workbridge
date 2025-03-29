@@ -12,7 +12,7 @@ import {
   useState,
 } from 'react';
 
-const OrgChartWithHoverPositions = ({
+const OrgChartWithPositions = ({
   onSelectedEmployees,
   employees,
   compact,
@@ -240,40 +240,29 @@ const OrgChartWithHoverPositions = ({
         })
         .nodeContent((d) => {
           const directSubordinatesCount = actualSubordinates[d.data.id] || 0;
-          const isSelected = d.data.selectedEmployees?.includes(d.data.id);
-          const color = isSelected
-            ? '#230E37'
-            : d.data.isOpenPosition
-            ? '#00B87D'
-            : '#97959980';
-          const bgColor =
+          const hasOpenPositions =
+            d.data.openPositions?.length > 0 || checkForOpenPositions(d);
+          const nodeDiv = document.createElement('div');
+          nodeDiv.style.width = `${d.width}px`;
+          nodeDiv.style.height = `${d.height}px`;
+          nodeDiv.style.backgroundColor =
             d.data._highlighted || d.data._upToTheRootHighlighted
               ? '#D5F6DD'
               : d.data.isOpenPosition
               ? '#D5F6DD'
               : 'white';
-          const hasOpenPositions =
-            d.data.openPositions?.length > 0 || checkForOpenPositions(d);
+          nodeDiv.style.border = `1.5px solid ${
+            d.data.selectedEmployees?.includes(d.data.id)
+              ? '#230E37'
+              : '#97959980'
+          }`;
+          nodeDiv.style.borderRadius = '5px';
+          nodeDiv.style.padding = '0.5rem';
+          nodeDiv.style.display = 'flex';
+          nodeDiv.style.flexDirection = 'column';
 
-          return `
-     
-          <div class="profile-${d.data.id}" style="width:${d.width}px;height:${
-            d.height
-          }px;
-            background-color: ${bgColor}; 
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            border-radius: 5px;
-            border-width: 1.5px;
-            border-color: ${color};
-            border-style: solid;
-            padding: .5rem;
-            font-size: 11px;
-            min-height: 97px;
-           
-          ">
+          nodeDiv.innerHTML = `
+          <div class="profile-${d.data.id}" >
             <div style="display: flex; align-items: center; padding-left: 1rem; height: 35px; ">
               <div style="background-color: #86699D; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 25px;">
                 ${
@@ -400,6 +389,7 @@ const OrgChartWithHoverPositions = ({
             </div>
           </div>
         `;
+          return nodeDiv.outerHTML;
         })
         .nodeUpdate(function (node) {
           const id = node.data.id;
@@ -487,4 +477,4 @@ const OrgChartWithHoverPositions = ({
   );
 };
 
-export default OrgChartWithHoverPositions;
+export default OrgChartWithPositions;
