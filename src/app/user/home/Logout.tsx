@@ -1,5 +1,6 @@
 'use client';
 import { signOut } from 'next-auth/react';
+import { signOut as nextAuthSignOut } from 'next-auth/react';
 import React from 'react';
 import { CiLogout } from 'react-icons/ci';
 
@@ -8,71 +9,96 @@ declare global {
     __REQUESTS__?: AbortController[];
   }
 }
+
 const Logout = () => {
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
-  const abortControllerRef = React.useRef<AbortController | null>(null);
 
-  const onLogout = async (e) => {
+  const onLogout = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (isLoggingOut) return;
 
     setIsLoggingOut(true);
-    abortControllerRef.current = new AbortController();
 
     try {
       // 1. Abort all ongoing fetch requests
-      if (typeof window !== 'undefined') {
-        // Abort any application-specific requests
-        if (window.__REQUESTS__) {
-          window.__REQUESTS__.forEach((req) => req.abort());
-        }
+      if (typeof window !== 'undefined' && window.__REQUESTS__) {
+        const requests = [...window.__REQUESTS__];
+        requests.forEach((controller) => {
+          try {
+            controller.abort();
+          } catch (e) {
+            console.warn('Failed to abort request:', e);
+          }
+        });
       }
 
-      // 2. Clear all auth tokens and storage
-      localStorage.removeItem('next-auth.session-token');
-      sessionStorage.clear();
-
-      // Clear all cookies
-      document.cookie.split(';').forEach((c) => {
-        document.cookie = c
-          .replace(/^ +/, '')
-          .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
-      });
-
-      // 3. Sign out from Next-Auth
+      // 2. Handle NextAuth signout first
       await signOut({ redirect: false });
+      await nextAuthSignOut({ redirect: false });
 
-      // 4. Completely reset the application state
+      // 3. Clear storage in a more production-friendly way
       if (typeof window !== 'undefined') {
-        // This ensures no callbacks can interfere
-        window.location.href = '/?logout=true';
-        window.location.reload();
+        // Clear localStorage items related to auth only
+        const authKeys = [
+          'next-auth.session-token',
+          'next-auth.callback-url',
+          'next-auth.csrf-token',
+        ];
+        authKeys.forEach((key) => {
+          try {
+            localStorage.removeItem(key);
+          } catch (e) {
+            console.warn(`Failed to remove ${key} from localStorage:`, e);
+          }
+        });
+
+        // A safer way to clear cookies (focus on auth-related cookies)
+        const cookiesToClear = [
+          'next-auth.session-token',
+          '__Secure-next-auth.session-token',
+          '__Host-next-auth.csrf-token',
+        ];
+        cookiesToClear.forEach((cookieName) => {
+          document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; secure; samesite=strict`;
+        });
+
+        // If you're using a specific path other than root, also clear there
+        cookiesToClear.forEach((cookieName) => {
+          document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/api/auth; secure; samesite=strict`;
+        });
       }
+
+      // 4. Navigate to login page with a small delay to ensure cleanup completes
+      setTimeout(() => {
+        window.location.href = '/?logout=success';
+      }, 100);
     } catch (error) {
       console.error('Logout error:', error);
-      // Force full reset on error
-      window.location.href = '/?logout=true';
-    } finally {
+      // Handle the error more gracefully
       setIsLoggingOut(false);
+
+      // Only force navigation as a last resort
+      setTimeout(() => {
+        window.location.href = '/?logout=error';
+      }, 100);
     }
   };
 
-  React.useEffect(() => {
-    return () => {
-      // Cleanup abort controller on unmount
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-    };
-  }, []);
+  // Keyboard accessibility
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      onLogout(e as unknown as React.MouseEvent<HTMLDivElement>);
+    }
+  };
 
   return (
     <div
-      className="flex gap-4 items-center text-xs px-4 py-2 bg-white hover:bg-opacity-50 cursor-pointer"
+      className='flex gap-4 items-center text-xs px-4 py-2 bg-white hover:bg-opacity-50 cursor-pointer'
       onClick={onLogout}
-      role="button"
+      onKeyDown={handleKeyDown}
+      role='button'
       tabIndex={0}
-      aria-label="Logout"
+      aria-label='Logout'
       style={{
         opacity: isLoggingOut ? 0.7 : 1,
         pointerEvents: isLoggingOut ? 'none' : 'auto',
