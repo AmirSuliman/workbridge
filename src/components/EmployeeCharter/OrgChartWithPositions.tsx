@@ -239,6 +239,14 @@ const OrgChartWithPositions = ({
           }
         })
         .nodeContent((d) => {
+          const {
+            country = '',
+            state = '',
+            city = '',
+            street1 = '',
+            street2 = '',
+          } = d.data?.location || {};
+
           const directSubordinatesCount = actualSubordinates[d.data.id] || 0;
           const hasOpenPositions =
             d.data.openPositions?.length > 0 || checkForOpenPositions(d);
@@ -249,8 +257,8 @@ const OrgChartWithPositions = ({
             d.data._highlighted || d.data._upToTheRootHighlighted
               ? '#D5F6DD'
               : d.data.isOpenPosition
-              ? '#D5F6DD'
-              : 'white';
+                ? '#D5F6DD'
+                : 'white';
           nodeDiv.style.border = `1.5px solid ${
             d.data.selectedEmployees?.includes(d.data.id)
               ? '#230E37'
@@ -333,13 +341,11 @@ const OrgChartWithPositions = ({
                     }
             
                     <span style="font-size: 10px; color: #000; margin-right: 20px; margin-left: 2px;" >${
-                      d.data?.location
-                        ? `${
-                            d.data?.location?.city
-                              ? d.data?.location?.city + ','
-                              : ''
-                          } ${d.data?.location?.country}`
-                        : ''
+                      // if country and state are equal then show only the country
+                      // if state exist then prefix it with the comma (,)
+                      country === state
+                        ? `${country}`
+                        : `${country}${state ? ', ' + state : ''}`
                     }
                     </span>
                 
@@ -461,18 +467,18 @@ const OrgChartWithPositions = ({
   ]);
 
   return (
-    <main className="h-[calc(100vh-10rem)] overflow-hidden relative">
+    <main className='h-[calc(100vh-10rem)] overflow-hidden relative'>
       {hasMultiRoots && (
-        <div className="border-b-[1px] border-gray-border px-6 py-4">
+        <div className='border-b-[1px] border-gray-border px-6 py-4'>
           <h1>There are multiple roots in the data</h1>
         </div>
       )}
       {hasCycle && (
-        <div className="border-b-[1px] border-gray-border px-6 py-4">
+        <div className='border-b-[1px] border-gray-border px-6 py-4'>
           <h1>There is a cycle in the data</h1>
         </div>
       )}
-      <div ref={d3Container} className="w-full h-full" />
+      <div ref={d3Container} className='w-full h-full' />
     </main>
   );
 };

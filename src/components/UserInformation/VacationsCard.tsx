@@ -258,7 +258,10 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
                 <span className='text-gray-400 text-[12px]'>Leaving Date</span>
                 <DatePicker
                   selected={startDate}
-                  onChange={(date) => setStartDate(date)}
+                  onChange={(date) => {
+                    setStartDate(date);
+                    setEndDate(null);
+                  }}
                   selectsStart
                   startDate={startDate}
                   endDate={endDate}
@@ -321,9 +324,15 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
 
             {/* Display the vacation duration */}
             <div className='flex flex-row gap-4 items-center mt-4'>
-              <p className='text-[14px]'>Vacation days left</p>
-              <div className='text-[14px] border rounded p-3 px-12'>
+              <p className='text-[14px]'>Vacation days requested:</p>
+              <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
                 {vacationDaysUsed} days
+              </div>
+            </div>
+            <div className='flex flex-row gap-4 items-center mt-4 '>
+              <p className='text-[14px]'>Total vacation days remaining:</p>
+              <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
+                {totalDays} days
               </div>
             </div>
 
