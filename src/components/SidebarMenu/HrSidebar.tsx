@@ -35,7 +35,7 @@ const HrSidebar = () => {
     <>
       {/* Hamburger button */}
       <button
-        className="lg:hidden p-4 fixed top-0 left-0 z-20 bg-white rounded shadow-md text-4xl"
+        className='lg:hidden p-4 fixed top-0 left-0 z-20 bg-white rounded shadow-md text-4xl'
         onClick={toggleSidebar}
       >
         {!isOpen ? <FiMenu size={24} /> : 'x'}
@@ -46,58 +46,58 @@ const HrSidebar = () => {
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
-        <h1 className="text-center px-8 text-2xl py-8">
-          <Image src="/logo.svg" alt="logo" width={150} height={150} />
+        <h1 className='text-center px-8 text-2xl py-8'>
+          <Image src='/logo.svg' alt='logo' width={150} height={150} />
         </h1>
         <>
           <SidebarNavItem
-            name="Home"
+            name='Home'
             icon={<HiHome size={22} />}
-            href="/hr/home"
+            href='/hr/home'
           />
           <SidebarNavItem
-            name="My Information"
+            name='My Information'
             icon={<FaUserCircle size={22} />}
-            href="/hr/my-information"
+            href='/hr/my-information'
           />
           <SidebarNavItem
-            name="Employees"
+            name='Employees'
             icon={<HiUsers size={22} />}
-            href="/hr/employees"
+            href='/hr/employees'
           />
           <SidebarNavItem
-            name="Hiring"
+            name='Hiring'
             icon={<PiHandshakeFill size={22} />}
-            href="/hr/hiring"
+            href='/hr/hiring'
           />
           <SidebarNavItem
-            name="Leave Requests"
+            name='Pending Leave Requests'
             icon={<IoCalendarOutline size={22} />}
-            href="/hr/leave-requests"
+            href='/hr/leave-requests'
           />
           <SidebarNavItem
-            name="Announcements & Policies"
+            name='Announcements & Policies'
             icon={<FaBullhorn size={22} />}
-            href="/hr/announcements-&-policies/announcements"
+            href='/hr/announcements-&-policies/announcements'
           />
           <SidebarNavItem
-            name="Files"
+            name='Files'
             icon={<IoIosFolderOpen size={22} />}
-            href="/hr/files"
+            href='/hr/files'
           />
 
           <SidebarNavItem
-            name="Reports"
+            name='Reports'
             icon={<FiTrendingUp size={22} />}
-            href="/hr/evaluation-&-reports"
+            href='/hr/evaluation-&-reports'
           />
 
           {/* Conditionally render Admins */}
           {isSuperAdmin && (
             <SidebarNavItem
-              name="Admins"
+              name='Admins'
               icon={<FaUsers size={22} />}
-              href="/hr/admins"
+              href='/hr/admins'
             />
           )}
         </>

@@ -6,6 +6,7 @@ import { HiSpeakerphone } from 'react-icons/hi';
 import { PiArrowUpRightThin } from 'react-icons/pi';
 import imageLoader from '../../../../../imageLoader';
 import { getPoliciesById } from '@/services/getAllPolicies';
+import PolicyIcon from '@/app/hr/home/Homepolicies/PolicyIcon';
 
 interface Policy {
   id: number;
@@ -116,13 +117,14 @@ const HomePolicies = () => {
                 className="flex flex-row items-center mb-4 justify-between w-full"
               >
                 <div className="flex flex-row items-center gap-2">
-                  <Image
+                  {/* <Image
                     loader={imageLoader}
                     src="/annoucementIconRed.png"
                     alt="img"
                     width={40}
                     height={40}
-                  />
+                  /> */}
+                  <PolicyIcon />
                   <div className="flex flex-col">
                     <p className="text-[14px] font-semibold">
                       {policy.title || ''}

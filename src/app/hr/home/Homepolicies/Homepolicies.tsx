@@ -7,6 +7,7 @@ import { IoCalendarOutline } from 'react-icons/io5';
 import { PiArrowUpRightThin } from 'react-icons/pi';
 import imageLoader from '../../../../../imageLoader';
 import { getPoliciesById } from '@/services/getAllPolicies';
+import PolicyIcon from './PolicyIcon';
 
 interface Policy {
   id: number;
@@ -117,13 +118,14 @@ const HomePolicies = () => {
                 className="flex flex-row items-center mb-4 justify-between w-full"
               >
                 <div className="flex flex-row items-center gap-2">
-                  <Image
+                  {/* <Image
                     loader={imageLoader}
                     src="/annoucementIconRed.png"
                     alt="img"
                     width={40}
                     height={40}
-                  />
+                  /> */}
+                  <PolicyIcon />
                   <div className="flex flex-col">
                     <p className="text-[14px] font-semibold">
                       {policy.title || ''}

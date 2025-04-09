@@ -9,6 +9,7 @@ import Deny from './deny';
 import UserImgPlaceholder from '@/components/LeaveRequests/UserImgPlaceholder';
 import { getSession } from 'next-auth/react';
 import imageLoader from '../../../../../imageLoader';
+import { Pagination } from '@/components/common/Pagination';
 
 const ITEMS_PER_PAGE = 7;
 
@@ -47,6 +48,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
@@ -77,6 +79,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
         const fetchedData = response.data.data.items || [];
 
         setEmployeeData(fetchedData);
+        setTotalItems(response.data.data.totalItems);
         setTotalPages(response.data.data.totalPages || 1);
       } catch (err) {
         setError('Failed to fetch employee data.');
@@ -134,64 +137,64 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
   };
 
   return (
-    <div className="p-4 mt-8 overflow-x-auto">
+    <div className='p-4 mt-8 overflow-x-auto'>
       {isLoading && <p>Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className='text-red-500'>{error}</p>}
 
       {!isLoading && !error && (
         <>
           {employeeData.length === 0 ? (
             <p>No data available for the selected filter.</p>
           ) : (
-            <table className="w-full">
+            <table className='w-full'>
               <thead>
                 <tr>
-                  <th className="font-medium text-gray-400 text-[14px] p-3 text-left">
+                  <th className='font-medium text-gray-400 text-[14px] p-3 text-left'>
                     Employee Name
                   </th>
-                  <th className="font-medium text-gray-400 text-[14px] p-3 text-left">
+                  <th className='font-medium text-gray-400 text-[14px] p-3 text-left'>
                     Type
                   </th>
-                  <th className="font-medium text-gray-400 text-[14px] p-3 text-center">
+                  <th className='font-medium text-gray-400 text-[14px] p-3 text-center'>
                     Duration
                   </th>
-                  <th className="font-medium text-gray-400 text-[14px] p-3 text-center">
+                  <th className='font-medium text-gray-400 text-[14px] p-3 text-center'>
                     Leave Day
                   </th>
-                  <th className="font-medium text-gray-400 text-[14px] p-3 text-center">
+                  <th className='font-medium text-gray-400 text-[14px] p-3 text-center'>
                     Returning Day
                   </th>
-                  <th className="font-medium text-gray-400 text-[14px] p-3 text-center"></th>
+                  <th className='font-medium text-gray-400 text-[14px] p-3 text-center'></th>
                 </tr>
               </thead>
               <tbody>
                 {employeeData.map((employee) => (
                   <tr
                     key={employee.id}
-                    className="text-center text-[14px] hover:bg-gray-50 border-b"
+                    className='text-center text-[14px] hover:bg-gray-50 border-b'
                   >
-                    <td className="p-4 flex items-center gap-3 justify-start whitespace-nowrap">
-                      {employee.employee.profilePictureUrl ? (
+                    <td className='p-4 flex items-center gap-3 justify-start whitespace-nowrap'>
+                      {employee.employee?.profilePictureUrl ? (
                         <img
-                          src={employee.employee.profilePictureUrl}
-                          alt="user"
-                          className="w-10 h-10 rounded-full"
+                          src={employee.employee?.profilePictureUrl}
+                          alt='user'
+                          className='w-10 h-10 rounded-full'
                         />
                       ) : (
                         <UserImgPlaceholder
-                          name={`${employee.employee.firstName} ${employee.employee.lastName}`}
+                          name={`${employee.employee?.firstName} ${employee.employee?.lastName}`}
                         />
                       )}
-                      <p className="text-left">
+                      <p className='text-left'>
                         {employee
-                          ? `${employee.employee.firstName} ${
-                              employee.employee.middleName || ''
-                            } ${employee.employee.lastName || ''}`
+                          ? `${employee.employee?.firstName} ${
+                              employee.employee?.middleName || ''
+                            } ${employee.employee?.lastName || ''}`
                           : ''}
                       </p>
                     </td>
-                    <td className="p-4 whitespace-nowrap text-left">
-                      <span className="flex items-center gap-3">
+                    <td className='p-4 whitespace-nowrap text-left'>
+                      <span className='flex items-center gap-3'>
                         <Image
                           loader={imageLoader}
                           src={
@@ -199,42 +202,42 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
                               ? '/vaction.png'
                               : '/sickleave.png'
                           }
-                          alt="vacation or sick leave"
+                          alt='vacation or sick leave'
                           width={25}
                           height={25}
-                          className="rounded-full"
+                          className='rounded-full'
                         />
                         <span>{employee.type}</span>
                       </span>
                     </td>
-                    <td className="p-4 whitespace-nowrap text-center">
+                    <td className='p-4 whitespace-nowrap text-center'>
                       {employee.duration} days
                     </td>
-                    <td className="p-4 text-center">
+                    <td className='p-4 text-center'>
                       {new Date(employee.leaveDay).toLocaleDateString()}
                     </td>
-                    <td className="p-4 text-center">
+                    <td className='p-4 text-center'>
                       {new Date(employee.returningDay).toLocaleDateString()}
                     </td>
-                    <td className="p-4 flex justify-center items-center whitespace-nowrap gap-2">
+                    <td className='p-4 flex justify-center items-center whitespace-nowrap gap-2'>
                       {employee.status === 'Pending' ? (
                         isAdminOrManager ? (
                           <>
                             <button
-                              className="p-2 text-white bg-[#25A244] rounded text-[10px] flex items-center gap-2"
+                              className='p-2 text-white bg-[#25A244] rounded text-[10px] flex items-center gap-2'
                               onClick={() => handleConfirmRequest(employee)}
                             >
                               Confirm Request <FaCheck />
                             </button>
                             <button
-                              className="p-2 text-white bg-[#F53649] rounded text-[10px] flex items-center gap-2"
+                              className='p-2 text-white bg-[#F53649] rounded text-[10px] flex items-center gap-2'
                               onClick={() => handleDenyRequest(employee)}
                             >
                               Deny <FaTimes />
                             </button>
                           </>
                         ) : (
-                          <span className="font-semibold text-yellow-600 border rounded p-2 px-4 border-yellow-600">
+                          <span className='font-semibold text-yellow-600 border rounded p-2 px-4 border-yellow-600'>
                             Pending
                           </span>
                         )
@@ -260,39 +263,18 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="mt-8 flex justify-between items-center">
-          <p className="text-[13px] text-gray-400">
+        <div className='mt-8 flex justify-between items-center'>
+          <p className='text-[13px] text-gray-400'>
             Showing page {currentPage} of {totalPages}
           </p>
-          <div className="flex gap-2">
-            <button
-              className="p-2 border bg-gray-200 rounded-lg"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              <BiChevronLeft size={24} />
-            </button>
-            {Array.from({ length: totalPages }, (_, index) => (
-              <button
-                key={index}
-                className={`p-2 border w-10 rounded-lg ${
-                  currentPage === index + 1
-                    ? 'bg-black text-white'
-                    : 'hover:bg-black hover:text-white'
-                }`}
-                onClick={() => handlePageChange(index + 1)}
-              >
-                {index + 1}
-              </button>
-            ))}
-            <button
-              className="p-2 border bg-gray-200 rounded-lg"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              <BiChevronRight size={24} />
-            </button>
-          </div>
+          <Pagination
+            styles={{ container: 'mt-5 gap-x-2 !justify-end' }}
+            totalItems={totalItems || 0}
+            pageSize={ITEMS_PER_PAGE}
+            currentPage={currentPage}
+            maxPagesToShow={3} // Adjust if needed
+            setCurrentPage={handlePageChange}
+          />
         </div>
       )}
 

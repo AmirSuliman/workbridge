@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { FC, useEffect, useReducer, useState } from 'react';
 
-import OrgChartWithHoverPositions from '@/components/EmployeeCharter/OrgChartWithHoverPositions';
+import OrgChartWithPositions from '@/components/EmployeeCharter/OrgChartWithPositions';
 import { getCharter } from '@/services/getCharter';
 import { initialState, reducer } from '@/store/reducer';
 import { EmployeeData } from '@/types/employee';
@@ -88,7 +88,7 @@ const OrgChartPage: FC = () => {
           </button>
         </div>
       </div>
-      <OrgChartWithHoverPositions
+      <OrgChartWithPositions
         onSelectedEmployees={state.selectedEmployees}
         employees={employeesData}
         compact={compact}
