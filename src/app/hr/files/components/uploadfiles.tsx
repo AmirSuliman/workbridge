@@ -4,7 +4,7 @@ import axiosInstance from '@/lib/axios';
 import { useEffect, useState } from 'react';
 import { FaTimes, FaUpload } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
-
+import toast from 'react-hot-toast';
 interface Folder {
   id: string;
   name: string;
@@ -89,7 +89,7 @@ const UploadFiles = ({ setIsModalOpen1 }) => {
       }
 
       console.log('File uploaded:', uploadResponse.data);
-
+      toast.success("File uploaded successfully!");
       // Step 2: Call /adminfile/upload API
       const adminUploadResponse = await axiosInstance.post(
         '/adminfile/upload',

@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { FaTimes } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 
-const Addfolder = ({ setIsModalOpen }) => {
+const Addfolder = ({ setIsModalOpen,setFolders }) => {
   const [userId, setUserId] = useState<number | undefined>(undefined);
   const [folderName, setFolderName] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -39,18 +39,26 @@ const Addfolder = ({ setIsModalOpen }) => {
   }, []);
 
   const handleCreateFolder = async () => {
+    if (!folderName || !userId) {
+      setErrorMessage('Folder name and user ID are required.');
+      return;
+    }
+  
     try {
-      if (!folderName.trim()) {
-        setErrorMessage('Folder name is required!');
-        return;
-      }
-      setErrorMessage(null);
-      await dispatch(createFolder({ folderName, userId }));
-      setIsModalOpen(false);
+      const newFolder = { folderName, userId }; // Add any other required fields for the folder
+      // Dispatch the create folder action with the correct data
+      await dispatch(createFolder(newFolder));
+      setFolders((prevFolders) => [...prevFolders, { ...newFolder, id: Date.now() }]);
+
+      toast.success('Folder created successfully!');
+      setFolderName(''); // Reset folder name after success
+      setIsModalOpen(false); // Close the modal
     } catch (error) {
-      console.log(error);
+      toast.error('Failed to create folder');
+      console.error('Error creating folder:', error);
     }
   };
+  
 
   const handleCloseModal = () => {
     dispatch(resetState());

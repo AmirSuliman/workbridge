@@ -62,6 +62,7 @@ const HrFiles = () => {
   const { data: session } = useSession();
   const role = session?.user.role;
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
+  const [documents, setDocuments] = useState([]);
 
   const handleDocumentOpen = async (doc) => {
     const isEdge = window.navigator.userAgent.indexOf('Edg') > -1;
@@ -110,10 +111,11 @@ const HrFiles = () => {
     }
   };
 
-  const handleAddfolder = () => {
-    setIsModalOpen(true);
-  };
-
+ const handleAddfolder = () => {
+  setIsModalOpen(true);
+  // Ensure to fetch updated folders or directly add the new folder
+  fetchInitialData();  // Re-fetch to get the latest folders and files
+};
   const handleUploadfiles = () => {
     setIsModalOpen1(true);
   };
@@ -142,9 +144,10 @@ const HrFiles = () => {
         setLoading(false);
       }
     };
-
+  
     fetchInitialData();
   }, []);
+  
 
   const handleEditdocument = (file: File) => {
     setDocumentId(file.id);
@@ -477,7 +480,7 @@ const HrFiles = () => {
 
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-          <Addfolder setIsModalOpen={setIsModalOpen} />
+          <Addfolder setIsModalOpen={setIsModalOpen} setFolders={setFolders}/>
         </Modal>
       )}
 
@@ -508,15 +511,17 @@ const HrFiles = () => {
         </Modal>
       )}
       {isModalOpen3 && (
-        <Modal onClose={() => setIsModalOpen3(false)}>
-          <Editdocument
-            setIsModalOpen3={setIsModalOpen3}
-            documentId={documentId}
-            currentTitle={currentTitle}
-            currentFolderId={currentFolderId}
-          />
-        </Modal>
-      )}
+  <Modal onClose={() => setIsModalOpen3(false)}>
+    <Editdocument
+      setIsModalOpen3={setIsModalOpen3}
+      documentId={documentId}
+      currentTitle={currentTitle}
+      currentFolderId={currentFolderId}
+      setDocuments={setDocuments} // Pass this function
+    />
+  </Modal>
+)}
+
       {isModalOpen4 && (
         <Modal onClose={() => setIsModalOpen4(false)}>
           <Deletedocument

@@ -1,7 +1,7 @@
 "use client";
 import { FaTimes } from "react-icons/fa";
 import axiosInstance from "@/lib/axios";
-
+import toast from "react-hot-toast";
 const Deletedocument = ({ setIsModalOpen4, fileId, setFolders, setAllFiles, setActiveFolder }) => {
   const handleDelete = async () => {
     try {
@@ -23,10 +23,13 @@ const Deletedocument = ({ setIsModalOpen4, fileId, setFolders, setAllFiles, setA
           files: prevFolder.files.filter((file) => file.id !== fileId),
         };
       });
+      toast.success("File deleted successfully!");
 
       setIsModalOpen4(false);
     } catch (err) {
       console.error("Error deleting file:", err);
+      toast.error("Failed to delete the file. Please try again.");
+
     }
   };
 
