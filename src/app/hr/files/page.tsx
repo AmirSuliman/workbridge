@@ -62,7 +62,7 @@ const HrFiles = () => {
   const { data: session } = useSession();
   const role = session?.user.role;
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
-  const [documents, setDocuments] = useState([]);
+  const [documents, setDocuments] = useState<any[]>([]); // Explicitly specify the type
 
   const handleDocumentOpen = async (doc) => {
     const isEdge = window.navigator.userAgent.indexOf('Edg') > -1;
@@ -124,27 +124,27 @@ const HrFiles = () => {
     setIsModalOpen2(true);
   };
 
-  useEffect(() => {
-    const fetchInitialData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const [foldersResponse, filesResponse] = await Promise.all([
-          axiosInstance.get('/folders'),
-          axiosInstance.get('/files'),
-        ]);
-        setFolders(foldersResponse.data.data.items);
-        setAllFiles(filesResponse.data.data.items);
-        setIsAllFilesActive(true); // Ensure "All Files" is selected by default
-        setActiveFolder(null); // No specific folder should be active
-      } catch (err) {
-        setError('Failed to load data.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchInitialData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [foldersResponse, filesResponse] = await Promise.all([
+        axiosInstance.get('/folders'),
+        axiosInstance.get('/files'),
+      ]);
+      setFolders(foldersResponse.data.data.items);
+      setAllFiles(filesResponse.data.data.items);
+      setIsAllFilesActive(true);
+      setActiveFolder(null);
+    } catch (err) {
+      setError('Failed to load data.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
   
+  useEffect(() => {
     fetchInitialData();
   }, []);
   
@@ -479,10 +479,14 @@ const HrFiles = () => {
       </div>
 
       {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <Addfolder setIsModalOpen={setIsModalOpen} setFolders={setFolders}/>
-        </Modal>
-      )}
+  <Modal onClose={() => setIsModalOpen(false)}>
+    <Addfolder
+      setIsModalOpen={setIsModalOpen}
+      onSuccess={fetchInitialData} // trigger refresh
+    />
+  </Modal>
+)}
+
 
       {subfolderOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>

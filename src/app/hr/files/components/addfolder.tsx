@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { FaTimes } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 
-const Addfolder = ({ setIsModalOpen,setFolders }) => {
+const Addfolder = ({ setIsModalOpen, onSuccess }: { setIsModalOpen: (val: boolean) => void, onSuccess?: () => void }) => {
   const [userId, setUserId] = useState<number | undefined>(undefined);
   const [folderName, setFolderName] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -48,7 +48,7 @@ const Addfolder = ({ setIsModalOpen,setFolders }) => {
       const newFolder = { folderName, userId }; // Add any other required fields for the folder
       // Dispatch the create folder action with the correct data
       await dispatch(createFolder(newFolder));
-      setFolders((prevFolders) => [...prevFolders, { ...newFolder, id: Date.now() }]);
+      onSuccess?.(); // Trigger refresh in parent
 
       toast.success('Folder created successfully!');
       setFolderName(''); // Reset folder name after success
