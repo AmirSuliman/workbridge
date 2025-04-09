@@ -295,7 +295,7 @@ const VacationPolicies = () => {
       </div>
 
       <div className="flex flex-row items-center gap-4 mt-4 ">
-         <label className="flex flex-col gap-1 w-[200px]">
+        <label className="flex flex-col gap-1 w-[200px]">
           <span className="text-gray-400 text-[12px]">Vacation</span>
           <input
             type="text"
@@ -304,7 +304,7 @@ const VacationPolicies = () => {
             onChange={(e) => setVacationLeave(e.target.value)}
             disabled={!isEditing}
           />
-        </label> 
+        </label>
         <label className="flex flex-col gap-1 w-[200px]">
           <span className="text-gray-400 text-[12px]">Sick Leave</span>
           <input

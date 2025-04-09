@@ -22,9 +22,10 @@ const Logout = () => {
 
       // Optional: Clear cookies manually
       document.cookie =
-        'next-auth.session-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-      document.cookie =
-        'next-auth.csrf-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      'next-auth.session-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure';
+    document.cookie =
+      'next-auth.csrf-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=None; Secure';
+    
 
     } catch (error) {
       console.error('Logout error:', error);
