@@ -9,6 +9,11 @@ import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
 import Select from 'react-select';
 
+type OptionType = {
+  value: number;
+  label: string;
+};
+
 const PolicyToDepartments = ({ onClose, postPolicy }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -16,11 +21,14 @@ const PolicyToDepartments = ({ onClose, postPolicy }) => {
   const [departments, setDepartments] = useState<Department[]>([]);
   const [selectAll, setSelectAll] = useState(false);
 
-  const { control, handleSubmit, setValue } = useForm({
+  const { control, handleSubmit, setValue } = useForm<{
+    departmentId: OptionType[];
+  }>({
     defaultValues: {
       departmentId: [],
     },
   });
+  
 
   // Fetch departments
   useEffect(() => {
