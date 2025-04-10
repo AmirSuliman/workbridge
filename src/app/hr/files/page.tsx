@@ -62,6 +62,7 @@ const HrFiles = () => {
   const { data: session } = useSession();
   const role = session?.user.role;
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
+  const [documents, setDocuments] = useState<any[]>([]); // Explicitly specify the type
 
   const handleDocumentOpen = async (doc) => {
     const isEdge = window.navigator.userAgent.indexOf('Edg') > -1;
@@ -110,10 +111,11 @@ const HrFiles = () => {
     }
   };
 
-  const handleAddfolder = () => {
-    setIsModalOpen(true);
-  };
-
+ const handleAddfolder = () => {
+  setIsModalOpen(true);
+  // Ensure to fetch updated folders or directly add the new folder
+  fetchInitialData();  // Re-fetch to get the latest folders and files
+};
   const handleUploadfiles = () => {
     setIsModalOpen1(true);
   };
@@ -122,29 +124,30 @@ const HrFiles = () => {
     setIsModalOpen2(true);
   };
 
+  const fetchInitialData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [foldersResponse, filesResponse] = await Promise.all([
+        axiosInstance.get('/folders'),
+        axiosInstance.get('/files'),
+      ]);
+      setFolders(foldersResponse.data.data.items);
+      setAllFiles(filesResponse.data.data.items);
+      setIsAllFilesActive(true);
+      setActiveFolder(null);
+    } catch (err) {
+      setError('Failed to load data.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   useEffect(() => {
-    const fetchInitialData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const [foldersResponse, filesResponse] = await Promise.all([
-          axiosInstance.get('/folders'),
-          axiosInstance.get('/files'),
-        ]);
-        setFolders(foldersResponse.data.data.items);
-        setAllFiles(filesResponse.data.data.items);
-        setIsAllFilesActive(true); // Ensure "All Files" is selected by default
-        setActiveFolder(null); // No specific folder should be active
-      } catch (err) {
-        setError('Failed to load data.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchInitialData();
   }, []);
+  
 
   const handleEditdocument = (file: File) => {
     setDocumentId(file.id);
@@ -476,10 +479,14 @@ const HrFiles = () => {
       </div>
 
       {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <Addfolder setIsModalOpen={setIsModalOpen} />
-        </Modal>
-      )}
+  <Modal onClose={() => setIsModalOpen(false)}>
+    <Addfolder
+      setIsModalOpen={setIsModalOpen}
+      onSuccess={fetchInitialData} // trigger refresh
+    />
+  </Modal>
+)}
+
 
       {subfolderOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
@@ -508,15 +515,17 @@ const HrFiles = () => {
         </Modal>
       )}
       {isModalOpen3 && (
-        <Modal onClose={() => setIsModalOpen3(false)}>
-          <Editdocument
-            setIsModalOpen3={setIsModalOpen3}
-            documentId={documentId}
-            currentTitle={currentTitle}
-            currentFolderId={currentFolderId}
-          />
-        </Modal>
-      )}
+  <Modal onClose={() => setIsModalOpen3(false)}>
+    <Editdocument
+      setIsModalOpen3={setIsModalOpen3}
+      documentId={documentId}
+      currentTitle={currentTitle}
+      currentFolderId={currentFolderId}
+      setDocuments={setDocuments} // Pass this function
+    />
+  </Modal>
+)}
+
       {isModalOpen4 && (
         <Modal onClose={() => setIsModalOpen4(false)}>
           <Deletedocument

@@ -1,7 +1,7 @@
 import { FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import axiosInstance from "@/lib/axios";
-
+import toast from "react-hot-toast";
 const Editfolder = ({ folderId, currentName, setIsModalOpen2, setFolders, createdBy }) => {
   const [folderName, setFolderName] = useState(currentName);
 
@@ -17,6 +17,7 @@ const Editfolder = ({ folderId, currentName, setIsModalOpen2, setFolders, create
       });
   
       console.log(response, 'res');
+      toast.success("Folder updated successfully!");
       setFolders((prevFolders) => 
         prevFolders.map((folder) => 
           folder.id === folderId ? { ...folder, name: folderName } : folder
@@ -24,6 +25,7 @@ const Editfolder = ({ folderId, currentName, setIsModalOpen2, setFolders, create
       );
       setIsModalOpen2(false);
     } catch (error) {
+      toast.error("Failed to update folder");
       console.error("Failed to update folder:", error);
     }
   };
