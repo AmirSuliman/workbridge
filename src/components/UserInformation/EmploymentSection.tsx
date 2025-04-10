@@ -45,7 +45,7 @@ const EmploymentSection = ({
         </div>
         <div className='grid md:grid-cols-3 gap-4'>
           <label className='form-label'>
-            Hire Date
+            Hire Date*
             <input
               type='date'
               className={`form-input`}
