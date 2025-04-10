@@ -12,8 +12,12 @@ const UserHeader = () => {
   return (
     <header className="gap-4 bg-white border-0 border-b-[1px] border-gray-border flex items-center py-2 px-3">
       <TiThMenu className=" ms h-5 w-8 sm:hidden" onClick={toggleSidebar} />
-      <Notifications />
-      <UserProfileInfo />
+      <div className="flex justify-between items-center">
+        <Notifications />
+        <div className="flex-1 flex justify-end sm:justify-end md:justify-start lg:justify-start">
+          <UserProfileInfo />
+        </div>
+      </div>
     </header>
   );
 };

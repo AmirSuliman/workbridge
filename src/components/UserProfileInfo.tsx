@@ -84,7 +84,7 @@ const UserProfileInfo: React.FC<
       <button
         onClick={toggleDropdown}
         {...props}
-        className={`relative flex flex-nowrap gap-4 justify-end items-center mr-0 ${
+        className={`relative flex flex-nowrap justify-end items-center mr-0 ${
           props.className || ''
         }`}
       >
@@ -96,7 +96,7 @@ const UserProfileInfo: React.FC<
           width={2000}
           className="size-12 rounded-full"
         />
-        <div>
+        <div className="hidden sm:block">
           <h4 className="text-lg font-medium">{`${
             session?.user?.user?.firstName || ''
           } ${session?.user?.user?.lastName || ''}`}</h4>
@@ -110,7 +110,15 @@ const UserProfileInfo: React.FC<
           }`}
         />
         {showDropdown && (
-          <nav className="absolute right-0 mt-4 top-[100%] w-[150px] z-10 flex flex-col py-4 rounded-md shadow-md bg-white">
+          <nav className="absolute right-0 sm:mt-4 top-[100%] w-[150px] z-10 flex flex-col py-4 rounded-md shadow-md bg-white">
+            <div className="block pl-2 sm:hidden">
+              <h4 className="text-md font-medium text-left">{`${
+                session?.user?.user?.firstName || ''
+              } ${session?.user?.user?.lastName || ''}`}</h4>
+              <p className="text-xs opacity-60 text-left">
+                {session?.user?.user?.role || ''}
+              </p>
+            </div>
             <Link
               href={`${
                 isUserPanel ? '/user/my-information' : '/hr/my-information'
