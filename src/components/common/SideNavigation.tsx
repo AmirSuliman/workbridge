@@ -68,11 +68,7 @@ const SideNavigation: React.FC<SideNavigationProps> = ({
             >
               {item.icon}
             </span>
-            {!collapsed && (
-              <span className='mx-2 text-xs whitespace-nowrap'>
-                {item.label}
-              </span>
-            )}
+            {!collapsed && <span className='mx-2'>{item.label}</span>}
           </li>
         ))}
       </ul>

@@ -111,44 +111,47 @@ const Page = () => {
   };
 
   return (
-    <main className="space-y-8">
+    <main className='space-y-8'>
       {/* Tabs */}
-      <div className="flex gap-4 border-b">
+      <div
+        style={{ scrollbarWidth: 'thin' }}
+        className='flex gap-4 border-b overflow-x-auto'
+      >
         <TabButton
           isRootTab={true}
-          name="Announcements"
+          name='Announcements'
           href={`/hr/announcements-&-policies/announcements?tab=0`}
         />
         <TabButton
-          name="Policies"
+          name='Policies'
           href={`/hr/announcements-&-policies/announcements?tab=1`}
         />
         <TabButton
-          name="Vacation Policies"
+          name='Vacation Policies'
           href={`/hr/announcements-&-policies/announcements?tab=2`}
         />
       </div>
 
       {/* Tab Content */}
-      <TabComponent index="0" isRootTab={true}>
+      <TabComponent index='0' isRootTab={true}>
         <>
           {/* Announcements Section */}
-          <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
-            <header className="px-4 flex items-center gap-4 justify-between">
-              <h1 className="flex items-center gap-4 font-semibold text-xl mb-4">
+          <section className='bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2'>
+            <header className='px-4 flex items-center gap-4 flex-wrap justify-between mb-4'>
+              <h1 className='flex items-center gap-4 font-semibold text-xl'>
                 <HiSpeakerphone />
                 Announcements
               </h1>
-              <Link href="/hr/announcements-&-policies/announcements/create-announcment">
-                <button className="flex flex-row items-center gap-3 bg-[#0F172A] text-white text-[12px] p-3 px-4 rounded-md">
+              <Link href='/hr/announcements-&-policies/announcements/create-announcment'>
+                <button className='flex flex-row items-center gap-3 bg-[#0F172A] text-white text-[12px] p-3 px-4 rounded-md'>
                   Create Announcement <PiPlusCircleBold size={18} />
                 </button>
               </Link>
             </header>
-            <h6 className="my-2 opacity-35 font-medium text-sm px-4">
+            <h6 className='my-2 opacity-35 font-medium text-sm px-4'>
               Published
             </h6>
-            <div className="divide-y">
+            <div className='divide-y'>
               {Array.isArray(publishedAnnouncements) &&
                 publishedAnnouncements.map((announcement) => (
                   <article
@@ -160,12 +163,12 @@ const Page = () => {
                           : `/hr/announcements-&-policies/announcements/${announcement.id}`
                       )
                     }
-                    className="flex items-center flex-wrap md:flex-nowrap gap-3 py-3 px-4 cursor-pointer hover:bg-background"
+                    className='flex items-center flex-wrap md:flex-nowrap gap-3 py-3 px-4 cursor-pointer hover:bg-background'
                   >
                     <AnnouncementImage type={announcement.type} />
-                    <div className="flex flex-row  items-center justify-between gap-1 w-full">
-                      <p className="text-sm">{announcement.title}</p>
-                      <p className="opacity-50 font-medium text-[12px]">
+                    <div className='flex flex-row  items-center justify-between gap-1 w-full'>
+                      <p className='text-sm'>{announcement.title}</p>
+                      <p className='opacity-50 font-medium text-[12px]'>
                         {announcement.createdAt
                           ? new Date(
                               announcement.createdAt
@@ -180,14 +183,14 @@ const Page = () => {
                 totalItems={totalPublishedAnnouncements || 0}
                 pageSize={pageSize}
                 currentPage={currentPublishedPage}
-                maxPagesToShow={3}
+                maxPagesToShow={2}
                 setCurrentPage={handlePublishedPageChange}
               />
             </div>
           </section>
 
-          <section className="bg-white divide-y rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
-            <h6 className="my-2 opacity-35 font-medium text-sm px-4">Drafts</h6>
+          <section className='bg-white divide-y rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2'>
+            <h6 className='my-2 opacity-35 font-medium text-sm px-4'>Drafts</h6>
             {Array.isArray(draftAnnouncements) &&
               draftAnnouncements.map((announcement) => (
                 <article
@@ -199,13 +202,13 @@ const Page = () => {
                         : `/hr/announcements-&-policies/announcements/${announcement.id}`
                     )
                   }
-                  className="flex items-center flex-wrap md:flex-nowrap gap-3 py-3 px-4 cursor-pointer hover:bg-background"
+                  className='flex items-center flex-wrap md:flex-nowrap gap-3 py-3 px-4 cursor-pointer hover:bg-background'
                 >
                   <AnnouncementImage type={announcement.type} />
 
-                  <div className="flex flex-row  items-center justify-between gap-1 w-full">
-                    <p className="text-sm">{announcement.title}</p>
-                    <p className="opacity-50 font-medium text-[12px]">
+                  <div className='flex flex-row  items-center justify-between gap-1 w-full'>
+                    <p className='text-sm'>{announcement.title}</p>
+                    <p className='opacity-50 font-medium text-[12px]'>
                       {announcement.createdAt
                         ? new Date(announcement.createdAt).toLocaleDateString()
                         : 'Date not available'}
@@ -225,14 +228,14 @@ const Page = () => {
         </>
       </TabComponent>
 
-      <TabComponent index="1">
-        <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 px-4 space-y-4">
+      <TabComponent index='1'>
+        <section className='bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 px-4 space-y-4'>
           <Policies />
         </section>
       </TabComponent>
 
-      <TabComponent index="2">
-        <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 px-4 space-y-4">
+      <TabComponent index='2'>
+        <section className='bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 px-4 space-y-4'>
           <Vacationpolicies />
         </section>
       </TabComponent>

@@ -348,52 +348,50 @@ const WeeklyReport = () => {
   };
 
   return (
-    <div ref={reportRef} className="p-6 bg-white border rounded-[10px] w-full">
-      <div className="flex flex-row items-center justify-between w-full">
-        <div className="flex flex-row items-center gap-2">
+    <div ref={reportRef} className='p-6 bg-white border rounded-[10px] w-full'>
+      <div className='flex flex-row items-center justify-between flex-wrap gap-2 w-full'>
+        <div className='flex flex-row items-center gap-2'>
           <BiTrendingUp />
           Weekly report{' '}
         </div>
-        <div className="flex flex-row items-center gap-4">
-          <div className="text-[12px] text-gray-400 flex flex-row items-center gap-2">
-            Date{' '}
-            <input
-              type="week"
-              className="form-input !font-medium"
-              onChange={handleDateChange}
-              value={
-                startDate
-                  ? `${new Date(startDate).getFullYear()}-W${String(
-                      new Date(startDate).getWeek()
-                    ).padStart(2, '0')}`
-                  : ''
-              }
-            />{' '}
-          </div>
-          <button
-            onClick={handleDownload}
-            disabled={isDownloading || !weeklyReports}
-            className="p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            <FaDownload /> {isDownloading ? 'Downloading...' : 'Download'}
-          </button>
-          {/* <button
+        <div className='text-[12px] text-gray-400 flex flex-row items-center gap-2 lg:ml-auto lg:mr-0'>
+          Date{' '}
+          <input
+            type='week'
+            className='form-input !font-medium'
+            onChange={handleDateChange}
+            value={
+              startDate
+                ? `${new Date(startDate).getFullYear()}-W${String(
+                    new Date(startDate).getWeek()
+                  ).padStart(2, '0')}`
+                : ''
+            }
+          />{' '}
+        </div>
+        <button
+          onClick={handleDownload}
+          disabled={isDownloading || !weeklyReports}
+          className='p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed'
+        >
+          <FaDownload /> {isDownloading ? 'Downloading...' : 'Download'}
+        </button>
+        {/* <button
             onClick={handlePdfDownload}
             disabled={isPdfDownloading || !weeklyReports}
             className="p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             <FaFilePdf /> {isPdfDownloading ? 'Downloading...' : 'PDF'}
           </button> */}
-        </div>
       </div>
-      <div className="flex flex-row items-center gap-3 text-[14px] mt-4 mb-8">
+      <div className='flex flex-row items-center gap-3 text-[14px] mt-4 mb-8'>
         <BiCalendar />
         {startDate && endDate
           ? `${formatDate(startDate)} - ${formatDate(endDate)}`
           : 'Loading...'}
       </div>
 
-      <h1 className="text-[16px] font-medium">
+      <h1 className='text-[16px] font-medium'>
         Total Number of Applicants ({weeklyReports?.count || 0})
       </h1>
       <StackedBarChart reportsData={weeklyReports} />

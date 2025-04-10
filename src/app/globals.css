@@ -45,7 +45,7 @@ body {
 
 @layer components {
   .form-input {
-    @apply p-2 border border-gray-border text-[#0F172A] text-sm outline-none focus:outline-none rounded-md w-full transition-colors;
+    @apply py-1 px-2 lg:p-2 border border-gray-border text-[#0F172A] text-sm outline-none focus:outline-none rounded-md w-full transition-colors;
 
     &:read-only {
       @apply cursor-default;

@@ -146,7 +146,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
           {employeeData.length === 0 ? (
             <p>No data available for the selected filter.</p>
           ) : (
-            <table className='w-full'>
+            <table className='w-full '>
               <thead>
                 <tr>
                   <th className='font-medium text-gray-400 text-[14px] p-3 text-left'>
@@ -243,7 +243,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
                         )
                       ) : (
                         <span
-                          className={`font-semibold ${
+                          className={`font-semibold text-[10px] ${
                             employee.status === 'Confirmed'
                               ? 'text-green-600 border rounded p-2 px-4 border-green-600'
                               : 'text-red-600 border rounded p-2 px-7 border-red-600'
@@ -263,8 +263,8 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className='mt-8 flex justify-between items-center'>
-          <p className='text-[13px] text-gray-400'>
+        <div className='mt-8 flex justify-between items-center flex-wrap'>
+          <p className='text-[13px] text-gray-400 mr-auto'>
             Showing page {currentPage} of {totalPages}
           </p>
           <Pagination
@@ -272,7 +272,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
             totalItems={totalItems || 0}
             pageSize={ITEMS_PER_PAGE}
             currentPage={currentPage}
-            maxPagesToShow={3} // Adjust if needed
+            maxPagesToShow={2} // Adjust if needed
             setCurrentPage={handlePageChange}
           />
         </div>
