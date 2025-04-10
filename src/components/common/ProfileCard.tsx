@@ -28,10 +28,12 @@ const ProfileCard = ({
   setEditEmployee,
   editEmployee,
   employeeData,
+  onSubmit,
   loading,
 }: {
   setEditEmployee: (value: boolean) => void;
   employeeData: EmployeeData;
+  onSubmit;
   editEmployee: boolean;
   loading?: boolean;
 }) => {
@@ -154,6 +156,7 @@ const ProfileCard = ({
                     />
                   ) : (
                     <Button
+                      onClick={onSubmit}
                       type='submit'
                       className={'!bg-dark-navy !text-white !text-xs'}
                       icon=''
