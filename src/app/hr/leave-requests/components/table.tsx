@@ -264,7 +264,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
       {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className='mt-8 flex justify-between items-center flex-wrap'>
-          <p className='text-[13px] text-gray-400 mr-auto'>
+          <p className='text-[13px] text-gray-400'>
             Showing page {currentPage} of {totalPages}
           </p>
           <Pagination

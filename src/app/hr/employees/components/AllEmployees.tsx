@@ -201,13 +201,14 @@ export const AllEmployees = () => {
         </Link>
       </nav>
       <main className='bg-white border p-4 rounded-md mt-4'>
-      <div className='flex flex-col sm:flex-row sm:gap-4'>
-      <div className='flex gap-3 my-3'>
+        {/* for search bar */}
+        <nav className='flex flex-wrap gap-2 my-3'>
           <SearchInput
             placeholder='Search Employees'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          {/* Sort and Filter DropDowns */}
           <div className='flex gap-2 items-center ml-auto mr-0'>
             <label className='text-sm text-[#abaeb4]'>Sort</label>
             <select
@@ -245,17 +246,16 @@ export const AllEmployees = () => {
               </optgroup>
             </select>
           </div>
-      </div>
           {(role === 'Admin' || role === 'SuperAdmin') && (
             <Button
-              className='bg-red-600 sm:h-fit sm:mt-[10px] sm:px-6'
-              name='Add new Employee' 
+              className='bg-[#0F172A] sm:px-6'
+              name='Add new Employee'
               icon={<CiCirclePlus />}
               onClick={() => router.push('/hr/employees/create-employee')}
             />
           )}
-        </div>
-        
+        </nav>
+
         <div className='mt-12 overflow-x-auto w-full'>
           <table className='w-full text-left border-collapse'>
             <thead>
@@ -298,9 +298,9 @@ export const AllEmployees = () => {
                   return (
                     <tr
                       key={employee.id}
-                      className='hover:bg-gray-50 text-[#0F172A] text-[14px] w-full '
+                      className='hover:bg-gray-50 text-[#0F172A] text-[12px] w-full '
                     >
-                      <td className='py-3 px-4 break-all min-w-6 border-b w-full lg:w-fit'>
+                      <td className='py-2 px-2 text-dark-navy whitespace-nowrap overflow-hidden text-ellipsis border-b w-full'>
                         <ProfileAvatarItem
                           src={
                             employee.profilePictureUrl ||
@@ -310,13 +310,13 @@ export const AllEmployees = () => {
                           subtitle={`#${String(employee.id)}`}
                         />
                       </td>
-                      <td className='py-3 px-4 break-all min-w-6 border-b ml-4 lg:ml-0'>
+                      <td className='py-3 px-4 border-b w-full  whitespace-nowrap overflow-hidden text-ellipsis '>
                         {employee.tittle}
                       </td>
-                      <td className='py-3 px-4 border-b'>
+                      <td className='py-3 px-4 border-b w-full  whitespace-nowrap overflow-hidden text-ellipsis '>
                         {employee.department?.name}
                       </td>
-                      <td className='py-3 px-4 border-b'>
+                      <td className='py-3 px-4 border-b w-full  whitespace-nowrap overflow-hidden text-ellipsis '>
                         <a
                           className='text-blue-700 underline'
                           href={`mailto:${employee.email}`}
@@ -324,12 +324,12 @@ export const AllEmployees = () => {
                           {employee.email}
                         </a>
                       </td>
-                      <td className='py-3 px-4 border-b'>
+                      <td className='py-3 px-4 border-b w-full  whitespace-nowrap overflow-hidden text-ellipsis '>
                         {hireDateFormatted}
                         <br />
                         <span className='text-[10px] mt-2'>{duration}</span>
                       </td>
-                      <td className='py-3 px-4 border-b '>
+                      <td className='py-3 px-4 border-b w-full  whitespace-nowrap overflow-hidden text-ellipsis '>
                         {role === 'SuperAdmin' && (
                           <FaTrash
                             onClick={() => dispatch(openDeleteModal(employee))}
@@ -346,7 +346,7 @@ export const AllEmployees = () => {
                               `employees/employee-info/${employee.id}`
                             );
                         }}
-                        className='py-3 px-4 border-b cursor-pointer'
+                        className='py-3 px-4 border-b cursor-pointer '
                       >
                         {role !== 'ViewOnly' && (
                           <span className='p-2 border w-8 rounded-md flex items-center justify-center hover:bg-black hover:text-white'>
@@ -373,7 +373,7 @@ export const AllEmployees = () => {
             totalItems={totalItems || 0}
             pageSize={pageSize}
             currentPage={currentPage}
-            maxPagesToShow={3} // Adjust if needed
+            maxPagesToShow={2} // Adjust if needed
             setCurrentPage={handlePageChange}
           />
         </div>
