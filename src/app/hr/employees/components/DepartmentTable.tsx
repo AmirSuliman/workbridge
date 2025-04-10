@@ -131,18 +131,20 @@ const DepartmentTable = () => {
       <div className="p-6 border border-gray-300 w-full bg-white mt-3 rounded-lg">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
           {/* Search and Sort */}
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6">
-            <div className="flex flex-row rounded-lg border px-3 py-1 text-gray-400 items-center gap-3 text-[12px]">
-              <FaSearch className="text-gray-400 text-[16px]" />
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6">
+            {/* for search bar */}
+            <div className="flex flex-row w-[300px] rounded-md border px-3 py-1 text-gray-400 items-start md:items-center gap-3 text-[12px]">
+              <FaSearch className="text-black text-[16px] " />
               <input
                 type="search"
                 placeholder="Search department"
                 className="border-none focus:outline-none text-[12px] text-gray-700"
-                value={searchQuery}
+                value={searchQuery} 
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <div>
+            {/* for sort */}
+            <div className=''>
               <label htmlFor="sort" className="mr-2 text-gray-400 text-[12px]">
                 Sort
               </label>

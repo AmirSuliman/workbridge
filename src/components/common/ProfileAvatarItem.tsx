@@ -26,18 +26,18 @@ const ProfileAvatarItem: React.FC<ProfileAvatarItemProps> = ({
       <Image
         src={imgSrc}
         alt={alt}
-        width={500}
-        height={500}
-        className="size-12 rounded-full"
+        width={400}
+        height={400}
+        className="size-10 rounded-full"
         onError={() => {
           setImgSrc(IMAGES.placeholderAvatar);
         }}
       />
-      <div className="ml-2 text-left">
-        <h4 className="text-sm font-[500] text-dark-navy whitespace-nowrap">
+      <div className="ml-1 text-left">
+        <h4 className="text-sm font-[400] text-dark-navy whitespace-nowrap">
           {title}
         </h4>
-        <p className="text-xs  font-[500] text-dark-navy">{subtitle}</p>
+        <p className="text-xs  font-[400] text-dark-navy">{subtitle}</p>
       </div>
     </div>
   );
