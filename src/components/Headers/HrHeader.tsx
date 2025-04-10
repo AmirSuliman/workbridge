@@ -96,9 +96,9 @@ const HrHeader = () => {
       ) : (
         <Button
           onClick={() => router.back()}
-          icon={<FaArrowLeft />}
-          name='Back'
-          className='flex-row-reverse'
+          icon={<FaArrowLeft size={20} />}
+          name={window.innerWidth >= 640 ? 'Back' : ''}
+          className="flex-row-reverse w-10 h-10 sm:w-auto sm:h-auto ml-[30px] md:ml-[30px] lg:ml-0 rounded-full sm:rounded-md"
         />
       )}
 

@@ -164,7 +164,7 @@ export const AllEmployees = () => {
   return (
     <>
       <nav className='flex gap-4 justify-between flex-wrap my-8'>
-        <h1 className='font-semibold text-2xl flex gap-2 items-center'>
+        <h1 className='font-semibold text-lg sm:text-2xl flex gap-2 items-center'>
           <svg
             width='26'
             height='25'
@@ -194,14 +194,15 @@ export const AllEmployees = () => {
         <Link href='employees/charter'>
           <Button
             bg='#00B87D'
-            className='!font-mdium !text-sm'
+            className=' !font-mdium !text-sm'
             name='See Employee Charter'
             icon={<GoArrowUpRight size={20} />}
           />
         </Link>
       </nav>
       <main className='bg-white border p-4 rounded-md mt-4'>
-        <div className='flex gap-3 my-3'>
+      <div className='flex flex-col sm:flex-row sm:gap-4'>
+      <div className='flex gap-3 my-3'>
           <SearchInput
             placeholder='Search Employees'
             value={searchTerm}
@@ -244,14 +245,17 @@ export const AllEmployees = () => {
               </optgroup>
             </select>
           </div>
+      </div>
           {(role === 'Admin' || role === 'SuperAdmin') && (
             <Button
-              name='Add new Employee'
+              className='bg-red-600 sm:h-fit sm:mt-[10px] sm:px-6'
+              name='Add new Employee' 
               icon={<CiCirclePlus />}
               onClick={() => router.push('/hr/employees/create-employee')}
             />
           )}
         </div>
+        
         <div className='mt-12 overflow-x-auto w-full'>
           <table className='w-full text-left border-collapse'>
             <thead>
@@ -296,7 +300,7 @@ export const AllEmployees = () => {
                       key={employee.id}
                       className='hover:bg-gray-50 text-[#0F172A] text-[14px] w-full '
                     >
-                      <td className='py-3 px-4 border-b min-w-fit w-full lg:w-fit'>
+                      <td className='py-3 px-4 break-all min-w-6 border-b w-full lg:w-fit'>
                         <ProfileAvatarItem
                           src={
                             employee.profilePictureUrl ||
@@ -306,7 +310,7 @@ export const AllEmployees = () => {
                           subtitle={`#${String(employee.id)}`}
                         />
                       </td>
-                      <td className='py-3 px-4 border-b ml-4 lg:ml-0'>
+                      <td className='py-3 px-4 break-all min-w-6 border-b ml-4 lg:ml-0'>
                         {employee.tittle}
                       </td>
                       <td className='py-3 px-4 border-b'>
