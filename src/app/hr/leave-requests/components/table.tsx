@@ -9,6 +9,7 @@ import Deny from './deny';
 import UserImgPlaceholder from '@/components/LeaveRequests/UserImgPlaceholder';
 import { getSession } from 'next-auth/react';
 import imageLoader from '../../../../../imageLoader';
+import { Pagination } from '@/components/common/Pagination';
 
 const ITEMS_PER_PAGE = 7;
 
@@ -47,6 +48,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
   const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
@@ -77,6 +79,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
         const fetchedData = response.data.data.items || [];
 
         setEmployeeData(fetchedData);
+        setTotalItems(response.data.data.totalItems);
         setTotalPages(response.data.data.totalPages || 1);
       } catch (err) {
         setError('Failed to fetch employee data.');
@@ -264,35 +267,14 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
           <p className='text-[13px] text-gray-400'>
             Showing page {currentPage} of {totalPages}
           </p>
-          <div className='flex gap-2'>
-            <button
-              className='p-2 border bg-gray-200 rounded-lg'
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              <BiChevronLeft size={24} />
-            </button>
-            {Array.from({ length: totalPages }, (_, index) => (
-              <button
-                key={index}
-                className={`p-2 border w-10 rounded-lg ${
-                  currentPage === index + 1
-                    ? 'bg-black text-white'
-                    : 'hover:bg-black hover:text-white'
-                }`}
-                onClick={() => handlePageChange(index + 1)}
-              >
-                {index + 1}
-              </button>
-            ))}
-            <button
-              className='p-2 border bg-gray-200 rounded-lg'
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              <BiChevronRight size={24} />
-            </button>
-          </div>
+          <Pagination
+            styles={{ container: 'mt-5 gap-x-2 !justify-end' }}
+            totalItems={totalItems || 0}
+            pageSize={ITEMS_PER_PAGE}
+            currentPage={currentPage}
+            maxPagesToShow={3} // Adjust if needed
+            setCurrentPage={handlePageChange}
+          />
         </div>
       )}
 
