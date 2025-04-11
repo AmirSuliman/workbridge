@@ -1,15 +1,16 @@
 'use client';
 import Modal from '@/components/modal/Modal';
 import axiosInstance from '@/lib/axios';
+import { isAxiosError } from 'axios';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { addDays } from 'date-fns';
-import UmbrellaIcon from '../icons/umbrella-icon';
-import { isAxiosError } from 'axios';
+import toast from 'react-hot-toast';
 import imageLoader from '../../../imageLoader';
+import UmbrellaIcon from '../icons/umbrella-icon';
+import { useSession } from 'next-auth/react';
+import { useParams } from 'next/navigation';
 
 interface VacationCardProps {
   onButtonClick?: () => void;
@@ -23,6 +24,9 @@ interface HolidaysErrorsProps {
 }
 
 const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
+  const { empId } = useParams(); // This id is used to view any employee's info
+  const { data: session } = useSession();
+  const userRole = session?.user?.role;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [holidaysErrors, setHolidaysErrors] = useState<HolidaysErrorsProps[]>(
     []
@@ -184,16 +188,20 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
               Requests must be made at least 2 weeks prior to submission
             </p>
           </div>
-          <button
-            type='button'
-            onClick={handleButtonClick}
-            className={`text-white bg-dark-navy py-2 w-[15rem] rounded-[4px] font-[400] text-sm ${
-              totalDays === 0 ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            disabled={totalDays === 0}
-          >
-            Request Vacation
-          </button>
+
+          {/* A manager cannot make a request for another employee */}
+          {userRole === 'Manager' && empId ? null : (
+            <button
+              type='button'
+              onClick={handleButtonClick}
+              className={`text-white bg-dark-navy py-2 w-[15rem] rounded-[4px] font-[400] text-sm ${
+                totalDays === 0 ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              disabled={totalDays === 0}
+            >
+              Request Vacation
+            </button>
+          )}
         </div>
 
         <div className='flex flex-col border border-gray-border items-center justify-center rounded-[7px] h-full px-4'>
@@ -338,6 +346,7 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
 
             <div className='flex flex-row  px-6 w-full gap-4 mt-16'>
               <button
+                type='button'
                 onClick={handleRequestVacation}
                 className='mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full'
                 disabled={loading}
@@ -345,6 +354,7 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
                 {loading ? 'Submitting...' : 'Request Vacation'}
               </button>
               <button
+                type='button'
                 onClick={() => setIsModalOpen(false)}
                 className='mt-4 px-4 py-3 border rounded w-full'
               >

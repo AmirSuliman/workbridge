@@ -38,22 +38,22 @@ const SideNavigation: React.FC<SideNavigationProps> = ({
 
   return (
     <nav
-      className={`bg-white text-dark-navy h-full  border-0 border-r-[1px] border-gray-border  w-[90%] absolute  sm:relative  sm:translate-x-0 transition-transform duration-300 ease-in-out  sm:w-[16rem] ${
+      className={`bg-white text-dark-navy h-full z-[1000] border-0 border-r-[1px] border-gray-border  w-[90%] absolute  sm:relative  sm:translate-x-0 transition-transform duration-300 ease-in-out  sm:w-[16rem] ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }     `}
     >
-      <div className="flex justify-end mt-5 mr-4 sm:hidden">
-        <IoClose className="w-6" onClick={() => toggleSidebar()} />
+      <div className='flex justify-end mt-5 mr-4 sm:hidden'>
+        <IoClose className='w-6' onClick={() => toggleSidebar()} />
       </div>
-      <div className="mt-4">
-        <WorkBridgeLogo classNames="max-w-[7rem] mx-auto" />
+      <div className='mt-4'>
+        <WorkBridgeLogo classNames='max-w-[7rem] mx-auto' />
       </div>
 
       <ul>
         {items.map((item, index) => (
           <li
             key={index}
-            className={` flex items-center p-3 ps-6 py-4 cursor-pointer transition-colors duration-75 group hover:bg-dark-navy  hover:text-white  ${
+            className={`flex items-center gap-4 text-lg py-2 px-8 cursor-pointer duration-75 group hover:bg-dark-navy hover:text-white  ${
               path === item.path ? 'bg-dark-navy text-white' : 'text-dark-navy'
             }`}
             onClick={() => {
@@ -68,11 +68,7 @@ const SideNavigation: React.FC<SideNavigationProps> = ({
             >
               {item.icon}
             </span>
-            {!collapsed && (
-              <span className="mx-2 text-xs whitespace-nowrap">
-                {item.label}
-              </span>
-            )}
+            {!collapsed && <span className='mx-2'>{item.label}</span>}
           </li>
         ))}
       </ul>

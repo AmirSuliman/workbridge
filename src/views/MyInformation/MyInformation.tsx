@@ -324,34 +324,35 @@ const MyInformation = () => {
 
   if (loading || myInfoLoading) {
     return (
-      <div className="p-4">
+      <div className='p-4'>
         <ScreenLoader />
       </div>
     );
   }
 
   if (error) {
-    return <div className="p-4">Error: {error}</div>;
+    return <div className='p-4'>Error: {error}</div>;
   }
 
   if (!employeeData) {
-    return <div className="p-4">No data available.</div>;
+    return <div className='p-4'>No data available.</div>;
   }
   console.log('Form errors: ', schemaErrors);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={`my-1 p-4 h-full`}>
+    <form className={`my-1 p-4 h-full`}>
       <ProfileCard
+        onSubmit={handleSubmit(onSubmit)}
         setEditEmployee={setEditEmployee}
         editEmployee={editEmployee}
         employeeData={employeeData}
         loading={editLoading}
       />
-      <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
+      <div className='flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto '>
         <TabButton
           isRootTab={true}
           className={hasPersonalErrors ? `!border-red-500 text-red-500` : ''}
-          name="Personal"
+          name='Personal'
           href={`${
             empId
               ? `/${
@@ -362,7 +363,7 @@ const MyInformation = () => {
         />
         <TabButton
           className={hasEmploymentErrors ? `!border-red-500 text-red-500` : ''}
-          name="Employment"
+          name='Employment'
           href={`${
             empId
               ? `/${
@@ -376,7 +377,7 @@ const MyInformation = () => {
         {!editEmployee && (
           <>
             <TabButton
-              name="Time Off"
+              name='Time Off'
               href={`${
                 empId
                   ? `/${
@@ -386,7 +387,7 @@ const MyInformation = () => {
               }`}
             />
             <TabButton
-              name="Documents"
+              name='Documents'
               href={`${
                 empId
                   ? `/${
@@ -396,7 +397,7 @@ const MyInformation = () => {
               }`}
             />
             <TabButton
-              name="Emergency"
+              name='Emergency'
               href={`${
                 empId
                   ? `/${
@@ -406,7 +407,7 @@ const MyInformation = () => {
               }`}
             />
             <TabButton
-              name="Notes"
+              name='Notes'
               href={`${
                 empId
                   ? `/${
@@ -420,7 +421,7 @@ const MyInformation = () => {
 
             {(role === 'SuperAdmin' || !empId) && (
               <TabButton
-                name="Payments"
+                name='Payments'
                 href={`${
                   empId
                     ? `/${
@@ -434,7 +435,7 @@ const MyInformation = () => {
         )}
       </div>
       <div>
-        <TabComponent index="0" isRootTab={true}>
+        <TabComponent index='0' isRootTab={true}>
           <UserInfoSection
             control={control}
             register={register}
@@ -444,7 +445,7 @@ const MyInformation = () => {
             handleFileChange={handleFileChange}
           />
         </TabComponent>
-        <TabComponent index="1">
+        <TabComponent index='1'>
           <EmploymentSection
             register={register}
             resetField={resetField}
@@ -453,21 +454,21 @@ const MyInformation = () => {
             employeeData={employeeData}
           />
         </TabComponent>
-        <TabComponent index="2">
+        <TabComponent index='2'>
           <TimeOffSection employeeData={employeeData} />
         </TabComponent>
-        <TabComponent index="3">
+        <TabComponent index='3'>
           <DocumentSection employeeData={employeeData} />
         </TabComponent>
-        <TabComponent index="4">
+        <TabComponent index='4'>
           <EmergencySection employeeData={employeeData} />
         </TabComponent>
-        <TabComponent index="5">
+        <TabComponent index='5'>
           <NotesSection employeeId={empId || myId} />
         </TabComponent>
         {/* Superadmin can see all user's payments. Other users can see only thier own payments */}
         {(role === 'SuperAdmin' || !empId) && (
-          <TabComponent index="6">
+          <TabComponent index='6'>
             <PaymentSection employeeId={empId || myId} />
           </TabComponent>
         )}

@@ -36,11 +36,8 @@ export const employeeSchema = z.object({
   tittle: z.string().min(1, 'Title is required'),
   hireDate: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in mm/dd/yyyy format')
-    .optional()
-    .or(z.literal(''))
-    .transform((val) => (val === '' ? undefined : val)),
-
+    .min(1, 'Hire date is required')
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in yyyy-mm-dd format'),
   birthday: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birth date must be in mm/dd/yyyy format')
@@ -184,10 +181,8 @@ export const getEmployeeSchema = (role, empId) => {
     note: z.string().optional(),
     hireDate: z
       .string()
-      .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in mm/dd/yyyy format')
-      .optional()
-      .or(z.literal(''))
-      .transform((val) => (val === '' ? undefined : val)),
+      .min(1, 'Hire date is required')
+      .regex(/^\d{4}-\d{2}-\d{2}$/, 'Hire date must be in yyyy-mm-dd format'),
     birthday: z
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birth date must be in mm/dd/yyyy format')

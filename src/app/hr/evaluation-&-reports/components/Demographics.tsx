@@ -244,17 +244,17 @@ const Demographics = () => {
   };
 
   return (
-    <div ref={reportRef} className="p-6 bg-white border rounded-[10px]">
-      <div className="flex flex-row items-center justify-between w-full">
-        <div className="flex flex-row items-center gap-2">
+    <div ref={reportRef} className='p-6 bg-white border rounded-[10px]'>
+      <div className='flex flex-row items-center justify-between w-full'>
+        <div className='flex flex-row items-center gap-2'>
           <BiTrendingUp />
           Demographics{' '}
         </div>
-        <div className="flex flex-row items-center gap-4">
+        <div className='flex flex-row items-center gap-4'>
           <button
             onClick={handleDownload}
             disabled={isDownloading || demographicReports.length === 0}
-            className="p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className='p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed'
           >
             <FaDownload /> {isDownloading ? 'Downloading...' : 'Download'}
           </button>
@@ -274,14 +274,14 @@ const Demographics = () => {
         height={1000}
         className="mt-10"
       /> */}
-      <div className="mt-10">
+      <div className='mt-10'>
         <WorldMap
           data={demographicReports}
           hoveredCountry={hoveredCountry}
           setHoveredCountry={setHoveredCountry}
         />
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mt-8">
+      <div className='grid grid-cols-2 md:grid-cols-5 gap-2 lg:gap-8 mt-8'>
         {demographicReports.length > 0 ? (
           demographicReports.map((data) => (
             <CountryBox
@@ -293,7 +293,7 @@ const Demographics = () => {
             />
           ))
         ) : (
-          <p className="col-span-full p-4 w-full border rounded text-center">
+          <p className='col-span-full p-4 w-full border rounded text-center'>
             No data available
           </p>
         )}

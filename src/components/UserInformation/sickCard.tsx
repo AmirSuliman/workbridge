@@ -11,6 +11,8 @@ import { isAxiosError } from 'axios';
 import imageLoader from '../../../imageLoader';
 import SickLeaveAttachments, { uploadFiles } from './SickLeaveAttachments';
 import { BiLoaderCircle } from 'react-icons/bi';
+import { useSession } from 'next-auth/react';
+import { useParams } from 'next/navigation';
 interface SickCardProps {
   onButtonClick?: () => void;
   totalDays: number;
@@ -23,6 +25,10 @@ interface HolidaysErrorsProps {
 }
 
 const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
+  const { empId } = useParams(); // This id is used to view any employee's info
+  const { data: session } = useSession();
+  const userRole = session?.user?.role;
+
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [note, setNote] = useState('');
@@ -199,16 +205,19 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
               </h3>
             </div>
           </div>
-          <button
-            type='button'
-            onClick={handleButtonClick}
-            className={`text-white bg-dark-navy py-2 w-[15rem] rounded-[4px] font-[400] text-sm ${
-              totalDays === 0 ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            disabled={totalDays === 0}
-          >
-            Request Sick leave
-          </button>
+          {/* A manager cannot make a request for another employee */}
+          {userRole === 'Manager' && empId ? null : (
+            <button
+              type='button'
+              onClick={handleButtonClick}
+              className={`text-white bg-dark-navy py-2 w-[15rem] rounded-[4px] font-[400] text-sm ${
+                totalDays === 0 ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              disabled={totalDays === 0}
+            >
+              Request Sick leave
+            </button>
+          )}
         </div>
 
         <div className='flex flex-col border border-gray-border items-center justify-center rounded-[7px] h-full px-4'>
@@ -355,14 +364,6 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
             />
 
             <div className='flex flex-row  px-6 w-full gap-4 mt-16'>
-              {/* <button
-                type="button"
-                onClick={handleRequestVacation}
-                className="mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full"
-                disabled={loading}
-              >
-                {loading ? 'Submitting...' : 'Request Sick Leave'}
-              </button> */}
               <button
                 type='button'
                 onClick={handleRequestVacation}

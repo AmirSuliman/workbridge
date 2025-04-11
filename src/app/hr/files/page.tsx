@@ -111,11 +111,11 @@ const HrFiles = () => {
     }
   };
 
- const handleAddfolder = () => {
-  setIsModalOpen(true);
-  // Ensure to fetch updated folders or directly add the new folder
-  fetchInitialData();  // Re-fetch to get the latest folders and files
-};
+  const handleAddfolder = () => {
+    setIsModalOpen(true);
+    // Ensure to fetch updated folders or directly add the new folder
+    fetchInitialData(); // Re-fetch to get the latest folders and files
+  };
   const handleUploadfiles = () => {
     setIsModalOpen1(true);
   };
@@ -143,11 +143,10 @@ const HrFiles = () => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchInitialData();
   }, []);
-  
 
   const handleEditdocument = (file: File) => {
     setDocumentId(file.id);
@@ -273,10 +272,10 @@ const HrFiles = () => {
         }`}
         style={{ paddingLeft: `${level * 10}px` }}
       >
-        <div className="flex flex-row items-center gap-2 px-4 font-medium">
+        <div className='flex flex-row items-center gap-2 px-4 font-medium'>
           <FaFolder size={20} />
           <p>{folder.name}</p>
-          <span className="text-sm">
+          <span className='text-sm'>
             {folder.children.length > 0 ? (
               expandedFolders.has(folder.id) ? (
                 <FaChevronDown size={12} />
@@ -284,11 +283,11 @@ const HrFiles = () => {
                 <FaChevronRight size={12} />
               )
             ) : (
-              <span className="w-4" /> // Spacer for folders without children
+              <span className='w-4' /> // Spacer for folders without children
             )}
           </span>
         </div>
-        <p className="px-4 text-gray-400 text-[16px]">
+        <p className='px-4 text-gray-400 text-[16px]'>
           {folder?.files?.length} Files
         </p>
       </div>
@@ -299,108 +298,106 @@ const HrFiles = () => {
 
   return (
     <div>
-      <div className="flex flex-row items-center justify-between">
-        <div className="flex flex-row items-center gap-2">
-          <Image src="/folder.svg" alt="img" width={25} height={25} />
-          <h1 className="font-semibold text-[22px]">Files</h1>
+      <div className='flex flex-row items-center justify-between flex-wrap gap-2'>
+        <div className='flex flex-row items-center gap-2 lg:ml-0 lg:mr-auto'>
+          <Image src='/folder.svg' alt='img' width={25} height={25} />
+          <h1 className='font-semibold text-[22px]'>Files</h1>
         </div>
         {!isUserPanel && (
-          <div className="flex flex-row items-center gap-4">
+          <>
             {activeFolder?.id && (
               <button
                 onClick={() => {
                   setSubfolderOpen(true);
                 }}
-                className="flex flex-row items-center p-3 gap-2 px-4 bg-white border rounded text-[12px]"
+                className='flex flex-row items-center p-3 gap-2 px-4 bg-white border rounded text-[12px]'
               >
                 Add Sub Folder <FaPlusCircle />
               </button>
             )}
             <button
               onClick={handleAddfolder}
-              className="flex flex-row items-center p-3 gap-2 px-4 bg-white border rounded text-[12px]"
+              className='flex flex-row items-center p-3 gap-2 px-4 bg-white border rounded text-[12px]'
             >
               Add Folder <FaPlusCircle />
             </button>
             <button
               onClick={handleUploadfiles}
-              className="flex flex-row items-center p-3 gap-2 px-4 bg-[#0F172A] text-white border rounded text-[12px]"
+              className='flex flex-row items-center p-3 gap-2 px-4 bg-[#0F172A] text-white border rounded text-[12px]'
             >
               Upload Files <FaUpload />
             </button>
-          </div>
+          </>
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row items-start gap-6 w-full mt-8">
-        <div className="flex flex-col bg-white border rounded-[10px] whitespace-nowrap min-h-[600px] w-[400px]">
-          <h1 className="mt-6 px-4 font-medium text-[18px] text-[#0F172A] mb-4">
+      <div className='flex flex-col sm:flex-row items-start gap-6 w-full mt-8'>
+        <div className='flex flex-col bg-white border rounded-[10px] whitespace-nowrap min-h-[600px] w-[400px]'>
+          <h1 className='mt-6 px-4 font-medium text-[18px] text-[#0F172A] mb-4'>
             Folders
           </h1>
 
           {loading && (
-            <p className="text-center text-gray-500">Loading folders...</p>
+            <p className='text-center text-gray-500'>Loading folders...</p>
           )}
-          {error && <p className="text-center text-red-500">{error}</p>}
+          {error && <p className='text-center text-red-500'>{error}</p>}
           {!loading && !error && folders.length > 0 ? (
-            <div className="text-sm">
+            <div className='text-sm'>
               {tree.map((folder) => renderFolder(folder, 0))}
             </div>
           ) : (
             !loading && (
-              <p className="text-center text-gray-500">No folders found.</p>
+              <p className='text-center text-gray-500'>No folders found.</p>
             )
           )}
         </div>
 
-        <div className="flex flex-col bg-white border rounded-[10px] p-5 w-full overflow-x-auto">
-          <div className="flex flex-row items-center justify-between">
-            <div className="flex flex-row items-center gap-2">
-              <Image src="/folder.svg" alt="img" width={20} height={20} />
-              <h1 className="font-medium text-[18px]">
+        <div className='flex flex-col bg-white border rounded-[10px] p-5 w-full overflow-x-auto'>
+          <div className='flex flex-row items-center flex-wrap gap-2'>
+            <div className='flex flex-row items-center gap-2 lg:mr-auto lg:ml-0'>
+              <Image src='/folder.svg' alt='img' width={20} height={20} />
+              <h1 className='font-medium text-[18px]'>
                 {isAllFilesActive
                   ? 'All Files'
                   : activeFolder
-                  ? activeFolder.name
-                  : 'Select a Folder'}
+                    ? activeFolder.name
+                    : 'Select a Folder'}
               </h1>
             </div>
-            <div className="flex flex-row items-center gap-3 text-xs">
-              <label>
-                <span>Sort</span>
-                <select
-                  className="p-1 border rounded ml-2 text-[12px]"
-                  value={sortCriteria}
-                  onChange={(e) => handleSortFiles(e.target.value)}
-                >
-                  <option>Select</option>
-                  <option>Name</option>
-                  <option>Date uploaded</option>
-                  <option>Size</option>
-                </select>
-              </label>
-              {!isUserPanel && (
-                <button
-                  onClick={handleEditfolder}
-                  className="flex flex-row items-center p-2 gap-2 px-4 bg-[#0F172A] text-white border rounded text-[12px]"
-                  disabled={!activeFolder}
-                >
-                  Edit Folder <FaEdit />
-                </button>
-              )}
-            </div>
+            <label>
+              <span>Sort</span>
+              <select
+                className='p-1 border rounded ml-2 text-[12px]'
+                value={sortCriteria}
+                onChange={(e) => handleSortFiles(e.target.value)}
+              >
+                <option>Select</option>
+                <option>Name</option>
+                <option>Date uploaded</option>
+                <option>Size</option>
+              </select>
+            </label>
+            {!isUserPanel && (
+              <button
+                onClick={handleEditfolder}
+                className='flex flex-row items-center p-2 gap-2 px-4 bg-[#0F172A] text-white border rounded text-[12px]'
+                disabled={!activeFolder}
+              >
+                Edit Folder <FaEdit />
+              </button>
+            )}
           </div>
 
-          <div className="mt-8 w-full mb-2 overflow-x-auto">
-            <table className="w-full">
-              <thead className="text-gray-400 text-[14px] font-medium">
-                <tr className="border-b">
-                  <th className="p-4 font-medium text-left">Document Name</th>
-                  <th className="p-4 font-medium text-left">Date Uploaded</th>
-                  <th className="p-4 font-medium text-left">Size</th>
-                  <th className="p-4 font-medium text-left">Filetype</th>
+          <div className='mt-8 w-full mb-2 overflow-x-auto'>
+            <table className='w-full'>
+              <thead className='text-gray-400 text-[14px] font-medium'>
+                <tr className='border-b'>
+                  <th className='p-4 font-medium text-left'>Document Name</th>
+                  <th className='p-4 font-medium text-left'>Date Uploaded</th>
+                  <th className='p-4 font-medium text-left'>Size</th>
+                  <th className='p-4 font-medium text-left'>Filetype</th>
                   {!isUserPanel && (
-                    <th className="p-4 font-medium text-center">Actions</th>
+                    <th className='p-4 font-medium text-center'>Actions</th>
                   )}
                 </tr>
               </thead>
@@ -410,48 +407,48 @@ const HrFiles = () => {
                     activeFolder.files.map((file, index) => (
                       <tr
                         key={index}
-                        className="p-3 border-b text-[14px] font-normal hover:bg-gray-50"
+                        className='p-3 border-b text-[14px] font-normal hover:bg-gray-50'
                       >
                         <td
                           onClick={() => {
                             handleDocumentOpen(file);
                           }}
-                          className="p-4 flex items-center gap-2 cursor-pointer"
+                          className='p-4 flex items-center gap-2 cursor-pointer'
                         >
                           {/* <input type="checkbox" /> */}
                           <span>{file.fileTitle || file.fileName}</span>
                         </td>
-                        <td className="p-4">
+                        <td className='p-4'>
                           {file.createdAt ? file.createdAt.split('T')[0] : ''}
                         </td>
-                        <td className="p-4">{file.size}</td>
-                        <td className="p-4">
+                        <td className='p-4'>{file.size}</td>
+                        <td className='p-4'>
                           {file.fileType
                             ? file.fileType ===
                               'vnd.openxmlformats-officedocument.wordprocessingml.document'
                               ? 'docx'
                               : file.fileType === 'msword'
-                              ? 'doc'
-                              : file.fileType
+                                ? 'doc'
+                                : file.fileType
                             : ''}
                         </td>
                         {!isUserPanel && (
-                          <td className="flex flex-row gap-3 justify-center items-center">
+                          <td className='flex flex-row gap-3 justify-center items-center'>
                             <Image
-                              src="/edit.svg"
-                              alt="edit"
+                              src='/edit.svg'
+                              alt='edit'
                               width={10}
                               height={10}
                               onClick={() => handleEditdocument(file)}
-                              className="cursor-pointer"
+                              className='cursor-pointer'
                             />
                             <Image
-                              src="/delete.svg"
-                              alt="del"
+                              src='/delete.svg'
+                              alt='del'
                               width={10}
                               height={10}
                               onClick={() => handleDeletedocument(file.id)}
-                              className="cursor-pointer"
+                              className='cursor-pointer'
                             />
                           </td>
                         )}
@@ -459,7 +456,7 @@ const HrFiles = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={5} className="text-center text-gray-500">
+                      <td colSpan={5} className='text-center text-gray-500'>
                         This folder is empty. Use the upload button to add
                         files.
                       </td>
@@ -467,7 +464,7 @@ const HrFiles = () => {
                   )
                 ) : (
                   <tr>
-                    <td colSpan={5} className="text-center text-gray-500">
+                    <td colSpan={5} className='text-center text-gray-500'>
                       Select a folder to view its files.
                     </td>
                   </tr>
@@ -479,14 +476,13 @@ const HrFiles = () => {
       </div>
 
       {isModalOpen && (
-  <Modal onClose={() => setIsModalOpen(false)}>
-    <Addfolder
-      setIsModalOpen={setIsModalOpen}
-      onSuccess={fetchInitialData} // trigger refresh
-    />
-  </Modal>
-)}
-
+        <Modal onClose={() => setIsModalOpen(false)}>
+          <Addfolder
+            setIsModalOpen={setIsModalOpen}
+            onSuccess={fetchInitialData} // trigger refresh
+          />
+        </Modal>
+      )}
 
       {subfolderOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
@@ -515,16 +511,16 @@ const HrFiles = () => {
         </Modal>
       )}
       {isModalOpen3 && (
-  <Modal onClose={() => setIsModalOpen3(false)}>
-    <Editdocument
-      setIsModalOpen3={setIsModalOpen3}
-      documentId={documentId}
-      currentTitle={currentTitle}
-      currentFolderId={currentFolderId}
-      setDocuments={setDocuments} // Pass this function
-    />
-  </Modal>
-)}
+        <Modal onClose={() => setIsModalOpen3(false)}>
+          <Editdocument
+            setIsModalOpen3={setIsModalOpen3}
+            documentId={documentId}
+            currentTitle={currentTitle}
+            currentFolderId={currentFolderId}
+            setDocuments={setDocuments} // Pass this function
+          />
+        </Modal>
+      )}
 
       {isModalOpen4 && (
         <Modal onClose={() => setIsModalOpen4(false)}>

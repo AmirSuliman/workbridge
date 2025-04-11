@@ -28,10 +28,12 @@ const ProfileCard = ({
   setEditEmployee,
   editEmployee,
   employeeData,
+  onSubmit,
   loading,
 }: {
   setEditEmployee: (value: boolean) => void;
   employeeData: EmployeeData;
+  onSubmit;
   editEmployee: boolean;
   loading?: boolean;
 }) => {
@@ -81,7 +83,7 @@ const ProfileCard = ({
               alt='Avatar'
               width={700}
               height={700}
-              className=' w-32 h-28 shrink-0 grow-0 rounded-full object-cover'
+              className='w-12 h-10 sm:w-32 sm:h-28 shrink-0 grow-0 rounded-full object-cover'
               onError={() => {
                 setImgSrc(IMAGES?.placeholderAvatar);
               }}
@@ -121,10 +123,10 @@ const ProfileCard = ({
         <div className='flex flex-col w-full'>
           <div className='flex justify-between flex-wrap'>
             <div className='flex flex-col'>
-              <h1 className={`text-[24px]`}>{`${
+              <h1 className={`text-[18px] sm:text-[24px]`}>{`${
                 employeeData?.firstName || ''
               } ${employeeData?.lastName || ''}`}</h1>
-              <p className='text-[16px] text-gray-500'>
+              <p className='text-[12px] sm:text-[16px] text-gray-500'>
                 {employeeData?.tittle || ''}
               </p>
             </div>
@@ -154,6 +156,7 @@ const ProfileCard = ({
                     />
                   ) : (
                     <Button
+                      onClick={onSubmit}
                       type='submit'
                       className={'!bg-dark-navy !text-white !text-xs'}
                       icon=''
