@@ -63,8 +63,8 @@ const Page = () => {
             role === 'Admin'
               ? 'Manager'
               : role === 'Manager'
-              ? 'Manager'
-              : 'Employee';
+                ? 'Manager'
+                : 'Employee';
           const response = await axiosInstance.get(
             `/survey/notification/employee/${employeeId.employeeId}?role=${roleParam}`
           );
@@ -98,13 +98,13 @@ const Page = () => {
   const isHR = role === 'Admin';
   const isManager = role === 'Manager';
   return (
-    <main className="flex flex-col sm:flex-row items-start gap-4 w-full">
-      <div className="flex flex-col gap-4 w-full sm:w-[45%]">
+    <main className='flex flex-col lg:flex-row items-start gap-4 w-full'>
+      <div className='flex flex-col gap-4 w-full lg:w-[45%]'>
         <WhosOut />
         <Companyinfo />
         <Employeementreport />
       </div>
-      <div className="flex flex-col gap-4 flex-1">
+      <div className='flex flex-col gap-4 flex-1'>
         {(isHR || isSuperadmin) && evaluation.length > 0 && (
           <Evaluation evaluation={evaluation} employeeId={employeeId} />
         )}
@@ -114,19 +114,19 @@ const Page = () => {
           !evaluation.some((item) => item.status === 'In Progress') && (
             <UserEvaluation evaluation={evaluation} employeeId={employeeId} />
           )}
-        <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
-          <header className="px-4 flex items-center gap-4 justify-between">
-            <h1 className="flex items-center gap-4 font-medium text-[18px] mb-4">
+        <section className='bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2'>
+          <header className='px-4 flex items-center gap-4 justify-between'>
+            <h1 className='flex items-center gap-4 font-medium text-[18px] mb-4'>
               <HiSpeakerphone />
               Announcements
             </h1>
-            <Link href="/hr/announcements-&-policies/announcements">
+            <Link href='/hr/announcements-&-policies/announcements'>
               <Button
-                name="See All"
+                name='See All'
                 icon={<PiArrowUpRightThin size={18} />}
-                bg="transparent"
-                textColor="black"
-                className="!text-[10px]"
+                bg='transparent'
+                textColor='black'
+                className='!text-[10px]'
               />
             </Link>
           </header>
