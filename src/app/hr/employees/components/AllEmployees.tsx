@@ -194,7 +194,7 @@ export const AllEmployees = () => {
         <Link href='employees/charter'>
           <Button
             bg='#00B87D'
-            className=' !font-mdium !text-sm'
+            className=''
             name='See Employee Charter'
             icon={<GoArrowUpRight size={20} />}
           />

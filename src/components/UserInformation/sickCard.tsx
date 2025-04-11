@@ -1,21 +1,21 @@
 'use client';
 import Modal from '@/components/modal/Modal';
 import axiosInstance from '@/lib/axios';
+import { EmployeeData } from '@/types/employee';
+import { isAxiosError } from 'axios';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { addDays } from 'date-fns';
-import { isAxiosError } from 'axios';
-import imageLoader from '../../../imageLoader';
-import SickLeaveAttachments, { uploadFiles } from './SickLeaveAttachments';
+import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
-import { useSession } from 'next-auth/react';
-import { useParams } from 'next/navigation';
+import imageLoader from '../../../imageLoader';
+import RequestCard from './RequestCard';
+import SickLeaveAttachments, { uploadFiles } from './SickLeaveAttachments';
+
 interface SickCardProps {
   onButtonClick?: () => void;
-  totalDays: number;
+  employeeData: EmployeeData;
 }
 
 interface HolidaysErrorsProps {
@@ -24,10 +24,9 @@ interface HolidaysErrorsProps {
   title: string;
 }
 
-const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
-  const { empId } = useParams(); // This id is used to view any employee's info
-  const { data: session } = useSession();
-  const userRole = session?.user?.role;
+const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
+  const totalDays = employeeData?.sickLeaveCounter;
+  const totalDaysUsed = employeeData?.sickDaysUsed;
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -187,46 +186,14 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
 
   return (
     <>
-      <div className='flex items-center justify-between border border-gray-border rounded-[10px] bg-white p-3 md:p-6 md:gap-[3.3rem] w-full'>
-        <div className='flex flex-col justify-between gap-[2rem] h-full'>
-          <div>
-            <div className='flex gap-2 items-center mb-2'>
-              <div className='flex items-center justify-center rounded-full p-1'>
-                <Image
-                  loader={imageLoader}
-                  src='/sickleave.png'
-                  alt='img'
-                  width={25}
-                  height={25}
-                />
-              </div>
-              <h3 className='text-dark-navy font-[500] text-sm'>
-                Request Sick Leave
-              </h3>
-            </div>
-          </div>
-          {/* A manager cannot make a request for another employee */}
-          {userRole === 'Manager' && empId ? null : (
-            <button
-              type='button'
-              onClick={handleButtonClick}
-              className={`text-white bg-dark-navy py-2 w-[15rem] rounded-[4px] font-[400] text-sm ${
-                totalDays === 0 ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-              disabled={totalDays === 0}
-            >
-              Request Sick leave
-            </button>
-          )}
-        </div>
-
-        <div className='flex flex-col border border-gray-border items-center justify-center rounded-[7px] h-full px-4'>
-          <span className='text-lg text-dark-navy font-[400]'>
-            {totalDays ?? 0}
-          </span>
-          <span className='text-xs text-dark-navy'>days left</span>
-        </div>
-      </div>
+      <RequestCard
+        type='sick'
+        totalDays={totalDays}
+        totalDaysUsed={totalDaysUsed}
+        onClick={handleButtonClick}
+        imageSrc='/sickleave.png'
+        imageAlt='Sick leave'
+      />
 
       {isModalOpen && (
         <Modal
