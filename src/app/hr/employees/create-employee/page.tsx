@@ -155,7 +155,6 @@ const CreateEmployee = () => {
         ...payLoad,
         profilePictureUrl: previewUrl,
       });
-      dispatch(updateEmployeeData(response.data.data));
       toast.success('Employee created successfully!');
       setShowSuccess(true);
       console.log('post employee: ', response.data);

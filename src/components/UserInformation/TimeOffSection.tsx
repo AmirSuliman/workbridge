@@ -34,13 +34,15 @@ interface TimeOffItem {
 }
 
 const TimeOffSection = ({ employeeData }) => {
+  console.log('emp data: ', employeeData);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [leaveDate, setLeaveDate] = useState('');
   const [returningDate, setReturningDate] = useState('');
   const [duration, setDuration] = useState(0);
-  const [timeOffData, setTimeOffData] = useState<TimeOffItem[]>([]);
+  const [timeOffData, setTimeOffData] = useState<TimeOffItem[]>(
+    employeeData ? employeeData.timeOffRequests : []
+  );
   const [selectedTimeOff, setSelectedTimeOff] = useState<TimeOffItem | null>(
     null
   );
@@ -80,40 +82,6 @@ const TimeOffSection = ({ employeeData }) => {
     startDateObj.setDate(startDateObj.getDate() + days - 1);
     return startDateObj.toISOString().split('T')[0];
   };
-
-  useEffect(() => {
-    const fetchTimeOffData = async () => {
-      try {
-        // if employee id is not coming from search params then show my timoffs
-        // else show that employee's timeoffs
-        if (!empId) {
-          const response = await axiosInstance.get('/timeoffs/my', {
-            params: { associations: true },
-          });
-
-          setTimeOffData(response.data.data.items);
-        } else {
-          const response = await axiosInstance.get(
-            `/timeoffs?employeeId=${empId}`,
-            {
-              params: { associations: true },
-            }
-          );
-          setTimeOffData(response.data.data.items);
-        }
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('An unknown error occurred.');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTimeOffData();
-  }, []);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -200,9 +168,7 @@ const TimeOffSection = ({ employeeData }) => {
           icon={<UmbrellaIcon classNames='w-4 text-dark-navy' />}
           text='Upcoming Time Off'
         />
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
+        {error ? (
           <p className='text-red-500'>{error}</p>
         ) : (
           <InfoGrid
@@ -223,9 +189,7 @@ const TimeOffSection = ({ employeeData }) => {
           text='Time Off History'
         />
 
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
+        {error ? (
           <p className='text-red-500'>{error}</p>
         ) : (
           <InfoGrid
@@ -262,7 +226,7 @@ const TimeOffSection = ({ employeeData }) => {
                   <p className='text-[#F53649]'>Denied</p>
                 ),
                 `${item?.user?.firstName || 'N/A'} ${
-                  item?.user?.lastName || 'N/A'
+                  item?.user?.lastName || ''
                 }`.trim(),
                 `${item.note || 'N/A'}`,
               ])}
