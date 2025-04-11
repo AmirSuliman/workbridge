@@ -1,19 +1,20 @@
 'use client';
 import Modal from '@/components/modal/Modal';
 import axiosInstance from '@/lib/axios';
+import { EmployeeData } from '@/types/employee';
+import { isAxiosError } from 'axios';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { addDays } from 'date-fns';
-import UmbrellaIcon from '../icons/umbrella-icon';
-import { isAxiosError } from 'axios';
+import toast from 'react-hot-toast';
 import imageLoader from '../../../imageLoader';
+import UmbrellaIcon from '../icons/umbrella-icon';
+import RequestCard from './RequestCard';
 
 interface VacationCardProps {
   onButtonClick?: () => void;
-  totalDays: number; // Use totalDays as prop
+  employeeData: EmployeeData;
 }
 
 interface HolidaysErrorsProps {
@@ -22,7 +23,9 @@ interface HolidaysErrorsProps {
   title: string;
 }
 
-const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
+const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
+  const totalDays = employeeData?.vacationLeaveCounter;
+  const totalDaysUsed = employeeData?.vacationDaysUsed;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [holidaysErrors, setHolidaysErrors] = useState<HolidaysErrorsProps[]>(
     []
@@ -169,40 +172,13 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
 
   return (
     <>
-      <div className='flex items-center justify-between border border-gray-border rounded-[10px] bg-white p-3 md:p-6 md:gap-[3.3rem] w-full'>
-        <div className='flex flex-col justify-between gap-[2rem] h-full'>
-          <div>
-            <div className='flex gap-2 items-center mb-2'>
-              <div className='flex items-center justify-center rounded-full p-1 bg-[#00B87D]'>
-                <UmbrellaIcon classNames='w-4 h-4 text-white' />
-              </div>
-              <h3 className='text-dark-navy font-[500] text-sm'>
-                Request Vacation
-              </h3>
-            </div>
-            <p className='font-[400] text-[#878b94] text-xs'>
-              Requests must be made at least 2 weeks prior to submission
-            </p>
-          </div>
-          <button
-            type='button'
-            onClick={handleButtonClick}
-            className={`text-white bg-dark-navy py-2 w-[15rem] rounded-[4px] font-[400] text-sm ${
-              totalDays === 0 ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            disabled={totalDays === 0}
-          >
-            Request Vacation
-          </button>
-        </div>
-
-        <div className='flex flex-col border border-gray-border items-center justify-center rounded-[7px] h-full px-4'>
-          <span className='text-lg text-dark-navy font-[400]'>
-            {totalDays ?? 0}
-          </span>
-          <span className='text-xs text-dark-navy'>days left</span>
-        </div>
-      </div>
+      <RequestCard
+        type='vacation'
+        totalDays={totalDays}
+        totalDaysUsed={totalDaysUsed}
+        onClick={handleButtonClick}
+        icon={<UmbrellaIcon classNames='w-4 h-4 text-white' />}
+      />
 
       {isModalOpen && (
         <Modal
@@ -338,6 +314,7 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
 
             <div className='flex flex-row  px-6 w-full gap-4 mt-16'>
               <button
+                type='button'
                 onClick={handleRequestVacation}
                 className='mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full'
                 disabled={loading}
@@ -345,6 +322,7 @@ const VacationsCard = ({ onButtonClick, totalDays }: VacationCardProps) => {
                 {loading ? 'Submitting...' : 'Request Vacation'}
               </button>
               <button
+                type='button'
                 onClick={() => setIsModalOpen(false)}
                 className='mt-4 px-4 py-3 border rounded w-full'
               >

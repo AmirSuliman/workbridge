@@ -24,8 +24,8 @@ export const WorldMap = ({
   setHoveredCountry: (country: string | null) => void;
 }) => {
   return (
-    <div className="w-full h-[450px] overflow-hidden">
-      <ComposableMap projection="geoMercator">
+    <div className='w-full lg:h-[450px] overflow-hidden'>
+      <ComposableMap projection='geoMercator'>
         <ZoomableGroup center={[60, 20]} zoom={3}>
           <Geographies geography={geoUrl}>
             {({ geographies }) =>
@@ -59,8 +59,8 @@ export const WorldMap = ({
                           : '#0F172A'
                         : '#ECECEC'
                     }
-                    stroke="#000000"
-                    strokeWidth="0.09px"
+                    stroke='#000000'
+                    strokeWidth='0.09px'
                     style={{
                       default: { outline: 'none' },
                       hover: { outline: 'none', fill: '#00B87D' },
@@ -106,8 +106,8 @@ export const CountryBox = ({
     onMouseEnter={onHover}
     onMouseLeave={onLeave}
   >
-    <p className="text-[14px]">{data.countryName || ''}</p>
-    <p className="text-[16px] font-medium">
+    <p className='text-[14px]'>{data.countryName || ''}</p>
+    <p className='text-[16px] font-medium'>
       {data.employeeCount || 0} employees
     </p>
   </div>

@@ -120,7 +120,7 @@ export const AllJobsTable = () => {
   return (
     <div className="p-4 bg-white flex flex-col rounded-lg border mt-4">
       <div className="flex flex-col gap-2 sm:flex-row items-start sm:items-center justify-between w-full">
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
           {/* Sort Dropdown */}
           <div>
             <label htmlFor="sort" className="mr-2 text-gray-400 text-[12px]">
@@ -142,46 +142,48 @@ export const AllJobsTable = () => {
             </select>
           </div>
 
-          {/* Status Filter */}
-          <div>
-            <label
-              htmlFor="statusFilter"
-              className="mr-2 text-gray-400 text-[12px]"
-            >
-              Status
-            </label>
-            <select
-              id="statusFilter"
-              className="border rounded px-2 py-1 text-[12px]"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="">All</option>
-              <option value="Published">Published</option>
-              <option value="Draft">Draft</option>
-              {/* <option value="closed">Closed</option> */}
-            </select>
-          </div>
+          <div className='flex flex-row gap-2'>
+            {/* Status Filter */}
+            <div>
+              <label
+                htmlFor="statusFilter"
+                className="mr-2 text-gray-400 text-[12px]"
+              >
+                Status
+              </label>
+              <select
+                id="statusFilter"
+                className="border rounded px-2 py-1 text-[12px]"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="">All</option>
+                <option value="Published">Published</option>
+                <option value="Draft">Draft</option>
+                {/* <option value="closed">Closed</option> */}
+              </select>
+            </div>
 
-          {/* Type Filter */}
-          <div>
-            <label
-              htmlFor="typeFilter"
-              className="mr-2 text-gray-400 text-[12px]"
-            >
-              Job Type
-            </label>
-            <select
-              id="typeFilter"
-              className="border rounded px-2 py-1 text-[12px]"
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-            >
-              <option value="">All</option>
-              <option value="FullTime">Full Time</option>
-              <option value="Part Time">Part Time</option>
-              <option value="Contract">Contract</option>
-            </select>
+            {/* Type Filter */}
+            <div>
+              <label
+                htmlFor="typeFilter"
+                className="mr-2 text-gray-400 text-[12px]"
+              >
+                Job Type
+              </label>
+              <select
+                id="typeFilter"
+                className="border rounded px-2 py-1 text-[12px]"
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+              >
+                <option value="">All</option>
+                <option value="FullTime">Full Time</option>
+                <option value="Part Time">Part Time</option>
+                <option value="Contract">Contract</option>
+              </select>
+            </div>
           </div>
         </div>
 

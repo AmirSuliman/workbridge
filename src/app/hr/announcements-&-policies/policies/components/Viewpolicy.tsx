@@ -9,12 +9,13 @@ const ViewPolicy = ({ previewData }) => {
   const { data: session } = useSession();
   const { policyId } = useParams(); 
   const [loading, setLoading] = useState(false);
+  const [isChecked, setIsChecked] = useState(false); 
 
   const employeeId = session?.user?.employeeId; 
 
   const handleAcceptPolicy = async () => {
-    if (!policyId || !employeeId) {
-      console.error('Missing required identifiers.');
+    if (!policyId || !employeeId || !isChecked) {
+      console.error('Missing required identifiers or checkbox not checked.');
       return;
     }
 
@@ -100,15 +101,33 @@ const ViewPolicy = ({ previewData }) => {
             ></div>
           )}
         </div>
+
+        {/* Checkbox */}
+        {previewData?.status?.toLowerCase() !== 'accepted' && (
+          <div className='flex items-center gap-2 mt-2 px-4'>
+            <input
+              type="checkbox"
+              className="w-4 h-4"
+              checked={isChecked}
+              onChange={() => setIsChecked(prev => !prev)}
+            />
+            <label className="text-sm cursor-pointer" onClick={() => setIsChecked(prev => !prev)}>
+            I have read and agree to the policy.
+            </label>
+          </div>
+        )}
       </div>
 
+      {/* Accept Button or Accepted Message */}
       {previewData?.status?.toLowerCase() === 'accepted' ? (
         <p className="text-green-600 font-semibold mt-4">Accepted</p>
       ) : (
         <button
-          className="bg-green-500 text-white p-3 px-8 mt-8 rounded-lg"
+          className={`bg-green-500 text-white p-3 px-8 mt-4 rounded-lg ${
+            !isChecked || loading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
           onClick={handleAcceptPolicy}
-          disabled={loading}
+          disabled={!isChecked || loading}
         >
           {loading ? 'Processing...' : 'Accept'}
         </button>

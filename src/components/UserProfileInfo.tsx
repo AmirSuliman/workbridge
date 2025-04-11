@@ -84,23 +84,23 @@ const UserProfileInfo: React.FC<
       <button
         onClick={toggleDropdown}
         {...props}
-        className={`relative flex flex-nowrap gap-4 justify-end items-center mr-0 ${
+        className={`relative flex flex-nowrap justify-end items-center mr-0 ${
           props.className || ''
         }`}
       >
         <Image
           loader={imageLoader}
           src={profilePictureUrl || IMAGES.placeholderAvatar}
-          alt="User Avatar"
+          alt='User Avatar'
           height={2000}
           width={2000}
-          className="size-12 rounded-full"
+          className='size-12 rounded-full'
         />
-        <div>
-          <h4 className="text-lg font-medium">{`${
+        <div className='hidden sm:block ml-2'>
+          <h4 className='text-lg font-medium'>{`${
             session?.user?.user?.firstName || ''
           } ${session?.user?.user?.lastName || ''}`}</h4>
-          <p className="text-xs opacity-60 text-left">
+          <p className='text-xs opacity-60 text-left'>
             {session?.user?.user?.role || ''}
           </p>
         </div>
@@ -110,12 +110,20 @@ const UserProfileInfo: React.FC<
           }`}
         />
         {showDropdown && (
-          <nav className="absolute right-0 mt-4 top-[100%] w-[150px] z-10 flex flex-col py-4 rounded-md shadow-md bg-white">
+          <nav className='absolute right-0 sm:mt-4 top-[100%] w-[150px] z-10 flex flex-col py-4 rounded-md shadow-md bg-white'>
+            <div className='block pl-2 sm:hidden'>
+              <h4 className='text-md font-medium text-left'>{`${
+                session?.user?.user?.firstName || ''
+              } ${session?.user?.user?.lastName || ''}`}</h4>
+              <p className='text-xs opacity-60 text-left'>
+                {session?.user?.user?.role || ''}
+              </p>
+            </div>
             <Link
               href={`${
                 isUserPanel ? '/user/my-information' : '/hr/my-information'
               }`}
-              className="flex gap-4 items-center text-xs px-4 py-2 bg-white/100 hover:bg-white/50"
+              className='flex gap-4 items-center text-xs px-4 py-2 bg-white/100 hover:bg-white/50'
             >
               <FaUser />
               Profile

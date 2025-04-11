@@ -68,6 +68,7 @@ const CandidateTable = () => {
     <div className="p-4 bg-white rounded-lg border mt-4">
       {/* Search, Sort, and Filter */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+       
         <div className="flex flex-row rounded-lg border px-2 py-1 text-gray-400 items-center gap-3 text-[12px]">
           <FaSearch />
           <input
@@ -79,7 +80,8 @@ const CandidateTable = () => {
           />
         </div>
 
-        <div>
+       <div className='flex flex-row gap-2'>
+       <div>
           <label htmlFor="sort" className="mr-2 text-gray-400 text-[12px]">
             Sort
           </label>
@@ -92,8 +94,8 @@ const CandidateTable = () => {
             <option value="">Select</option>
             <option value="createdAt">Date Applied</option>
             <option value="stage">Status</option>
-            <option value="rating">Highets rating</option>
-            <option value="lowerRating">Lowets rating</option>
+            <option value="rating">Highest rating</option>
+            <option value="lowerRating">Lowest rating</option>
           </select>
         </div>
 
@@ -119,6 +121,7 @@ const CandidateTable = () => {
             <option value="Onboarded">Onboarded</option>
           </select>
         </div>
+       </div>
       </div>
 
       {/* Candidate Table */}

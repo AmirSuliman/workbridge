@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
-import * as XLSX from 'xlsx';
 import axiosInstance from '@/lib/axios';
 import { isAxiosError } from 'axios';
-import toast from 'react-hot-toast';
-import { BiTrendingUp } from 'react-icons/bi';
-import { FaDownload, FaFilePdf } from 'react-icons/fa';
-import StackedBarChart from './charts/weeklychart';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import React, { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { BiTrendingUp } from 'react-icons/bi';
+import { FaDownload } from 'react-icons/fa';
+import * as XLSX from 'xlsx';
+import StackedBarChart from './charts/weeklychart';
 
 interface WeeklyProps {
   count: number | null;
@@ -242,46 +242,44 @@ const YearlyReport = () => {
   };
 
   return (
-    <div ref={reportRef} className="p-6 bg-white border rounded-[10px]">
-      <div className="flex flex-row items-center justify-between w-full">
-        <div className="flex flex-row items-center gap-2">
+    <div ref={reportRef} className='p-6 bg-white border rounded-[10px]'>
+      <div className='flex flex-row items-center justify-between flex-wrap gap-2 w-full'>
+        <div className='flex flex-row items-center gap-2'>
           <BiTrendingUp />
           <span>Yearly Report</span>
         </div>
-        <div className="flex flex-row items-center gap-4">
-          <div className="text-[12px] text-gray-400 flex flex-row items-center gap-2">
-            Year
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(Number(e.target.value))}
-              className="form-input font-medium"
-            >
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button
-            onClick={handleDownload}
-            disabled={isDownloading || !yearlyReports}
-            className="p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+        <div className='lg:mr-0 lg:ml-auto text-[12px] text-gray-400 flex flex-row items-center gap-2'>
+          Year
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+            className='form-input font-medium'
           >
-            <FaDownload /> {isDownloading ? 'Downloading...' : 'Download'}
-          </button>
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button
+          onClick={handleDownload}
+          disabled={isDownloading || !yearlyReports}
+          className='p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed'
+        >
+          <FaDownload /> {isDownloading ? 'Downloading...' : 'Download'}
+        </button>
 
-          {/* <button
+        {/* <button
             onClick={handlePdfDownload}
             disabled={isPdfDownloading || !yearlyReports}
             className="p-2 bg-black rounded text-white text-[12px] flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             <FaFilePdf /> {isPdfDownloading ? 'Downloading...' : 'PDF'}
           </button> */}
-        </div>
       </div>
 
-      <h1 className="text-[16px] font-medium mt-12">
+      <h1 className='text-[16px] font-medium mt-12'>
         Total Number of Applicants ({yearlyReports?.count || 0})
       </h1>
       <StackedBarChart reportsData={yearlyReports} />

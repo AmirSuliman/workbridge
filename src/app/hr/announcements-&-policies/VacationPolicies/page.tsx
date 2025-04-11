@@ -266,18 +266,18 @@ const VacationPolicies = () => {
   return (
     <>
       {/* Header */}
-      <div className="flex flex-row items-center gap-4 font-medium text-[22px] mb-12">
+      <div className='flex flex-row items-center gap-4 font-medium text-[22px] mb-12'>
         <FaBullhorn /> Policies In-use
       </div>
 
       {/* Dropdown and Add Button */}
-      <div className="flex flex-row items-center justify-between">
+      <div className='flex flex-row items-center flex-wrap gap-2 justify-between'>
         <select
-          id="countries"
-          name="countries"
+          id='countries'
+          name='countries'
           value={selectedCountry}
           onChange={(e) => setSelectedCountry(Number(e.target.value))}
-          className="border p-2 rounded w-[400px] focus:outline-none"
+          className='border w-full p-2 rounded max-w-[400px] focus:outline-none'
         >
           {countries.map((country) => (
             <option key={country.id} value={country.id}>
@@ -288,28 +288,28 @@ const VacationPolicies = () => {
 
         <button
           onClick={toggleModal}
-          className="flex flex-row items-center gap-2 text-[12px] text-white bg-black rounded p-2"
+          className='flex flex-row items-center gap-2 text-[12px] text-white bg-black rounded p-2'
         >
           Add Holiday <BiPlusCircle size={16} />
         </button>
       </div>
 
-      <div className="flex flex-row items-center gap-4 mt-4 ">
-        <label className="flex flex-col gap-1 w-[200px]">
-          <span className="text-gray-400 text-[12px]">Vacation</span>
+      <div className='flex flex-row flex-wrap items-center gap-4 mt-4 '>
+        <label className='flex flex-col gap-1 w-[200px]'>
+          <span className='text-gray-400 text-[12px]'>Vacation</span>
           <input
-            type="text"
-            className="border p-3  rounded outline-none"
+            type='text'
+            className='border p-3  rounded outline-none'
             value={vacationLeave}
             onChange={(e) => setVacationLeave(e.target.value)}
             disabled={!isEditing}
           />
         </label>
-        <label className="flex flex-col gap-1 w-[200px]">
-          <span className="text-gray-400 text-[12px]">Sick Leave</span>
+        <label className='flex flex-col gap-1 w-[200px]'>
+          <span className='text-gray-400 text-[12px]'>Sick Leave</span>
           <input
-            type="text"
-            className="border p-3  rounded outline-none"
+            type='text'
+            className='border p-3  rounded outline-none'
             value={sickLeave}
             onChange={(e) => setSickLeave(e.target.value)}
             disabled={!isEditing}
@@ -317,18 +317,18 @@ const VacationPolicies = () => {
         </label>
 
         <Image
-          src="/edit.svg"
-          alt="edit"
+          src='/edit.svg'
+          alt='edit'
           width={13}
           height={13}
-          className="cursor-pointer mt-4"
-          title="Edit"
+          className='cursor-pointer mt-4'
+          title='Edit'
           onClick={handleEditClick}
         />
         {isEditing && (
           <button
             onClick={handleSave}
-            className="bg-[#0F172A] text-white px-4 py-2 rounded mt-4"
+            className='bg-[#0F172A] text-white px-4 py-2 rounded mt-4'
           >
             Post
           </button>
@@ -336,48 +336,48 @@ const VacationPolicies = () => {
       </div>
 
       {/* Table */}
-      <div className="w-full mt-8 overflow-x-auto">
-        <table className="w-full mt-8 border-collapse">
-          <thead className="font-medium text-gray-400 border-b">
+      <div className='w-full mt-8 overflow-x-auto'>
+        <table className='w-full mt-8 border-collapse'>
+          <thead className='font-medium text-gray-400 border-b'>
             <tr>
-              <td className="p-3 text-left">Title</td>
-              <td className="p-3 text-left">Date</td>
-              <td className="p-3 text-left">Type</td>
-              <td className="p-3 text-left">Created by</td>
-              <td className="p-3 text-center"></td>
+              <td className='p-3 text-left'>Title</td>
+              <td className='p-3 text-left'>Date</td>
+              <td className='p-3 text-left'>Type</td>
+              <td className='p-3 text-left'>Created by</td>
+              <td className='p-3 text-center'></td>
             </tr>
           </thead>
           <tbody>
             {holidays.map((holiday) => (
               <tr
                 key={holiday.id}
-                className="hover:bg-gray-50 text-[14px] border-b"
+                className='hover:bg-gray-50 text-[14px] border-b'
               >
-                <td className="p-4">{holiday.title}</td>
-                <td className="p-4">{formatDate(holiday.date)}</td>
-                <td className="p-4">{holiday.type}</td>
-                <td className="p-4">
+                <td className='p-4'>{holiday.title}</td>
+                <td className='p-4'>{formatDate(holiday.date)}</td>
+                <td className='p-4'>{holiday.type}</td>
+                <td className='p-4'>
                   {holiday.user
                     ? `${holiday.user.firstName} ${holiday.user.lastName}`
                     : ''}
                 </td>
-                <td className="p-4 text-center flex justify-center space-x-2">
+                <td className='p-4 text-center flex justify-center space-x-2'>
                   <Image
-                    src="/delete.svg"
-                    alt="delete"
+                    src='/delete.svg'
+                    alt='delete'
                     width={13}
                     height={13}
-                    className="cursor-pointer"
-                    title="Delete"
+                    className='cursor-pointer'
+                    title='Delete'
                     onClick={() => deleteModal(holiday.id)}
                   />
                   <Image
-                    src="/edit.svg"
-                    alt="edit"
+                    src='/edit.svg'
+                    alt='edit'
                     width={13}
                     height={13}
-                    className="cursor-pointer"
-                    title="Edit"
+                    className='cursor-pointer'
+                    title='Edit'
                     onClick={() => openEditModal(holiday)}
                   />
                 </td>
@@ -389,8 +389,8 @@ const VacationPolicies = () => {
 
       {isModalOpen && (
         <Modal onClose={toggleModal}>
-          <div className="p-6 w-full sm:w-[600px]">
-            <h2 className="text-lg font-bold mb-4">Add Holiday</h2>
+          <div className='p-6 w-full sm:w-[600px]'>
+            <h2 className='text-lg font-bold mb-4'>Add Holiday</h2>
             <SendHolidayNotification
               toggleModal={toggleModal}
               onHolidayAdded={fetchHolidays}
@@ -401,21 +401,21 @@ const VacationPolicies = () => {
 
       {isModalOpen2 && (
         <Modal onClose={() => setIsModalOpen2(false)}>
-          <div className="p-6 w-full sm:w-[500px]">
-            <h2 className="text-lg font-bold mb-4 text-center mt-8">
+          <div className='p-6 w-full sm:w-[500px]'>
+            <h2 className='text-lg font-bold mb-4 text-center mt-8'>
               Are you sure you want to delete this holiday?
             </h2>
-            <div className="flex items-center w-full p-8 gap-5">
+            <div className='flex items-center w-full p-8 gap-5'>
               <button
-                type="submit"
-                className="px-4 py-3 w-full bg-black rounded text-white"
+                type='submit'
+                className='px-4 py-3 w-full bg-black rounded text-white'
                 onClick={handleDeleteHoliday}
               >
                 Confirm
               </button>
               <button
-                type="button"
-                className="px-4 py-3 text-black w-full border rounded"
+                type='button'
+                className='px-4 py-3 text-black w-full border rounded'
                 onClick={() => setIsModalOpen2(false)}
               >
                 Cancel
@@ -427,68 +427,68 @@ const VacationPolicies = () => {
 
       {isModalOpen3 && selectedHoliday && (
         <Modal onClose={() => setIsModalOpen3(false)}>
-          <div className="p-6 bg-white w-full sm:w-[600px]">
+          <div className='p-6 bg-white w-full sm:w-[600px]'>
             <form onSubmit={handleSubmit}>
-              <div className="mb-4 mt-8">
-                <label className="block text-sm font-medium mb-2 text-gray-400">
+              <div className='mb-4 mt-8'>
+                <label className='block text-sm font-medium mb-2 text-gray-400'>
                   Holiday Title
                 </label>
                 <input
-                  type="text"
+                  type='text'
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Add Holiday title"
-                  className="p-4 w-full border text-gray-400 rounded focus:outline-none"
+                  placeholder='Add Holiday title'
+                  className='p-4 w-full border text-gray-400 rounded focus:outline-none'
                   required
                 />
               </div>
 
-              <div className="flex flex-row items-center justify-between gap-4 mt-8 w-full">
-                <div className="mb-4 w-full">
-                  <label className="block text-sm font-medium mb-2 text-gray-400">
+              <div className='flex flex-row items-center justify-between gap-4 mt-8 w-full'>
+                <div className='mb-4 w-full'>
+                  <label className='block text-sm font-medium mb-2 text-gray-400'>
                     Date
                   </label>
                   <input
-                    type="date"
+                    type='date'
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="p-4 w-full border text-gray-400 rounded focus:outline-none"
+                    className='p-4 w-full border text-gray-400 rounded focus:outline-none'
                     required
                   />
                 </div>
-                <div className="mb-4 w-full">
-                  <label className="block text-sm font-medium mb-2 text-gray-400">
+                <div className='mb-4 w-full'>
+                  <label className='block text-sm font-medium mb-2 text-gray-400'>
                     Type
                   </label>
                   <select
                     value={type}
                     onChange={(e) => setType(e.target.value)}
-                    className="p-4 w-full border text-gray-400 rounded focus:outline-none"
+                    className='p-4 w-full border text-gray-400 rounded focus:outline-none'
                     required
                   >
-                    <option value="" disabled>
+                    <option value='' disabled>
                       Select Holiday Type
                     </option>
-                    <option value="Public">Public</option>
-                    <option value="Company">Company</option>
-                    <option value="Restricted">Restricted</option>
-                    <option value="Other">Other</option>
+                    <option value='Public'>Public</option>
+                    <option value='Company'>Company</option>
+                    <option value='Restricted'>Restricted</option>
+                    <option value='Other'>Other</option>
                   </select>
                 </div>
               </div>
 
-              <div className="flex flex-row items-center justify-between gap-4 mt-8 w-full">
-                <div className="mb-4 w-full">
-                  <label className="block text-sm font-medium mb-2 text-gray-400">
+              <div className='flex flex-row items-center justify-between gap-4 mt-8 w-full'>
+                <div className='mb-4 w-full'>
+                  <label className='block text-sm font-medium mb-2 text-gray-400'>
                     Primary Country
                   </label>
                   <select
                     value={primaryCountry || ''}
                     onChange={handlePrimaryCountryChange}
-                    className="p-4 w-full border text-gray-400 focus:outline-none"
+                    className='p-4 w-full border text-gray-400 focus:outline-none'
                     required
                   >
-                    <option value="" disabled>
+                    <option value='' disabled>
                       Select a country
                     </option>
                     {countries.map((country) => (
@@ -500,22 +500,22 @@ const VacationPolicies = () => {
                 </div>
               </div>
 
-              <div className="flex flex-row items-center p-4 mt-4 mb-4 gap-2">
+              <div className='flex flex-row items-center p-4 mt-4 mb-4 gap-2'>
                 <input
-                  type="checkbox"
+                  type='checkbox'
                   checked={addCountries}
                   onChange={() => setAddCountries(!addCountries)}
                 />
-                <p className="text-[14px]">Add Holiday to other countries?</p>
+                <p className='text-[14px]'>Add Holiday to other countries?</p>
               </div>
 
               {addCountries && (
-                <div className="mb-4">
+                <div className='mb-4'>
                   <select
                     multiple
                     value={additionalCountries.map(String)}
                     onChange={handleAdditionalCountriesChange}
-                    className="border p-2 rounded w-full focus:outline-none"
+                    className='border p-2 rounded w-full focus:outline-none'
                   >
                     {countries
                       .filter((c) => c.id !== primaryCountry)
@@ -526,24 +526,24 @@ const VacationPolicies = () => {
                       ))}
                   </select>
 
-                  <p className="text-sm text-gray-400 mt-2">
+                  <p className='text-sm text-gray-400 mt-2'>
                     Hold down Ctrl (Windows) or Command (Mac) to select multiple
                     countries.
                   </p>
                 </div>
               )}
 
-              <div className="flex items-center w-full p-8 gap-5">
+              <div className='flex items-center w-full p-8 gap-5'>
                 <button
-                  type="submit"
+                  type='submit'
                   disabled={loading}
-                  className="px-4 py-3 w-full bg-black rounded text-white"
+                  className='px-4 py-3 w-full bg-black rounded text-white'
                 >
                   {loading ? 'Submitting...' : 'Confirm'}
                 </button>
                 <button
-                  type="button"
-                  className="px-4 py-3 text-black w-full border rounded"
+                  type='button'
+                  className='px-4 py-3 text-black w-full border rounded'
                   onClick={() => setIsModalOpen3(false)}
                 >
                   Cancel
