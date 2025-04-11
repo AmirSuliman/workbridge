@@ -22,13 +22,13 @@ const ProfileAvatarItem: React.FC<ProfileAvatarItemProps> = ({
   }, [src]);
 
   return (
-    <div className='flex  items-center p-0 gap-2'>
+    <div className='flex items-center p-0 gap-2'>
       <Image
         src={imgSrc}
         alt={alt}
-        width={500}
-        height={500}
-        className='size-8 lg:size-12 rounded-full'
+        width={400}
+        height={400}
+        className='size-8 lg:size-10 rounded-full'
         onError={() => {
           setImgSrc(IMAGES.placeholderAvatar);
         }}

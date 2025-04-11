@@ -260,15 +260,15 @@ export const AllEmployees = () => {
           <table className='w-full text-left border-collapse'>
             <thead>
               <tr className='text-sm text-gray-500'>
-                <th className='py-3 px-4 font-medium border-b'>
+                <th className='py-2 px-4 font-medium border-b'>
                   Employee Name
                 </th>
-                <th className='py-3 px-4 font-medium border-b'>Job Title</th>
-                <th className='py-3 px-4 font-medium border-b'>Department</th>
-                <th className='py-3 px-4 font-medium border-b'>Email</th>
-                <th className='py-3 px-4 font-medium border-b'>Hire Date</th>
-                <th className='py-3 px-4 font-medium border-b'></th>
-                <th className='py-3 px-4 font-medium border-b'>
+                <th className='py-2 px-4 font-medium border-b'>Job Title</th>
+                <th className='py-2 px-4 font-medium border-b'>Department</th>
+                <th className='py-2 px-4 font-medium border-b'>Email</th>
+                <th className='py-2 px-4 font-medium border-b'>Hire Date</th>
+                <th className='py-2 px-4 font-medium border-b'></th>
+                <th className='py-2 px-4 font-medium border-b'>
                   <button
                     onClick={handleDownload}
                     className='border bg-[#0F172A] text-white p-2 text-[12px] flex flex-row items-center gap-2 rounded-sm cursor-pointer'
@@ -298,9 +298,9 @@ export const AllEmployees = () => {
                   return (
                     <tr
                       key={employee.id}
-                      className='hover:bg-gray-50 text-[#0F172A] text-[12px] w-full '
+                      className='hover:bg-gray-50 text-dark-navy text-[12px] w-full '
                     >
-                      <td className='py-2 px-2 text-dark-navy whitespace-nowrap overflow-hidden text-ellipsis border-b w-full'>
+                      <td className='py-2 px-4 border-b w-full whitespace-nowrap overflow-hidden text-ellipsis !min-w-[170px]'>
                         <ProfileAvatarItem
                           src={
                             employee.profilePictureUrl ||
@@ -310,13 +310,13 @@ export const AllEmployees = () => {
                           subtitle={`#${String(employee.id)}`}
                         />
                       </td>
-                      <td className='py-3 px-4 border-b w-full  whitespace-nowrap overflow-hidden text-ellipsis '>
+                      <td className='py-2 px-4 border-b w-full whitespace-nowrap overflow-hidden text-ellipsis '>
                         {employee.tittle}
                       </td>
-                      <td className='py-3 px-4 border-b w-full  whitespace-nowrap overflow-hidden text-ellipsis '>
+                      <td className='py-2 px-4 border-b w-full whitespace-nowrap overflow-hidden text-ellipsis '>
                         {employee.department?.name}
                       </td>
-                      <td className='py-3 px-4 border-b w-full  whitespace-nowrap overflow-hidden text-ellipsis '>
+                      <td className='py-2 px-4 border-b w-full whitespace-nowrap overflow-hidden text-ellipsis '>
                         <a
                           className='text-blue-700 underline'
                           href={`mailto:${employee.email}`}
@@ -324,12 +324,12 @@ export const AllEmployees = () => {
                           {employee.email}
                         </a>
                       </td>
-                      <td className='py-3 px-4 border-b w-full  whitespace-nowrap overflow-hidden text-ellipsis '>
+                      <td className='py-2 px-4 border-b w-full whitespace-nowrap overflow-hidden text-ellipsis '>
                         {hireDateFormatted}
                         <br />
                         <span className='text-[10px] mt-2'>{duration}</span>
                       </td>
-                      <td className='py-3 px-4 border-b w-full  whitespace-nowrap overflow-hidden text-ellipsis '>
+                      <td className='py-2 px-4 border-b w-full whitespace-nowrap overflow-hidden text-ellipsis '>
                         {role === 'SuperAdmin' && (
                           <FaTrash
                             onClick={() => dispatch(openDeleteModal(employee))}
@@ -346,7 +346,7 @@ export const AllEmployees = () => {
                               `employees/employee-info/${employee.id}`
                             );
                         }}
-                        className='py-3 px-4 border-b cursor-pointer '
+                        className='py-2 px-4 border-b cursor-pointer '
                       >
                         {role !== 'ViewOnly' && (
                           <span className='p-2 border w-8 rounded-md flex items-center justify-center hover:bg-black hover:text-white'>

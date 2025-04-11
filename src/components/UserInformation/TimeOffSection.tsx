@@ -34,7 +34,6 @@ interface TimeOffItem {
 }
 
 const TimeOffSection = ({ employeeData }) => {
-  console.log('employee data: ', employeeData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -146,7 +145,7 @@ const TimeOffSection = ({ employeeData }) => {
         const response = await axiosInstance.get(
           `/timeoffs?employeeId=${empId}`
         );
-        // console.log('empId timeoffs: ', response.data.data.items);
+        console.log('empId timeoffs: ', response.data.data.items);
         setTimeOffData(response.data.data.items);
       }
       toast.success('Time off updated successfully');
@@ -234,7 +233,6 @@ const TimeOffSection = ({ employeeData }) => {
               'Type',
               'Date From',
               'Date To',
-
               'Status',
               'Approved/Denied By',
               'Notes',
