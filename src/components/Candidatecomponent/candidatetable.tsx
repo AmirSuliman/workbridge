@@ -69,7 +69,7 @@ const CandidateTable = () => {
       {/* Search, Sort, and Filter */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
        
-        <div className="flex flex-row rounded-lg border px-2 py-1 text-gray-400 items-center gap-3 text-[12px]">
+        <div className="flex flex-row rounded-md border w-full px-2 py-1 text-gray-400 items-center gap-3 text-[12px]">
           <FaSearch />
           <input
             type="search"

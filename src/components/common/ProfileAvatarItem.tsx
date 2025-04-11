@@ -34,10 +34,10 @@ const ProfileAvatarItem: React.FC<ProfileAvatarItemProps> = ({
         }}
       />
       <div className='text-left'>
-        <h4 className='text-xs lg:text-sm font-[500] text-dark-navy '>
+        <h4 className='text-[10px] lg:text-xs font-[500] text-dark-navy '>
           {title}
         </h4>
-        <p className='text-[8px] lg:text-xs font-[500] text-dark-navy'>
+        <p className='text-[8px] lg:text-[10px] font-[500] text-dark-navy'>
           {subtitle}
         </p>
       </div>

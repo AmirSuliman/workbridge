@@ -52,7 +52,7 @@ const Announcements = () => {
   }
 
   return (
-    <div className="p-6 bg-white rounded-[10px] w-full border">
+    <div className="p-6 bg-red-500 rounded-[10px] w-full border">
       {announcements.length > 0 ? (
         announcements.map((announcement) => (
           <article

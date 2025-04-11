@@ -30,6 +30,10 @@ export interface Employee {
     lastName: string;
     profilePictureUrl: string;
   };
+  user: {
+    firstName: string;
+    lastName: string;
+  };
 }
 
 type TableProps = {
@@ -77,7 +81,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
 
         const response = await axiosInstance.get('/timeoffs', { params });
         const fetchedData = response.data.data.items || [];
-
+        console.log('response.data.data.items', response.data.data.items);
         setEmployeeData(fetchedData);
         setTotalItems(response.data.data.totalItems);
         setTotalPages(response.data.data.totalPages || 1);
@@ -153,6 +157,9 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
                     Employee Name
                   </th>
                   <th className='font-medium text-gray-400 text-[14px] p-3 text-left'>
+                    Reporting Manager
+                  </th>
+                  <th className='font-medium text-gray-400 text-[14px] p-3 text-left'>
                     Type
                   </th>
                   <th className='font-medium text-gray-400 text-[14px] p-3 text-center'>
@@ -187,11 +194,15 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
                       )}
                       <p className='text-left'>
                         {employee
-                          ? `${employee.employee?.firstName} ${
+                          ? `${employee.employee?.firstName || ''} ${
                               employee.employee?.middleName || ''
                             } ${employee.employee?.lastName || ''}`
                           : ''}
                       </p>
+                    </td>
+                    <td className='p-4 whitespace-nowrap text-left'>
+                      {employee?.user?.firstName || ''}{' '}
+                      {employee?.user?.lastName || ''}
                     </td>
                     <td className='p-4 whitespace-nowrap text-left'>
                       <span className='flex items-center gap-3'>
