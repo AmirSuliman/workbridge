@@ -74,7 +74,7 @@ const AdminScreen = () => {
         <ProfileAvatarItem
           src={row.profilePictureUrl}
           title={`${row.firstName} ${row.lastName}`}
-          subtitle=""
+          subtitle=''
         />
       ),
     },
@@ -106,7 +106,7 @@ const AdminScreen = () => {
       title: 'Email',
       accessor: 'email',
       render: (value: any) => (
-        <Link href={`mailto:${value}`} className="text-blue-500">
+        <Link href={`mailto:${value}`} className='text-blue-500'>
           {value}
         </Link>
       ),
@@ -120,7 +120,7 @@ const AdminScreen = () => {
             handleOpenDeleteModal(row);
           }}
           size={14}
-          className="cursor-pointer"
+          className='cursor-pointer'
         />
       ),
     },
@@ -144,41 +144,41 @@ const AdminScreen = () => {
   }, []);
 
   return (
-    <div className="h-full">
+    <div className='h-full'>
       <FormHeading
-        textClasses="text-xl font-[600] font-semibold"
-        classNames="mb-4"
-        icon={<EmployeesIcon classNames="w-6" />}
-        text="Admins"
+        textClasses='text-xl font-[600] font-semibold'
+        classNames='mb-4'
+        icon={<EmployeesIcon classNames='w-6' />}
+        text='Admins'
       />
-      <div className="bg-white border border-gray-border rounded-md p-3">
-        <div className="flex justify-between items-center mb-3">
-          <div className="flex gap-3 my-3">
+      <div className='bg-white border border-gray-border rounded-md p-3'>
+        <div className='flex justify-between flex-wrap items-center mb-3'>
+          <div className='flex gap-3 my-3'>
             <SearchInput
-              placeholder="Search Employees"
+              placeholder='Search Employees'
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
             />
 
-            <div className="flex gap-2 items-center w-full">
-              <label className="text-sm text-[#abaeb4]">Filter</label>
+            <div className='flex gap-2 items-center w-full'>
+              <label className='text-sm text-[#abaeb4]'>Filter</label>
               <select
-                className="p-2 border w-full max-w-xs border-gray-border rounded-[5px] outline-none focus:outline-none ring-0 text-xs text-dark-gray"
+                className='p-2 border w-full max-w-xs border-gray-border rounded-[5px] outline-none focus:outline-none ring-0 text-xs text-dark-gray'
                 onChange={(e) => setFilter(e.target.value)}
               >
-                <option value="">Select</option>
-                <option value="2">Super Admins</option>
-                <option value="1">Hr Admins</option>
-                <option value="4">Managers</option>
-                <option value="3">Employess</option>
+                <option value=''>Select</option>
+                <option value='2'>Super Admins</option>
+                <option value='1'>Hr Admins</option>
+                <option value='4'>Managers</option>
+                <option value='3'>Employess</option>
               </select>
             </div>
           </div>
           <Button
-            name="Add New Admin"
+            name='Add New Admin'
             onClick={() => setIsModalOpen(true)}
-            icon={<IoIosAddCircleOutline className="w-4" />}
-            className="bg-dark-navy text-white text-xs"
+            icon={<IoIosAddCircleOutline className='w-4' />}
+            className='bg-dark-navy text-white text-xs'
           />
         </div>
         <div>
@@ -193,7 +193,7 @@ const AdminScreen = () => {
             totalItems={users.total}
             pageSize={users.pageSize}
             currentPage={currentPage}
-            maxPagesToShow={4}
+            maxPagesToShow={2}
             setCurrentPage={handlePageChange}
           />
         </div>

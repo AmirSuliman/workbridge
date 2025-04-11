@@ -18,49 +18,43 @@ const AllLeaveRequests = () => {
   };
 
   return (
-    <div className="flex flex-col bg-white p-6 border rounded-lg w-full">
-      <div className="flex flex-row items-center justify-between w-full">
-        <div className="flex flex-row gap-2 items-center">
+    <div className='flex flex-col bg-white p-6 border rounded-lg w-full'>
+      <div className='flex flex-row items-center gap-2 flex-wrap w-full'>
+        <div className='flex flex-row gap-2 items-center lg:mr-auto lg:ml-0'>
           <FaRegCalendarAlt size={20} />
-          <h1 className="text-[22px] font-semibold">Leave Requests</h1>
+          <h1 className='text-[22px] font-semibold'>Leave Requests</h1>
         </div>
-        <div className="flex flex-col sm:flex-row items-center gap-6">
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            <div className="flex flex-row items-center gap-1">
-              <label htmlFor="sort" className="mr-2 text-gray-400 text-[12px]">
-                Sort
-              </label>
-              <select
-                id="sort"
-                className="border rounded px-2 py-1 text-[12px]"
-                value={sort}
-                onChange={handleSortChange}
-              >
-                <option value="">Select</option>
-                <option value="duration">Duration</option>
-                <option value="leaveDay">Leave Day</option>
-                <option value="returningDay">Returning Day</option>
-              </select>
-            </div>
-            <div className="flex flex-row items-center gap-1">
-              <label
-                htmlFor="filter"
-                className="mr-2 text-gray-400 text-[12px]"
-              >
-                Filter
-              </label>
-              <select
-                id="filter"
-                className="border rounded px-2 py-1 text-[12px]"
-                value={filter}
-                onChange={handleFilterChange}
-              >
-                <option value="">All</option>
-                <option value="Vacation">Vacation</option>
-                <option value="Sick">Sick Leave</option>
-              </select>
-            </div>
-          </div>
+
+        <div className='flex flex-row items-center gap-1'>
+          <label htmlFor='sort' className='mr-2 text-gray-400 text-[12px]'>
+            Sort
+          </label>
+          <select
+            id='sort'
+            className='border rounded px-2 py-1 text-[12px]'
+            value={sort}
+            onChange={handleSortChange}
+          >
+            <option value=''>Select</option>
+            <option value='duration'>Duration</option>
+            <option value='leaveDay'>Leave Day</option>
+            <option value='returningDay'>Returning Day</option>
+          </select>
+        </div>
+        <div className='flex flex-row items-center gap-1'>
+          <label htmlFor='filter' className='mr-2 text-gray-400 text-[12px]'>
+            Filter
+          </label>
+          <select
+            id='filter'
+            className='border rounded px-2 py-1 text-[12px]'
+            value={filter}
+            onChange={handleFilterChange}
+          >
+            <option value=''>All</option>
+            <option value='Vacation'>Vacation</option>
+            <option value='Sick'>Sick Leave</option>
+          </select>
         </div>
       </div>
 
