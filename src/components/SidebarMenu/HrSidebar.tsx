@@ -1,7 +1,7 @@
 'use client';
 
 import { getSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { FaBullhorn, FaUserCircle, FaUsers } from 'react-icons/fa';
 import { FiMenu, FiTrendingUp } from 'react-icons/fi';
 import { HiHome, HiUsers } from 'react-icons/hi';
@@ -11,9 +11,11 @@ import { PiHandshakeFill } from 'react-icons/pi';
 import SidebarNavItem from './SidebarNavItem';
 import Image from 'next/image';
 import imageLoader from '../../../imageLoader';
+
 const HrSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [role, setRole] = useState<string>();
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -29,6 +31,38 @@ const HrSidebar = () => {
     fetchSession();
   }, []);
 
+  useEffect(() => {
+    // Toggle body overflow based on sidebar state
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    // Cleanup function to reset overflow when component unmounts
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
   const isSuperAdmin = role === 'SuperAdmin';
 
   return (
@@ -42,12 +76,13 @@ const HrSidebar = () => {
       </button>
 
       <main
+        ref={sidebarRef}
         className={`flex flex-col gap-2 w-[270px] bg-white fixed top-0 bottom-0 left-0 1700px:left-auto border-r-[1px] border-[#E8E8E8] z-10 transition-transform duration-300 overflow-y-auto ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
         <h1 className='text-center px-8 text-2xl py-8'>
-          <Image src='/logo.svg' alt='logo' width={150} height={150} />
+          <Image className='ml-6' src='/logo.svg' alt='logo' width={150} height={150} />
         </h1>
         <>
           <SidebarNavItem
