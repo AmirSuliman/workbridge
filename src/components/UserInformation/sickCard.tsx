@@ -32,7 +32,7 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
-  const [vacationDaysUsed, setVacationDaysUsed] = useState(0);
+  const [sickDaysUsed, setsickDaysUsed] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [holidaysErrors, setHolidaysErrors] = useState<HolidaysErrorsProps[]>(
@@ -89,7 +89,7 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
 
   useEffect(() => {
     if (startDate) {
-      setVacationDaysUsed(calculateDuration());
+      setsickDaysUsed(calculateDuration());
     }
   }, [startDate, endDate, calculateDuration]);
 
@@ -98,12 +98,12 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
       // Only auto-calculate if endDate hasn't been set by the user
       const newEndDate = calculateReturningDate(
         startDate,
-        vacationDaysUsed,
+        sickDaysUsed,
         totalDays
       );
       setEndDate(newEndDate);
     }
-  }, [startDate, vacationDaysUsed, totalDays, endDate]);
+  }, [startDate, sickDaysUsed, totalDays, endDate]);
 
   const formatDate = (date) => {
     if (!date) return '';
@@ -315,13 +315,13 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
             <div className='flex flex-row gap-4 items-center mt-4'>
               <p className='text-[14px]'>Sick days requested:</p>
               <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
-                {vacationDaysUsed} days
+                {sickDaysUsed} days
               </div>
             </div>
             <div className='flex flex-row gap-4 items-center mt-4 '>
               <p className='text-[14px]'>Total Sick days remaining:</p>
               <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
-                {totalDays} days
+                {totalDays - sickDaysUsed} days
               </div>
             </div>
             <br />

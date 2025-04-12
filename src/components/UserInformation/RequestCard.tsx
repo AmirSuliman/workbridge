@@ -1,8 +1,7 @@
-import React from 'react';
 import Image from 'next/image';
-import DaysStatBox from './DaysStatBox';
-import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
+import React from 'react';
+import DaysStatBox from './DaysStatBox';
 
 interface RequestCardProps {
   type: 'vacation' | 'sick';
@@ -23,9 +22,7 @@ const RequestCard: React.FC<RequestCardProps> = ({
   imageSrc,
   imageAlt,
 }) => {
-  const { data: session } = useSession();
-  const userRole = session?.user?.role;
-  const { empId } = useParams(); // This id is used to view any employee's info
+  const { empId } = useParams();
 
   const title = type === 'vacation' ? 'Request Vacation' : 'Request Sick Leave';
   const buttonText =
@@ -61,7 +58,9 @@ const RequestCard: React.FC<RequestCardProps> = ({
           )}
         </div>
 
-        {userRole === 'Manager' && empId ? null : (
+        {/* if emplId is coming from search prams then don't show this button */}
+        {/* which mean, this button is only visible to the logged in user */}
+        {empId ? null : (
           <button
             type='button'
             onClick={onClick}

@@ -197,12 +197,13 @@ const TimeOffSection = ({ employeeData }) => {
               'Type',
               'Date From',
               'Date To',
+              'Days Used',
               'Status',
               'Approved/Denied By',
               'Notes',
             ]}
             values={timeOffData
-              .filter((timeoff, index) => timeoff.status !== 'Pending')
+              .filter((timeoff) => timeoff.status !== 'Pending')
               .map((item, index) => [
                 <LabelWithIcon
                   key={index}
@@ -218,16 +219,25 @@ const TimeOffSection = ({ employeeData }) => {
                     item.type === 'Vacation' ? 'bg-[#00B87D]' : 'bg-[#F53649]'
                   }
                 />,
+
                 new Date(item.leaveDay).toLocaleDateString(),
                 new Date(item.returningDay).toLocaleDateString(),
+
+                // days used are inside the employee data, not in the timeoffs array
+                item.type === 'Vacation'
+                  ? employeeData?.vacationDaysUsed || ''
+                  : employeeData?.sickDaysUsed || '',
+
                 item?.status === 'Confirmed' ? (
                   <p className='text-[#00B87D]'>Confirmed</p>
                 ) : (
                   <p className='text-[#F53649]'>Denied</p>
                 ),
+
                 `${item?.user?.firstName || 'N/A'} ${
                   item?.user?.lastName || ''
                 }`.trim(),
+
                 `${item.note || 'N/A'}`,
               ])}
           />
