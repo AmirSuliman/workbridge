@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HiUsers } from 'react-icons/hi';
 import { PiPlusCircleBold } from 'react-icons/pi';
 import Notifications from '../Notifications/Notifications';
@@ -18,16 +18,29 @@ const HrHeader = () => {
   const pathname = usePathname();
   const isHomePage = pathname?.startsWith('/hr/home');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [windowWidth, setWindowWidth] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Set the window width on component mount
+    setWindowWidth(window.innerWidth);
+
+    // Optionally, add a resize event listener if you want to update the width on window resize
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup the event listener on component unmount
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
-    <nav className='relative flex flex-wrap-reverse items-center gap-4 bg-white px-8 py-4 border-b border-[#E8E8E8] w-full'>
+    <nav className='relative flex flex-wrap-reverse items-center gap-4 bg-white px-4 sm:px-8 py-4 border-b border-[#E8E8E8] w-full'>
       {/* Create New Button with Dropdown */}
       {isHomePage ? (
         <>
           <div className='relative'>
             <Button
               onClick={() => setShowDropdown((prev) => !prev)}
-              className='!font-mdium !text-xs'
+              className='!font-medium !text-xs sm:!text-sm'
               name='Create New'
               icon={<PiPlusCircleBold size={20} />}
             />
@@ -87,7 +100,7 @@ const HrHeader = () => {
           <Link href='employees/charter'>
             <Button
               bg='#00B87D'
-              className='!font-mdium !text-xs'
+              className='!font-medium !text-xs sm:!text-sm'
               name='See Employee Charter'
               icon={<GoArrowUpRight size={20} />}
             />
@@ -97,11 +110,11 @@ const HrHeader = () => {
         <Button
           onClick={() => router.back()}
           icon={<FaArrowLeft size={20} />}
-          name={window.innerWidth >= 640 ? 'Back' : ''}
-          className="flex-row-reverse w-10 h-10 sm:w-auto sm:h-auto ml-[30px] md:ml-[30px] lg:ml-0 rounded-full sm:rounded-md"
+          name={windowWidth !== null && windowWidth >= 640 ? 'Back' : ''}
+          className="flex-row-reverse w-10 h-10 sm:w-auto sm:h-auto ml-[50px] md:ml-[30px] lg:ml-0 rounded-full sm:rounded-md"
         />
       )}
-
+      
       <Notifications />
       <UserProfileInfo />
     </nav>
