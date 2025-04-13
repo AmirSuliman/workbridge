@@ -13,7 +13,7 @@ interface EditdocumentProps {
   documentId: string | null;
   currentTitle: string | null;
   currentFolderId: string | null;
-  setDocuments: React.Dispatch<React.SetStateAction<any[]>>; // Pass setDocuments function as prop
+  onFileUpdated: (updatedFile: any) => void; // ✅ Add this
 }
 
 const Editdocument: React.FC<EditdocumentProps> = ({
@@ -21,7 +21,7 @@ const Editdocument: React.FC<EditdocumentProps> = ({
   documentId,
   currentTitle,
   currentFolderId,
-  setDocuments,
+  onFileUpdated,
 }) => {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [title, setTitle] = useState(currentTitle || "");
@@ -68,15 +68,14 @@ const Editdocument: React.FC<EditdocumentProps> = ({
       if (response.status === 200) {
         toast.success("Document updated successfully!");
 
-        // Immediately update the document in the parent component's state
-        setDocuments((prevDocuments) =>
-          prevDocuments.map((doc) =>
-            doc.id === documentId
-              ? { ...doc, fileTitle: title, folderId } // Update the relevant document
-              : doc
-          )
-        );
-
+        const updatedFile = {
+          id: documentId,
+          fileTitle: title.trim(),
+          folderId,
+        };
+        
+        onFileUpdated(updatedFile);
+        
         setIsModalOpen3(false); // Close the modal after successful update
       } else {
         setError("Failed to update document.");
