@@ -97,46 +97,46 @@ const UserLeaveInfo = () => {
   };
 
   if (loading) {
-    return <div className="p-4">Loading...</div>;
+    return <div className='p-4'>Loading...</div>;
   }
 
   if (error) {
-    return <div className=" text-red-500">{error}</div>;
+    return <div className=' text-red-500'>{error}</div>;
   }
 
   return (
     <>
       {leaveData.length > 0 ? (
-        <section className="w-full divide-y-[1px] divide-[#E8E8E8] overflow-x-auto">
+        <section className='w-full divide-y-[1px] divide-[#E8E8E8] overflow-x-auto'>
           <div>
             {leaveData.map((leave) => (
-              <div key={leave.id} className="border-b w-full">
-                <div className="flex justify-between items-center gap-4">
-                  <div className="p-4 flex gap-4 items-center">
+              <div key={leave.id} className='border-b w-full'>
+                <div className='flex justify-between items-center gap-4'>
+                  <div className='p-4 flex gap-4 items-center'>
                     <UserImgPlaceholder
-                      name={`${leave.employee?.firstName} ${
+                      name={`${leave.employee?.firstName || ''} ${
                         leave.employee?.lastName || ''
                       }`}
                     />
-                    <p className="text-left">
+                    <p className='text-left'>
                       {leave
-                        ? `${leave.employee?.firstName} ${
+                        ? `${leave.employee?.firstName || ''} ${
                             leave.employee?.middleName || ''
                           } ${leave.employee?.lastName || ''}`
                         : ''}
                     </p>
                   </div>
-                  <div className="p-4 flex justify-center items-center gap-2">
+                  <div className='p-4 flex justify-center items-center gap-2'>
                     {leave.status === 'Pending' ? (
                       <>
                         <button
-                          className="p-2 text-white bg-[#25A244] rounded text-[10px] flex items-center gap-2"
+                          className='p-2 text-white bg-[#25A244] rounded text-[10px] flex items-center gap-2'
                           onClick={() => handleConfirmRequest(leave)}
                         >
                           Confirm Request <FaCheck />
                         </button>
                         <button
-                          className="p-2 text-white bg-[#F53649] rounded text-[10px] flex items-center gap-2"
+                          className='p-2 text-white bg-[#F53649] rounded text-[10px] flex items-center gap-2'
                           onClick={() => handleDenyRequest(leave)}
                         >
                           Deny <FaTimes />
@@ -155,32 +155,32 @@ const UserLeaveInfo = () => {
                     )}
                   </div>
                 </div>
-                <div className="flex justify-start gap-4 -mt-2 items-center">
-                  <div className="p-4">
-                    <p className="opacity-50 font-medium text-[8px]">
+                <div className='flex justify-start gap-4 -mt-2 items-center'>
+                  <div className='p-4'>
+                    <p className='opacity-50 font-medium text-[8px]'>
                       Leave Type
                     </p>
-                    <div className="flex items-center gap-2 justify-start">
-                      <PiUmbrellaBold className="opacity-50" size={14} />
-                      <p className="text-[12px]">{leave?.type}</p>
+                    <div className='flex items-center gap-2 justify-start'>
+                      <PiUmbrellaBold className='opacity-50' size={14} />
+                      <p className='text-[12px]'>{leave?.type}</p>
                     </div>
                   </div>
-                  <div className="p-4">
-                    <p className="opacity-50 font-medium text-[8px]">
+                  <div className='p-4'>
+                    <p className='opacity-50 font-medium text-[8px]'>
                       Duration
                     </p>
-                    <div className="flex items-center gap-2 justify-start">
-                      <MdCalendarToday className="opacity-50" size={14} />
-                      <p className="text-[12px]">{`${leave?.duration} days`}</p>
+                    <div className='flex items-center gap-2 justify-start'>
+                      <MdCalendarToday className='opacity-50' size={14} />
+                      <p className='text-[12px]'>{`${leave?.duration} days`}</p>
                     </div>
                   </div>
-                  <div className="p-4 ">
-                    <p className="opacity-50 font-medium text-[8px]">
+                  <div className='p-4 '>
+                    <p className='opacity-50 font-medium text-[8px]'>
                       Leave Day
                     </p>
-                    <div className="flex items-center gap-2 justify-start">
-                      <LuLogOut className="opacity-50" size={14} />
-                      <p className="text-[12px]">
+                    <div className='flex items-center gap-2 justify-start'>
+                      <LuLogOut className='opacity-50' size={14} />
+                      <p className='text-[12px]'>
                         {new Date(leave?.leaveDay).toLocaleDateString('en-GB', {
                           day: '2-digit',
                           month: 'short',
@@ -188,13 +188,13 @@ const UserLeaveInfo = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="p-4">
-                    <p className="opacity-50 font-medium text-[8px]">
+                  <div className='p-4'>
+                    <p className='opacity-50 font-medium text-[8px]'>
                       Returning Day
                     </p>
-                    <div className="flex items-center gap-2 justify-start">
-                      <LuLogIn className="opacity-50" size={14} />
-                      <p className="text-[12px]">
+                    <div className='flex items-center gap-2 justify-start'>
+                      <LuLogIn className='opacity-50' size={14} />
+                      <p className='text-[12px]'>
                         {new Date(leave?.returningDay).toLocaleDateString(
                           'en-GB',
                           {
@@ -211,7 +211,7 @@ const UserLeaveInfo = () => {
           </div>
         </section>
       ) : (
-        <div className="p-4 text-center">No leave records available.</div>
+        <div className='p-4 text-center'>No leave records available.</div>
       )}
 
       {isConfirmModalOpen && selectedLeave && (

@@ -308,7 +308,7 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
             <div className='flex flex-row gap-4 items-center mt-4 '>
               <p className='text-[14px]'>Total vacation days remaining:</p>
               <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
-                {totalDays} days
+                {totalDays - vacationDaysUsed} days
               </div>
             </div>
 

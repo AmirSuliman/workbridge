@@ -58,105 +58,105 @@ const BasicInfo = ({ countries, previewUrl, handleFileChange }) => {
 
   return (
     <div>
-      <section className="bg-white rounded-lg border">
+      <section className='bg-white rounded-lg border'>
         {/* Basic Information Block */}
-        <div className="border-b p-4 pb-12">
-          <Heading icon={<AiFillContacts />} text="Basic Information" />
+        <div className='border-b p-4 pb-12'>
+          <Heading icon={<AiFillContacts />} text='Basic Information' />
           <ProfilePicture
             previewUrl={previewUrl}
             handleFileChange={handleFileChange}
             errors={errors}
           />
 
-          <label className="flex items-center gap-2 mb-4">
-            <input type="checkbox" {...register('isManager')} />
-            <span className="form-label">Is Manager?</span>
+          <label className='flex items-center gap-2 mb-4'>
+            <input type='checkbox' {...register('isManager')} />
+            <span className='form-label'>Is Manager?</span>
           </label>
-          <div className="grid grid-cols-3 gap-4">
+          <div className='grid grid-cols-3 gap-4'>
             <article>
-              <Label text="First Name*" />
+              <Label text='First Name*' />
               <input
-                type="text"
-                placeholder="Add first name"
-                className="form-input"
+                type='text'
+                placeholder='Add first name'
+                className='form-input'
                 {...register('firstName', {
                   required: 'First name is required',
                 })}
               />
               {errors.firstName && (
-                <span className="form-error">{errors.firstName.message}</span>
+                <span className='form-error'>{errors.firstName.message}</span>
               )}
             </article>
             <article>
-              <Label text="Middle Name" />
+              <Label text='Middle Name' />
               <input
-                type="text"
-                placeholder="Add middle name"
-                className="form-input"
+                type='text'
+                placeholder='Add middle name'
+                className='form-input'
                 {...register('middleName')}
               />
               {errors.middleName && (
-                <span className="form-error">{errors.middleName.message}</span>
+                <span className='form-error'>{errors.middleName.message}</span>
               )}
             </article>
             <article>
-              <Label text="Last Name*" />
+              <Label text='Last Name*' />
               <input
-                type="text"
-                placeholder="Add last name"
-                className="form-input"
+                type='text'
+                placeholder='Add last name'
+                className='form-input'
                 {...register('lastName', {
                   required: 'Last name is required',
                 })}
               />
               {errors.lastName && (
-                <span className="form-error">{errors.lastName.message}</span>
+                <span className='form-error'>{errors.lastName.message}</span>
               )}
             </article>
             <article>
-              <Label text="Birthday" />
+              <Label text='Birthday' />
               <input
-                type="date"
-                placeholder="Add birthday"
-                className="form-input"
+                type='date'
+                placeholder='Add birthday'
+                className='form-input'
                 {...register('birthday', {
                   required: 'Birthday is required',
                 })}
               />
               {errors.birthday && (
-                <span className="form-error">{errors.birthday.message}</span>
+                <span className='form-error'>{errors.birthday.message}</span>
               )}
             </article>
             <article>
-              <Label text="Gender*" />
-              <select className="form-input" {...register('gender')}>
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+              <Label text='Gender*' />
+              <select className='form-input' {...register('gender')}>
+                <option value=''>Select Gender</option>
+                <option value='Male'>Male</option>
+                <option value='Female'>Female</option>
               </select>
               {errors.gender && (
-                <span className="form-error">{errors.gender.message}</span>
+                <span className='form-error'>{errors.gender.message}</span>
               )}
             </article>
             <article>
-              <Label text="Marital Status*" />
-              <select className="form-input" {...register('marritialStatus')}>
-                <option value="">Select Status</option>
-                <option value="Single">Single</option>
-                <option value="Married">Married</option>
-                <option value="Enganged">Engaged </option>
-                <option value="Prefer not say">Prefer not to say</option>
+              <Label text='Marital Status*' />
+              <select className='form-input' {...register('marritialStatus')}>
+                <option value=''>Select Status</option>
+                <option value='Single'>Single</option>
+                <option value='Married'>Married</option>
+                <option value='Enganged'>Engaged </option>
+                <option value='Prefer not say'>Prefer not to say</option>
               </select>
               {errors.marritialStatus && (
-                <span className="form-error">
+                <span className='form-error'>
                   {errors.marritialStatus.message}
                 </span>
               )}
             </article>
             <article>
-              <Label text="Country*" />
-              <select {...register('countryId')} className="form-input">
-                <option value="">Select a country</option>
+              <Label text='Country*' />
+              <select {...register('countryId')} className='form-input'>
+                <option value=''>Select a country</option>
                 {countries.map((country) => (
                   <option key={country.id} value={country.id}>
                     {country.country}
@@ -164,15 +164,15 @@ const BasicInfo = ({ countries, previewUrl, handleFileChange }) => {
                 ))}
               </select>
               {errors.countryId && (
-                <span className="form-error">{errors.countryId.message}</span>
+                <span className='form-error'>{errors.countryId.message}</span>
               )}
             </article>
           </div>
         </div>
         {/* Address Block */}
-        <div className="p-4 pb-12 border-b">
-          <Heading icon={<AiFillContacts />} text="Address" />
-          <div className="grid grid-cols-3 gap-4">
+        <div className='p-4 pb-12 border-b'>
+          <Heading icon={<AiFillContacts />} text='Address' />
+          <div className='grid grid-cols-3 gap-4'>
             {[
               {
                 type: 'text',
@@ -192,7 +192,7 @@ const BasicInfo = ({ countries, previewUrl, handleFileChange }) => {
               {
                 type: 'text',
                 name: 'location.city',
-                label: 'City*',
+                label: 'City',
               },
               {
                 type: 'text',
@@ -210,12 +210,12 @@ const BasicInfo = ({ countries, previewUrl, handleFileChange }) => {
                 <input
                   type={field.type}
                   placeholder={`Add ${field.label.toLowerCase().split('*')[0]}`}
-                  className="form-input"
+                  className='form-input'
                   {...register(field.name as keyof EmployeeData)}
                 />
                 {errors.location &&
                   errors.location[field.name.split('.')[1]] && (
-                    <span className="form-error">
+                    <span className='form-error'>
                       {errors.location[field.name.split('.')[1]]?.message}
                     </span>
                   )}
@@ -224,37 +224,37 @@ const BasicInfo = ({ countries, previewUrl, handleFileChange }) => {
           </div>
         </div>
 
-        <div className="p-4 pb-12 border-b">
-          <FormHeading icon={<FaPhoneAlt className="w-4" />} text="Contact" />
-          <div className="grid sm:grid-cols-3 gap-4 mt-5">
-            <label className="form-label">
+        <div className='p-4 pb-12 border-b'>
+          <FormHeading icon={<FaPhoneAlt className='w-4' />} text='Contact' />
+          <div className='grid sm:grid-cols-3 gap-4 mt-5'>
+            <label className='form-label'>
               Phone
               <input
-                type="text"
+                type='text'
                 className={`form-input`}
                 {...register('phoneNumber')}
               />
               {errors.phoneNumber && (
-                <p className="form-error">{errors.phoneNumber.message}</p>
+                <p className='form-error'>{errors.phoneNumber.message}</p>
               )}
             </label>
-            <label className="form-label">
+            <label className='form-label'>
               Work Phone
               <input
-                type="text"
+                type='text'
                 className={`form-input`}
                 {...register('workPhone')}
               />
               {errors.workPhone && (
-                <p className="form-error">{errors.workPhone.message}</p>
+                <p className='form-error'>{errors.workPhone.message}</p>
               )}
             </label>
           </div>
         </div>
         {/* Social Links Block */}
-        <div className="p-4 pb-12">
-          <Heading icon={<AiFillContacts />} text="Social Links" />
-          <div className="grid grid-cols-3 gap-4">
+        <div className='p-4 pb-12'>
+          <Heading icon={<AiFillContacts />} text='Social Links' />
+          <div className='grid grid-cols-3 gap-4'>
             {[
               {
                 name: 'linkedin',
@@ -280,13 +280,13 @@ const BasicInfo = ({ countries, previewUrl, handleFileChange }) => {
               <article key={field.name}>
                 <Label text={field.label} />
                 <input
-                  type="text"
+                  type='text'
                   placeholder={`Add ${field.label.toLowerCase().split('*')[0]}`}
-                  className="form-input"
+                  className='form-input'
                   {...register(field.name as keyof EmployeeData)}
                 />
                 {errors[field.name] && (
-                  <span className="form-error">
+                  <span className='form-error'>
                     {errors[field.name].message}
                   </span>
                 )}
@@ -295,19 +295,19 @@ const BasicInfo = ({ countries, previewUrl, handleFileChange }) => {
           </div>
         </div>
       </section>
-      <article className="flex justify-end mt-6 gap-x-4">
+      <article className='flex justify-end mt-6 gap-x-4'>
         <Button
-          type="button"
-          name="Cancel"
-          bg="white"
-          textColor="black"
-          className=" !px-16 !w-[200px] !text-[14px] !p-2"
+          type='button'
+          name='Cancel'
+          bg='white'
+          textColor='black'
+          className=' !px-16 !w-[200px] !text-[14px] !p-2'
           onClick={() => router.push('/hr/employees')}
         />
         <Button
-          type="button"
-          name="Next"
-          className="!px-16 !w-[200px] !text-[14px] !p-2"
+          type='button'
+          name='Next'
+          className='!px-16 !w-[200px] !text-[14px] !p-2'
           onClick={handleNext}
         />
       </article>

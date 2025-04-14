@@ -37,13 +37,7 @@ const ProfileCard = ({
   editEmployee: boolean;
   loading?: boolean;
 }) => {
-  const {
-    country = '',
-    state = '',
-    city = '',
-    street1 = '',
-    street2 = '',
-  } = employeeData?.location || {};
+  const { country = '', state = '' } = employeeData?.location || {};
 
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
