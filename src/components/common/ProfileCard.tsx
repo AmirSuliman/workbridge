@@ -72,11 +72,13 @@ const ProfileCard = ({
             {!empId && isUserPanel && <UploadProfilePicture />}
 
             <Image
-              loader={imageLoader}
               src={imgSrc}
               alt='Avatar'
-              width={700}
-              height={700}
+              width={128}
+              height={128}
+              quality={80}
+              placeholder='blur'
+              blurDataURL={IMAGES?.placeholderAvatar.src}
               className='w-12 h-10 sm:w-32 sm:h-28 shrink-0 grow-0 rounded-full object-cover'
               onError={() => {
                 setImgSrc(IMAGES?.placeholderAvatar);
