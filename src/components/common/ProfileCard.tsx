@@ -83,6 +83,7 @@ const ProfileCard = ({
               onError={() => {
                 setImgSrc(IMAGES?.placeholderAvatar);
               }}
+              loading='lazy'
             />
           </div>
           {/* social Icons */}

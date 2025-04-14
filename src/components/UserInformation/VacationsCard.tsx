@@ -241,7 +241,9 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
                   selectsStart
                   startDate={startDate}
                   endDate={endDate}
-                  minDate={new Date()}
+                  minDate={
+                    new Date(new Date().setDate(new Date().getDate() + 1))
+                  } // tomorrow
                   dateFormat='MM/dd/yyyy'
                   placeholderText='mm/dd/yyyy'
                   className='p-3 border rounded w-full'
@@ -299,16 +301,16 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
             <div className='h-[1px] w-full bg-gray-200 mt-8' />
 
             {/* Display the vacation duration */}
-            <div className='flex flex-row gap-4 items-center mt-4'>
-              <p className='text-[14px]'>Vacation days requested:</p>
-              <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
-                {vacationDaysUsed} days
-              </div>
-            </div>
             <div className='flex flex-row gap-4 items-center mt-4 '>
               <p className='text-[14px]'>Total vacation days remaining:</p>
               <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
                 {totalDays - vacationDaysUsed} days
+              </div>
+            </div>
+            <div className='flex flex-row gap-4 items-center mt-4'>
+              <p className='text-[14px]'>Vacation days requested:</p>
+              <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
+                {vacationDaysUsed} days
               </div>
             </div>
 
@@ -316,8 +318,8 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
               <button
                 type='button'
                 onClick={handleRequestVacation}
-                className='mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full'
-                disabled={loading}
+                className='mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full disabled:opacity-70 disabled:cursor-not-allowed'
+                disabled={vacationDaysUsed === 0 || loading}
               >
                 {loading ? 'Submitting...' : 'Request Vacation'}
               </button>

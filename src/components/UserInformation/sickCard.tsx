@@ -254,7 +254,9 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
                   selectsStart
                   startDate={startDate}
                   endDate={endDate}
-                  minDate={new Date()}
+                  minDate={
+                    new Date(new Date().setDate(new Date().getDate() + 1))
+                  } // tomorrow
                   dateFormat='MM/dd/yyyy'
                   placeholderText='mm/dd/yyyy'
                   className='p-3 border rounded w-full'
@@ -311,19 +313,19 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
             <div className='h-[1px] w-full bg-gray-200 mt-8' />
 
             {/* Display the vacation duration */}
-
-            <div className='flex flex-row gap-4 items-center mt-4'>
-              <p className='text-[14px]'>Sick days requested:</p>
-              <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
-                {sickDaysUsed} days
-              </div>
-            </div>
             <div className='flex flex-row gap-4 items-center mt-4 '>
               <p className='text-[14px]'>Total Sick days remaining:</p>
               <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
                 {totalDays - sickDaysUsed} days
               </div>
             </div>
+            <div className='flex flex-row gap-4 items-center mt-4'>
+              <p className='text-[14px]'>Sick days requested:</p>
+              <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
+                {sickDaysUsed} days
+              </div>
+            </div>
+
             <br />
             <SickLeaveAttachments
               selectedFiles={selectedFiles}
@@ -334,8 +336,8 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
               <button
                 type='button'
                 onClick={handleRequestVacation}
-                className='mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full'
-                disabled={loading}
+                className='mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full disabled:opacity-70 disabled:cursor-not-allowed'
+                disabled={sickDaysUsed === 0 || loading}
               >
                 {loading ? (
                   <span className='flex items-center justify-center gap-2'>
