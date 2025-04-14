@@ -3,7 +3,7 @@
 import { getSession } from 'next-auth/react';
 import { useEffect, useState, useRef } from 'react';
 import { FaBullhorn, FaUserCircle, FaUsers } from 'react-icons/fa';
-import { FiMenu, FiTrendingUp } from 'react-icons/fi';
+import { FiMenu, FiTrendingUp, FiX } from 'react-icons/fi';
 import { HiHome, HiUsers } from 'react-icons/hi';
 import { IoIosFolderOpen } from 'react-icons/io';
 import { IoCalendarOutline } from 'react-icons/io5';
@@ -18,7 +18,11 @@ const HrSidebar = () => {
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prevIsOpen) => !prevIsOpen);
+  };
+  
+  const closeSidebar = () => {
+    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -67,23 +71,43 @@ const HrSidebar = () => {
 
   return (
     <>
-      {/* Hamburger button */}
+      {/* Menu button for opening */}
       <button
-        className='lg:hidden p-4 fixed top-0 left-0 z-20 bg-white rounded shadow-md text-4xl'
+        className='lg:hidden p-4 fixed top-0 left-0 z-20 bg-white rounded shadow-md'
         onClick={toggleSidebar}
+        aria-label="Open sidebar"
       >
-        {!isOpen ? <FiMenu size={24} /> : 'x'}
+        <FiMenu size={24} />
       </button>
 
       <main
         ref={sidebarRef}
-        className={`flex flex-col gap-2 w-[270px] bg-white fixed top-0 bottom-0 left-0 1700px:left-auto border-r-[1px] border-[#E8E8E8] z-10 transition-transform duration-300 overflow-y-auto ${
+        className={`flex flex-col gap-2 w-[270px] bg-white fixed top-0 bottom-0 left-0 border-r-[1px] border-[#E8E8E8] z-10 transition-transform duration-300 ease-in-out overflow-y-auto ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
-        <h1 className='text-center px-8 text-2xl py-8'>
-          <Image className='ml-6' src='/logo.svg' alt='logo' width={150} height={150} />
-        </h1>
+        <div className="flex justify-between items-center px-4 py-4">
+          <h1 className='text-center'>
+            <Image
+              className=' ml-12 mt-5 sm:ml-6'
+              src='/logo.svg'
+              alt='logo'
+              width={150}
+              height={150}
+            />
+          </h1>
+          {/* Close button as separate element from open button */}
+          {isOpen && (
+            <div
+              className="lg:hidden cursor-pointer p-2 absolute top-2 right-2"
+              onClick={closeSidebar}
+              aria-label="Close sidebar"
+            >
+              <FiX size={24} />
+            </div>
+          )}
+        </div>
+        
         <>
           <SidebarNavItem
             name='Home'
