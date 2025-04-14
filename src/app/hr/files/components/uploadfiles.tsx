@@ -5,12 +5,19 @@ import { useEffect, useState } from 'react';
 import { FaTimes, FaUpload } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
+
 interface Folder {
   id: string;
   name: string;
+  
 }
 
-const UploadFiles = ({ setIsModalOpen1 }) => {
+interface UploadFilesProps {
+  setIsModalOpen1: (val: boolean) => void;
+  onFileUploaded?: (file: any) => void; // Adjust `file` type as needed
+}
+
+const UploadFiles = ({ setIsModalOpen1, onFileUploaded }: UploadFilesProps) => {
   const { data: session } = useSession();
   const userId = session?.user?.userId;
   const [progress, setProgress] = useState(0);
@@ -39,34 +46,31 @@ const UploadFiles = ({ setIsModalOpen1 }) => {
     fetchFolders();
   }, []);
 
-  // Handle file selection
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setSelectedFile(event.target.files[0]);
     }
   };
 
-  // Handle file upload
   const handleUpload = async () => {
     if (!selectedFile || !folderId || !title) {
       setError('Please select a file, folder, and provide a title.');
       return;
     }
-
+  
     if (!userId) {
       setError('User not authenticated.');
       return;
     }
-
+  
     const formData = new FormData();
     formData.append('file', selectedFile);
     formData.append('folderId', folderId);
     formData.append('fileTitle', title);
-
+  
     try {
       setLoading(true);
-
-      // Step 1: Upload the file
+  
       const uploadResponse = await axiosInstance.post(
         '/file/upload',
         formData,
@@ -82,26 +86,39 @@ const UploadFiles = ({ setIsModalOpen1 }) => {
           },
         }
       );
-
-      const fileId = uploadResponse.data?.data?.id;
-      if (!fileId) {
-        throw new Error('File upload failed, missing file ID.');
+  
+      // Extract metadata from the API response
+      const fileMetadata = uploadResponse.data?.data;
+      if (!fileMetadata) {
+        throw new Error('File upload failed, missing file metadata.');
       }
-
-      console.log('File uploaded:', uploadResponse.data);
-      toast.success("File uploaded successfully!");
-      // Step 2: Call /adminfile/upload API
-      const adminUploadResponse = await axiosInstance.post(
-        '/adminfile/upload',
-        {
-          fileId,
-          uploadedBy: userId,
-        }
-      );
-
-      console.log('Admin file uploaded:', adminUploadResponse.data);
-
-      // Close modal after successful API calls
+  
+      // Construct the uploaded file object with the metadata from the response
+      const uploadedFile = {
+        id: fileMetadata.id,
+        fileTitle: title,                   
+        folderId,                          
+        uploadedBy: userId,                 
+        fileName: fileMetadata.fileName,    
+        fileType: fileMetadata.fileType,    
+        size: fileMetadata.size,           
+        url: fileMetadata.url,              
+        uploadedAt: fileMetadata.createdAt,
+      };
+  
+      // Pass the uploaded file metadata to the parent component (if provided)
+      if (onFileUploaded) {
+        onFileUploaded(uploadedFile);
+      }
+  
+      toast.success('File uploaded successfully!');
+  
+      const adminUploadResponse = await axiosInstance.post('/adminfile/upload', {
+        fileId: fileMetadata.id,
+        uploadedBy: userId,
+      });
+  
+      // Reset progress bar and close modal
       setProgress(0);
       setIsModalOpen1(false);
     } catch (err) {
@@ -111,6 +128,7 @@ const UploadFiles = ({ setIsModalOpen1 }) => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="w-full sm:w-[700px] p-8 bg-white rounded shadow-lg relative">
@@ -124,9 +142,7 @@ const UploadFiles = ({ setIsModalOpen1 }) => {
       <h2 className="font-semibold text-xl mb-4">Upload File</h2>
 
       {/* File Select */}
-      <label className="text-gray-400 block text-sm mb-2 mt-8">
-        Upload file
-      </label>
+      <label className="text-gray-400 block text-sm mb-2 mt-8">Upload file</label>
       <label className="border-dashed border-2 border-gray-300 rounded-lg h-32 w-full flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition text-gray-400">
         <span className="text-black flex flex-row items-center gap-2 mt-2">
           Choose a file <FaUpload />
