@@ -26,6 +26,7 @@ import { calculateDuration } from '@/lib/calculateDuration';
 import DeleteEmployeeMoadal from './DeleteEmployeeModal';
 import { AppDispatch, RootState } from '@/store/store';
 import { GoArrowUpRight } from 'react-icons/go';
+import ButtonWithNav from '@/components/common/ButtonWithNav';
 
 export const AllEmployees = () => {
   const router = useRouter();
@@ -163,7 +164,7 @@ export const AllEmployees = () => {
 
   return (
     <>
-      <nav className='flex gap-4 justify-between flex-wrap my-8'>
+      <nav className='flex gap-4 justify-between flex-wrap my-4'>
         <h1 className='font-semibold text-lg sm:text-2xl flex gap-2 items-center'>
           <svg
             width='26'
@@ -191,14 +192,7 @@ export const AllEmployees = () => {
           </svg>
           Employees
         </h1>
-        <Link href='employees/charter'>
-          <Button
-            bg='#00B87D'
-            className=''
-            name='See Employee Charter'
-            icon={<GoArrowUpRight size={20} />}
-          />
-        </Link>
+        <ButtonWithNav href='/employees/charter' label='See Employee Charter' />
       </nav>
       <main className='bg-white border p-4 rounded-md mt-4'>
         {/* for search bar */}

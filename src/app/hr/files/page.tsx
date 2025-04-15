@@ -117,10 +117,10 @@ const HrFiles = () => {
     // Ensure to fetch updated folders or directly add the new folder
     fetchInitialData(); // Re-fetch to get the latest folders and files
   };
-  
+
   const handleFileUploaded = (newFile) => {
     console.log('New File:', newFile);
-  
+
     // Check if size and fileType exist in the response data
     const fileWithMetadata = {
       ...newFile, // Spread the newFile object (which should already have the correct fields from the response)
@@ -128,27 +128,26 @@ const HrFiles = () => {
       createdAt: new Date().toISOString(), // Set createdAt to the current timestamp
       fileType: newFile.fileType || 'unknown', // Fallback to 'unknown' if fileType is missing
     };
-  
+
     console.log('File with Metadata:', fileWithMetadata);
     console.log('File Type:', fileWithMetadata.fileType);
     console.log('File Size:', fileWithMetadata.size);
-  
+
     // Update the state with the new file (with metadata)
     setAllFiles((prevFiles) => [fileWithMetadata, ...prevFiles]);
-  
+
     if (activeFolder) {
       setActiveFolder((prevFolder): Folder | null => {
         if (!prevFolder) return null;
-      
+
         return {
           ...prevFolder,
           files: [fileWithMetadata, ...prevFolder.files],
         };
       });
-      
     }
   };
-  
+
   const handleEditfolder = () => {
     setIsModalOpen2(true);
   };
@@ -179,37 +178,35 @@ const HrFiles = () => {
 
   const handleFileUpdate = (updatedFile: File) => {
     // Log the updated file that was passed to the function
-    console.log("Updated File:", updatedFile);
-  
+    console.log('Updated File:', updatedFile);
+
     // Update the file in the active folder or global list of files
     setAllFiles((prevFiles) => {
-      console.log("Previous Files:", prevFiles); // Log the previous state of all files
+      console.log('Previous Files:', prevFiles); // Log the previous state of all files
       const updatedFiles = prevFiles.map((file) =>
         file.id === updatedFile.id ? { ...file, ...updatedFile } : file
       );
-      console.log("Updated Files:", updatedFiles); // Log the updated files
+      console.log('Updated Files:', updatedFiles); // Log the updated files
       return updatedFiles;
     });
-  
+
     if (activeFolder) {
       setActiveFolder((prevFolder) => {
-        console.log("Previous Folder:", prevFolder); // Log the previous folder state
-  
+        console.log('Previous Folder:', prevFolder); // Log the previous folder state
+
         if (!prevFolder) return null;
-  
+
         // Update the file within the active folder state
         const updatedFiles = prevFolder.files.map((file) =>
           file.id === updatedFile.id ? { ...file, ...updatedFile } : file
         );
-        console.log("Updated Folder Files:", updatedFiles); // Log the updated files in the folder
-  
+        console.log('Updated Folder Files:', updatedFiles); // Log the updated files in the folder
+
         return { ...prevFolder, files: updatedFiles };
       });
     }
   };
-  
-  
-  
+
   const handleSortFiles = (criteria: string) => {
     if (!activeFolder && !isAllFilesActive) return;
 
@@ -457,80 +454,86 @@ const HrFiles = () => {
                 </tr>
               </thead>
               <tbody>
-  {activeFolder ? (
-    activeFolder?.files?.length > 0 ? (
-      activeFolder.files.map((file, index) => (
-        <tr
-          key={index}
-          className='p-3 border-b text-[14px] font-normal hover:bg-gray-50'
-        >
-          <td
-            onClick={() => {
-              handleDocumentOpen(file);
-            }}
-            className='p-4 flex items-center gap-2 cursor-pointer'
-          >
-            <span>{file.fileTitle || file.fileName}</span>
-          </td>
-          <td className='p-4'>
-            {file.createdAt ? file.createdAt.split('T')[0] : ''}
-          </td>
-          <td className='p-4'>
-            {formatFileSize(file.size)} {/* Format size */}
-          </td>
-          <td className='p-4'>
-            {file.fileType
-              ? file.fileType ===
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                ? 'docx'
-                : file.fileType === 'msword'
-                ? 'doc'
-                : file.fileType
-              : ''} {/* Display file type */}
-          </td>
-          {!isUserPanel && (
-            <td className='flex flex-row gap-3 justify-center items-center'>
-              <Image
-                src='/edit.svg'
-                alt='edit'
-                width={10}
-                height={10}
-                onClick={() => {
-                  setDocumentId(file.id); // Set the document ID
-                  setCurrentTitle(file.fileTitle || file.fileName); // Set the current title
-                  setCurrentFolderId(file.folderId); // Optionally, if needed for editing
-                  setIsModalOpen3(true); // Open the edit modal
-                }}                
-                className='cursor-pointer'
-              />
-              <Image
-                src='/delete.svg'
-                alt='del'
-                width={10}
-                height={10}
-                onClick={() => handleDeletedocument(file.id)}
-                className='cursor-pointer'
-              />
-            </td>
-          )}
-        </tr>
-      ))
-    ) : (
-      <tr>
-        <td colSpan={5} className='text-center text-gray-500'>
-          This folder is empty. Use the upload button to add files.
-        </td>
-      </tr>
-    )
-  ) : (
-    <tr>
-      <td colSpan={5} className='text-center text-gray-500'>
-        Select a folder to view its files.
-      </td>
-    </tr>
-  )}
-</tbody>
-
+                {activeFolder ? (
+                  activeFolder?.files?.length > 0 ? (
+                    activeFolder.files.map((file, index) => (
+                      <tr
+                        key={index}
+                        className='p-3 border-b text-[14px] font-normal hover:bg-gray-50'
+                      >
+                        <td
+                          onClick={() => {
+                            handleDocumentOpen(file);
+                          }}
+                          className='p-4 flex items-center gap-2 cursor-pointer'
+                        >
+                          <span>{file.fileTitle || file.fileName}</span>
+                        </td>
+                        <td className='p-4'>
+                          {file.createdAt ? file.createdAt.split('T')[0] : ''}
+                        </td>
+                        <td className='p-4'>
+                          {formatFileSize(file.size)} {/* Format size */}
+                        </td>
+                        <td className='p-4'>
+                          {file.fileType
+                            ? file.fileType ===
+                              'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                              ? 'docx'
+                              : file.fileType === 'msword'
+                                ? 'doc'
+                                : file.fileType
+                            : ''}{' '}
+                          {/* Display file type */}
+                        </td>
+                        {!isUserPanel && (
+                          <td className='flex flex-row gap-3 justify-center items-center'>
+                            <Image
+                              src='/edit.svg'
+                              alt='edit'
+                              width={10}
+                              height={10}
+                              onClick={() => {
+                                setDocumentId(file.id); // Set the document ID
+                                setCurrentTitle(
+                                  file.fileTitle || file.fileName
+                                ); // Set the current title
+                                setCurrentFolderId(file.folderId); // Optionally, if needed for editing
+                                setIsModalOpen3(true); // Open the edit modal
+                              }}
+                              className='cursor-pointer'
+                            />
+                            <Image
+                              src='/delete.svg'
+                              alt='del'
+                              width={10}
+                              height={10}
+                              onClick={() => handleDeletedocument(file.id)}
+                              className='cursor-pointer'
+                            />
+                          </td>
+                        )}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className='text-center text-gray-500 pt-4'
+                      >
+                        This folder is empty. Use the upload button to add
+                        files.
+                      </td>
+                    </tr>
+                  )
+                ) : (
+                  <tr>
+                    <td colSpan={5} className='text-center text-gray-500 pt-4'>
+                      Select a folder to view its files.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
             </table>
           </div>
         </div>
@@ -557,10 +560,11 @@ const HrFiles = () => {
 
       {isModalOpen1 && (
         <Modal onClose={() => setIsModalOpen1(false)}>
-<Uploadfiles
-  setIsModalOpen1={setIsModalOpen1}
-  onFileUploaded={handleFileUploaded}
-/>        </Modal>
+          <Uploadfiles
+            setIsModalOpen1={setIsModalOpen1}
+            onFileUploaded={handleFileUploaded}
+          />{' '}
+        </Modal>
       )}
       {isModalOpen2 && activeFolder && (
         <Modal onClose={() => setIsModalOpen2(false)}>
@@ -581,7 +585,7 @@ const HrFiles = () => {
             currentTitle={currentTitle}
             currentFolderId={currentFolderId}
             onFileUpdated={handleFileUpdate}
-            />
+          />
         </Modal>
       )}
 
