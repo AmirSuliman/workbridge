@@ -16,7 +16,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [role, setRole] = useState<string | null>(null);
-
+  const [showSidbarMenu, setShowSidebarMenu] = useState(false);
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
@@ -63,9 +63,13 @@ export default function DashboardLayout({
 
   return (
     <section className='flex w-full h-full overflow-hidden'>
-      <SideNavigation items={navItems}></SideNavigation>
+      <SideNavigation
+        setShowSidebarMenu={setShowSidebarMenu}
+        showSidbarMenu={showSidbarMenu}
+        items={navItems}
+      ></SideNavigation>
       <div className='flex flex-col flex-1'>
-        <UserHeader />
+        <UserHeader setShowSidebarMenu={setShowSidebarMenu} />
         <div className='flex-1 overflow-y-scroll'>{children}</div>
       </div>
     </section>

@@ -11,6 +11,8 @@ import { FaSearch } from 'react-icons/fa';
 import CreateDepartment from '../department/components/createdepartment';
 import { useSession } from 'next-auth/react';
 import { GoArrowUpRight } from 'react-icons/go';
+import ButtonWithNav from '@/components/common/ButtonWithNav';
+import SearchInput from '@/components/common/SearchBar';
 
 interface Department {
   id: string;
@@ -101,41 +103,27 @@ const DepartmentTable = () => {
           <EmployeesIcon />
           <h1 className='font-semibold text-[22px]'>Departments</h1>
         </div>
-        <Link href='employees/charter'>
-          <Button
-            bg='#00B87D'
-            className=''
-            name='See Employee Charter'
-            icon={<GoArrowUpRight size={20} />}
-          />
-        </Link>
+        <ButtonWithNav href='/employees/charter' label='See Employee Charter' />
       </div>
 
       {/* Table Container */}
       <div className='p-6 border border-gray-300 w-full bg-white mt-3 rounded-lg'>
         <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2'>
           {/* Search and Sort */}
-          <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6'>
+          <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6 w-full justify-between'>
             {/* for search bar */}
-            <div className='flex flex-row w-[300px] rounded-md border px-3 py-1 text-gray-400 items-start md:items-center gap-3 text-[12px]'>
-              <FaSearch className='text-black text-[16px] ' />
-              <input
-                type='search'
-                placeholder='Search department'
-                className='border-none focus:outline-none text-[12px] text-gray-700'
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
+
+            <SearchInput
+              placeholder='Search department'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
             {/* for sort */}
-            <div className=''>
-              <label htmlFor='sort' className='mr-2 text-gray-400 text-[12px]'>
+            <div className='flex items-center'>
+              <label htmlFor='sort' className='mr-2 text-gray-400 text-xs'>
                 Sort
               </label>
-              <select
-                id='sort'
-                className='border rounded px-2 py-1 text-[12px]'
-              >
+              <select id='sort' className='border rounded px-2 py-2 text-xs'>
                 <option value=''>Select</option>
                 <option value='nameAZ'>A-Z</option>
                 <option value='nameZA'>Z-A</option>
