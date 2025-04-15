@@ -19,6 +19,7 @@ import { z } from 'zod';
 import Footer from './footer';
 import Navbar from './nav';
 import ScreenLoader from '@/components/common/ScreenLoader';
+import axiosInstance from '@/lib/axios';
 
 type AuthFormInputs = z.infer<typeof authSchema>;
 
@@ -113,18 +114,18 @@ const Auth = () => {
     }
     const checkSession = async () => {
       try {
-        const session = await getSession();
+        const token = localStorage.getItem('accessToken');
 
         if (!isMounted) return;
 
-        if (session?.user?.accessToken) {
+        if (token) {
           try {
-            const userData = await fetchUserData(session.user.accessToken);
+            const userData = await fetchUserData(token);
 
             if (!isMounted) return;
 
             dispatch(setUser(userData));
-            handleRedirect(userData, session.user.accessToken);
+            handleRedirect(userData, token);
           } catch (error) {
             // Token invalid - just continue to login page
             setIsLoading(false);
@@ -160,28 +161,24 @@ const Auth = () => {
       const decodedCallbackUrl = decodeURIComponent(callbackUrl);
       const absoluteCallbackUrl = getAbsoluteUrl(decodedCallbackUrl);
 
-      const res = await signIn('credentials', {
+      const res = await axiosInstance.post('/user/login', {
         email: data.email,
         password: data.password,
-        redirect: false,
-        callbackUrl: absoluteCallbackUrl || '',
       });
 
-      if (!res?.ok) {
+      if (!res?.data?.data?.accessToken) {
         toast.error('Invalid Email or Password!');
         setIsLoading(false);
         return;
       }
 
-      // Get session after successful sign-in
-      const session = await getSession();
+      const accessToken = res.data.data.accessToken.accessToken;
 
-      if (session?.user?.accessToken) {
+      if (accessToken) {
         try {
-          const userData = await fetchUserData(session.user.accessToken);
+          const userData = await fetchUserData(accessToken);
           dispatch(setUser(userData));
-          toast.success('Login Successful!');
-          handleRedirect(userData, session.user.accessToken);
+          handleRedirect(userData, accessToken);
         } catch (error) {
           console.error('Error fetching user data:', error);
           toast.error(

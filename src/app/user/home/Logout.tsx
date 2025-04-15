@@ -67,6 +67,7 @@ const Logout = () => {
           document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/api/auth; secure; samesite=strict`;
         });
       }
+      localStorage.removeItem('accessToken');
 
       // 4. Navigate to login page with a small delay to ensure cleanup completes
       setTimeout(() => {
