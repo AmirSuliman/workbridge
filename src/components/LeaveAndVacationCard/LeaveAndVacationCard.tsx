@@ -4,6 +4,7 @@ import Button from '../Button';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSession } from 'next-auth/react';
+import InfoTooltip from '../common/InfoTooltip';
 
 const LeaveAndVacationCard = ({
   title,
@@ -12,6 +13,7 @@ const LeaveAndVacationCard = ({
   description,
   daysNum,
   name,
+  tooltipText,
 }: {
   title: string;
   bgColor: string;
@@ -19,6 +21,7 @@ const LeaveAndVacationCard = ({
   description: string;
   daysNum: string;
   name: string;
+  tooltipText: string;
 }) => {
   const router = useRouter();
   const [role, setRole] = useState<string>();
@@ -47,6 +50,9 @@ const LeaveAndVacationCard = ({
       <div className='flex items-center gap-2'>
         <IconWithBg bgColor={bgColor} icon={icon} />
         <h3 className='text-sm'>{title}</h3>
+        <div className='flex justify-end'>
+          <InfoTooltip text={tooltipText} />
+        </div>
       </div>
       <div className='flex justify-between items-center gap-2'>
         <p className='text-xs opacity-50'>{description}</p>
