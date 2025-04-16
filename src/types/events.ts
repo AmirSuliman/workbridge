@@ -1,3 +1,3 @@
-export enum EventTypes {
-    Toggle_Navbar = 'toggleNavbar',
-  }
+// export enum EventTypes {
+//     Toggle_Navbar = 'toggleNavbar',
+//   }

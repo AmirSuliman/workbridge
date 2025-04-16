@@ -10,8 +10,7 @@ import UserProfileInfo from '../UserProfileInfo';
 import imageLoader from '../../../imageLoader';
 import Button from '../Button';
 import { FaArrowLeft } from 'react-icons/fa';
-import Link from 'next/link';
-import { GoArrowUpRight } from 'react-icons/go';
+import ButtonWithNav from '../common/ButtonWithNav';
 
 const HrHeader = () => {
   const router = useRouter();
@@ -97,24 +96,20 @@ const HrHeader = () => {
               </div>
             )}
           </div>
-          <Link href='employees/charter'>
-            <Button
-              bg='#00B87D'
-              className='!font-medium !text-xs sm:!text-sm'
-              name='See Employee Charter'
-              icon={<GoArrowUpRight size={20} />}
-            />
-          </Link>
+          <ButtonWithNav
+            href='/employees/charter'
+            label='See Employee Charter'
+          />
         </>
       ) : (
         <Button
           onClick={() => router.back()}
           icon={<FaArrowLeft size={20} />}
           name={windowWidth !== null && windowWidth >= 640 ? 'Back' : ''}
-          className="flex-row-reverse w-10 h-10 sm:w-auto sm:h-auto ml-[50px] md:ml-[30px] lg:ml-0 rounded-full sm:rounded-md"
+          className='flex-row-reverse w-10 h-10 sm:w-auto sm:h-auto ml-[50px] md:ml-[30px] lg:ml-0 rounded-full sm:rounded-md'
         />
       )}
-      
+
       <Notifications />
       <UserProfileInfo />
     </nav>
