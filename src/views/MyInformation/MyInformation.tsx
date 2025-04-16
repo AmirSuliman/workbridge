@@ -272,7 +272,14 @@ const MyInformation = () => {
       toast.success('Employee information updated successfully!');
       setEditLoading(false);
       setEditEmployee(false);
-      dispatch(updateEmployeeData(response.data.data));
+dispatch(updateEmployeeData({
+  ...employeeData,
+  ...response.data.data,
+  location: {
+    ...employeeData?.location,
+    ...response.data.data.location,
+  }
+}));
 
       // to immediatly get updated profile picture in the UserProfileInfo.tsx if a user update it
       if (!empId) {
