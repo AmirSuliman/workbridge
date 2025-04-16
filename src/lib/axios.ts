@@ -17,9 +17,9 @@ export interface CustomSession extends Session {
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const session = (await getSession()) as CustomSession;
-    if (session && session.accessToken) {
-      config.headers['Authorization'] = `Bearer ${session.accessToken}`;
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      config.headers['Authorization'] = `${token}`;
     }
     return config;
   },

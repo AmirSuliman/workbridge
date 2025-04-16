@@ -1,3 +1,5 @@
+import { jwtDecode } from 'jwt-decode';
+import { User } from 'next-auth';
 import { getToken } from 'next-auth/jwt';
 import { withAuth } from 'next-auth/middleware';
 import type { NextRequest } from 'next/server';
@@ -12,14 +14,6 @@ const ROUTES = {
 
 // Define roles for better type safety
 type UserRole = 'Admin' | 'SuperAdmin' | 'Manager' | 'ViewOnly';
-
-interface CustomToken {
-  user?: {
-    user?: {
-      role?: UserRole;
-    };
-  };
-}
 
 // Define role access map to simplify permission checks
 const ROLE_ACCESS = {
@@ -47,13 +41,16 @@ const ROLE_ACCESS = {
 
 export default withAuth(
   async function middleware(request: NextRequest) {
-    const token = (await getToken({
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET,
-    })) as CustomToken | null;
+    console.log('Middleware triggered');
 
+    let token = localStorage.getItem('accessToken');
+    if (token?.startsWith('Bearer ')) {
+      token = token.replace('Bearer ', '');
+    }
+    const user = jwtDecode(token!.trim()) as any;
     const pathname = request.nextUrl.pathname;
-    const userRole = token?.user?.user?.role as UserRole | undefined;
+    const userRole = user.user!.role as UserRole | undefined;
+    console.log('User Role:', userRole);
 
     // Handle unauthenticated users
     if (!token && pathname !== ROUTES.SIGN_IN) {
