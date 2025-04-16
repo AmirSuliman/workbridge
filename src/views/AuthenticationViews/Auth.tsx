@@ -126,6 +126,7 @@ const Auth = () => {
 
             dispatch(setUser(userData));
             handleRedirect(userData, token);
+            setIsLoading(false);
           } catch (error) {
             // Token invalid - just continue to login page
             setIsLoading(false);
@@ -171,8 +172,8 @@ const Auth = () => {
         setIsLoading(false);
         return;
       }
-
-      const accessToken = res.data.data.accessToken.accessToken;
+      const accessToken = res?.data?.data?.accessToken;
+      localStorage.setItem('accessToken', accessToken!);
 
       if (accessToken) {
         try {
