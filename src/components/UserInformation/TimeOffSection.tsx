@@ -14,7 +14,7 @@ import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import SickCard from './sickCard';
 import VacationsCard from './VacationsCard';
-
+import { getSession } from 'next-auth/react';
 interface Employee {
   firstName: string;
   lastName: string;
@@ -47,7 +47,27 @@ const TimeOffSection = ({ employeeData }) => {
     null
   );
   const { empId } = useParams(); // This id is used to view any employee's info
+  const [role, setRole] = useState('');
 
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await getSession();
+      if (session?.user?.role) {
+        setRole(session.user.role);
+      }
+    };
+    fetchSession();
+  }, []);
+  
+  useEffect(() => {
+    if (role && employeeData?.tittle) {
+      console.log('Role:', role);
+      console.log('Employee Title:', employeeData.tittle);
+    }
+  }, [role, employeeData]);
+  
+  
+  
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
@@ -199,47 +219,55 @@ const TimeOffSection = ({ employeeData }) => {
               'Date To',
               'Days Used',
               'Status',
-              'Approved/Denied By',
-              'Notes',
+              ...(employeeData.tittle === 'CEO' && role === 'SuperAdmin'
+                ? []
+                : ['Approved/Denied By']),
+                'Notes',
             ]}
             values={timeOffData
               .filter((timeoff) => timeoff.status !== 'Pending')
-              .map((item, index) => [
-                <LabelWithIcon
-                  key={index}
-                  icon={
-                    item.type === 'Vacation' ? (
-                      <UmbrellaIcon classNames='w-4 text-white' />
-                    ) : (
-                      <SickPersonIcon classNames='w-4 text-white' />
-                    )
-                  }
-                  title={item.type}
-                  iconStyles={
-                    item.type === 'Vacation' ? 'bg-[#00B87D]' : 'bg-[#F53649]'
-                  }
-                />,
-
-                new Date(item.leaveDay).toLocaleDateString(),
-                new Date(item.returningDay).toLocaleDateString(),
-
-                // days used are inside the employee data, not in the timeoffs array
-                item.type === 'Vacation'
-                  ? employeeData?.vacationDaysUsed || ''
-                  : employeeData?.sickDaysUsed || '',
-
-                item?.status === 'Confirmed' ? (
-                  <p className='text-[#00B87D]'>Confirmed</p>
-                ) : (
-                  <p className='text-[#F53649]'>Denied</p>
-                ),
-
-                `${item?.user?.firstName || 'N/A'} ${
-                  item?.user?.lastName || ''
-                }`.trim(),
-
-                `${item.note || 'N/A'}`,
-              ])}
+              .map((item, index) => {
+                const baseValues = [
+                  <LabelWithIcon
+                    key={index}
+                    icon={
+                      item.type === 'Vacation' ? (
+                        <UmbrellaIcon classNames='w-4 text-white' />
+                      ) : (
+                        <SickPersonIcon classNames='w-4 text-white' />
+                      )
+                    }
+                    title={item.type}
+                    iconStyles={
+                      item.type === 'Vacation' ? 'bg-[#00B87D]' : 'bg-[#F53649]'
+                    }
+                  />,
+                  new Date(item.leaveDay).toLocaleDateString(),
+                  new Date(item.returningDay).toLocaleDateString(),
+                  item.type === 'Vacation'
+                    ? employeeData?.vacationDaysUsed || ''
+                    : employeeData?.sickDaysUsed || '',
+                  item?.status === 'Confirmed' ? (
+                    <p className='text-[#00B87D]'>Confirmed</p>
+                  ) : (
+                    <p className='text-[#F53649]'>Denied</p>
+                  ),
+                ];
+            
+                // Conditionally include "Approved/Denied By"
+                const approvedBy =
+                  `${item?.user?.firstName || 'N/A'} ${item?.user?.lastName || ''}`.trim();
+            
+                const includeApprovedBy =
+                  employeeData.tittle !== 'CEO' || role !== 'SuperAdmin';
+            
+                const finalRow = includeApprovedBy
+                  ? [...baseValues, approvedBy, item.note || 'N/A']
+                  : [...baseValues, item.note || 'N/A'];
+            
+                return finalRow;
+              })}
+            
           />
         )}
       </div>

@@ -87,11 +87,27 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
     return current;
   };
 
-  useEffect(() => {
-    if (startDate) {
-      setsickDaysUsed(calculateDuration());
+  const fetchVacationDuration = async (start: Date, end: Date) => {
+    try {
+      const response = await axiosInstance.post('/timeoff/duration', {
+        leaveDay: formatDate(start),
+        returningDay: formatDate(end),
+      });
+  
+      if (response.status === 200) {
+        setsickDaysUsed(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching vacation duration:', error);
+      setsickDaysUsed(0); // fallback or error value
     }
-  }, [startDate, endDate, calculateDuration]);
+  };
+  console.log(sickDaysUsed, 'sick days');
+  useEffect(() => {
+    if (startDate && endDate) {
+      fetchVacationDuration(startDate, endDate);
+    }
+  }, [startDate, endDate]);
 
   useEffect(() => {
     if (startDate && !endDate) {
@@ -313,19 +329,19 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
             <div className='h-[1px] w-full bg-gray-200 mt-8' />
 
             {/* Display the vacation duration */}
-            <div className='flex flex-row gap-4 items-center mt-4 '>
-              <p className='text-[14px]'>Total Sick days remaining:</p>
-              <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
-                {totalDays - sickDaysUsed} days
-              </div>
-            </div>
+            
             <div className='flex flex-row gap-4 items-center mt-4'>
               <p className='text-[14px]'>Sick days requested:</p>
               <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
                 {sickDaysUsed} days
               </div>
             </div>
-
+            <div className='flex flex-row gap-4 items-center mt-4 '>
+              <p className='text-[14px]'>Total Sick days remaining:</p>
+              <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
+                {totalDays - sickDaysUsed} days
+              </div>
+            </div>
             <br />
             <SickLeaveAttachments
               selectedFiles={selectedFiles}
