@@ -32,7 +32,7 @@ const HrHeader = () => {
   }, []);
 
   return (
-    <nav className='relative flex flex-wrap-reverse items-center gap-4 bg-white px-4 sm:px-8 py-4 border-b border-[#E8E8E8] w-full'>
+    <nav className='sticky top-0 flex flex-wrap-reverse  items-center gap-4 bg-white px-4 sm:px-8 py-4 border-b border-[#E8E8E8] z-10'>
       {/* Create New Button with Dropdown */}
       {isHomePage ? (
         <>

@@ -35,6 +35,7 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
   const [vacationDaysUsed, setVacationDaysUsed] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [apiCalculatedDays, setApiCalculatedDays] = useState<number>(0);
 
   const calculateDuration = useCallback(() => {
     if (startDate && endDate) {
@@ -83,12 +84,28 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
 
     return current;
   };
-
-  useEffect(() => {
-    if (startDate) {
-      setVacationDaysUsed(calculateDuration());
+  const fetchVacationDuration = async (start: Date, end: Date) => {
+    try {
+      const response = await axiosInstance.post('/timeoff/duration', {
+        leaveDay: formatDate(start),
+        returningDay: formatDate(end),
+      });
+  
+      if (response.status === 200) {
+        setVacationDaysUsed(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching vacation duration:', error);
+      setVacationDaysUsed(0); // fallback or error value
     }
-  }, [startDate, endDate, calculateDuration]);
+  };
+  console.log(vacationDaysUsed, 'vacation days');
+  useEffect(() => {
+    if (startDate && endDate) {
+      fetchVacationDuration(startDate, endDate);
+    }
+  }, [startDate, endDate]);
+  
 
   useEffect(() => {
     if (startDate && !endDate) {
@@ -121,7 +138,7 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
     const payload = {
       leaveDay: formatDate(startDate),
       returningDay: formatDate(endDate),
-      duration: duration,
+      duration: apiCalculatedDays, // use API-calculated value
       type: 'Vacation',
       note: note,
     };
@@ -301,16 +318,18 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
             <div className='h-[1px] w-full bg-gray-200 mt-8' />
 
             {/* Display the vacation duration */}
+            
+            <div className='flex flex-row gap-4 items-center mt-4'>
+              <p className='text-[14px]'>Vacation days requested:</p>
+              <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
+    {vacationDaysUsed || 0} days
+  </div>
+              
+            </div>
             <div className='flex flex-row gap-4 items-center mt-4 '>
               <p className='text-[14px]'>Total vacation days remaining:</p>
               <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
                 {totalDays - vacationDaysUsed} days
-              </div>
-            </div>
-            <div className='flex flex-row gap-4 items-center mt-4'>
-              <p className='text-[14px]'>Vacation days requested:</p>
-              <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
-                {vacationDaysUsed} days
               </div>
             </div>
 

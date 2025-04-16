@@ -71,22 +71,31 @@ const HrSidebar = () => {
 
   return (
     <>
-      {/* Menu button for opening */}
+      {/* Menu button for opening 
       <button
-        className='lg:hidden p-4 fixed top-0 left-0 z-20 bg-white rounded shadow-md'
+        className='lg:hidden p-4  top-3 left-0 z-10  '
         onClick={toggleSidebar}
         aria-label="Open sidebar"
       >
         <FiMenu size={24} />
-      </button>
-
+      </button>*/}
+ {!isOpen && (
+    <button
+      className="lg:hidden fixed top-4 left-4 z-50 bg-white  p-2 "
+      onClick={toggleSidebar}
+      aria-label="Open sidebar"
+    >
+      <FiMenu size={24} />
+    </button>
+  )}
       <main
         ref={sidebarRef}
-        className={`flex flex-col gap-2 w-[270px] bg-white fixed top-0 bottom-0 left-0 border-r-[1px] border-[#E8E8E8] z-10 transition-transform duration-300 ease-in-out overflow-y-auto ${
+        className={`flex flex-col gap-2 w-[90%] md:w-[270px] lg:w-[270px]  bg-white fixed top-0 bottom-0 left-0 border-r-[1px] border-[#E8E8E8] z-20 transition-transform duration-300 ease-in-out overflow-y-auto ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
         <div className="flex justify-between items-center px-4 py-4">
+        
           <h1 className='text-center'>
             <Image
               className=' ml-12 mt-5 sm:ml-6'

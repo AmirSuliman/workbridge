@@ -1,10 +1,10 @@
-// export const BASE_URL = 'https://backend.uat.isaworkbridge.com/'; // for uat.
-export const BASE_URL = 'https://devbackend.isaworkbridge.com/'; // for development.
+//export const BASE_URL = 'https://backend.uat.isaworkbridge.com/'; // for uat.
+ export const BASE_URL = 'https://devbackend.isaworkbridge.com/'; // for development.
 // export const BASE_URL = 'https://backend.app.isaworkbridge.com/'; // for production
 
 export const API_ROUTES = {
-  // WEBSOCKET_URL: 'wss://backend.uat.isaworkbridge.com', // for uat
-  WEBSOCKET_URL: 'wss://devbackend.isaworkbridge.com', // for development
+  WEBSOCKET_URL: 'wss://backend.uat.isaworkbridge.com', // for uat
+  // WEBSOCKET_URL: 'wss://devbackend.isaworkbridge.com', // for development
   // WEBSOCKET_URL: 'wss://backend.app.isaworkbridge.com', // for production
   LOGIN: `user/login`,
   GET_USERS: `users`,
