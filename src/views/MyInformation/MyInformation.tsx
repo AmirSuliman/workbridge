@@ -78,6 +78,7 @@ const MyInformation = () => {
       ? new Date(employeeData?.hireDate).toISOString().split('T')[0]
       : '',
     salary: employeeData?.salary ? employeeData.salary : 0,
+    country: employeeData?.country?.country || '', 
     location: {
       zipCode: employeeData?.location?.zipCode || '',
       street1: employeeData?.location?.street1 || '',
@@ -89,7 +90,9 @@ const MyInformation = () => {
     phoneNumber: employeeData?.phoneNumber || '',
     workPhone: employeeData?.workPhone || '',
   };
-
+  console.log('Selected Country:', formattedData.country);
+  console.log('Location Country:', formattedData.location.country);
+  
   // conditionaly get schema
   // if role is superadmin and emplId is not coming from the searchParams
   // then make the reporignManagerId required
@@ -234,6 +237,7 @@ const MyInformation = () => {
       birthday: data.birthday,
       phoneNumber: data.phoneNumber,
       workPhone: data.workPhone,
+      countryId: data.countryId,
       // don't send 0 to backend it gives error
       reportingManagerId:
         data.reportingManagerId === 0 ? undefined : data.reportingManagerId,
@@ -278,6 +282,10 @@ dispatch(updateEmployeeData({
   location: {
     ...employeeData?.location,
     ...response.data.data.location,
+  },
+  country: {
+    ...employeeData?.country,
+    ...response.data.data.country, 
   }
 }));
 
