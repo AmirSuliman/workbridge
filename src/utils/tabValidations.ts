@@ -1,3 +1,8 @@
+// these are used to show a toast message coming
+// from Form fields (react-hook-form erro) in my information
+// or create employee pages
+// MyInformation.tsx and create-employee page.tsx
+
 export const employmentTabValidation = [
   'tittle',
   'salary',

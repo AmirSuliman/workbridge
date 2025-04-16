@@ -1,15 +1,13 @@
+import PolicyIcon from '@/app/hr/home/Homepolicies/PolicyIcon';
 import { getAllPolicies } from '@/services/getAllPolicies';
 import { Policy } from '@/types/policy';
-import { getTimeAgo } from '@/utils/timeAgo';
-import Image from 'next/image';
+import { getTimeAgo } from '@/utils/misc';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BiLoaderCircle } from 'react-icons/bi';
 import { FaArrowUp } from 'react-icons/fa';
 import { HiSpeakerphone } from 'react-icons/hi';
 import { IoCalendarOutline } from 'react-icons/io5';
-import imageLoader from '../../../../../imageLoader';
-import PolicyIcon from '@/app/hr/home/Homepolicies/PolicyIcon';
 
 const AllPolicies = () => {
   const router = useRouter();
@@ -61,20 +59,20 @@ const AllPolicies = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center p-4">
-        <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+      <div className='flex justify-center items-center p-4'>
+        <BiLoaderCircle className='h-5 w-5 duration-100 animate-spin' />
       </div>
     );
   }
 
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return <div className='text-red-500'>{error}</div>;
   }
 
   return (
-    <div className="p-6 bg-white rounded-[10px] border ">
+    <div className='p-6 bg-white rounded-[10px] border '>
       {' '}
-      <h1 className="text-[18px] font-medium flex flex-row items-center gap-2 mb-4">
+      <h1 className='text-[18px] font-medium flex flex-row items-center gap-2 mb-4'>
         <HiSpeakerphone size={22} />
         New Policies Update
       </h1>
@@ -82,19 +80,19 @@ const AllPolicies = () => {
         policies.map((policy) => (
           <div
             key={policy.id}
-            className="flex flex-col gap-6 p-4 rounded border mt-8 "
+            className='flex flex-col gap-6 p-4 rounded border mt-8 '
           >
-            <div className="flex flex-row items-center justify-between">
-              <h1 className="text-[14px] font-semibold uppercase">
+            <div className='flex flex-row items-center justify-between'>
+              <h1 className='text-[14px] font-semibold uppercase'>
                 {policy.title || ''}
               </h1>
-              <p className="text-[12px] text-gray-400">
+              <p className='text-[12px] text-gray-400'>
                 {getTimeAgo(policy.updatedAt || '')}
               </p>
             </div>
 
-            <div className="flex flex-row items-center justify-between">
-              <div className="flex flex-row items-center gap-5">
+            <div className='flex flex-row items-center justify-between'>
+              <div className='flex flex-row items-center gap-5'>
                 {/* <Image
                   loader={imageLoader}
                   src="/annoucementIconRed.png"
@@ -104,9 +102,9 @@ const AllPolicies = () => {
                 /> */}
                 <PolicyIcon />
 
-                <p className="text-[12px]">
+                <p className='text-[12px]'>
                   Posted by:{' '}
-                  <span className="font-semibold">
+                  <span className='font-semibold'>
                     {policy?.users
                       ? `${policy.users.firstName || ''} ${
                           policy.users.lastName || ''
@@ -114,9 +112,9 @@ const AllPolicies = () => {
                       : 'Unknown'}
                   </span>
                 </p>
-                <p className="text-[12px]">
+                <p className='text-[12px]'>
                   Effective Date:{' '}
-                  <span className="font-semibold">
+                  <span className='font-semibold'>
                     {new Date(policy.effectiveDate).toLocaleDateString(
                       'en-US',
                       {
@@ -130,7 +128,7 @@ const AllPolicies = () => {
               </div>
               <button
                 onClick={() => router.push(`/user/home/policy/${policy.id}`)}
-                className="border p-2 px-3 text-[12px] rounded flex flex-row items-center gap-2 "
+                className='border p-2 px-3 text-[12px] rounded flex flex-row items-center gap-2 '
               >
                 View <FaArrowUp style={{ transform: 'rotate(45deg)' }} />
               </button>

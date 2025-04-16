@@ -23,6 +23,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import imageLoader from '../../../imageLoader';
 import UploadProfilePicture from '../UserInformation/UploadProfilePicture';
 import { calculateDuration } from '@/lib/calculateDuration';
+import { formatDate } from '@/utils/misc';
 
 const ProfileCard = ({
   setEditEmployee,
@@ -51,7 +52,7 @@ const ProfileCard = ({
   }, [employeeData?.profilePictureUrl]);
 
   const hireDate = employeeData?.hireDate
-    ? new Date(employeeData.hireDate).toLocaleDateString()
+    ? formatDate(employeeData.hireDate)
     : '';
 
   const logedInUser = useSelector((state: RootState) => state.myInfo?.user);
