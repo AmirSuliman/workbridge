@@ -1,19 +1,16 @@
 'use client';
-import React from 'react';
-import { Provider } from 'react-redux';
 import { store } from '@/store/store';
-import { Toaster } from 'react-hot-toast';
 import { SessionProvider } from 'next-auth/react';
+import React from 'react';
+import { Toaster } from 'react-hot-toast';
+import { Provider } from 'react-redux';
 
-const Providers: React.FC<{ children: React.ReactNode; session: any }> = ({
-  children,
-  session,
-}) => {
+const Providers: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <SessionProvider session={session}>
+    <SessionProvider>
       <Provider store={store}>
         {children}
-        <Toaster position="top-right" reverseOrder={false} gutter={12} />
+        <Toaster position='top-right' reverseOrder={false} gutter={12} />
       </Provider>
     </SessionProvider>
   );

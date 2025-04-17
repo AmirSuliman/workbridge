@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { Session } from 'next-auth';
-import { getSession } from 'next-auth/react';
 import { BASE_URL } from '../constants/apiRoutes';
 
 const axiosInstance = axios.create({
@@ -25,18 +24,6 @@ axiosInstance.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
-
-// axiosInstance.interceptors.request.use(
-//     (config) => {
-//         if (token) {
-//             config.headers['Authorization'] = `Bearer ${token}`;
-//         }
-//         return config;
-//     },
-//     (error) => {
-//         return Promise.reject(error);
-//     }
-// );
 
 axiosInstance.interceptors.response.use(
   (response) => response,

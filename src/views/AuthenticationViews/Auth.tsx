@@ -155,7 +155,6 @@ const Auth = () => {
     };
   }, [dispatch, handleRedirect]);
 
-  // Add cache control headers
   const onSubmit = async (data: AuthFormInputs) => {
     try {
       setIsLoading(true);
@@ -172,8 +171,14 @@ const Auth = () => {
         setIsLoading(false);
         return;
       }
-      const accessToken = res?.data?.data?.accessToken;
+
+      const accessToken = res?.data?.data?.accessToken.accessToken;
+
+      // Store token in localStorage for client-side access
       localStorage.setItem('accessToken', accessToken!);
+
+      // Store token in cookie for middleware access
+      document.cookie = `accessToken=${accessToken}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
 
       if (accessToken) {
         try {

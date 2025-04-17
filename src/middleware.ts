@@ -1,9 +1,6 @@
+// middleware.ts
 import { jwtDecode } from 'jwt-decode';
-import { User } from 'next-auth';
-import { getToken } from 'next-auth/jwt';
-import { withAuth } from 'next-auth/middleware';
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 // Define routes as constants for better maintainability
 const ROUTES = {
@@ -39,26 +36,33 @@ const ROLE_ACCESS = {
   },
 };
 
-export default withAuth(
-  async function middleware(request: NextRequest) {
-    console.log('Middleware triggered');
+export function middleware(request: NextRequest) {
+  console.log('Middleware triggered');
 
-    let token = localStorage.getItem('accessToken');
-    if (token?.startsWith('Bearer ')) {
-      token = token.replace('Bearer ', '');
-    }
-    const user = jwtDecode(token!.trim()) as any;
-    const pathname = request.nextUrl.pathname;
-    const userRole = user.user!.role as UserRole | undefined;
+  const pathname = request.nextUrl.pathname;
+
+  // Get the token from the cookies instead of localStorage
+  const token = request.cookies.get('accessToken')?.value;
+
+  // Handle unauthenticated users
+  if (!token && pathname !== ROUTES.SIGN_IN) {
+    return NextResponse.redirect(new URL(ROUTES.SIGN_IN, request.url));
+  }
+
+  // Skip further processing if no token
+  if (!token) {
+    return NextResponse.next();
+  }
+
+  try {
+    // Decode the JWT token
+    const decoded = jwtDecode(token) as any;
+    const userRole = decoded?.user?.role as UserRole | undefined;
+
     console.log('User Role:', userRole);
 
-    // Handle unauthenticated users
-    if (!token && pathname !== ROUTES.SIGN_IN) {
-      return NextResponse.redirect(new URL(ROUTES.SIGN_IN, request.url));
-    }
-
-    // Skip further processing if no token or no role
-    if (!token || !userRole) {
+    // Skip further processing if no role
+    if (!userRole) {
       return NextResponse.next();
     }
 
@@ -89,15 +93,20 @@ export default withAuth(
         new URL(roleAccess.defaultRedirect, request.url)
       );
     }
+  } catch (error) {
+    // Invalid token
+    console.error('Token decode error:', error);
 
-    return NextResponse.next();
-  },
-  {
-    pages: {
-      signIn: ROUTES.SIGN_IN,
-    },
+    // For invalid tokens, clear the cookie and redirect to sign-in
+    const response = NextResponse.redirect(
+      new URL(ROUTES.SIGN_IN, request.url)
+    );
+    response.cookies.delete('accessToken');
+    return response;
   }
-);
+
+  return NextResponse.next();
+}
 
 export const config = {
   // Be specific about what paths to match to avoid unnecessary middleware execution
