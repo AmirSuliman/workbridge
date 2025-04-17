@@ -150,9 +150,12 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
       if (response.status === 200) {
         toast.success('Request timeoff made successfuly!');
         setIsModalOpen(false);
-        setStartDate(null);
-        setEndDate(null);
-        setNote('');
+      setStartDate(null);
+      setEndDate(null);
+      setNote('');
+      setVacationDaysUsed(0);
+      setApiCalculatedDays(0);
+      setHolidaysErrors([]);
       }
     } catch (error) {
       console.error('Error:', error);
