@@ -26,6 +26,7 @@ interface HolidaysErrorsProps {
 const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
   const totalDays = employeeData?.vacationLeaveCounter;
   const totalDaysUsed = employeeData?.vacationDaysUsed;
+  console.log(totalDaysUsed, 'total days used');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [holidaysErrors, setHolidaysErrors] = useState<HolidaysErrorsProps[]>(
     []
@@ -150,12 +151,13 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
       if (response.status === 200) {
         toast.success('Request timeoff made successfuly!');
         setIsModalOpen(false);
-      setStartDate(null);
-      setEndDate(null);
-      setNote('');
-      setVacationDaysUsed(0);
-      setApiCalculatedDays(0);
-      setHolidaysErrors([]);
+        setStartDate(null);
+        setEndDate(null);
+        setNote('');
+        setVacationDaysUsed(0);
+        setApiCalculatedDays(0);
+        setHolidaysErrors([]);
+        
       }
     } catch (error) {
       console.error('Error:', error);
@@ -188,7 +190,16 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
     }
     setIsModalOpen(true);
   };
-
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setStartDate(null);
+    setEndDate(null);
+    setNote('');
+    setVacationDaysUsed(0);
+    setApiCalculatedDays(0);
+    setHolidaysErrors([]);
+  };
+  
   return (
     <>
       <RequestCard
@@ -200,13 +211,8 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
       />
 
       {isModalOpen && (
-        <Modal
-          onClose={() => {
-            setIsModalOpen(false);
-            setStartDate(null);
-            setEndDate(null);
-          }}
-        >
+        <Modal onClose={handleCloseModal}>
+
           <div className='p-6 w-full sm:w-[600px]'>
             <div className='flex flex-row items-center gap-2'>
               <Image
@@ -345,7 +351,7 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
               </button>
               <button
                 type='button'
-                onClick={() => setIsModalOpen(false)}
+                onClick={handleCloseModal}
                 className='mt-4 px-4 py-3 border rounded w-full'
               >
                 Close
