@@ -5,6 +5,14 @@ import { HiMiniGlobeAmericas, HiMiniHomeModern } from 'react-icons/hi2';
 import BasicInfoIcon from '../icons/basic-info-icon';
 import FormHeading from './FormHeading';
 import { Controller } from 'react-hook-form';
+import { useEffect } from 'react';
+import axiosInstance from '@/lib/axios';
+import { useState } from 'react';
+
+type Country = {
+  id: number;
+  country: string;
+};
 
 const UserInfoSection = ({
   errors,
@@ -14,6 +22,23 @@ const UserInfoSection = ({
   editEmployee,
   handleFileChange,
 }) => {
+  const [countries, setCountries] = useState<Country[]>([]);
+ 
+
+   useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const countriesResponse = await axiosInstance.get('/countries');
+          if (countriesResponse.data?.data?.items) {
+            setCountries(countriesResponse.data.data.items);
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+  
+      fetchData();
+    }, []);
   return (
     <main className="p-4 rounded-md border-[1px] border-gray-border bg-white h-full">
       {/* Basic Information */}
@@ -144,6 +169,37 @@ const UserInfoSection = ({
               <p className="text-red-500">{errors?.email.message}</p>
             )}
           </label>
+
+          <label className="form-label">
+              Country*
+              {editEmployee ? (
+                <select
+                  className="form-input"
+                  {...register('countryId', { valueAsNumber: true })}
+                >
+                  <option value="">Select Country</option>
+                  {countries.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.country}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  className="form-input"
+                  value={
+                    countries.find((c) => c.id === Number(control._formValues?.countryId))?.country || ''
+                  }                  
+                  readOnly={!editEmployee}
+
+                />
+              )}
+              {errors?.countryId && (
+                <p className="form-error">{errors?.countryId.message}</p>
+              )}
+            </label>
+
         </div>
       </div>
       <hr className="text-white" />

@@ -12,7 +12,9 @@ export interface Department {
   id: number;
   name: string;
 }
-
+export interface Country{
+  country:string
+}
 export interface EmployeeData {
   id: number;
   parentId: number | null;
@@ -39,16 +41,18 @@ export interface EmployeeData {
   instagram: string | null;
   website: string | null;
   profilePictureUrl: string;
+  country:Country;
   location: Location;
   locationId: number;
   department: Department;
   departmentId: number;
+  sickDaysUsed: number;
   sickLeaveCounter: number;
   vacationLeaveCounter: number;
+  vacationDaysUsed: number;
   effectiveDate: string | null;
   reportingManagerId: number | null;
   surveyStatus?: { status: string }[];
-
 }
 
 type question = {

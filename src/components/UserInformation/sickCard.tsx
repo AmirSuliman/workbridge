@@ -1,19 +1,21 @@
 'use client';
 import Modal from '@/components/modal/Modal';
 import axiosInstance from '@/lib/axios';
+import { EmployeeData } from '@/types/employee';
+import { isAxiosError } from 'axios';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { addDays } from 'date-fns';
-import { isAxiosError } from 'axios';
-import imageLoader from '../../../imageLoader';
-import SickLeaveAttachments, { uploadFiles } from './SickLeaveAttachments';
+import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
+import imageLoader from '../../../imageLoader';
+import RequestCard from './RequestCard';
+import SickLeaveAttachments, { uploadFiles } from './SickLeaveAttachments';
+
 interface SickCardProps {
   onButtonClick?: () => void;
-  totalDays: number;
+  employeeData: EmployeeData;
 }
 
 interface HolidaysErrorsProps {
@@ -22,12 +24,15 @@ interface HolidaysErrorsProps {
   title: string;
 }
 
-const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
+const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
+  const totalDays = employeeData?.sickLeaveCounter;
+  const totalDaysUsed = employeeData?.sickDaysUsed;
+
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
-  const [vacationDaysUsed, setVacationDaysUsed] = useState(0);
+  const [sickDaysUsed, setsickDaysUsed] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [holidaysErrors, setHolidaysErrors] = useState<HolidaysErrorsProps[]>(
@@ -82,23 +87,39 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
     return current;
   };
 
-  useEffect(() => {
-    if (startDate) {
-      setVacationDaysUsed(calculateDuration());
+  const fetchVacationDuration = async (start: Date, end: Date) => {
+    try {
+      const response = await axiosInstance.post('/timeoff/duration', {
+        leaveDay: formatDate(start),
+        returningDay: formatDate(end),
+      });
+  
+      if (response.status === 200) {
+        setsickDaysUsed(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching vacation duration:', error);
+      setsickDaysUsed(0); // fallback or error value
     }
-  }, [startDate, endDate, calculateDuration]);
+  };
+  console.log(sickDaysUsed, 'sick days');
+  useEffect(() => {
+    if (startDate && endDate) {
+      fetchVacationDuration(startDate, endDate);
+    }
+  }, [startDate, endDate]);
 
   useEffect(() => {
     if (startDate && !endDate) {
       // Only auto-calculate if endDate hasn't been set by the user
       const newEndDate = calculateReturningDate(
         startDate,
-        vacationDaysUsed,
+        sickDaysUsed,
         totalDays
       );
       setEndDate(newEndDate);
     }
-  }, [startDate, vacationDaysUsed, totalDays, endDate]);
+  }, [startDate, sickDaysUsed, totalDays, endDate]);
 
   const formatDate = (date) => {
     if (!date) return '';
@@ -181,43 +202,14 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
 
   return (
     <>
-      <div className="flex items-center justify-between border border-gray-border rounded-[10px] bg-white p-3 md:p-6 md:gap-[3.3rem] w-full">
-        <div className="flex flex-col justify-between gap-[2rem] h-full">
-          <div>
-            <div className="flex gap-2 items-center mb-2">
-              <div className="flex items-center justify-center rounded-full p-1">
-                <Image
-                  loader={imageLoader}
-                  src="/sickleave.png"
-                  alt="img"
-                  width={25}
-                  height={25}
-                />
-              </div>
-              <h3 className="text-dark-navy font-[500] text-sm">
-                Request Sick Leave
-              </h3>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={handleButtonClick}
-            className={`text-white bg-dark-navy py-2 w-[15rem] rounded-[4px] font-[400] text-sm ${
-              totalDays === 0 ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            disabled={totalDays === 0}
-          >
-            Request Sick leave
-          </button>
-        </div>
-
-        <div className="flex flex-col border border-gray-border items-center justify-center rounded-[7px] h-full px-4">
-          <span className="text-lg text-dark-navy font-[400]">
-            {totalDays ?? 0}
-          </span>
-          <span className="text-xs text-dark-navy">days left</span>
-        </div>
-      </div>
+      <RequestCard
+        type='sick'
+        totalDays={totalDays}
+        totalDaysUsed={totalDaysUsed}
+        onClick={handleButtonClick}
+        imageSrc='/sickleave.png'
+        imageAlt='Sick leave'
+      />
 
       {isModalOpen && (
         <Modal
@@ -227,23 +219,23 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
             setEndDate(null);
           }}
         >
-          <div className="p-6 w-full sm:w-[600px]">
-            <div className="flex flex-row items-center gap-2">
+          <div className='p-6 w-full sm:w-[600px]'>
+            <div className='flex flex-row items-center gap-2'>
               <Image
                 loader={imageLoader}
-                src="/sickleave.png"
-                alt="img"
+                src='/sickleave.png'
+                alt='img'
                 width={40}
                 height={40}
               />
-              <h2 className="text-2xl font-semibold">Request Sick Leave</h2>
+              <h2 className='text-2xl font-semibold'>Request Sick Leave</h2>
             </div>
             {/* if holidays errors exist then show it as a list */}
             {holidaysErrors.length > 0 && (
-              <section className="my-4 rounded border-2 border-red-500 p-3 relative">
+              <section className='my-4 rounded border-2 border-red-500 p-3 relative'>
                 <button
-                  type="button"
-                  className="absolute -top-2 -right-2 font-medium text-lg border-[1px] border-black bg-white flex items-center justify-center grow-0 shrink-0 rounded-full p-1 size-[20px]"
+                  type='button'
+                  className='absolute -top-2 -right-2 font-medium text-lg border-[1px] border-black bg-white flex items-center justify-center grow-0 shrink-0 rounded-full p-1 size-[20px]'
                   onClick={() => {
                     setHolidaysErrors([]);
                     setStartDate(null);
@@ -252,12 +244,12 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                 >
                   x
                 </button>
-                <h1 className="font-medium text-lg mb-2">
+                <h1 className='font-medium text-lg mb-2'>
                   Following are the holidays, you cannot make a leave request on
                   these days.
                 </h1>
                 {holidaysErrors.map((holidayError, index) => (
-                  <ul key={index} className="space-y-2 list-disc ml-4">
+                  <ul key={index} className='space-y-2 list-disc ml-4'>
                     <li>
                       {holidayError.title} (
                       {new Date(holidayError.date).toLocaleDateString()})
@@ -266,19 +258,24 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                 ))}
               </section>
             )}
-            <div className="grid grid-cols-2 gap-4 w-full mt-8">
-              <label className="flex flex-col w-full">
-                <span className="text-gray-400 text-[12px]">Leaving Date</span>
+            <div className='grid grid-cols-2 gap-4 w-full mt-8'>
+              <label className='flex flex-col w-full'>
+                <span className='text-gray-400 text-[12px]'>Leaving Date</span>
                 <DatePicker
                   selected={startDate}
-                  onChange={(date) => setStartDate(date)}
+                  onChange={(date) => {
+                    setStartDate(date);
+                    setEndDate(null);
+                  }}
                   selectsStart
                   startDate={startDate}
                   endDate={endDate}
-                  minDate={new Date()}
-                  dateFormat="MM/dd/yyyy"
-                  placeholderText="mm/dd/yyyy"
-                  className="p-3 border rounded w-full"
+                  minDate={
+                    new Date(new Date().setDate(new Date().getDate() + 1))
+                  } // tomorrow
+                  dateFormat='MM/dd/yyyy'
+                  placeholderText='mm/dd/yyyy'
+                  className='p-3 border rounded w-full'
                   filterDate={(date) => {
                     const day = date.getDay();
                     return day !== 0 && day !== 6;
@@ -286,8 +283,8 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                 />
               </label>
 
-              <label className="flex flex-col w-full">
-                <span className="text-gray-400 text-[12px]">
+              <label className='flex flex-col w-full'>
+                <span className='text-gray-400 text-[12px]'>
                   Returning Date
                 </span>
                 <DatePicker
@@ -306,9 +303,9 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                         ) || undefined
                       : undefined
                   }
-                  dateFormat="MM/dd/yyyy"
-                  placeholderText="mm/dd/yyyy"
-                  className="p-3 border rounded w-full"
+                  dateFormat='MM/dd/yyyy'
+                  placeholderText='mm/dd/yyyy'
+                  className='p-3 border rounded w-full'
                   disabled={!startDate}
                   filterDate={(date) => {
                     const day = date.getDay();
@@ -316,26 +313,33 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
                   }}
                 />
               </label>
-              <label className="flex flex-col w-full col-span-full">
-                <span className="text-gray-400 text-[12px]">Note</span>
+              <label className='flex flex-col w-full col-span-full'>
+                <span className='text-gray-400 text-[12px]'>Note</span>
                 <textarea
-                  placeholder="Add a message (optional)"
-                  name="note"
+                  placeholder='Add a message (optional)'
+                  name='note'
                   rows={5}
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  className="p-3 border rounded w-full"
+                  className='p-3 border rounded w-full'
                 ></textarea>
               </label>
             </div>
 
-            <div className="h-[1px] w-full bg-gray-200 mt-8" />
+            <div className='h-[1px] w-full bg-gray-200 mt-8' />
 
             {/* Display the vacation duration */}
-            <div className="flex flex-row gap-4 items-center mt-4">
-              <p className="text-[14px]">Vacation days left</p>
-              <div className="text-[14px] border rounded p-3 px-12">
-                {vacationDaysUsed} days
+            
+            <div className='flex flex-row gap-4 items-center mt-4'>
+              <p className='text-[14px]'>Sick days requested:</p>
+              <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
+                {sickDaysUsed} days
+              </div>
+            </div>
+            <div className='flex flex-row gap-4 items-center mt-4 '>
+              <p className='text-[14px]'>Total Sick days remaining:</p>
+              <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
+                {totalDays - sickDaysUsed} days
               </div>
             </div>
             <br />
@@ -344,24 +348,16 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
               setSelectedFiles={setSelectedFiles}
             />
 
-            <div className="flex flex-row  px-6 w-full gap-4 mt-16">
-              {/* <button
-                type="button"
-                onClick={handleRequestVacation}
-                className="mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full"
-                disabled={loading}
-              >
-                {loading ? 'Submitting...' : 'Request Sick Leave'}
-              </button> */}
+            <div className='flex flex-row  px-6 w-full gap-4 mt-16'>
               <button
-                type="button"
+                type='button'
                 onClick={handleRequestVacation}
-                className="mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full"
-                disabled={loading}
+                className='mt-4 px-4 py-3 bg-dark-navy text-white rounded w-full disabled:opacity-70 disabled:cursor-not-allowed'
+                disabled={sickDaysUsed === 0 || loading}
               >
                 {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <BiLoaderCircle className="h-5 w-5 animate-spin" />
+                  <span className='flex items-center justify-center gap-2'>
+                    <BiLoaderCircle className='h-5 w-5 animate-spin' />
                   </span>
                 ) : (
                   'Request Sick Leave'
@@ -369,9 +365,9 @@ const SickCard = ({ onButtonClick, totalDays }: SickCardProps) => {
               </button>
               <button
                 disabled={loading}
-                type="button"
+                type='button'
                 onClick={() => setIsModalOpen(false)}
-                className="mt-4 px-4 py-3 border rounded w-full"
+                className='mt-4 px-4 py-3 border rounded w-full'
               >
                 Close
               </button>

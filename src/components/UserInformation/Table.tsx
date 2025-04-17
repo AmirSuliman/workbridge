@@ -33,9 +33,15 @@ const Table: React.FC<TableProps> = ({
   tableConfig = {},
   onSelectionChange,
   isLoading = false,
-  loader = <div className='h-full'><BiLoaderCircle className="mt-[5%] h-8 w-8 animate-spin mx-auto" /></div>,
+  loader = (
+    <div className='h-full'>
+      <BiLoaderCircle className='mt-[5%] h-8 w-8 animate-spin mx-auto' />
+    </div>
+  ),
 }) => {
-  const [selectedRows, setSelectedRows] = useState<{ [key: string]: any }[]>([]);
+  const [selectedRows, setSelectedRows] = useState<{ [key: string]: any }[]>(
+    []
+  );
 
   const handleRowSelection = (rowData: { [key: string]: any }) => {
     const isSelected = selectedRows.some((row) => row === rowData);
@@ -56,29 +62,29 @@ const Table: React.FC<TableProps> = ({
   };
 
   return (
-    <div className="overflow-x-auto max-w-[86vw] min-h-[40vh] sm:w-full">
-      <table className="min-w-full table-auto border-collapse">
+    <div className='overflow-x-auto max-w-[86vw] min-h-[40vh] sm:w-full'>
+      <table className='min-w-full table-auto border-collapse'>
         <thead>
           <tr>
             {tableConfig.selectable && (
-              <th className="text-xs py-2 px-2 text-gray-400 whitespace-nowrap"></th>
+              <th className='text-xs py-2 px-2 text-gray-400 whitespace-nowrap'></th>
             )}
             {headers.map((header) => (
               <th
                 key={header.accessor}
-                className="text-xs text-left py-2 px-2 text-gray-400 whitespace-nowrap font-[500]"
+                className='text-xs text-left py-2 px-2 text-gray-400 whitespace-nowrap font-[500]'
               >
                 {header.title}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody        >
+        <tbody>
           {isLoading ? (
             <tr>
               <td
                 colSpan={headers.length + (tableConfig.selectable ? 1 : 0)}
-                className="text-center py-6"
+                className='text-center py-6'
               >
                 {loader}
               </td>
@@ -90,12 +96,12 @@ const Table: React.FC<TableProps> = ({
                 className={tableConfig.rowBorder ? 'border-b' : ''}
               >
                 {tableConfig.selectable && (
-                  <td className="text-center py-2 px-2">
+                  <td className='text-center py-2 px-2'>
                     <input
-                      type="checkbox"
+                      type='checkbox'
                       checked={selectedRows.includes(row)}
                       onChange={() => handleRowSelection(row)}
-                      className="form-checkbox h-4 w-4 text-gray-border hover:cursor-pointer"
+                      className='form-checkbox h-4 w-4 text-gray-border hover:cursor-pointer'
                     />
                   </td>
                 )}
@@ -110,7 +116,7 @@ const Table: React.FC<TableProps> = ({
                   return (
                     <td
                       key={`${rowIndex}-${header.accessor}`}
-                      className="text-xs py-2 px-2 text-dark-navy"
+                      className='text-xs py-2 px-2 text-dark-navy whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] sm:max-w-none'
                     >
                       {content as any}
                     </td>
@@ -122,7 +128,7 @@ const Table: React.FC<TableProps> = ({
             <tr>
               <td
                 colSpan={headers.length + (tableConfig.selectable ? 1 : 0)}
-                className="text-center py-6 text-gray-500"
+                className='text-center py-6 text-gray-500'
               >
                 No data available
               </td>

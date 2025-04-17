@@ -16,7 +16,7 @@ const InfoGrid: React.FC<InfoGridProps> = ({
   colSpans = [],
 }) => {
   return (
-    <div className="overflow-x-auto max-w-[86vw] sm:w-full">
+    <div className='overflow-x-auto max-w-[86vw] sm:w-full'>
       <div
         className={classNames(` grid  gap-4 mb-2 mt-4`, `grid-cols-${cols}`)}
       >
@@ -43,7 +43,7 @@ const InfoGrid: React.FC<InfoGridProps> = ({
           ))}
 
         {/* Horizontal line spanning all columns */}
-        <hr className="col-span-8" />
+        <hr className='col-span-8' />
 
         {/* Render Rows with Dynamic Column Span */}
         {values.map((row, rowIndex) => {

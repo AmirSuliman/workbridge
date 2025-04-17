@@ -37,26 +37,28 @@ const LeaveAndVacationCardsCombined = () => {
   ]);
 
   return (
-    <div className="flex gap-4 flex-wrap lg:flex-nowrap p-4">
+    <div className='flex gap-4 flex-wrap lg:flex-nowrap p-4'>
       <LeaveAndVacationCard
-        title="Vacation"
-        bgColor="#25A244"
+        title='Vacation'
+        bgColor='#25A244'
         icon={
-          <img src="/vacation.svg" alt="Vacation Icon" className="w-4 h-4" />
+          <img src='/vacation.svg' alt='Vacation Icon' className='w-4 h-4' />
         }
-        description="Requests must be made at least 2 weeks prior to submission."
+        description='Requests must be made at least 2 weeks prior to submission.'
         daysNum={String(employeeData?.vacationLeaveCounter || '0')}
-        name="Request Vacation"
+        name='Request Vacation'
+        tooltipText='Please note that your accrued vacation days are valid until December 31st of the current calendar year. We kindly encourage you to plan your time off in advance, as any unused days will expire at year-end.'
       />
       <LeaveAndVacationCard
-        title="Sick leave"
-        bgColor="#F53649"
+        title='Sick leave'
+        bgColor='#F53649'
         icon={
-          <img src="/sickicon.svg" alt="Vacation Icon" className="w-5 h-5" />
+          <img src='/sickicon.svg' alt='Vacation Icon' className='w-5 h-5' />
         }
-        description=""
+        description=''
         daysNum={String(employeeData?.sickLeaveCounter || '0')}
-        name="Request Sick Leave"
+        name='Request Sick Leave'
+        tooltipText='Sick leave days will reset to 0 at the end of the year.'
       />
     </div>
   );

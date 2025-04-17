@@ -1,17 +1,16 @@
-import { FaDownload } from 'react-icons/fa6';
-import SimpleBarChart from './charts/quartleychart';
-import { BiTrendingUp } from 'react-icons/bi';
-import toast from 'react-hot-toast';
-import { isAxiosError } from 'axios';
 import axiosInstance from '@/lib/axios';
+import { isAxiosError } from 'axios';
 import { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { BiTrendingUp } from 'react-icons/bi';
+import { FaDownload } from 'react-icons/fa6';
 import * as XLSX from 'xlsx';
+import SimpleBarChart from './charts/quartleychart';
 
 // Download logic for PDF
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { FaFilePdf } from 'react-icons/fa';
 
 const downloadPDF = async (
   data,
@@ -256,61 +255,59 @@ const QuarterlyReport = () => {
   };
 
   return (
-    <div ref={reportRef} className="p-6 bg-white border rounded-lg">
-      <div className="flex flex-row items-center justify-between w-full mb-12">
-        <div className="flex flex-row items-center gap-2">
-          <BiTrendingUp className="text-gray-600" />
-          <span className="font-medium">Quarterly Reports</span>
+    <div ref={reportRef} className='p-6 bg-white border rounded-lg'>
+      <div className='flex flex-row items-center justify-between w-full mb-12 flex-wrap gap-2'>
+        <div className='flex flex-row items-center gap-2'>
+          <BiTrendingUp className='text-gray-600' />
+          <span className='font-medium'>Quarterly Reports</span>
         </div>
-        <div className="flex flex-row items-center gap-4">
-          <div className="text-sm text-gray-400 flex flex-row items-center gap-2">
-            Year:
-            <select
-              className="form-input font-medium"
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(Number(e.target.value))}
-            >
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="text-sm text-gray-400 flex flex-row items-center gap-2">
-            Quarter:
-            <select
-              className="form-input font-medium"
-              value={selectedQuarter}
-              onChange={(e) => setSelectedQuarter(e.target.value)}
-            >
-              <option value="all">All Quarters</option>
-              <option value="1">Q1</option>
-              <option value="2">Q2</option>
-              <option value="3">Q3</option>
-              <option value="4">Q4</option>
-            </select>
-          </div>
-          <button
-            onClick={handleDownload}
-            disabled={isDownloading || chartData.length === 0}
-            className="p-2 bg-black rounded text-white text-sm flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+        <div className='text-sm text-gray-400 flex flex-row items-center gap-2 lg:mr-0 lg:ml-auto'>
+          Year:
+          <select
+            className='form-input font-medium'
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
           >
-            <FaDownload /> {isDownloading ? 'Downloading...' : 'Download'}
-          </button>
-          {/* <button
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className='text-sm text-gray-400 flex flex-row items-center gap-2'>
+          Quarter:
+          <select
+            className='form-input font-medium'
+            value={selectedQuarter}
+            onChange={(e) => setSelectedQuarter(e.target.value)}
+          >
+            <option value='all'>All Quarters</option>
+            <option value='1'>Q1</option>
+            <option value='2'>Q2</option>
+            <option value='3'>Q3</option>
+            <option value='4'>Q4</option>
+          </select>
+        </div>
+        <button
+          onClick={handleDownload}
+          disabled={isDownloading || chartData.length === 0}
+          className='p-2 bg-black rounded text-white text-sm flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed'
+        >
+          <FaDownload /> {isDownloading ? 'Downloading...' : 'Download'}
+        </button>
+        {/* <button
             onClick={handlePdfDownload}
             disabled={isPdfDownloading || chartData.length === 0}
             className="p-2 bg-black rounded text-white text-sm flex flex-row items-center gap-2 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             <FaFilePdf /> {isPdfDownloading ? 'Downloading...' : 'PDF'}
           </button> */}
-        </div>
       </div>
       {chartData.length > 0 ? (
         <SimpleBarChart data={chartData} />
       ) : (
-        <div className="flex items-center justify-center h-[350px] text-gray-400">
+        <div className='flex items-center justify-center h-[350px] text-gray-400'>
           No data available for the selected period
         </div>
       )}

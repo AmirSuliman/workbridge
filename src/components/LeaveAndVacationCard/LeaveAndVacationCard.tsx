@@ -4,6 +4,7 @@ import Button from '../Button';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSession } from 'next-auth/react';
+import InfoTooltip from '../common/InfoTooltip';
 
 const LeaveAndVacationCard = ({
   title,
@@ -12,6 +13,7 @@ const LeaveAndVacationCard = ({
   description,
   daysNum,
   name,
+  tooltipText,
 }: {
   title: string;
   bgColor: string;
@@ -19,6 +21,7 @@ const LeaveAndVacationCard = ({
   description: string;
   daysNum: string;
   name: string;
+  tooltipText: string;
 }) => {
   const router = useRouter();
   const [role, setRole] = useState<string>();
@@ -43,24 +46,27 @@ const LeaveAndVacationCard = ({
   };
 
   return (
-    <div className="border-[0.5px] border-[#E8E8E8] bg-[#F5F6FA] p-4 rounded space-y-2 w-full">
-      <div className="flex items-center gap-2">
+    <div className='border-[0.5px] border-[#E8E8E8] bg-[#F5F6FA] p-4 rounded space-y-2 w-full'>
+      <div className='flex items-center gap-2'>
         <IconWithBg bgColor={bgColor} icon={icon} />
-        <h3 className="text-sm">{title}</h3>
+        <h3 className='text-sm'>{title}</h3>
+        <div className='flex justify-end'>
+          <InfoTooltip text={tooltipText} />
+        </div>
       </div>
-      <div className="flex justify-between items-center gap-2">
-        <p className="text-xs opacity-50">{description}</p>
+      <div className='flex justify-between items-center gap-2'>
+        <p className='text-xs opacity-50'>{description}</p>
         <DaysCard daysNum={daysNum} />
       </div>
 
-      <div onClick={navigateToTimeRequestTab} className="w-full h-fit ">
+      <div onClick={navigateToTimeRequestTab} className='w-full h-fit '>
         <Button
           disabled={daysNum === '0'}
           name={name}
-          icon=""
-          bg="#0F172A"
-          textColor="white"
-          className="w-full mt-8 disabled:opacity-70 disabled:cursor-not-allowed"
+          icon=''
+          bg='#0F172A'
+          textColor='white'
+          className='w-full mt-8 disabled:opacity-70 disabled:cursor-not-allowed'
         />
       </div>
     </div>

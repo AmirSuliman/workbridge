@@ -1,7 +1,7 @@
-'use client';
 import { FaTimes } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import axiosInstance from "@/lib/axios";
+import toast from "react-hot-toast";
 
 interface Folder {
   id: string;
@@ -13,6 +13,7 @@ interface EditdocumentProps {
   documentId: string | null;
   currentTitle: string | null;
   currentFolderId: string | null;
+  onFileUpdated: (updatedFile: any) => void; // ✅ Add this
 }
 
 const Editdocument: React.FC<EditdocumentProps> = ({
@@ -20,15 +21,14 @@ const Editdocument: React.FC<EditdocumentProps> = ({
   documentId,
   currentTitle,
   currentFolderId,
+  onFileUpdated,
 }) => {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [title, setTitle] = useState(currentTitle || "");
   const [folderId, setFolderId] = useState(currentFolderId || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  console.log("Document ID:", documentId);
-  console.log("Current Title:", currentTitle);
-  console.log("Current Folder ID:", currentFolderId);
+
   useEffect(() => {
     const fetchFolders = async () => {
       setLoading(true);
@@ -66,13 +66,22 @@ const Editdocument: React.FC<EditdocumentProps> = ({
       });
 
       if (response.status === 200) {
-        // Handle successful update
-        setIsModalOpen3(false);
-        window.location.reload(); // Refresh the page to reflect changes
+        toast.success("Document updated successfully!");
+
+        const updatedFile = {
+          id: documentId,
+          fileTitle: title.trim(),
+          folderId,
+        };
+        
+        onFileUpdated(updatedFile);
+        
+        setIsModalOpen3(false); // Close the modal after successful update
       } else {
         setError("Failed to update document.");
       }
     } catch (err) {
+      toast.error("Failed to update document.");
       setError("Failed to update document.");
       console.error(err);
     } finally {

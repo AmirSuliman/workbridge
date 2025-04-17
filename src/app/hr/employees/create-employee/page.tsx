@@ -21,6 +21,7 @@ import { TbEdit } from 'react-icons/tb';
 import { useDispatch } from 'react-redux';
 import BasicInfo from '../components/form/BasicInfo';
 import Employment from '../components/form/Employement';
+import SuccessMessage from './SuccessMessage';
 
 interface Country {
   id: number;
@@ -30,6 +31,7 @@ interface Country {
 
 const CreateEmployee = () => {
   const [loader, setLoader] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const router = useRouter();
@@ -103,14 +105,6 @@ const CreateEmployee = () => {
     formState: { errors },
   } = formMethods;
 
-  // useEffect(() => {
-  //   if (Object.keys(errors).length > 0) {
-  //     toast.error(
-  //       'Some input fields are missing in Personal or Employment tab!'
-  //     );
-  //   }
-  // }, [errors]);
-
   const onSubmit = async (data) => {
     // console.log('onsubmit data: ', data);
     const payLoad = {
@@ -161,10 +155,8 @@ const CreateEmployee = () => {
         ...payLoad,
         profilePictureUrl: previewUrl,
       });
-      dispatch(updateEmployeeData(response.data.data));
       toast.success('Employee created successfully!');
-      reset();
-      router.back();
+      setShowSuccess(true);
       console.log('post employee: ', response.data);
       setLoader(false);
     } catch (error) {
@@ -203,34 +195,42 @@ const CreateEmployee = () => {
 
   return (
     <main>
-      <div className="flex justify-between">
-        <h1 className="flex items-center gap-x-2">
+      {showSuccess && (
+        <SuccessMessage
+          onClose={() => {
+            router.push('/hr/employees');
+            setShowSuccess(false);
+          }}
+        />
+      )}
+      <div className='flex justify-between'>
+        <h1 className='flex items-center gap-x-2'>
           <TbEdit />
           <span>Create Employee</span>
         </h1>
-        <div className="flex items-center gap-x-2">
-          <Button name="Save Draft" />
+        <div className='flex items-center gap-x-2'>
+          <Button name='Save Draft' />
           <Button
-            name="Cancel"
-            className="bg-transparent border-none !text-black"
+            name='Cancel'
+            className='bg-transparent border-none !text-black'
             onClick={() => router.back()}
           />
         </div>
       </div>
       {/* tabs */}
-      <div className="my-1 pb-2 md:pb-4">
-        <div className="flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto ">
+      <div className='my-1 pb-2 md:pb-4'>
+        <div className='flex gap-0  my-2 border-b-[1px] border-gray-border overflow-x-auto '>
           <TabButton
             isRootTab={true}
             className={hasPersonalErrors ? `!border-red-500 text-red-500` : ''}
-            name="Basic Information"
+            name='Basic Information'
             href={`/hr/employees/create-employee?tab=0`}
           />
           <TabButton
             className={
               hasEmploymentErrors ? `!border-red-500 text-red-500` : ''
             }
-            name="Employment"
+            name='Employment'
             href={`/hr/employees/create-employee?tab=1`}
           />
         </div>
@@ -238,14 +238,14 @@ const CreateEmployee = () => {
           {/* using form provider for multi-step form */}
           <FormProvider {...formMethods}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <TabComponent index="0" isRootTab={true}>
+              <TabComponent index='0' isRootTab={true}>
                 <BasicInfo
                   countries={countries}
                   previewUrl={previewUrl}
                   handleFileChange={handleFileChange}
                 />
               </TabComponent>
-              <TabComponent index="1">
+              <TabComponent index='1'>
                 <Employment loader={loader} />
               </TabComponent>
             </form>

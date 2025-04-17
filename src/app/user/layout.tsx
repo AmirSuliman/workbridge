@@ -16,7 +16,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [role, setRole] = useState<string | null>(null);
-
+  const [showSidbarMenu, setShowSidebarMenu] = useState(false);
   useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession();
@@ -31,29 +31,29 @@ export default function DashboardLayout({
   const navItems = [
     {
       label: 'Home',
-      icon: <HomeIcon classNames="w-4" />,
+      icon: <HomeIcon classNames='w-4' />,
       path: '/user/home',
     },
     {
       label: 'My Information',
-      icon: <UserIcon classNames="w-4" />,
+      icon: <UserIcon classNames='w-4' />,
       path: '/user/my-information',
     },
     {
       label: 'Employees',
-      icon: <EmployeesIcon classNames="w-4" />,
+      icon: <EmployeesIcon classNames='w-4' />,
       path: '/user/employees',
     },
     {
       label: 'Files',
-      icon: <FileIcon classNames="w-4" />,
+      icon: <FileIcon classNames='w-4' />,
       path: '/user/files',
     },
 
     ...(isManager
       ? [
           {
-            label: 'Leave Requests',
+            label: 'Pending Leave Requests',
             icon: <IoCalendarOutline />,
             path: '/user/leave-requests',
           },
@@ -62,11 +62,15 @@ export default function DashboardLayout({
   ];
 
   return (
-    <section className="flex w-full h-full overflow-hidden">
-      <SideNavigation items={navItems}></SideNavigation>
-      <div className="flex flex-col flex-1">
-        <UserHeader />
-        <div className="flex-1 overflow-y-scroll">{children}</div>
+    <section className='flex w-full h-full overflow-hidden'>
+      <SideNavigation
+        setShowSidebarMenu={setShowSidebarMenu}
+        showSidbarMenu={showSidbarMenu}
+        items={navItems}
+      ></SideNavigation>
+      <div className='flex flex-col flex-1'>
+        <UserHeader setShowSidebarMenu={setShowSidebarMenu} />
+        <div className='flex-1 overflow-y-scroll'>{children}</div>
       </div>
     </section>
   );

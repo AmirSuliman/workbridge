@@ -23,6 +23,7 @@ export default {
         'blue-base': '#007BB2',
         'dark-navy': '#0F172A',
         'gray-border': '#E8E8E8',
+        'green-teal': '#00B87D',
       },
       boxShadow: {
         'custom-deep': '0px 4px 77px 0px rgba(0, 0, 0, 0.12)',

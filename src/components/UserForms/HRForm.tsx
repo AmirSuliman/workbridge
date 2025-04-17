@@ -47,6 +47,15 @@ const HRForm = ({ onClose }) => {
   });
 
   const [employees, setEmployees] = useState<EmployeeData[]>([]);
+  const selectedRoleId = watch('roleId');
+
+  useEffect(() => {
+    if (selectedRoleId == 2 || selectedRoleId == 4) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
+  }, [selectedRoleId]);
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -115,7 +124,7 @@ const HRForm = ({ onClose }) => {
     }
   };
 
-  const selectedRoleId = watch('roleId');
+  // const selectedRoleId = watch('roleId');
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -151,23 +160,25 @@ const HRForm = ({ onClose }) => {
               const roleId = Number(e.target.value);
               console.log('Selected Role ID:', roleId);
               setValue('roleId', roleId);
+              if (selectedRoleId == 2 || selectedRoleId == 4) {
+                setIsManager(true);
+              }
             }}
           />
 
-{(Number(selectedRoleId) === 1 || Number(selectedRoleId) === 2 || Number(selectedRoleId) === 3) && (  
-  <div className="flex items-center col-span-2 mt-2 mb-3">
-    <input
-      type="checkbox"
-      id="isManager"
-      checked={isManager}
-      onChange={(e) => setIsManager(e.target.checked)} 
-      className="mr-2"
-    />
-    <label htmlFor="isManager" className="text-sm">Is Manager</label>
-  </div>
-)}
-
-
+          <div className="flex items-center col-span-2 mt-2 mb-3">
+            <input
+              type="checkbox"
+              id="isManager"
+              {...register('isManager')}
+              checked={isManager}
+              onChange={(e) => setIsManager(e.target.checked)}
+              className="mr-2"
+            />
+            <label htmlFor="isManager" className="text-sm">
+              Is Manager
+            </label>
+          </div>
         </div>
 
         <article className="w-full">
@@ -191,28 +202,16 @@ const HRForm = ({ onClose }) => {
         </article>
 
         <article className="w-full">
-          {Number(selectedRoleId) !== 2 && (
-            <select
-              {...register('reportingManagerId')}
-              className="form-input"
-              onChange={(e) => {
-                const managerId = Number(e.target.value);
-                setReportingManagerId(managerId);
-                setValue('reportingManagerId', managerId, {
-                  shouldValidate: true,
-                }); // ✅ Ensure it's set in form state
-              }}
-            >
-              <option value="">Select Manager</option>
-              {employees
-                .filter((employee) => employee.isManager)
-                .map((manager) => (
-                  <option key={manager.id} value={manager.id}>
-                    {manager.firstName} {manager.lastName}
-                  </option>
-                ))}
-            </select>
-          )}
+          <select {...register('reportingManagerId')} className="form-input">
+            <option value="">Select Manager</option>
+            {employees
+              .filter((employee) => employee.isManager)
+              .map((manager) => (
+                <option key={manager.id} value={manager.id}>
+                  {manager.firstName} {manager.lastName}
+                </option>
+              ))}
+          </select>
           {errors.reportingManagerId && (
             <span className="form-error">
               {errors.reportingManagerId.message}

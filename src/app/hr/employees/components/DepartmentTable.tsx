@@ -10,6 +10,9 @@ import { CiCirclePlus } from 'react-icons/ci';
 import { FaSearch } from 'react-icons/fa';
 import CreateDepartment from '../department/components/createdepartment';
 import { useSession } from 'next-auth/react';
+import { GoArrowUpRight } from 'react-icons/go';
+import ButtonWithNav from '@/components/common/ButtonWithNav';
+import SearchInput from '@/components/common/SearchBar';
 
 interface Department {
   id: string;
@@ -93,68 +96,39 @@ const DepartmentTable = () => {
   }, [searchQuery, departments]);
 
   return (
-    <div className="mt-4 p-2 z-10">
+    <div className='mt-4 p-2 z-10'>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-        <div className="flex flex-row items-center gap-2">
+      <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2'>
+        <div className='flex flex-row items-center gap-2'>
           <EmployeesIcon />
-          <h1 className="font-semibold text-[22px]">Departments</h1>
+          <h1 className='font-semibold text-[22px]'>Departments</h1>
         </div>
-        <Link href="employees/charter">
-          <Button
-            bg="white"
-            textColor="black"
-            className="!font-mdium !text-xs"
-            name="See Employee Charter"
-            icon={
-              <svg
-                width="12"
-                height="11"
-                viewBox="0 0 12 11"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M1.49036 10.123L10.9998 0.613646M10.9998 0.613646L3.86771 0.613647M10.9998 0.613646L10.9998 7.7457"
-                  stroke="#0F172A"
-                  strokeWidth="1.15289"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            }
-          />
-        </Link>
+        <ButtonWithNav href='employees/charter' label='See Employee Charter' />
       </div>
 
       {/* Table Container */}
-      <div className="p-6 border border-gray-300 w-full bg-white mt-3 rounded-lg">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+      <div className='p-6 border border-gray-300 w-full bg-white mt-3 rounded-lg'>
+        <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2'>
           {/* Search and Sort */}
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6">
-            <div className="flex flex-row rounded-lg border px-3 py-1 text-gray-400 items-center gap-3 text-[12px]">
-              <FaSearch className="text-gray-400 text-[16px]" />
-              <input
-                type="search"
-                placeholder="Search department"
-                className="border-none focus:outline-none text-[12px] text-gray-700"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="sort" className="mr-2 text-gray-400 text-[12px]">
+          <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6 w-full justify-between'>
+            {/* for search bar */}
+
+            <SearchInput
+              placeholder='Search department'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {/* for sort */}
+            <div className='flex items-center'>
+              <label htmlFor='sort' className='mr-2 text-gray-400 text-xs'>
                 Sort
               </label>
-              <select
-                id="sort"
-                className="border rounded px-2 py-1 text-[12px]"
-              >
-                <option value="">Select</option>
-                <option value="nameAZ">A-Z</option>
-                <option value="nameZA">Z-A</option>
-                <option value="dateAsc">Date Ascending</option>
-                <option value="dateDesc">Date Descending</option>
+              <select id='sort' className='border rounded px-2 py-2 text-xs'>
+                <option value=''>Select</option>
+                <option value='nameAZ'>A-Z</option>
+                <option value='nameZA'>Z-A</option>
+                <option value='dateAsc'>Date Ascending</option>
+                <option value='dateDesc'>Date Descending</option>
               </select>
             </div>
           </div>
@@ -162,46 +136,46 @@ const DepartmentTable = () => {
           {/* Add Button */}
           {!isUserpanel && (
             <button
-              className="flex flex-row text-[12px] items-center gap-2 bg-[#0F172A] p-3 px-4 text-white rounded-lg"
+              className='flex flex-row text-[12px] items-center gap-2 bg-dark-navy p-2 px-4 text-white rounded'
               onClick={() => setIsModalOpen(true)}
             >
               Add new Department
-              <CiCirclePlus className="text-white" size={18} />
+              <CiCirclePlus className='text-white' size={18} />
             </button>
           )}
         </div>
 
         {/* Responsive Table */}
-        <div className="overflow-x-auto mt-6">
+        <div className='overflow-x-auto mt-6'>
           {loading ? (
             <p>Loading...</p>
           ) : error ? (
-            <p className="text-red-500">{error}</p>
+            <p className='text-red-500'>{error}</p>
           ) : (
-            <table className="min-w-full table-auto border-collapse">
+            <table className='min-w-full table-auto border-collapse'>
               <thead>
-                <tr className="border-b text-gray-400 text-[14px]">
-                  <th className="px-4 py-3 text-left fon-medium">Department</th>
-                  <th className="px-4 py-3 text-left fon-medium">Employees</th>
-                  <th className="px-4 py-3 text-left fon-medium">Dept. Head</th>
-                  <th className="px-4 py-3"></th>
+                <tr className='border-b text-gray-400 text-[14px]'>
+                  <th className='px-4 py-3 text-left fon-medium'>Department</th>
+                  <th className='px-4 py-3 text-left fon-medium'>Employees</th>
+                  <th className='px-4 py-3 text-left fon-medium'>Dept. Head</th>
+                  <th className='px-4 py-3'></th>
                 </tr>
               </thead>
-              <tbody className="text-[14px]">
+              <tbody className='text-[14px]'>
                 {filteredDepartments.length > 0 ? (
                   filteredDepartments.map((dept) => (
-                    <tr key={dept.id} className="border-b">
-                      <td className="px-4 py-3">{dept.name}</td>
-                      <td className="px-4 py-3 flex items-center gap-2">
-                        <EmployeesIcon classNames="w-4 " /> {dept.employeeCount}
+                    <tr key={dept.id} className='border-b'>
+                      <td className='px-4 py-3'>{dept.name}</td>
+                      <td className='px-4 py-3 flex items-center gap-2'>
+                        <EmployeesIcon classNames='w-4 ' /> {dept.employeeCount}
                       </td>
-                      <td className="px-4 py-3">
+                      <td className='px-4 py-3'>
                         {dept.department_head_data
                           ? `${dept.department_head_data.firstName} ${dept.department_head_data.lastName}`
                           : 'N/A'}
                       </td>
 
-                      <td className="px-4 py-3">
+                      <td className='px-4 py-3'>
                         <Link
                           href={`${
                             isUserpanel
@@ -209,7 +183,7 @@ const DepartmentTable = () => {
                               : `/hr/employees/department/${dept.id}`
                           }`}
                         >
-                          <div className="p-1 border rounded-lg w-[30px] flex justify-center items-center">
+                          <div className='p-1 border rounded-lg w-[30px] flex justify-center items-center'>
                             <BiChevronRight size={20} />
                           </div>
                         </Link>
@@ -218,7 +192,7 @@ const DepartmentTable = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={4} className="text-center">
+                    <td colSpan={4} className='text-center'>
                       No departments match your search
                     </td>
                   </tr>
