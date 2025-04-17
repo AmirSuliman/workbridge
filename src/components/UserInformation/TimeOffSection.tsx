@@ -196,6 +196,7 @@ const TimeOffSection = ({ employeeData }) => {
 
       const actionCell = canCancel ? (
         <button
+          type='button'
           key={`cancel-${item.id}`}
           onClick={() => handleCancelTimeOff(item)}
           className='px-3 py-1 bg-red-500 text-white text-[12px] m-[-5px] rounded hover:bg-red-600 transition-all'
