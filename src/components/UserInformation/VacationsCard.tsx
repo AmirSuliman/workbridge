@@ -90,7 +90,7 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
         leaveDay: formatDate(start),
         returningDay: formatDate(end),
       });
-  
+
       if (response.status === 200) {
         setVacationDaysUsed(response.data.data);
       }
@@ -105,7 +105,6 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
       fetchVacationDuration(startDate, endDate);
     }
   }, [startDate, endDate]);
-  
 
   useEffect(() => {
     if (startDate && !endDate) {
@@ -318,13 +317,12 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
             <div className='h-[1px] w-full bg-gray-200 mt-8' />
 
             {/* Display the vacation duration */}
-            
+
             <div className='flex flex-row gap-4 items-center mt-4'>
               <p className='text-[14px]'>Vacation days requested:</p>
               <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>
-    {vacationDaysUsed || 0} days
-  </div>
-              
+                {vacationDaysUsed || 0} days
+              </div>
             </div>
             <div className='flex flex-row gap-4 items-center mt-4 '>
               <p className='text-[14px]'>Total vacation days remaining:</p>

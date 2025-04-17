@@ -149,7 +149,7 @@ const AdminScreen = () => {
         textClasses='text-xl font-[600] font-semibold'
         classNames='mb-4'
         icon={<EmployeesIcon classNames='w-6' />}
-        text='Admins'
+        text='Employees & Roles'
       />
       <div className='bg-white border border-gray-border rounded-md p-3'>
         <div className='flex justify-between flex-wrap items-center mb-3'>

@@ -192,7 +192,7 @@ export const AllEmployees = () => {
           </svg>
           Employees
         </h1>
-        <ButtonWithNav href='/employees/charter' label='See Employee Charter' />
+        <ButtonWithNav href='employees/charter' label='See Employee Charter' />
       </nav>
       <main className='bg-white border p-4 rounded-md mt-4'>
         {/* for search bar */}

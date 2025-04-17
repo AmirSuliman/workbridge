@@ -58,16 +58,14 @@ const TimeOffSection = ({ employeeData }) => {
     };
     fetchSession();
   }, []);
-  
+
   useEffect(() => {
     if (role && employeeData?.tittle) {
       console.log('Role:', role);
       console.log('Employee Title:', employeeData.tittle);
     }
   }, [role, employeeData]);
-  
-  
-  
+
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
@@ -144,37 +142,68 @@ const TimeOffSection = ({ employeeData }) => {
     }
   };
 
-  const values = timeOffData
-    .filter((timeoff, index) => timeoff.status === 'Pending')
-    .map((item, index) => [
-      <LabelWithIcon
-        key={index}
-        icon={
-          item.type === 'Vacation' ? (
-            <UmbrellaIcon classNames='w-4 text-white' />
-          ) : (
-            <SickPersonIcon classNames='w-4 text-white' />
-          )
-        }
-        title={item.type}
-        iconStyles={item.type === 'Vacation' ? 'bg-[#00B87D]' : 'bg-[#F53649]'}
-      />,
-      new Date(item.leaveDay).toLocaleDateString(),
-      new Date(item.returningDay).toLocaleDateString(),
-      <span
-        key={`status-${index}`}
-        className={
-          item.status === 'Pending'
-            ? 'text-black'
-            : item.status === 'Confirmed'
-              ? 'text-[#25A244] font-[500]'
-              : 'text-[#F53649]'
-        }
-      >
-        {item.status === 'Pending' ? 'Waiting for Approval' : item.status}
-      </span>,
-    ]);
+  const handleCancelTimeOff = async (item) => {
+    try {
+      await axiosInstance.put(`/timeoff/${item.id}/cancel`);
+      toast.success('Request canceled successfully.');
+    } catch (error) {
+      console.error('Error canceling request:', error);
+    }
+  };
 
+  const values = timeOffData
+    .filter((timeoff) => timeoff.status === 'Pending')
+    .map((item, index) => {
+      const statusText =
+        item.status === 'Pending' ? 'Waiting for Approval' : item.status;
+
+      const baseValues = [
+        <LabelWithIcon
+          key={index}
+          icon={
+            item.type === 'Vacation' ? (
+              <UmbrellaIcon classNames='w-4 text-white' />
+            ) : (
+              <SickPersonIcon classNames='w-4 text-white' />
+            )
+          }
+          title={item.type}
+          iconStyles={
+            item.type === 'Vacation' ? 'bg-[#00B87D]' : 'bg-[#F53649]'
+          }
+        />,
+        new Date(item.leaveDay).toLocaleDateString(),
+        new Date(item.returningDay).toLocaleDateString(),
+        <span
+          key={`status-${index}`}
+          className={
+            item.status === 'Pending'
+              ? 'text-black'
+              : item.status === 'Confirmed'
+                ? 'text-[#25A244] font-[500]'
+                : 'text-[#F53649]'
+          }
+        >
+          {statusText}
+        </span>,
+      ];
+
+      const canCancel = statusText === 'Waiting for Approval';
+
+      const actionCell = canCancel ? (
+        <button
+          key={`cancel-${item.id}`}
+          onClick={() => handleCancelTimeOff(item)}
+          className='px-3 py-1 bg-red-500 text-white text-[12px] m-[-5px] rounded hover:bg-red-600 transition-all'
+        >
+          Cancel Request
+        </button>
+      ) : (
+        <span className='text-xs text-gray-400'> </span>
+      );
+
+      return [...baseValues, actionCell];
+    });
   return (
     <div className='p-1 rounded-md h-full'>
       <div className='flex flex-col md:flex-row gap-6'>
@@ -222,7 +251,7 @@ const TimeOffSection = ({ employeeData }) => {
               ...(employeeData.tittle === 'CEO' && role === 'SuperAdmin'
                 ? []
                 : ['Approved/Denied By']),
-                'Notes',
+              'Notes',
             ]}
             values={timeOffData
               .filter((timeoff) => timeoff.status !== 'Pending')
@@ -249,25 +278,26 @@ const TimeOffSection = ({ employeeData }) => {
                     : employeeData?.sickDaysUsed || '',
                   item?.status === 'Confirmed' ? (
                     <p className='text-[#00B87D]'>Confirmed</p>
+                  ) : item?.status === 'Cancelled' ? (
+                    <p className='text-[#ed6d3e]'>Canceled</p>
                   ) : (
                     <p className='text-[#F53649]'>Denied</p>
                   ),
                 ];
-            
+
                 // Conditionally include "Approved/Denied By"
                 const approvedBy =
                   `${item?.user?.firstName || 'N/A'} ${item?.user?.lastName || ''}`.trim();
-            
+
                 const includeApprovedBy =
                   employeeData.tittle !== 'CEO' || role !== 'SuperAdmin';
-            
+
                 const finalRow = includeApprovedBy
                   ? [...baseValues, approvedBy, item.note || 'N/A']
                   : [...baseValues, item.note || 'N/A'];
-            
+
                 return finalRow;
               })}
-            
           />
         )}
       </div>

@@ -97,7 +97,7 @@ const HrHeader = () => {
             )}
           </div>
           <ButtonWithNav
-            href='/employees/charter'
+            href='employees/charter'
             label='See Employee Charter'
           />
         </>
