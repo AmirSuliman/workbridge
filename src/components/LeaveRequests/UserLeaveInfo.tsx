@@ -85,7 +85,7 @@ const UserLeaveInfo = () => {
   // Callback to update the local state after confirmation
   const updateEmployeeStatus = (
     employeeId: number,
-    newStatus: 'Confirmed' | 'Denied'
+    newStatus: 'Confirmed' | 'Denied' | 'Cancelled'
   ) => {
     setLeaveData((prevData) =>
       prevData.map((employee) =>

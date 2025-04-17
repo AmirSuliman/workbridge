@@ -1,7 +1,6 @@
 'use client';
 import Modal from '@/components/modal/Modal';
 import axiosInstance from '@/lib/axios';
-import { formatFileSize } from '@/utils/formatFileSize';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
@@ -20,6 +19,7 @@ import Editdocument from './components/editdocument';
 import Editfolder from './components/editfolder';
 import Uploadfiles from './components/uploadfiles';
 import mammoth from 'mammoth';
+import { formatFileSize } from '@/utils/misc';
 
 interface Folder {
   id: string;
