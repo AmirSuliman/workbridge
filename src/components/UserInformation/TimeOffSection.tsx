@@ -16,6 +16,7 @@ import SickCard from './sickCard';
 import VacationsCard from './VacationsCard';
 import { getSession } from 'next-auth/react';
 interface Employee {
+  id: number;
   firstName: string;
   lastName: string;
 }
@@ -28,6 +29,7 @@ interface TimeOffItem {
   note: string;
   employee: Employee;
   user: {
+    id: number;
     firstName: string;
     lastName: string;
   };
@@ -146,6 +148,8 @@ const TimeOffSection = ({ employeeData }) => {
     try {
       await axiosInstance.put(`/timeoff/${item.id}/cancel`);
       toast.success('Request canceled successfully.');
+      const response = await axiosInstance.get('/timeoffs/my');
+      setTimeOffData(response.data.data.items);
     } catch (error) {
       console.error('Error canceling request:', error);
     }
@@ -192,6 +196,7 @@ const TimeOffSection = ({ employeeData }) => {
 
       const actionCell = canCancel ? (
         <button
+          type='button'
           key={`cancel-${item.id}`}
           onClick={() => handleCancelTimeOff(item)}
           className='px-3 py-1 bg-red-500 text-white text-[12px] m-[-5px] rounded hover:bg-red-600 transition-all'
