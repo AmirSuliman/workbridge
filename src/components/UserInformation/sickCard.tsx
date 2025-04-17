@@ -163,10 +163,12 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
       const response = await axiosInstance.post('/timeoff', payload);
       if (response.status === 200) {
         toast.success('Request timeoff made successfuly!');
-        setIsModalOpen(false);
-        setStartDate(null);
-        setEndDate(null);
-        setNote('');
+         setIsModalOpen(false);
+      setStartDate(null);
+      setEndDate(null);
+      setNote('');
+      setsickDaysUsed(0);
+      setHolidaysErrors([]);
       }
     } catch (error) {
       console.error('Error:', error);
