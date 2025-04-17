@@ -47,7 +47,7 @@ const LeaveAndVacationCardsCombined = () => {
         description='Requests must be made at least 2 weeks prior to submission.'
         daysNum={String(employeeData?.vacationLeaveCounter || '0')}
         name='Request Vacation'
-        tooltipText='Your vacation days will expire if not used within the year. Please plan accordingly.'
+        tooltipText='Please note that your accrued vacation days are valid until December 31st of the current calendar year. We kindly encourage you to plan your time off in advance, as any unused days will expire at year-end.'
       />
       <LeaveAndVacationCard
         title='Sick leave'
@@ -58,7 +58,7 @@ const LeaveAndVacationCardsCombined = () => {
         description=''
         daysNum={String(employeeData?.sickLeaveCounter || '0')}
         name='Request Sick Leave'
-        tooltipText='Your sick leave days will expire if not used within the year. Please plan accordingly.'
+        tooltipText='Sick leave days will reset to 0 at the end of the year.'
       />
     </div>
   );

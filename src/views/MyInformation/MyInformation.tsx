@@ -78,6 +78,7 @@ const MyInformation = () => {
       ? new Date(employeeData?.hireDate).toISOString().split('T')[0]
       : '',
     salary: employeeData?.salary ? employeeData.salary : 0,
+    country: employeeData?.country?.country || '',
     location: {
       zipCode: employeeData?.location?.zipCode || '',
       street1: employeeData?.location?.street1 || '',
@@ -111,9 +112,7 @@ const MyInformation = () => {
     const fetchMyId = async () => {
       if (session?.user?.accessToken) {
         try {
-          const response = await axiosInstance.get('/user/my', {
-            headers: { Authorization: `Bearer ${session.user.accessToken}` },
-          });
+          const response = await axiosInstance.get('/user/my');
           dispatch(setUser(response.data.data));
         } catch (error) {
           console.error('Error fetching user data:', error);
@@ -127,7 +126,7 @@ const MyInformation = () => {
       }
     };
     fetchMyId();
-  }, [dispatch, session?.user?.accessToken]);
+  }, [dispatch]);
 
   useEffect(() => {
     // Fetch employee data if session and empId are valid
@@ -234,6 +233,7 @@ const MyInformation = () => {
       birthday: data.birthday,
       phoneNumber: data.phoneNumber,
       workPhone: data.workPhone,
+      countryId: data.countryId,
       // don't send 0 to backend it gives error
       reportingManagerId:
         data.reportingManagerId === 0 ? undefined : data.reportingManagerId,
@@ -272,14 +272,20 @@ const MyInformation = () => {
       toast.success('Employee information updated successfully!');
       setEditLoading(false);
       setEditEmployee(false);
-dispatch(updateEmployeeData({
-  ...employeeData,
-  ...response.data.data,
-  location: {
-    ...employeeData?.location,
-    ...response.data.data.location,
-  }
-}));
+      dispatch(
+        updateEmployeeData({
+          ...employeeData,
+          ...response.data.data,
+          location: {
+            ...employeeData?.location,
+            ...response.data.data.location,
+          },
+          country: {
+            ...employeeData?.country,
+            ...response.data.data.country,
+          },
+        })
+      );
 
       // to immediatly get updated profile picture in the UserProfileInfo.tsx if a user update it
       if (!empId) {

@@ -163,10 +163,12 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
       const response = await axiosInstance.post('/timeoff', payload);
       if (response.status === 200) {
         toast.success('Request timeoff made successfuly!');
-        setIsModalOpen(false);
-        setStartDate(null);
-        setEndDate(null);
-        setNote('');
+         setIsModalOpen(false);
+      setStartDate(null);
+      setEndDate(null);
+      setNote('');
+      setsickDaysUsed(0);
+      setHolidaysErrors([]);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -199,7 +201,14 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
     }
     setIsModalOpen(true);
   };
-
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setStartDate(null);
+    setEndDate(null);
+    setNote('');
+    setsickDaysUsed(0);
+    setHolidaysErrors([]);
+  };
   return (
     <>
       <RequestCard
@@ -212,13 +221,8 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
       />
 
       {isModalOpen && (
-        <Modal
-          onClose={() => {
-            setIsModalOpen(false);
-            setStartDate(null);
-            setEndDate(null);
-          }}
-        >
+        <Modal onClose={handleCloseModal}>
+        
           <div className='p-6 w-full sm:w-[600px]'>
             <div className='flex flex-row items-center gap-2'>
               <Image
@@ -366,7 +370,7 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
               <button
                 disabled={loading}
                 type='button'
-                onClick={() => setIsModalOpen(false)}
+                onClick={handleCloseModal}
                 className='mt-4 px-4 py-3 border rounded w-full'
               >
                 Close

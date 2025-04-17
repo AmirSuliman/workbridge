@@ -23,7 +23,7 @@ export interface Employee {
   type: string;
   leaveDay: string;
   returningDay: string;
-  status: 'Confirmed' | 'Pending' | 'Denied';
+  status: 'Confirmed' | 'Pending' | 'Denied' | 'Cancelled';
   employee: {
     firstName: string;
     middleName?: string | null;
@@ -129,7 +129,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
   // Callback to update the local state after confirmation
   const updateEmployeeStatus = (
     employeeId: number,
-    newStatus: 'Confirmed' | 'Denied'
+    newStatus: 'Confirmed' | 'Denied' | 'Cancelled'
   ) => {
     setEmployeeData((prevData) =>
       prevData.map((employee) =>

@@ -103,7 +103,7 @@ const DepartmentTable = () => {
           <EmployeesIcon />
           <h1 className='font-semibold text-[22px]'>Departments</h1>
         </div>
-        <ButtonWithNav href='/employees/charter' label='See Employee Charter' />
+        <ButtonWithNav href='employees/charter' label='See Employee Charter' />
       </div>
 
       {/* Table Container */}

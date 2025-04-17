@@ -1,8 +1,7 @@
 'use client';
-import { signOut } from 'next-auth/react';
-import { signOut as nextAuthSignOut } from 'next-auth/react';
 import React from 'react';
 import { CiLogout } from 'react-icons/ci';
+import { useRouter } from 'next/navigation';
 
 declare global {
   interface Window {
@@ -12,6 +11,7 @@ declare global {
 
 const Logout = () => {
   const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+  const router = useRouter();
 
   const onLogout = async (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -32,18 +32,33 @@ const Logout = () => {
         });
       }
 
-      // 2. Handle NextAuth signout first
-      await signOut({ redirect: false });
-      await nextAuthSignOut({ redirect: false });
+      // 2. Call the logout API endpoint to clear server-side state
+      try {
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          credentials: 'include',
+        });
+      } catch (error) {
+        console.warn('Failed to call logout API:', error);
+        // Continue with client-side logout even if API call fails
+      }
 
-      // 3. Clear storage in a more production-friendly way
+      // 3. Clear client-side storage
       if (typeof window !== 'undefined') {
-        // Clear localStorage items related to auth only
+        // Clear accessToken from localStorage
+        localStorage.removeItem('accessToken');
+
+        // Clear accessToken cookie
+        document.cookie =
+          'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict';
+
+        // Clear any other auth-related items you might have
         const authKeys = [
-          'next-auth.session-token',
-          'next-auth.callback-url',
-          'next-auth.csrf-token',
+          'user',
+          'userData',
+          // Add any other keys your app uses
         ];
+
         authKeys.forEach((key) => {
           try {
             localStorage.removeItem(key);
@@ -51,27 +66,11 @@ const Logout = () => {
             console.warn(`Failed to remove ${key} from localStorage:`, e);
           }
         });
-
-        // A safer way to clear cookies (focus on auth-related cookies)
-        const cookiesToClear = [
-          'next-auth.session-token',
-          '__Secure-next-auth.session-token',
-          '__Host-next-auth.csrf-token',
-        ];
-        cookiesToClear.forEach((cookieName) => {
-          document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; secure; samesite=strict`;
-        });
-
-        // If you're using a specific path other than root, also clear there
-        cookiesToClear.forEach((cookieName) => {
-          document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/api/auth; secure; samesite=strict`;
-        });
       }
-      localStorage.removeItem('accessToken');
 
       // 4. Navigate to login page with a small delay to ensure cleanup completes
       setTimeout(() => {
-        window.location.href = '/?logout=success';
+        window.location.href = '/sign-in?logout=success';
       }, 100);
     } catch (error) {
       console.error('Logout error:', error);
@@ -80,7 +79,7 @@ const Logout = () => {
 
       // Only force navigation as a last resort
       setTimeout(() => {
-        window.location.href = '/?logout=error';
+        window.location.href = '/sign-in?logout=error';
       }, 100);
     }
   };
