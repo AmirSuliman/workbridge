@@ -35,7 +35,7 @@ const HrHeader = () => {
     <nav className='sticky top-0 flex flex-wrap-reverse  items-center gap-4 bg-white px-4 sm:px-8 py-4 border-b border-[#E8E8E8] z-10'>
       {/* Create New Button with Dropdown */}
       {isHomePage ? (
-        <>
+        <div className='sm:ml-0 md:ml-8 lg:ml-0 flex flex-row items-center gap-4'>
           <div className='relative'>
             <Button
               onClick={() => setShowDropdown((prev) => !prev)}
@@ -100,7 +100,7 @@ const HrHeader = () => {
             href='employees/charter'
             label='See Employee Charter'
           />
-        </>
+        </div>
       ) : (
         <Button
           onClick={() => router.back()}
