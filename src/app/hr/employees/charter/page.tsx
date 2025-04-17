@@ -35,8 +35,9 @@ const OrgChartPage: FC = () => {
       id="parent"
       className="w-full h-full relative overflow-hidden no-scrollbar "
     >
-      <div className="bg-white rounded-lg p-6 shadow-lg items-center mb-8 h-20 flex space-x-2 justify-end w-full top-0 left-0">
-        <button
+      <div className="bg-white rounded-lg p-6 shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-2  w-full top-0 left-0">
+       <div className='flex flex-row items-center justify-between w-full'>
+       <button
           // href="/public"
           onClick={(e) => {
             e.preventDefault();
@@ -44,14 +45,14 @@ const OrgChartPage: FC = () => {
           }}
           className="flex items-center space-x-1 mr-auto"
         >
-          <div className="bg-primary rounded-full w-6 h-6 p-1 flex items-center justify-center mr-2">
-            {/* <ArrowLeftIcon className="text-white" /> */}
-          </div>
-          <div className="flex flex-col -space-y-1">
-            <div className="text-100C18 text-lg">Company Charter</div>
+          {/*<div className="bg-primary rounded-full sm:w-6 h-0 w-0 sm:h-6 p-1 flex items-center justify-center mr-2">
+             <ArrowLeftIcon className="text-white" /> 
+          </div>*/}
+          <div className="flex flex-col -space-y-1 ml-2">
+            <div className="text-100C18 text-md sm:text-lg">Company Charter</div>
           </div>
         </button>
-        <div className="relative w-60">
+        <div className="relative w-40 lg:hidden block">
           <input
             className="w-full border border-979599 rounded-full p-2 text-sm outline-0"
             onChange={(e) => setSearch(e.target.value)}
@@ -67,7 +68,26 @@ const OrgChartPage: FC = () => {
             </button>
           )}
         </div>
-        <div className="flex space-x-2 text-sm ml-auto">
+       </div>
+       
+        
+        <div className="flex flex-row space-x-2 text-sm ">
+        <div className="relative w-60 hidden lg:block">
+          <input
+            className="w-full border border-979599 rounded-full p-2 text-sm outline-0"
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
+            placeholder="Search..."
+          />
+          {search.length > 0 && (
+            <button
+              className="absolute top-3 right-2"
+              onClick={() => setSearch('')}
+            >
+              <FaBackspace className="w-4 h-4" />
+            </button>
+          )}
+        </div>
           <button
             className={clsx(
               'border border-primary rounded-full px-4 py-2 text-black',
