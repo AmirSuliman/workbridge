@@ -175,7 +175,7 @@ const AdminScreen = () => {
             </div>
           </div>
           <Button
-            name='Add New Admin'
+            name='Add New Employee'
             onClick={() => setIsModalOpen(true)}
             icon={<IoIosAddCircleOutline className='w-4' />}
             className='bg-dark-navy text-white text-xs'

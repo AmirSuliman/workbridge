@@ -20,7 +20,7 @@ const HrSidebar = () => {
   const toggleSidebar = () => {
     setIsOpen((prevIsOpen) => !prevIsOpen);
   };
-  
+
   const closeSidebar = () => {
     setIsOpen(false);
   };
@@ -51,7 +51,10 @@ const HrSidebar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -79,23 +82,22 @@ const HrSidebar = () => {
       >
         <FiMenu size={24} />
       </button>*/}
- {!isOpen && (
-    <button
-      className="lg:hidden fixed top-4 left-4 z-50 bg-white  p-2 "
-      onClick={toggleSidebar}
-      aria-label="Open sidebar"
-    >
-      <FiMenu size={24} />
-    </button>
-  )}
+      {!isOpen && (
+        <button
+          className='lg:hidden fixed top-4 left-4 z-50 bg-white  p-2 '
+          onClick={toggleSidebar}
+          aria-label='Open sidebar'
+        >
+          <FiMenu size={24} />
+        </button>
+      )}
       <main
         ref={sidebarRef}
         className={`flex flex-col gap-2 w-[90%] md:w-[270px] lg:w-[270px]  bg-white fixed top-0 bottom-0 left-0 border-r-[1px] border-[#E8E8E8] z-20 transition-transform duration-300 ease-in-out overflow-y-auto ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0`}
       >
-        <div className="flex justify-between items-center px-4 py-4">
-        
+        <div className='flex justify-between items-center px-4 py-4'>
           <h1 className='text-center'>
             <Image
               className=' ml-12 mt-5 sm:ml-6'
@@ -108,15 +110,15 @@ const HrSidebar = () => {
           {/* Close button as separate element from open button */}
           {isOpen && (
             <div
-              className="lg:hidden cursor-pointer p-2 absolute top-2 right-2"
+              className='lg:hidden cursor-pointer p-2 absolute top-2 right-2'
               onClick={closeSidebar}
-              aria-label="Close sidebar"
+              aria-label='Close sidebar'
             >
               <FiX size={24} />
             </div>
           )}
         </div>
-        
+
         <>
           <SidebarNavItem
             name='Home'
@@ -163,7 +165,7 @@ const HrSidebar = () => {
           {/* Conditionally render Admins */}
           {isSuperAdmin && (
             <SidebarNavItem
-              name='Admins'
+              name='Employees & Roles'
               icon={<FaUsers size={22} />}
               href='/hr/admins'
             />
