@@ -5,47 +5,33 @@ import Companyinfo from '@//components/companyinformation/companyinformaion';
 import Employeementreport from '@//components/Employementreport/employmentreport';
 import LeaveRequests from '@//components/LeaveRequests/LeaveRequests';
 import NewEmployees from '@//components/NewEmployees/NewEmployees';
-import SingleAnnouncement from '@/components/Announcements/SingleAnnouncement';
 import WhosOut from '@//components/WhosOut/WhosOut';
 import Evaluation from '@/app/user/home/components/evaluation';
 import UserEvaluation from '@/app/user/home/components/userevaulation';
+import SingleAnnouncement from '@/components/Announcements/SingleAnnouncement';
 import axiosInstance from '@/lib/axios';
-import { getSession } from 'next-auth/react';
+import { RootState } from '@/store/store';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { HiSpeakerphone } from 'react-icons/hi';
 import { PiArrowUpRightThin } from 'react-icons/pi';
+import { useSelector } from 'react-redux';
 import HomePolicies from './Homepolicies/Homepolicies';
-import { Session } from 'next-auth';
 
 interface Employee {
   employeeId: Number | null;
 }
 const Page = () => {
-  const [role, setRole] = useState<string>();
   const [evaluation, setEvaluation] = useState<any[]>([]);
   const [employeeId, setEmployeeId] = useState<Employee | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-
-  const fetchSession = async (): Promise<Session | null> => {
-    const session = await getSession();
-    return session;
-  };
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-
-    fetchSession();
-  }, []);
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
 
   useEffect(() => {
     const fetchSessionAndSetEmployeeId = async () => {
-      const session = await fetchSession();
-      if (session?.user?.employeeId) {
-        setEmployeeId({ employeeId: session.user.employeeId });
+      if (user?.user?.employeeId) {
+        setEmployeeId({ employeeId: user.user.employeeId });
       } else {
         setEmployeeId({ employeeId: null });
       }
@@ -93,10 +79,8 @@ const Page = () => {
     }
   }, [employeeId, role]);
 
-  const isViewOnly = role === 'ViewOnly';
   const isSuperadmin = role === 'SuperAdmin';
   const isHR = role === 'Admin';
-  const isManager = role === 'Manager';
   return (
     <main className='flex flex-col sm:flex-row items-start gap-4 w-full max-w-full overflow-x-hidden px-2 sm:px-4'>
       <div className='flex flex-col gap-4 w-full sm:w-[45%]'>

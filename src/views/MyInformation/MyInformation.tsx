@@ -17,7 +17,6 @@ import {
   fetchEmployeeData,
   updateEmployeeData,
 } from '@/store/slices/employeeInfoSlice';
-import { setUser } from '@/store/slices/myInfoSlice';
 import { AppDispatch, RootState } from '@/store/store';
 import {
   employmentTabValidation,
@@ -25,7 +24,6 @@ import {
 } from '@/utils/tabValidations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AxiosError } from 'axios';
-import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { FieldErrors, useForm } from 'react-hook-form';
@@ -37,29 +35,18 @@ interface ErrorResponse {
 }
 
 const MyInformation = () => {
-  const [role, setRole] = useState<string>();
-  const [myInfoLoading, setMyInfoLoading] = useState(true);
   const [editLoading, setEditLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
   const myId = user?.user?.employeeId; // This id is used to view the current logged in user's info
   const { empId } = useParams(); // This id is used to view any employee's info
-  const { data: session } = useSession();
   const [editEmployee, setEditEmployee] = useState<boolean>(false);
   const [schemaErrors, setSchemaErrors] = useState<FieldErrors | undefined>(
     undefined
   );
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      // const session = await getSession();
-      setRole(session?.user?.role);
-    };
-
-    fetchSession();
-  }, []);
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 
@@ -108,36 +95,12 @@ const MyInformation = () => {
     mode: 'all',
   });
 
-  // useEffect(() => {
-  //   const fetchMyId = async () => {
-  //     if (session?.user?.accessToken) {
-  //       try {
-  //         const response = await axiosInstance.get('/user/my');
-  //         dispatch(setUser(response.data.data));
-  //       } catch (error) {
-  //         console.error('Error fetching user data:', error);
-  //         toast.error('Failed to load user data!');
-  //       } finally {
-  //         setMyInfoLoading(false);
-  //       }
-  //     } else {
-  //       setMyInfoLoading(false);
-  //       toast.error('Authentication failed. Please try again.');
-  //     }
-  //   };
-  //   fetchMyId();
-  // }, [dispatch]);
-
   useEffect(() => {
     // Fetch employee data if session and empId are valid
-    if (
-      !myInfoLoading &&
-      session?.user?.accessToken &&
-      (empId || session?.user?.userId)
-    ) {
+
+    if (empId || myId) {
       dispatch(
         fetchEmployeeData({
-          accessToken: session.user.accessToken,
           userId: Number(empId) || Number(myId),
         })
       );
@@ -148,14 +111,7 @@ const MyInformation = () => {
     return () => {
       dispatch(clearEmployeeData());
     };
-  }, [
-    dispatch,
-    empId,
-    session?.user.accessToken,
-    session?.user.userId,
-    myId,
-    myInfoLoading,
-  ]);
+  }, [dispatch, empId, myId]);
 
   // profile picture
   const handleFileChange = useCallback(
@@ -190,7 +146,6 @@ const MyInformation = () => {
         },
       });
       const uploadedUrl = response.data.data.url;
-      console.log('Uploaded URL:', uploadedUrl);
       setPreviewUrl(uploadedUrl);
       return { uploadedUrl, error: null };
     } catch (err) {
@@ -247,7 +202,7 @@ const MyInformation = () => {
         state: data.location.state,
       },
     };
-    console.log('payload: ', payLoad);
+
     try {
       setEditLoading(true);
       // handle profile picture to get url from the upload picture
@@ -268,7 +223,6 @@ const MyInformation = () => {
         finalPayload
       );
 
-      console.log('put emp response: ', response.data);
       toast.success('Employee information updated successfully!');
       setEditLoading(false);
       setEditEmployee(false);
@@ -335,7 +289,7 @@ const MyInformation = () => {
     }
   }, [hasPersonalErrors, hasEmploymentErrors]);
 
-  if (loading || myInfoLoading) {
+  if (loading) {
     return (
       <div className='p-4'>
         <ScreenLoader />

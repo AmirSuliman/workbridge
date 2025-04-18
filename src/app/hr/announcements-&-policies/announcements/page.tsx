@@ -15,6 +15,8 @@ import Image from 'next/image';
 import { AnnouncementImage } from '@/components/Announcements/AnnouncementImage';
 import TabButton from '@/components/common/TabsComponent/button';
 import TabComponent from '@/components/common/TabsComponent/TabComponent';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 // type Announcement = {
 //   id: string;
@@ -61,7 +63,8 @@ const Page = () => {
   const [totalDraftAnnouncements, setTotalDraftAnnouncements] = useState(0);
   const [currentPublishedPage, setCurrentPublishedPage] = useState<number>(1);
   const [currentDraftPage, setCurrentDraftPage] = useState<number>(1);
-  const [role, setRole] = useState<string>();
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
 
   const pageSize = 10;
 
@@ -90,15 +93,6 @@ const Page = () => {
     fetchPublishedData();
     fetchDraftData();
   }, [currentPublishedPage, currentDraftPage]);
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-
-    fetchSession();
-  }, []);
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 

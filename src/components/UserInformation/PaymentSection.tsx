@@ -1,18 +1,19 @@
+import { Label } from '@/app/hr/employees/components/Helpers';
+import axiosInstance from '@/lib/axios';
+import { RootState } from '@/store/store';
+import { isAxiosError } from 'axios';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { BiLoaderCircle } from 'react-icons/bi';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 import { HiMiniBriefcase } from 'react-icons/hi2';
+import { useSelector } from 'react-redux';
+import Button from '../Button';
+import AddPayments from './AddPayments';
 import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
-import { Label } from '@/app/hr/employees/components/Helpers';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import axiosInstance from '@/lib/axios';
-import { isAxiosError } from 'axios';
-import AddPayments from './AddPayments';
-import Button from '../Button';
-import { FaEdit, FaTrash } from 'react-icons/fa';
 import PaymentDeleteModal from './PaymentDeleteModal';
-import { BiLoaderCircle } from 'react-icons/bi';
-import { getSession } from 'next-auth/react';
 
 interface PaymentProps {
   id: number;
@@ -34,17 +35,8 @@ const PaymentSection = ({ employeeId }) => {
   const [currentPayment, setCurrentPayment] = useState<PaymentProps | null>(
     null
   );
-  const [role, setRole] = useState<string>();
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      // console.log('session: ', session);
-      setRole(session?.user?.role);
-    };
-
-    fetchSession();
-  }, []);
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 
@@ -124,11 +116,11 @@ const PaymentSection = ({ employeeId }) => {
 
   return (
     <>
-      <div className="p-3 sm:p-6 rounded-[10px] border-gray-border border-[1px] bg-white my-5">
-        <div className="mb-5">
+      <div className='p-3 sm:p-6 rounded-[10px] border-gray-border border-[1px] bg-white my-5'>
+        <div className='mb-5'>
           <FormHeading
-            icon={<HiMiniBriefcase className="w-4" />}
-            text="Payment"
+            icon={<HiMiniBriefcase className='w-4' />}
+            text='Payment'
           />
         </div>
 
@@ -158,7 +150,7 @@ const PaymentSection = ({ employeeId }) => {
                     payment.note || '',
                     !isUserPanel && (
                       <FaTrash
-                        className="cursor-pointer"
+                        className='cursor-pointer'
                         key={payment.id}
                         onClick={(e) => {
                           e.preventDefault();
@@ -170,7 +162,7 @@ const PaymentSection = ({ employeeId }) => {
                     ),
                     !isUserPanel && (
                       <FaEdit
-                        className="cursor-pointer"
+                        className='cursor-pointer'
                         key={payment.id}
                         onClick={(e) => {
                           e.preventDefault();
@@ -184,122 +176,122 @@ const PaymentSection = ({ employeeId }) => {
           />
         ) : (
           <div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className='grid grid-cols-3 gap-4'>
               <article>
-                <Label text="Pay rate*" />
+                <Label text='Pay rate*' />
                 <input
-                  type="number"
-                  className="form-input"
+                  type='number'
+                  className='form-input'
                   {...register(`payRate`, {
                     required: 'Pay rate is required',
                     valueAsNumber: true,
                   })}
                 />
                 {errors?.payRate && (
-                  <span className="form-error">
+                  <span className='form-error'>
                     {errors?.payRate.message?.toString()}
                   </span>
                 )}
               </article>
               <article>
-                <Label text="Pay type*" />
+                <Label text='Pay type*' />
                 <select
-                  className="form-input"
+                  className='form-input'
                   {...register('payType', {
                     required: 'Pay type is required',
                   })}
                 >
-                  <option value="">Select PayType</option>
-                  <option value="Salary">Salary</option>
-                  <option value="Contract">Contract</option>
-                  <option value="Bonus">Bonus</option>
+                  <option value=''>Select PayType</option>
+                  <option value='Salary'>Salary</option>
+                  <option value='Contract'>Contract</option>
+                  <option value='Bonus'>Bonus</option>
                 </select>
                 {errors?.payType && (
-                  <span className="form-error">
+                  <span className='form-error'>
                     {errors?.payType.message?.toString()}
                   </span>
                 )}
               </article>
               <article>
-                <Label text="Schedule*" />
+                <Label text='Schedule*' />
                 <select
-                  className="form-input"
+                  className='form-input'
                   {...register('paymentSchedule', {
                     required: 'Payment Schedule is required',
                   })}
                 >
-                  <option value="">Select Schedule</option>
-                  <option value="Weekly">Weekly</option>
-                  <option value="Biweekly">Biweekly</option>
-                  <option value="Once a month">Once a month</option>
+                  <option value=''>Select Schedule</option>
+                  <option value='Weekly'>Weekly</option>
+                  <option value='Biweekly'>Biweekly</option>
+                  <option value='Once a month'>Once a month</option>
                 </select>
                 {errors?.paymentSchedule && (
-                  <span className="form-error">
+                  <span className='form-error'>
                     {errors?.paymentSchedule?.message?.toString()}
                   </span>
                 )}
               </article>
 
               <article>
-                <Label text="Payment note" />
+                <Label text='Payment note' />
                 <input
-                  type="text"
-                  className="form-input"
+                  type='text'
+                  className='form-input'
                   {...register('note')}
                 />
                 {errors?.note && (
-                  <span className="form-error">
+                  <span className='form-error'>
                     {errors?.note.message?.toString()}
                   </span>
                 )}
               </article>
               <article>
-                <Label text="Effective date*" />
+                <Label text='Effective date*' />
                 <input
-                  type="date"
-                  className="form-input"
+                  type='date'
+                  className='form-input'
                   {...register('effectiveDate', {
                     required: 'Effective date is required',
                   })}
                 />
                 {errors?.effectiveDate && (
-                  <span className="form-error">
+                  <span className='form-error'>
                     {errors?.effectiveDate.message?.toString()}
                   </span>
                 )}
               </article>
-              <article className="my-auto">
-                <label className="flex gap-2">
+              <article className='my-auto'>
+                <label className='flex gap-2'>
                   <input
-                    type="checkbox"
-                    className="appearance-none border-2 border-black checked:bg-black size-4 rounded"
+                    type='checkbox'
+                    className='appearance-none border-2 border-black checked:bg-black size-4 rounded'
                     {...register('overtime')}
                   />
-                  <span className="form-label">Over time?</span>
+                  <span className='form-label'>Over time?</span>
                 </label>
                 {errors?.overtime && (
-                  <span className="form-error">
+                  <span className='form-error'>
                     {errors?.overtime.message?.toString()}
                   </span>
                 )}
               </article>
-              <div className="flex gap-4 flex-wrap col-span-full justify-center mt-8">
+              <div className='flex gap-4 flex-wrap col-span-full justify-center mt-8'>
                 <Button
                   onClick={handleSubmit(handleEdit)}
-                  type="submit"
+                  type='submit'
                   disabled={isSubmitting}
                   name={isSubmitting ? '' : 'Save Changes'}
                   icon={
                     isSubmitting && (
-                      <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+                      <BiLoaderCircle className='h-5 w-5 duration-100 animate-spin' />
                     )
                   }
                 />
                 <Button
-                  bg="transparent"
-                  textColor="black"
-                  type="button"
-                  name="Cancel"
+                  bg='transparent'
+                  textColor='black'
+                  type='button'
+                  name='Cancel'
                   onClick={() => setisEditPayment(false)}
                 />
               </div>
@@ -314,8 +306,8 @@ const PaymentSection = ({ employeeId }) => {
             setAddNew(true);
           }}
           name={'Add new payment'}
-          icon=""
-          className="w-full max-w-xl mx-auto col-span-full mt-4"
+          icon=''
+          className='w-full max-w-xl mx-auto col-span-full mt-4'
         />
       )}
       {!isUserPanel && addeNew && (

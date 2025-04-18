@@ -2,11 +2,11 @@ import {
   markReadNotification,
   toggleDropdown,
 } from '@/store/slices/notificationsSlice';
+import { RootState } from '@/store/store';
 import { NotificationItem, NotificationType } from '@/types/notifications';
-import { getSession } from 'next-auth/react';
 import Link from 'next/link';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface Props extends React.PropsWithChildren {
   notification: NotificationItem;
@@ -20,15 +20,8 @@ const NotificationLink = ({ notification, children }: Props) => {
     }
   }, []);
 
-  const [role, setRole] = useState<string>();
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-
-    fetchSession();
-  }, []);
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 

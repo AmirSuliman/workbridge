@@ -1,10 +1,10 @@
-import React from 'react'
-import ConfirmAccount from './components/ConfirmAccount'
+'use client';
+
+import React from 'react';
+import ConfirmAccount from './components/ConfirmAccount';
 
 const page = () => {
-    return (
-        <ConfirmAccount />
-    )
-}
+  return <ConfirmAccount />;
+};
 
-export default page
+export default page;

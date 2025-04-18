@@ -1,6 +1,5 @@
 import axiosInstance from '@/lib/axios';
 import axios from 'axios';
-import { getSession } from 'next-auth/react';
 
 export const getAllPolicies = async (page: number, size: number) => {
   try {
@@ -17,15 +16,12 @@ export const getAllPolicies = async (page: number, size: number) => {
   }
 };
 
-export const getPoliciesById = async (page: number, size: number) => {
+export const getPoliciesById = async (
+  page: number,
+  size: number,
+  employeeId: number | undefined
+) => {
   try {
-    const session = await getSession();
-    const employeeId = session?.user?.employeeId;
-
-    if (!employeeId) {
-      throw new Error('Employee ID not found in session');
-    }
-
     const response = await axiosInstance.get(
       `policies/employee/${employeeId}`,
       {

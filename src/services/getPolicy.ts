@@ -1,5 +1,6 @@
 import axiosInstance from '@/lib/axios';
-import { getSession } from 'next-auth/react';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
 
 export const getPolicy = async (id) => {
   try {
@@ -15,8 +16,9 @@ export const getPolicy = async (id) => {
 
 export const getPolicybyIdempId = async (id) => {
   try {
-    const session = await getSession();
-    const employeeId = session?.user?.employeeId;
+    const user = useSelector((state: RootState) => state.myInfo);
+    const employeeId = user?.user?.employeeId;
+    // const employeeId = session?.user?.employeeId;
 
     if (!employeeId) {
       throw new Error('Employee ID not found in session');

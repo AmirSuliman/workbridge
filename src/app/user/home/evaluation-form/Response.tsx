@@ -1,20 +1,18 @@
 import Button from '@/components/Button';
 import axiosInstance from '@/lib/axios';
-import { isAxiosError } from 'axios';
-import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import { isAxiosError } from 'axios';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { BiLoaderCircle } from 'react-icons/bi';
+import * as yup from 'yup';
 
 const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
   const [questions, setQuestions] = useState<any[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [responses, setResponses] = useState({});
-  const { data: session } = useSession();
   const [validationSchema, setValidationSchema] = useState(
     yup.object().shape({})
   );
@@ -90,9 +88,7 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
     };
 
     try {
-      await axiosInstance.post(`/survey/response`, payload, {
-        headers: { Authorization: `Bearer ${session?.user?.accessToken}` },
-      });
+      await axiosInstance.post(`/survey/response`, payload);
       toast.success('Evaluation successful!');
       setIsSubmitted(true);
       onSurveyUpdate('Completed');
@@ -111,35 +107,35 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
   };
 
   return (
-    <div className="mt-2 w-full">
+    <div className='mt-2 w-full'>
       {isSubmitted ? (
-        <div className="text-center p-6 border rounded-lg shadow-md">
-          <h2 className="text-lg font-semibold">
+        <div className='text-center p-6 border rounded-lg shadow-md'>
+          <h2 className='text-lg font-semibold'>
             Survey Submitted Successfully
           </h2>
-          <p className="text-gray-500">Thank you for completing the survey!</p>
+          <p className='text-gray-500'>Thank you for completing the survey!</p>
         </div>
       ) : (
         <>
-          <div className="w-full flex flex-row items-center justify-between">
-            <h1 className="text-[18px] font-medium">Yearly Evaluation Form</h1>
-            <h2 className="text-[18px] font-medium">
+          <div className='w-full flex flex-row items-center justify-between'>
+            <h1 className='text-[18px] font-medium'>Yearly Evaluation Form</h1>
+            <h2 className='text-[18px] font-medium'>
               Question {currentQuestionIndex + 1} out of {questions.length}
             </h2>
           </div>
 
           {questions.length > 0 && (
             <>
-              <label className="mt-4 flex flex-col">
-                <span className="text-[16px] text-gray-400 mb-1">Question</span>
-                <div className="border p-3 rounded text-[18px]">
+              <label className='mt-4 flex flex-col'>
+                <span className='text-[16px] text-gray-400 mb-1'>Question</span>
+                <div className='border p-3 rounded text-[18px]'>
                   {questions[currentQuestionIndex].question}
                 </div>
               </label>
 
-              <label className="mt-4 flex flex-col w-full">
-                <span className="text-[16px] text-gray-400 mb-1">Answers</span>
-                <div className="mt-2">
+              <label className='mt-4 flex flex-col w-full'>
+                <span className='text-[16px] text-gray-400 mb-1'>Answers</span>
+                <div className='mt-2'>
                   {questions[currentQuestionIndex].responseType === 'Text' && (
                     <Controller
                       name={`responseText_${questions[currentQuestionIndex].id}`}
@@ -152,8 +148,8 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
                       render={({ field }) => (
                         <>
                           <input
-                            type="text"
-                            className="border p-2 rounded w-full"
+                            type='text'
+                            className='border p-2 rounded w-full'
                             {...field}
                             value={
                               responses[
@@ -171,7 +167,7 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
                           {errors[
                             `responseText_${questions[currentQuestionIndex].id}`
                           ] && (
-                            <p className="text-red-500 text-sm">
+                            <p className='text-red-500 text-sm'>
                               {
                                 errors[
                                   `responseText_${questions[currentQuestionIndex].id}`
@@ -197,7 +193,7 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
                       render={({ field }) => (
                         <>
                           <select
-                            className="border p-2 rounded w-full"
+                            className='border p-2 rounded w-full'
                             {...field}
                             value={field.value ?? ''}
                             onChange={(e) => {
@@ -211,7 +207,7 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
                               );
                             }}
                           >
-                            <option value="">Select a rating</option>
+                            <option value=''>Select a rating</option>
                             {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(
                               (value) => (
                                 <option key={value} value={value}>
@@ -223,7 +219,7 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
                           {errors[
                             `rating_${questions[currentQuestionIndex].id}`
                           ] && (
-                            <p className="text-red-500 text-sm">
+                            <p className='text-red-500 text-sm'>
                               {errors[
                                 `rating_${questions[currentQuestionIndex].id}`
                               ]?.message || 'Please select a rating'}
@@ -238,10 +234,10 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
             </>
           )}
 
-          <div className="flex flex-row items-center justify-end mt-32 gap-4">
+          <div className='flex flex-row items-center justify-end mt-32 gap-4'>
             <button
-              type="button"
-              className="text-[14px] p-2 border rounded px-4 bg-white"
+              type='button'
+              className='text-[14px] p-2 border rounded px-4 bg-white'
               onClick={() =>
                 setCurrentQuestionIndex((prev) => Math.max(0, prev - 1))
               }
@@ -251,8 +247,8 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
             </button>
 
             <button
-              type="button"
-              className="text-[14px] p-2 border rounded px-4 bg-white"
+              type='button'
+              className='text-[14px] p-2 border rounded px-4 bg-white'
               onClick={async () => {
                 const question = questions[currentQuestionIndex];
                 const responseKey =
@@ -280,7 +276,7 @@ const Response = ({ surveyId, employeeId, managerId, onSurveyUpdate }) => {
                 name={isSubmitting ? '' : 'Submit'}
                 icon={
                   isSubmitting && (
-                    <BiLoaderCircle className="h-5 w-5 animate-spin" />
+                    <BiLoaderCircle className='h-5 w-5 animate-spin' />
                   )
                 }
               />

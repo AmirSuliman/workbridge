@@ -16,8 +16,10 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const loadUserData = async () => {
       try {
-        const token = localStorage.getItem('accessToken');
-
+        let token;
+        if (typeof window !== 'undefined') {
+          token = localStorage.getItem('accessToken');
+        }
         if (!token) {
           setLoading(false);
           return;

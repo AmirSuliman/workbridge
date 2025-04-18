@@ -11,6 +11,8 @@ import { getSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { calculateDuration } from '@/lib/calculateDuration';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const EmploymentSection = ({
   errors,
@@ -19,17 +21,9 @@ const EmploymentSection = ({
   editEmployee,
   employeeData,
 }) => {
-  const [role, setRole] = useState<string>();
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
   const { empId } = useParams(); // This id is used to view any employee's info
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-
-    fetchSession();
-  }, []);
 
   const hireDate = employeeData?.hireDate
     ? employeeData.hireDate.split('T')[0]

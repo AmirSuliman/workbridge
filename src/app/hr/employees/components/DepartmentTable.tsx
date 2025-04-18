@@ -1,18 +1,16 @@
 'use client';
-import Button from '@/components/Button';
+import ButtonWithNav from '@/components/common/ButtonWithNav';
+import SearchInput from '@/components/common/SearchBar';
 import EmployeesIcon from '@/components/icons/employees-icon';
 import Modal from '@/components/modal/Modal';
 import axiosInstance from '@/lib/axios';
+import { RootState } from '@/store/store';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { BiChevronRight } from 'react-icons/bi';
 import { CiCirclePlus } from 'react-icons/ci';
-import { FaSearch } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 import CreateDepartment from '../department/components/createdepartment';
-import { useSession } from 'next-auth/react';
-import { GoArrowUpRight } from 'react-icons/go';
-import ButtonWithNav from '@/components/common/ButtonWithNav';
-import SearchInput from '@/components/common/SearchBar';
 
 interface Department {
   id: string;
@@ -35,8 +33,8 @@ const DepartmentTable = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { data: session } = useSession();
-  const role = session?.user?.user?.role;
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
   const isUserpanel = role === 'ViewOnly' || role === 'Manager';
 
   const handleDepartmentAdded = (updatedDepartments) => {

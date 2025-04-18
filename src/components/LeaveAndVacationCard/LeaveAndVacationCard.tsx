@@ -1,10 +1,11 @@
-import IconWithBg from '../Announcements/IconWithBg';
-import DaysCard from './DaysCard';
-import Button from '../Button';
-import React, { useEffect, useState } from 'react';
+import { RootState } from '@/store/store';
 import { useRouter } from 'next/navigation';
-import { getSession } from 'next-auth/react';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import IconWithBg from '../Announcements/IconWithBg';
+import Button from '../Button';
 import InfoTooltip from '../common/InfoTooltip';
+import DaysCard from './DaysCard';
 
 const LeaveAndVacationCard = ({
   title,
@@ -24,16 +25,8 @@ const LeaveAndVacationCard = ({
   tooltipText: string;
 }) => {
   const router = useRouter();
-  const [role, setRole] = useState<string>();
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-
-    fetchSession();
-  }, []);
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 

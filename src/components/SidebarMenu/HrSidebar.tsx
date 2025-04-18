@@ -10,12 +10,14 @@ import { IoIosFolderOpen } from 'react-icons/io';
 import { IoCalendarOutline } from 'react-icons/io5';
 import { PiHandshakeFill } from 'react-icons/pi';
 import SidebarNavItem from './SidebarNavItem';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const HrSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [role, setRole] = useState<string>();
   const sidebarRef = useRef<HTMLDivElement>(null);
-
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
   const toggleSidebar = () => {
     setIsOpen((prevIsOpen) => !prevIsOpen);
   };
@@ -23,16 +25,6 @@ const HrSidebar = () => {
   const closeSidebar = () => {
     setIsOpen(false);
   };
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      // console.log('session: ', session);
-      setRole(session?.user?.role);
-    };
-
-    fetchSession();
-  }, []);
 
   useEffect(() => {
     // Toggle body overflow based on sidebar state

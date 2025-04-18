@@ -1,31 +1,31 @@
 import Logout from '@/app/user/home/Logout';
 import { IMAGES } from '@/constants/images';
-import { getSession, useSession } from 'next-auth/react';
+import { RootState } from '@/store/store';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { FaAngleDown, FaUser } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 import imageLoader from '../../imageLoader';
 
 const UserProfileInfo: React.FC<
   React.ButtonHTMLAttributes<HTMLButtonElement>
 > = ({ ...props }) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [role, setRole] = useState<string>();
-  const { data: session } = useSession();
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
   // Get the profile picture from sessionStorage or session data
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(
     () => {
       if (typeof window !== 'undefined') {
         return (
           sessionStorage.getItem('profilePictureUrl') ||
-          session?.user?.user?.profilePictureUrl ||
+          user?.user?.profilePictureUrl ||
           null
         );
       }
-      return session?.user?.user?.profilePictureUrl || null;
+      return user?.user?.profilePictureUrl || null;
     }
   );
 
@@ -50,14 +50,6 @@ const UserProfileInfo: React.FC<
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showDropdown]);
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-    fetchSession();
-  }, []);
 
   // this effect is used to check if profilePicture is updated in my info
   useEffect(() => {
@@ -98,10 +90,10 @@ const UserProfileInfo: React.FC<
         />
         <div className='hidden sm:block ml-2'>
           <h4 className='text-lg font-medium'>{`${
-            session?.user?.user?.firstName || ''
-          } ${session?.user?.user?.lastName || ''}`}</h4>
+            user?.user?.firstName || ''
+          } ${user?.user?.lastName || ''}`}</h4>
           <p className='text-xs opacity-60 text-left'>
-            {session?.user?.user?.role || ''}
+            {user?.user?.role || ''}
           </p>
         </div>
         <FaAngleDown
@@ -113,10 +105,10 @@ const UserProfileInfo: React.FC<
           <nav className='absolute right-0 sm:mt-4 top-[100%] w-[150px] z-10 flex flex-col py-4 rounded-md shadow-md bg-white'>
             <div className='block pl-2 sm:hidden'>
               <h4 className='text-md font-medium text-left'>{`${
-                session?.user?.user?.firstName || ''
-              } ${session?.user?.user?.lastName || ''}`}</h4>
+                user?.user?.firstName || ''
+              } ${user?.user?.lastName || ''}`}</h4>
               <p className='text-xs opacity-60 text-left'>
-                {session?.user?.user?.role || ''}
+                {user?.user?.role || ''}
               </p>
             </div>
             <Link

@@ -1,13 +1,13 @@
+import { RootState } from '@/store/store';
 import { BTN_HOVER_OPEN_POSITIONS } from '@/utils/const';
 import { checkForOpenPositions } from '@/utils/misc';
-import { useSession } from 'next-auth/react';
+import { useSelector } from 'react-redux';
 
 const OrgChartNode = ({ d, actualSubordinates }) => {
-  const { data: session } = useSession();
-  const role = session?.user?.user?.role;
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
-  console.log('isuerpanel: ', isUserPanel);
   const directSubordinatesCount = actualSubordinates[d.data.id] || 0;
   const hasOpenPositions =
     d.data.openPositions?.length > 0 || checkForOpenPositions(d);
@@ -18,8 +18,8 @@ const OrgChartNode = ({ d, actualSubordinates }) => {
     d.data._highlighted || d.data._upToTheRootHighlighted
       ? '#D5F6DD'
       : d.data.isOpenPosition
-      ? '#D5F6DD'
-      : 'white';
+        ? '#D5F6DD'
+        : 'white';
   nodeDiv.style.border = `1.5px solid ${
     d.data.selectedEmployees?.includes(d.data.id) ? '#230E37' : '#97959980'
   }`;

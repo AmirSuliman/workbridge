@@ -1,17 +1,14 @@
 import Button from '@/components/Button';
 import axiosInstance from '@/lib/axios';
 import { isAxiosError } from 'axios';
-import { useSession } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useSearchParams } from 'next/navigation';
 import * as yup from 'yup';
-import { useRouter } from 'next/navigation';
 
 const DepartmentResponse = () => {
   const [questions, setQuestions] = useState<any[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const { data: session } = useSession();
   const [departmentId, setDepartmentId] = useState(null);
   const [departmentHeadId, setDepartmentHeadId] = useState(null);
   const [responses, setResponses] = useState({});
@@ -140,9 +137,7 @@ const DepartmentResponse = () => {
     };
 
     try {
-      await axiosInstance.post(`/survey/response/department`, payload, {
-        headers: { Authorization: `Bearer ${session?.user?.accessToken}` },
-      });
+      await axiosInstance.post(`/survey/response/department`, payload);
       toast.success('Evaluation successful!');
       setResponses({});
       setCurrentQuestionIndex(0);
@@ -161,7 +156,7 @@ const DepartmentResponse = () => {
 
   if (status !== 'In Progress') {
     return (
-      <p className="text-center text-lg font-bold text-green-500 items-center justify-center">
+      <p className='text-center text-lg font-bold text-green-500 items-center justify-center'>
         Survey Completed
       </p>
     );
@@ -170,32 +165,32 @@ const DepartmentResponse = () => {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className="mt-2 w-full">
-      <div className="w-full flex flex-row items-center justify-between">
-        <h1 className="text-[18px] font-medium">Yearly Evaluation Form</h1>
-        <h2 className="text-[18px] font-medium">
+    <div className='mt-2 w-full'>
+      <div className='w-full flex flex-row items-center justify-between'>
+        <h1 className='text-[18px] font-medium'>Yearly Evaluation Form</h1>
+        <h2 className='text-[18px] font-medium'>
           Question {currentQuestionIndex + 1} out of {questions.length}
         </h2>
       </div>
 
       {currentQuestion && (
-        <label className="mt-4 flex flex-col">
-          <span className="text-[16px] text-gray-400 mb-1">Question</span>
-          <div className="border p-3 rounded text-[18px]">
+        <label className='mt-4 flex flex-col'>
+          <span className='text-[16px] text-gray-400 mb-1'>Question</span>
+          <div className='border p-3 rounded text-[18px]'>
             {currentQuestion.question}
           </div>
         </label>
       )}
 
-      <label className="mt-4 flex flex-col w-full">
-        <span className="text-[16px] text-gray-400 mb-1">Answers</span>
+      <label className='mt-4 flex flex-col w-full'>
+        <span className='text-[16px] text-gray-400 mb-1'>Answers</span>
         {currentQuestion && (
-          <div className="mt-2">
+          <div className='mt-2'>
             {currentQuestion.responseType === 'Text' && (
               <>
                 <input
-                  type="text"
-                  className="border p-2 rounded w-full"
+                  type='text'
+                  className='border p-2 rounded w-full'
                   value={responses[currentQuestionIndex]?.responseText || ''}
                   onChange={(e) =>
                     handleResponseChange(
@@ -206,7 +201,7 @@ const DepartmentResponse = () => {
                   }
                 />
                 {errors[currentQuestionIndex]?.responseText && (
-                  <p className="text-red-500 text-sm">
+                  <p className='text-red-500 text-sm'>
                     {errors[currentQuestionIndex]?.responseText}
                   </p>
                 )}
@@ -215,7 +210,7 @@ const DepartmentResponse = () => {
             {currentQuestion.responseType === 'Rating' && (
               <>
                 <select
-                  className="border p-2 rounded w-full"
+                  className='border p-2 rounded w-full'
                   value={responses[currentQuestionIndex]?.rating || ''}
                   onChange={(e) =>
                     handleResponseChange(
@@ -225,7 +220,7 @@ const DepartmentResponse = () => {
                     )
                   }
                 >
-                  <option value="">Select a rating</option>
+                  <option value=''>Select a rating</option>
                   {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((value) => (
                     <option key={value} value={value}>
                       {value}
@@ -233,7 +228,7 @@ const DepartmentResponse = () => {
                   ))}
                 </select>
                 {errors[currentQuestionIndex]?.rating && (
-                  <p className="text-red-500 text-sm">
+                  <p className='text-red-500 text-sm'>
                     {errors[currentQuestionIndex]?.rating}
                   </p>
                 )}
@@ -243,22 +238,22 @@ const DepartmentResponse = () => {
         )}
       </label>
 
-      <div className="flex flex-row items-center justify-end mt-32 gap-4">
+      <div className='flex flex-row items-center justify-end mt-32 gap-4'>
         <button
-          className="text-[14px] p-2 border rounded px-4 bg-white"
+          className='text-[14px] p-2 border rounded px-4 bg-white'
           onClick={handlePreviousQuestion}
           disabled={currentQuestionIndex === 0}
         >
           Previous
         </button>
         <button
-          className="text-[14px] p-2 border rounded px-4 bg-white"
+          className='text-[14px] p-2 border rounded px-4 bg-white'
           onClick={handleNextQuestion}
         >
           Next
         </button>
         {currentQuestionIndex + 1 === questions.length && (
-          <Button onClick={onSubmit} name="Submit" />
+          <Button onClick={onSubmit} name='Submit' />
         )}
       </div>
     </div>

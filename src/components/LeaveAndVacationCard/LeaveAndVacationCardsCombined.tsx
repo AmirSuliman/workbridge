@@ -1,40 +1,26 @@
 import { fetchEmployeeData } from '@/store/slices/employeeInfoSlice';
 import { AppDispatch, RootState } from '@/store/store';
-import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import LeaveAndVacationCard from './LeaveAndVacationCard';
 
 const LeaveAndVacationCardsCombined = () => {
-  const { data: session } = useSession();
   const dispatch = useDispatch<AppDispatch>();
-
+  const user = useSelector((state: RootState) => state.myInfo);
+  const employeeId = user?.user?.employeeId;
   const { data: employeeData } = useSelector(
     (state: RootState) => state.employee
   );
 
   useEffect(() => {
-    // Only fetch if we don't already have the data
-    if (
-      session?.user.accessToken &&
-      session?.user.employeeId &&
-      (!employeeData || !employeeData.firstName)
-    ) {
+    if (employeeId) {
       dispatch(
         fetchEmployeeData({
-          accessToken: session.user.accessToken,
-          userId: Number(session?.user.employeeId),
+          userId: Number(employeeId),
         })
       );
-    } else if (!session?.user.accessToken || !session?.user.employeeId) {
-      console.log('Invalid session or user ID');
-    }
-  }, [
-    dispatch,
-    session?.user.accessToken,
-    session?.user.employeeId,
-    employeeData,
-  ]);
+    } else console.log('Invalid session or employeeId');
+  }, [dispatch, employeeId]);
 
   return (
     <div className='flex gap-4 flex-wrap lg:flex-nowrap p-4'>

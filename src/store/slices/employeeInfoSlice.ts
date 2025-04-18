@@ -17,15 +17,9 @@ const initialState: EmployeeState = {
 // Create an async thunk for fetching employee data
 export const fetchEmployeeData = createAsyncThunk(
   'employee/fetchEmployeeData',
-  async (
-    {
-      accessToken,
-      userId,
-    }: { accessToken: string; userId: number | undefined },
-    { rejectWithValue }
-  ) => {
+  async ({ userId }: { userId: number | undefined }, { rejectWithValue }) => {
     try {
-      const { data } = await getEmployeeInfo(accessToken, userId);
+      const { data } = await getEmployeeInfo(userId);
       return data;
     } catch (err: any) {
       return rejectWithValue(err.message || 'Failed to fetch employee data');

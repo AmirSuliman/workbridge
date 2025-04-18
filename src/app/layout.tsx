@@ -2,6 +2,8 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import type { Metadata } from 'next';
 import Providers from '../Providers/Providers';
 import './globals.css';
+import { Suspense } from 'react';
+import ScreenLoader from '@/components/common/ScreenLoader';
 
 export const metadata: Metadata = {
   title: 'ISA WorkBridge',
@@ -22,7 +24,9 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <Providers>
-          <ErrorBoundary>{children}</ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<ScreenLoader />}>{children}</Suspense>
+          </ErrorBoundary>
         </Providers>
       </body>
     </html>

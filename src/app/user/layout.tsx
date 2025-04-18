@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import SideNavigation from '@/components/common/SideNavigation';
 import UserHeader from '@/components/Headers/UserHeader';
@@ -7,25 +7,19 @@ import EmployeesIcon from '@/components/icons/employees-icon';
 import FileIcon from '@/components/icons/file-icon';
 import HomeIcon from '@/components/icons/home-icon';
 import UserIcon from '@/components/icons/user-icon';
+import { RootState } from '@/store/store';
 import { IoCalendarOutline } from 'react-icons/io5';
-import { getSession } from 'next-auth/react';
+import { useSelector } from 'react-redux';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [role, setRole] = useState<string | null>(null);
   const [showSidbarMenu, setShowSidebarMenu] = useState(false);
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role || null);
-    };
 
-    fetchSession();
-  }, []);
-
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
   const isManager = role === 'Manager';
 
   const navItems = [

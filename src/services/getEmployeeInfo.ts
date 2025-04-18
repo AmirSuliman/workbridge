@@ -1,15 +1,9 @@
 import axiosInstance from '@/lib/axios';
 import axios from 'axios';
 
-export const getEmployeeInfo = async (
-  token: string | undefined,
-  id: number | undefined
-) => {
+export const getEmployeeInfo = async (id: number | undefined) => {
   try {
     const response = await axiosInstance.get(`/employee/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       params: { associations: true },
     });
     return response.data;

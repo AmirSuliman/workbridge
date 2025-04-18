@@ -1,27 +1,24 @@
 'use client';
 
+import SingleAnnouncement from '@/components/Announcements/SingleAnnouncement';
 import Button from '@/components/Button';
-import Celebrations from '@/components/Celebrations/Celebrations';
 import Companyinfo from '@/components/companyinformation/companyinformaion';
 import NewEmployees from '@/components/NewEmployees/NewEmployees';
-import SingleAnnouncement from '@/components/Announcements/SingleAnnouncement';
-import Training from '@/components/Training/Training';
 import WhosOut from '@/components/WhosOut/WhosOut';
 import axiosInstance from '@/lib/axios';
-import { getSession, useSession } from 'next-auth/react';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { HiSpeakerphone } from 'react-icons/hi';
-import { PiArrowUpRightThin } from 'react-icons/pi';
-import Evaluation from './components/evaluation';
-import HomePolicies from './components/HomePolicies';
-import UserEvaluation from './components/userevaulation';
 import {
   clearEmployeeData,
   fetchEmployeeData,
 } from '@/store/slices/employeeInfoSlice';
 import { AppDispatch, RootState } from '@/store/store';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { HiSpeakerphone } from 'react-icons/hi';
+import { PiArrowUpRightThin } from 'react-icons/pi';
 import { useDispatch, useSelector } from 'react-redux';
+import Evaluation from './components/evaluation';
+import HomePolicies from './components/HomePolicies';
+import UserEvaluation from './components/userevaulation';
 
 interface InnerUser {
   active: boolean;
@@ -51,18 +48,13 @@ const Home = () => {
   const [employeeId, setEmployeeId] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch<AppDispatch>();
-  const { data: session } = useSession();
-
-  const fetchSession = async (): Promise<Session | null> => {
-    const session = await getSession();
-    return session;
-  };
-
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
   useEffect(() => {
     const fetchSessionAndSetEmployeeId = async () => {
-      const session = await fetchSession();
-      if (session?.user?.employeeId) {
-        setEmployeeId({ employeeId: session.user.employeeId });
+      // const session = await fetchSession();
+      if (user?.user?.employeeId) {
+        setEmployeeId({ employeeId: user.user.employeeId });
       } else {
         setEmployeeId({ employeeId: null }); // Handle the case where employeeId is not available
       }
@@ -73,11 +65,10 @@ const Home = () => {
 
   useEffect(() => {
     // Fetch employee data if session and empId are valid
-    if (session?.user.accessToken && session?.user?.employeeId) {
+    if (user?.user?.employeeId) {
       dispatch(
         fetchEmployeeData({
-          accessToken: session.user.accessToken,
-          userId: session?.user?.employeeId,
+          userId: user?.user?.employeeId,
         })
       );
     } else {
@@ -87,7 +78,7 @@ const Home = () => {
     return () => {
       dispatch(clearEmployeeData());
     };
-  }, [dispatch, session?.user.accessToken, session?.user?.employeeId]);
+  }, [dispatch, user?.user?.employeeId]);
 
   const { data: employeeData } = useSelector(
     (state: RootState) => state.employee
@@ -134,21 +125,21 @@ const Home = () => {
   const isManager = employeeData?.isManager;
 
   return (
-    <div className="p-6">
-      <main className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div className='p-6'>
+      <main className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
         <WhosOut />
-        <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2">
-          <header className="px-4 flex items-center gap-4 justify-between">
-            <h1 className="flex items-center gap-4 font-semibold text-xl mb-4">
+        <section className='bg-white rounded-xl border-[1px] border-[#E0E0E0] py-4 space-y-2'>
+          <header className='px-4 flex items-center gap-4 justify-between'>
+            <h1 className='flex items-center gap-4 font-semibold text-xl mb-4'>
               <HiSpeakerphone />
               Announcements
             </h1>
-            <Link href="/user/home/all-announcements">
+            <Link href='/user/home/all-announcements'>
               <Button
-                name="See All"
+                name='See All'
                 icon={<PiArrowUpRightThin size={18} />}
-                bg="transparent"
-                textColor="black"
+                bg='transparent'
+                textColor='black'
               />
             </Link>
           </header>

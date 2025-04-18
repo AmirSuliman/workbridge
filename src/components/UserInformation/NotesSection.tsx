@@ -22,6 +22,8 @@ import FormHeading from './FormHeading';
 import imageLoader from '../../../imageLoader';
 import { useParams } from 'next/navigation';
 import { getSession } from 'next-auth/react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 interface Note {
   id: number;
@@ -62,7 +64,8 @@ const NotesSection = ({ employeeId }) => {
   const [createNoteModal, setCreateNoteModal] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const { empId } = useParams();
-  const [role, setRole] = useState<string>();
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
 
   const dispatch = useAppDispatch();
   const { notes, fetchStatus, crudStatus, error, selectedNote, updatedNote } =
@@ -119,29 +122,21 @@ const NotesSection = ({ employeeId }) => {
     setSelectedNote(null);
   };
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-    fetchSession();
-  }, []);
-
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 
   if (error) {
-    return <div className="text-red-500">Error: {error}</div>;
+    return <div className='text-red-500'>Error: {error}</div>;
   }
 
   return (
-    <div className="p-1 rounded-md w-full h-full">
-      <div className="p-3 md:p-6 rounded-[10px] border-gray-border border-b border-[1px] bg-white mb-5">
-        <div className="mb-6 flex justify-between flex-wrap gap-4">
+    <div className='p-1 rounded-md w-full h-full'>
+      <div className='p-3 md:p-6 rounded-[10px] border-gray-border border-b border-[1px] bg-white mb-5'>
+        <div className='mb-6 flex justify-between flex-wrap gap-4'>
           <FormHeading
             icon={
-              <Image src="/document.svg" alt="img" width={13} height={13} />
+              <Image src='/document.svg' alt='img' width={13} height={13} />
             }
-            text="Notes"
+            text='Notes'
           />
           {isUserPanel && empId ? (
             ''
@@ -152,73 +147,73 @@ const NotesSection = ({ employeeId }) => {
                 setCreateNoteModal(true);
               }}
               icon={<FiPlusCircle />}
-              name="Create"
-              className="flex-row-reverse"
+              name='Create'
+              className='flex-row-reverse'
             />
           )}
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white rounded-lg">
-            <thead className="w-full">
-              <tr className="border-b text-[14px] w-full">
-                <th className="py-4 px-4 text-left font-medium text-gray-600">
+        <div className='overflow-x-auto'>
+          <table className='min-w-full bg-white rounded-lg'>
+            <thead className='w-full'>
+              <tr className='border-b text-[14px] w-full'>
+                <th className='py-4 px-4 text-left font-medium text-gray-600'>
                   Note Title
                 </th>
-                <th className="py-4 px-4 text-left font-medium text-gray-600">
+                <th className='py-4 px-4 text-left font-medium text-gray-600'>
                   Note
                 </th>
-                <th className="py-4 px-4 text-left font-medium text-gray-600">
+                <th className='py-4 px-4 text-left font-medium text-gray-600'>
                   Date Created
                 </th>
-                <th className="py-4 px-4 text-left font-medium text-gray-600"></th>
+                <th className='py-4 px-4 text-left font-medium text-gray-600'></th>
               </tr>
             </thead>
             {fetchStatus === 'loading' ? (
-              <tbody className="w-full">
-                <tr className="w-full">
+              <tbody className='w-full'>
+                <tr className='w-full'>
                   <td colSpan={4}>
                     <ScreenLoader />
                   </td>
                 </tr>
               </tbody>
             ) : (
-              <tbody className="w-full">
+              <tbody className='w-full'>
                 {notes.map((note) => (
                   <tr
                     key={note.id}
-                    className="hover:bg-gray-50 text-[14px] w-full"
+                    className='hover:bg-gray-50 text-[14px] w-full'
                   >
-                    <td className="py-4 px-4 align-middle">{note.title}</td>
-                    <td className="py-4 px-4 align-middle">
+                    <td className='py-4 px-4 align-middle'>{note.title}</td>
+                    <td className='py-4 px-4 align-middle'>
                       <TruncatedText text={note.note} />
                     </td>
-                    <td className="py-4 px-4 align-middle">
+                    <td className='py-4 px-4 align-middle'>
                       {new Date(note.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="py-4 px-4 align-middle">
+                    <td className='py-4 px-4 align-middle'>
                       {isUserPanel && empId ? (
                         ''
                       ) : (
-                        <div className="flex space-x-2">
+                        <div className='flex space-x-2'>
                           <button
-                            type="button"
-                            className="text-black"
+                            type='button'
+                            className='text-black'
                             onClick={(e) => {
                               e.preventDefault();
                               handleEditClick(note);
                             }}
                           >
                             <Image
-                              src="/edit.svg"
-                              alt="img"
+                              src='/edit.svg'
+                              alt='img'
                               width={10}
                               height={10}
                             />
                           </button>
                           <button
-                            type="button"
-                            className="text-black"
+                            type='button'
+                            className='text-black'
                             onClick={(e) => {
                               e.preventDefault();
                               setDeleteId(note.id);
@@ -226,8 +221,8 @@ const NotesSection = ({ employeeId }) => {
                             }}
                           >
                             <Image
-                              src="/delete.svg"
-                              alt="img"
+                              src='/delete.svg'
+                              alt='img'
                               width={10}
                               height={10}
                             />
@@ -245,48 +240,48 @@ const NotesSection = ({ employeeId }) => {
 
       {showModal && selectedNote && (
         <Modal onClose={handleCloseModal}>
-          <div className="p-8 w-full sm:w-[600px]">
-            <h2 className="text-2xl font-semibold mb-4">Edit Note</h2>
-            <div className="mb-4 mt-8">
-              <label className="block mb-2 text-gray-400 text-[14px]">
+          <div className='p-8 w-full sm:w-[600px]'>
+            <h2 className='text-2xl font-semibold mb-4'>Edit Note</h2>
+            <div className='mb-4 mt-8'>
+              <label className='block mb-2 text-gray-400 text-[14px]'>
                 Title:
               </label>
               <input
-                type="text"
-                name="title"
+                type='text'
+                name='title'
                 value={updatedNote.title}
                 onChange={handleInputChange}
-                className="w-full p-3 text-[14px] border border-gray-300 rounded focus:outline-none"
+                className='w-full p-3 text-[14px] border border-gray-300 rounded focus:outline-none'
               />
             </div>
-            <div className="mb-4">
-              <label className="block mb-2 text-gray-400 text-[14px]">
+            <div className='mb-4'>
+              <label className='block mb-2 text-gray-400 text-[14px]'>
                 Note:
               </label>
               <textarea
-                name="note"
+                name='note'
                 value={updatedNote.note}
                 onChange={handleInputChange}
-                className="w-full p-2 text-[14px] border border-gray-300 rounded resize-none focus:outline-none"
+                className='w-full p-2 text-[14px] border border-gray-300 rounded resize-none focus:outline-none'
                 rows={4}
               />
             </div>
-            <div className="flex flex-row items-center gap-4 w-full px-8 mt-24">
+            <div className='flex flex-row items-center gap-4 w-full px-8 mt-24'>
               <button
-                type="button"
-                className="bg-black w-full text-white px-4 py-3 rounded flex items-center justify-center"
+                type='button'
+                className='bg-black w-full text-white px-4 py-3 rounded flex items-center justify-center'
                 onClick={handleSaveNote}
                 disabled={crudStatus === 'loading'}
               >
                 {crudStatus === 'loading' ? (
-                  <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+                  <BiLoaderCircle className='h-5 w-5 duration-100 animate-spin' />
                 ) : (
                   'Save'
                 )}
               </button>
               <button
-                type="button"
-                className="border w-full text-black px-4 py-3 rounded"
+                type='button'
+                className='border w-full text-black px-4 py-3 rounded'
                 onClick={handleCloseModal}
               >
                 Cancel
@@ -311,34 +306,34 @@ const NotesSection = ({ employeeId }) => {
             setDeleteNoteModal(false);
           }}
         >
-          <section className="p-8 min-h-80 flex flex-col">
-            <h1 className="font-semibold text-xl my-4">Delete</h1>
-            <p className="text-lg text-center">
+          <section className='p-8 min-h-80 flex flex-col'>
+            <h1 className='font-semibold text-xl my-4'>Delete</h1>
+            <p className='text-lg text-center'>
               Are you sure you want to delete this item?
             </p>
-            <p className="font-semibold text-base text-center mb-auto">
+            <p className='font-semibold text-base text-center mb-auto'>
               This action is irreversible.
             </p>
-            <div className="flex items-center gap-4 justify-center mt-4 mb-0">
+            <div className='flex items-center gap-4 justify-center mt-4 mb-0'>
               <Button
                 disabled={crudStatus == 'loading'}
                 onClick={handleDeleteClick}
                 name={crudStatus == 'loading' ? '' : 'Confirm'}
                 icon={
                   crudStatus == 'loading' && (
-                    <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+                    <BiLoaderCircle className='h-5 w-5 duration-100 animate-spin' />
                   )
                 }
-                className="disabled:cursor-not-allowed"
+                className='disabled:cursor-not-allowed'
               />
               <Button
                 onClick={(e) => {
                   e.preventDefault();
                   setDeleteNoteModal(false);
                 }}
-                bg="transparent"
-                textColor="black"
-                name="Cancel"
+                bg='transparent'
+                textColor='black'
+                name='Cancel'
               />
             </div>
           </section>

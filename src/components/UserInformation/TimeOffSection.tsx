@@ -1,10 +1,12 @@
 'use client';
 import Modal from '@/components/modal/Modal';
 import axiosInstance from '@/lib/axios';
+import { RootState } from '@/store/store';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import imageLoader from '../../../imageLoader';
 import LabelWithIcon from '../common/LabelWithIcon';
 import ClockRotateIcon from '../icons/clock-rotate-icon';
@@ -14,7 +16,6 @@ import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import SickCard from './sickCard';
 import VacationsCard from './VacationsCard';
-import { getSession } from 'next-auth/react';
 interface Employee {
   id: number;
   firstName: string;
@@ -36,7 +37,6 @@ interface TimeOffItem {
 }
 
 const TimeOffSection = ({ employeeData }) => {
-  console.log('emp data: ', employeeData);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [leaveDate, setLeaveDate] = useState('');
@@ -49,17 +49,8 @@ const TimeOffSection = ({ employeeData }) => {
     null
   );
   const { empId } = useParams(); // This id is used to view any employee's info
-  const [role, setRole] = useState('');
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      if (session?.user?.role) {
-        setRole(session.user.role);
-      }
-    };
-    fetchSession();
-  }, []);
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
 
   useEffect(() => {
     if (role && employeeData?.tittle) {

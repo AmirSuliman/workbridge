@@ -8,19 +8,20 @@ import EmployeesIcon from '@/components/icons/employees-icon';
 import Modal from '@/components/modal/Modal';
 import { IMAGES } from '@/constants/images';
 import axiosInstance from '@/lib/axios';
+import { RootState } from '@/store/store';
+import { EmployeeData } from '@/types/employee';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { CiCirclePlus } from 'react-icons/ci';
 import { FaAngleDown, FaEdit } from 'react-icons/fa';
+import { FaTrash } from 'react-icons/fa6';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
+import { useSelector } from 'react-redux';
+import DeleteDepartment from '../components/DeleteDepartment';
 import Addemployee from './components/addemployee';
 import EditDepartment from './components/editdepartment';
-import { EmployeeData } from '@/types/employee';
-import { FaTrash } from 'react-icons/fa6';
-import DeleteDepartment from '../components/DeleteDepartment';
-import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 
 interface DepartmentData {
   id: string;
@@ -47,10 +48,9 @@ const OpendepartmentTable: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortType, setSortType] = useState<string>('');
-  const { data: session } = useSession();
-  const role = session?.user?.user?.role;
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
   const isUserpanel = role === 'ViewOnly' || role === 'Manager';
-  console.log('role: ', role, 'isurepanel: ', isUserpanel);
 
   const handleEmployeeAdded = (newEmployees: EmployeeData[]) => {
     setEmployees((prevEmployees) => {
@@ -157,7 +157,7 @@ const OpendepartmentTable: React.FC = () => {
       title: 'Email',
       accessor: 'user.email',
       render: (value: string) => (
-        <a href={`mailto:${value}`} className="text-blue-400 text-sm">
+        <a href={`mailto:${value}`} className='text-blue-400 text-sm'>
           {value}
         </a>
       ),
@@ -166,7 +166,7 @@ const OpendepartmentTable: React.FC = () => {
       title: 'Hire Date',
       accessor: 'hireDate',
       render: (value: string) => (
-        <div className="text-sm text-dark-navy font-[500] mr-12">{value}</div>
+        <div className='text-sm text-dark-navy font-[500] mr-12'>{value}</div>
       ),
     },
 
@@ -178,9 +178,9 @@ const OpendepartmentTable: React.FC = () => {
             render: (id: string) => (
               <Link
                 href={`/hr/employees/employee-info/${id}`}
-                className="flex items-center"
+                className='flex items-center'
               >
-                <MdOutlineKeyboardArrowRight className="w-6 h-6 border border-gray-border rounded-sm hover:cursor-pointer hover:bg-gray-100 ml-12" />
+                <MdOutlineKeyboardArrowRight className='w-6 h-6 border border-gray-border rounded-sm hover:cursor-pointer hover:bg-gray-100 ml-12' />
               </Link>
             ),
           },
@@ -197,20 +197,20 @@ const OpendepartmentTable: React.FC = () => {
   };
 
   return (
-    <div className="h-full p-2">
-      <div className="flex justify-between items-center gap-4 mb-4">
+    <div className='h-full p-2'>
+      <div className='flex justify-between items-center gap-4 mb-4'>
         <FormHeading
-          textClasses="text-xl font-[600] font-semibold"
-          classNames=""
-          icon={<EmployeesIcon classNames="w-6" />}
+          textClasses='text-xl font-[600] font-semibold'
+          classNames=''
+          icon={<EmployeesIcon classNames='w-6' />}
           text={departmentData?.name || 'Department Name'}
         />
         {!isUserpanel && (
-          <nav className="relative  ">
+          <nav className='relative  '>
             <button
               onClick={() => setMoreOptions(!moreOptions)}
-              type="button"
-              className="flex items-center justify-center gap-2 p-2 px-4 bg-[#0F172A] text-white rounded text-[12px] border min-w-44"
+              type='button'
+              className='flex items-center justify-center gap-2 p-2 px-4 bg-[#0F172A] text-white rounded text-[12px] border min-w-44'
             >
               More Options{' '}
               <FaAngleDown className={`${moreOptions ? 'rotate-180' : ''}`} />
@@ -220,20 +220,20 @@ const OpendepartmentTable: React.FC = () => {
                 style={{
                   boxShadow: '0px 4px 4px 0px rgba(15, 23, 42, 0.1)',
                 }}
-                className="absolute right-0 top-[100%] bg-[rgba(255,255,255,1)] border border-gray-border rounded-md divide-y"
+                className='absolute right-0 top-[100%] bg-[rgba(255,255,255,1)] border border-gray-border rounded-md divide-y'
               >
                 <button
-                  type="button"
+                  type='button'
                   onClick={() => setIsModalOpen1(true)}
-                  className="flex items-center gap-2 p-2 px-4 text-black text-sm whitespace-nowrap"
+                  className='flex items-center gap-2 p-2 px-4 text-black text-sm whitespace-nowrap'
                 >
                   <FaEdit size={14} />
                   Edit Department
                 </button>
                 <button
-                  type="button"
+                  type='button'
                   onClick={() => setIsDeleteModalOpen(true)}
-                  className="flex items-center gap-2 p-2 px-4 text-red-500 text-sm whitespace-nowrap"
+                  className='flex items-center gap-2 p-2 px-4 text-red-500 text-sm whitespace-nowrap'
                 >
                   <FaTrash size={14} />
                   Delete Department
@@ -245,49 +245,49 @@ const OpendepartmentTable: React.FC = () => {
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center items-center h-[50vh]">
+        <div className='flex justify-center items-center h-[50vh]'>
           <p>Loading...</p>
         </div>
       ) : (
-        <div className="bg-white border border-gray-border rounded-md p-3">
-          <div className="flex justify-between items-center mb-8">
-            <div className="flex flex-row items-center gap-4">
+        <div className='bg-white border border-gray-border rounded-md p-3'>
+          <div className='flex justify-between items-center mb-8'>
+            <div className='flex flex-row items-center gap-4'>
               <SearchInput
-                placeholder="Search Employees"
+                placeholder='Search Employees'
                 value={searchTerm}
                 onChange={handleSearch}
               />
-              <div className="flex flex-row items-center gap-2">
+              <div className='flex flex-row items-center gap-2'>
                 <label
-                  htmlFor="sort"
-                  className="mr-2 text-gray-400 text-[12px]"
+                  htmlFor='sort'
+                  className='mr-2 text-gray-400 text-[12px]'
                 >
                   Sort
                 </label>
                 <select
-                  id="sort"
-                  className="border rounded px-2 py-1 text-[12px]"
+                  id='sort'
+                  className='border rounded px-2 py-1 text-[12px]'
                   value={sortType}
                   onChange={handleSort}
                 >
-                  <option value="">Select</option>
-                  <option value="nameAZ">Name A-Z</option>
-                  <option value="nameZA">Name Z-A</option>
-                  <option value="dateAsc">Date Ascending</option>
-                  <option value="dateDesc">Date Descending</option>
+                  <option value=''>Select</option>
+                  <option value='nameAZ'>Name A-Z</option>
+                  <option value='nameZA'>Name Z-A</option>
+                  <option value='dateAsc'>Date Ascending</option>
+                  <option value='dateDesc'>Date Descending</option>
                 </select>
               </div>
             </div>
             {!isUserpanel && (
               <Button
-                name="Add new Employee"
+                name='Add new Employee'
                 icon={<CiCirclePlus />}
                 onClick={() => setIsModalOpen(true)}
-                className="!text-[12px]"
+                className='!text-[12px]'
               />
             )}
           </div>
-          <div className="overflow-x-auto">
+          <div className='overflow-x-auto'>
             <Table
               headers={headers}
               values={Tvalues}
@@ -295,14 +295,14 @@ const OpendepartmentTable: React.FC = () => {
             />
           </div>
           {totalPages > 1 && (
-            <div className="mt-16 flex justify-between items-center">
-              <p className="text-[13px] text-gray-400">
+            <div className='mt-16 flex justify-between items-center'>
+              <p className='text-[13px] text-gray-400'>
                 Showing {currentPage} of {totalPages} pages
               </p>
 
-              <div className="flex gap-2">
+              <div className='flex gap-2'>
                 <button
-                  className="p-2 border bg-gray-200 rounded-lg"
+                  className='p-2 border bg-gray-200 rounded-lg'
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
@@ -322,7 +322,7 @@ const OpendepartmentTable: React.FC = () => {
                   </button>
                 ))}
                 <button
-                  className="p-2 border bg-gray-200 rounded-lg"
+                  className='p-2 border bg-gray-200 rounded-lg'
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
                 >

@@ -1,31 +1,38 @@
-import { useEffect } from 'react';
-import NotificationDropdown from './NotificationDropdown';
-import NotificationsButton from './NotificationsButton';
-import { useDispatch } from 'react-redux';
+import { API_ROUTES } from '@/constants/apiRoutes';
 import {
   addNotification,
   fetchNotificationsData,
 } from '@/store/slices/notificationsSlice';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
-import { useSession } from 'next-auth/react';
-import { API_ROUTES } from '@/constants/apiRoutes';
+import NotificationDropdown from './NotificationDropdown';
+import NotificationsButton from './NotificationsButton';
+import { RootState } from '@/store/store';
 
 const Notifications = () => {
   const dispatch = useDispatch();
-  const { data: session } = useSession();
-
+  const user = useSelector((state: RootState) => state.myInfo);
+  let accessToken;
+  if (typeof window !== 'undefined') {
+    accessToken = localStorage.getItem('accessToken');
+  }
   useEffect(() => {
-    if (!session?.accessToken || !session.user.userId) {
+    if (!accessToken || !user?.user?.employeeId) {
       return;
     }
     const connection = io(API_ROUTES.WEBSOCKET_URL, {
-      auth: { token: session.accessToken },
+      auth: { token: accessToken },
       transports: ['websocket'],
     });
 
-    connection.emit('joinRoom', session.user.userId);
+    connection.emit('joinRoom', user?.user?.employeeId);
     connection.on('notification', (notification) => {
-      if (notification.type !== 'system' && notification.data && notification.data.notification) {
+      if (
+        notification.type !== 'system' &&
+        notification.data &&
+        notification.data.notification
+      ) {
         dispatch(addNotification(notification.data));
       }
     });
@@ -34,7 +41,7 @@ const Notifications = () => {
       connection.off('foo');
       connection.close();
     };
-  }, [session?.user.userId, session?.accessToken]);
+  }, [user?.user?.employeeId, accessToken]);
 
   useEffect(() => {
     dispatch(

@@ -8,6 +8,8 @@ import { PiArrowUpRightThin } from 'react-icons/pi';
 import imageLoader from '../../../../../imageLoader';
 import { getPoliciesById } from '@/services/getAllPolicies';
 import PolicyIcon from './PolicyIcon';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 interface Policy {
   id: number;
@@ -35,11 +37,13 @@ const HomePolicies = () => {
   const [policies, setPolicies] = useState<Policy[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const user = useSelector((state: RootState) => state.myInfo);
+  const employeeId = user?.user?.employeeId;
 
   useEffect(() => {
     const fetchPolicies = async () => {
       try {
-        const response = await getPoliciesById(1, 1000);
+        const response = await getPoliciesById(1, 1000, employeeId);
         const allPolicies = response.data?.data?.rows || [];
 
         if (!Array.isArray(allPolicies) || allPolicies.length === 0) {
@@ -92,32 +96,32 @@ const HomePolicies = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center p-4">
-        <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+      <div className='flex justify-center items-center p-4'>
+        <BiLoaderCircle className='h-5 w-5 duration-100 animate-spin' />
       </div>
     );
   }
 
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return <div className='text-red-500'>{error}</div>;
   }
 
   return (
     <>
-      <div className="p-6 bg-white rounded-[10px] border ">
+      <div className='p-6 bg-white rounded-[10px] border '>
         {' '}
-        <h1 className="text-[18px] font-medium flex flex-row items-center gap-2 mb-4">
+        <h1 className='text-[18px] font-medium flex flex-row items-center gap-2 mb-4'>
           <HiSpeakerphone size={22} />
           New Policies Update
         </h1>
-        <section className="divide-y">
+        <section className='divide-y'>
           {policies.length > 0 ? (
             policies.map((policy, index) => (
               <div
                 key={index}
-                className="flex flex-row items-center mb-4 justify-between w-full"
+                className='flex flex-row items-center mb-4 justify-between w-full'
               >
-                <div className="flex flex-row items-center gap-2">
+                <div className='flex flex-row items-center gap-2'>
                   {/* <Image
                     loader={imageLoader}
                     src="/annoucementIconRed.png"
@@ -126,18 +130,18 @@ const HomePolicies = () => {
                     height={40}
                   /> */}
                   <PolicyIcon />
-                  <div className="flex flex-col">
-                    <p className="text-[14px] font-semibold">
+                  <div className='flex flex-col'>
+                    <p className='text-[14px] font-semibold'>
                       {policy.title || ''}
                     </p>
-                    <div className="flex flex-row items-center gap-5">
-                      <p className="text-[12px]">
+                    <div className='flex flex-row items-center gap-5'>
+                      <p className='text-[12px]'>
                         Posted by:{' '}
-                        <span className="font-semibold">{policy.postedBy}</span>
+                        <span className='font-semibold'>{policy.postedBy}</span>
                       </p>
-                      <p className="text-[12px]">
+                      <p className='text-[12px]'>
                         Effective Date:
-                        <span className="font-semibold">
+                        <span className='font-semibold'>
                           {policy.effectiveDate
                             ? new Date(policy.effectiveDate).toLocaleDateString(
                                 'en-US',
@@ -155,14 +159,14 @@ const HomePolicies = () => {
                 </div>
                 <button
                   onClick={() => router.push(`/hr/home/policy/${policy.id}`)}
-                  className="border rounded p-2 flex flex-row items-center gap-3 text-[10px] mt-8"
+                  className='border rounded p-2 flex flex-row items-center gap-3 text-[10px] mt-8'
                 >
                   View <PiArrowUpRightThin size={18} />
                 </button>
               </div>
             ))
           ) : (
-            <div className="text-gray-500 text-center p-4">
+            <div className='text-gray-500 text-center p-4'>
               No policies available.
             </div>
           )}

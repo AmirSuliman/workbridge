@@ -37,7 +37,8 @@ const EmergencySection = ({ employeeData }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [paymentId, setPaymentId] = useState<number | null>(null);
   const { empId } = useParams();
-  const [role, setRole] = useState<string>();
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
   const [addeNew, setAddNew] = useState(false);
   // const [payments, setPayments] = useState<PaymentProps[]>([]);
   const [currentPayment, setCurrentPayment] = useState<PaymentProps | null>(
@@ -131,23 +132,15 @@ const EmergencySection = ({ employeeData }) => {
     reset(payment);
   };
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-    fetchSession();
-  }, []);
-
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 
   return (
     <>
-      <div className="p-3 sm:p-6 rounded-[10px] border-gray-border border-[1px] bg-white my-5">
-        <div className="mb-5 flex justify-between flex-wrap gap-4">
+      <div className='p-3 sm:p-6 rounded-[10px] border-gray-border border-[1px] bg-white my-5'>
+        <div className='mb-5 flex justify-between flex-wrap gap-4'>
           <FormHeading
-            icon={<Image src="/contact.svg" alt="img" width={17} height={17} />}
-            text="Emergency Contact"
+            icon={<Image src='/contact.svg' alt='img' width={17} height={17} />}
+            text='Emergency Contact'
           />
           {
             // if it is user panel and you are viewing other employee info
@@ -164,7 +157,7 @@ const EmergencySection = ({ employeeData }) => {
                   }}
                   name={'Add New Contact'}
                   icon={<GoPlusCircle />}
-                  className="flex-row-reverse !text-[14px]"
+                  className='flex-row-reverse !text-[14px]'
                 />
               )}
         </div>
@@ -197,11 +190,11 @@ const EmergencySection = ({ employeeData }) => {
                       ''
                     ) : (
                       <Image
-                        src="/delete.svg"
+                        src='/delete.svg'
                         width={10}
                         height={10}
-                        alt="delete"
-                        className="cursor-pointer"
+                        alt='delete'
+                        className='cursor-pointer'
                         key={payment.id}
                         onClick={(e) => {
                           e.preventDefault();
@@ -215,11 +208,11 @@ const EmergencySection = ({ employeeData }) => {
                       ''
                     ) : (
                       <Image
-                        src="/edit.svg"
+                        src='/edit.svg'
                         width={10}
                         height={10}
-                        alt="edit"
-                        className="cursor-pointer"
+                        alt='edit'
+                        className='cursor-pointer'
                         key={payment.id}
                         onClick={(e) => {
                           e.preventDefault();
@@ -232,70 +225,70 @@ const EmergencySection = ({ employeeData }) => {
             }
           />
         ) : (
-          <div className="p-4 mt-4 rounded-md border-[1px] border-gray-border bg-white h-full">
+          <div className='p-4 mt-4 rounded-md border-[1px] border-gray-border bg-white h-full'>
             <FormHeading
-              icon={<BasicInfoIcon classNames="w-4" />}
-              text="Emergency Contact"
+              icon={<BasicInfoIcon classNames='w-4' />}
+              text='Emergency Contact'
             />
-            <div className="grid sm:grid-cols-3 gap-4 my-5">
-              <label className="form-label">
+            <div className='grid sm:grid-cols-3 gap-4 my-5'>
+              <label className='form-label'>
                 First Name*
                 <input
-                  type="text"
+                  type='text'
                   className={`form-input`}
                   {...register('firstName', {
                     required: 'First name is required',
                   })}
                 />
                 {errors?.firstName && (
-                  <p className="form-error">
+                  <p className='form-error'>
                     {String(errors?.firstName.message)}
                   </p>
                 )}
               </label>
-              <label className="form-label">
+              <label className='form-label'>
                 Middle Name
                 <input
-                  type="text"
+                  type='text'
                   className={`form-input`}
                   {...register('middleName')}
                 />
                 {errors?.middleName && (
-                  <p className="form-error">
+                  <p className='form-error'>
                     {String(errors?.middleName.message)}
                   </p>
                 )}
               </label>
-              <label className="form-label">
+              <label className='form-label'>
                 Surname*
                 <input
-                  type="text"
+                  type='text'
                   className={`form-input`}
                   {...register('lastName', {
                     required: 'Last name is required',
                   })}
                 />
                 {errors?.lastName && (
-                  <p className="form-error">
+                  <p className='form-error'>
                     {String(errors?.lastName.message)}
                   </p>
                 )}
               </label>
-              <label className="form-label">
+              <label className='form-label'>
                 Phone*
                 <input
-                  type="number"
+                  type='number'
                   className={`form-input`}
                   {...register('phone', { valueAsNumber: true })}
                 />
                 {errors?.phone && (
-                  <p className="form-error">{String(errors?.phone.message)}</p>
+                  <p className='form-error'>{String(errors?.phone.message)}</p>
                 )}
               </label>
-              <label className="form-label">
+              <label className='form-label'>
                 Work Phone
                 <input
-                  type="number"
+                  type='number'
                   className={`form-input`}
                   {...register('workPhone', {
                     setValueAs: (value) =>
@@ -303,60 +296,60 @@ const EmergencySection = ({ employeeData }) => {
                   })}
                 />
                 {errors?.workPhone && (
-                  <p className="form-error">
+                  <p className='form-error'>
                     {String(errors?.workPhone.message)}
                   </p>
                 )}
               </label>
-              <label className="form-label">
+              <label className='form-label'>
                 Email*
                 <input
-                  type="email"
+                  type='email'
                   className={`form-input`}
                   {...register('email', { required: 'Email is required' })}
                 />
                 {errors.email && (
-                  <p className="form-error">{String(errors.email.message)}</p>
+                  <p className='form-error'>{String(errors.email.message)}</p>
                 )}
               </label>
             </div>
-            <hr className="text-white" />
-            <div className="my-5">
+            <hr className='text-white' />
+            <div className='my-5'>
               <FormHeading
-                icon={<HiMiniHomeModern className="w-4" />}
-                text="Address"
+                icon={<HiMiniHomeModern className='w-4' />}
+                text='Address'
               />
-              <div className="grid sm:grid-cols-3 gap-4 mt-5">
-                <label className="form-label">
+              <div className='grid sm:grid-cols-3 gap-4 mt-5'>
+                <label className='form-label'>
                   Street 1
                   <input
-                    type="text"
+                    type='text'
                     className={`form-input`}
                     {...register('location.street1')}
                   />
                   {errors?.location?.['street1'] && (
-                    <p className="form-error">
+                    <p className='form-error'>
                       {errors.location['street1'].message}
                     </p>
                   )}
                 </label>
-                <label className="form-label">
+                <label className='form-label'>
                   Street 2
                   <input
-                    type="text"
+                    type='text'
                     className={`form-input`}
                     {...register('location.street2')}
                   />
                   {errors?.location?.['street2'] && (
-                    <p className="form-error">
+                    <p className='form-error'>
                       {errors?.location?.['street2'].message}
                     </p>
                   )}
                 </label>
-                <label className="form-label">
+                <label className='form-label'>
                   Zip
                   <input
-                    type="number"
+                    type='number'
                     className={`form-input`}
                     {...register('location.zipCode', {
                       setValueAs: (value) =>
@@ -364,69 +357,69 @@ const EmergencySection = ({ employeeData }) => {
                     })}
                   />
                   {errors?.location?.['zipCode'] && (
-                    <p className="form-error">
+                    <p className='form-error'>
                       {errors?.location?.['zipCode'].message}
                     </p>
                   )}
                 </label>
-                <label className="form-label">
+                <label className='form-label'>
                   City
                   <input
-                    type="text"
+                    type='text'
                     className={`form-input`}
                     {...register('location.city')}
                   />
                   {errors?.location?.['city'] && (
-                    <p className="form-error">
+                    <p className='form-error'>
                       {errors?.location?.['city'].message}
                     </p>
                   )}
                 </label>
-                <label className="form-label">
+                <label className='form-label'>
                   Country*
                   <input
-                    type="text"
+                    type='text'
                     className={`form-input`}
                     {...register('location.country', {
                       required: 'Country is required',
                     })}
                   />
                   {errors?.location?.['country'] && (
-                    <p className="form-error">
+                    <p className='form-error'>
                       {errors?.location?.['country'].message}
                     </p>
                   )}
                 </label>
-                <label className="form-label">
+                <label className='form-label'>
                   State
                   <input
-                    type="text"
+                    type='text'
                     className={`form-input`}
                     {...register('location.state')}
                   />
                   {errors?.location?.['state'] && (
-                    <p className="form-error">
+                    <p className='form-error'>
                       {errors?.location?.['state'].message}
                     </p>
                   )}
                 </label>
-                <div className="flex gap-4 flex-wrap col-span-full justify-center mt-8">
+                <div className='flex gap-4 flex-wrap col-span-full justify-center mt-8'>
                   <Button
                     onClick={handleSubmit(handleEdit)}
-                    type="submit"
+                    type='submit'
                     disabled={isSubmitting}
                     name={isSubmitting ? '' : 'Save Changes'}
                     icon={
                       isSubmitting && (
-                        <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+                        <BiLoaderCircle className='h-5 w-5 duration-100 animate-spin' />
                       )
                     }
                   />
                   <Button
-                    bg="transparent"
-                    textColor="black"
-                    type="button"
-                    name="Cancel"
+                    bg='transparent'
+                    textColor='black'
+                    type='button'
+                    name='Cancel'
                     onClick={() => setisEditPayment(false)}
                   />
                 </div>

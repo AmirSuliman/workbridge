@@ -1,44 +1,18 @@
 import axiosInstance from '@/lib/axios';
-import { fetchUserData } from '@/services/myInfo';
 import { resetState } from '@/store/slices/folderSlice';
-import { setUser } from '@/store/slices/myInfoSlice';
 import { AppDispatch, RootState } from '@/store/store';
-import { getSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaTimes } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 
 const AddSubFolder = ({ setIsModalOpen, activeFolder }) => {
-  console.log('activeFolder-> sub: ', activeFolder);
-  const [userId, setUserId] = useState<number | undefined>(undefined);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [folderName, setFolderName] = useState('');
   const dispatch = useDispatch<AppDispatch>();
   const { loading, success } = useSelector((state: RootState) => state.folder);
-
-  useEffect(() => {
-    const getMyInfo = async () => {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        try {
-          const userData = await fetchUserData(token);
-          setUserId(userData.id);
-          dispatch(setUser(userData));
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-          if (error instanceof Error) {
-            console.error(error.message || 'Failed to load user data!');
-          } else {
-            console.error('Failed to load user data!');
-          }
-        }
-      } else {
-        toast.error('Authentication failed. Please try again.');
-      }
-    };
-    getMyInfo();
-  }, []);
+  const user = useSelector((state: RootState) => state.myInfo);
+  const userId = user?.user?.employeeId;
 
   const handleCreateFolder = async () => {
     try {

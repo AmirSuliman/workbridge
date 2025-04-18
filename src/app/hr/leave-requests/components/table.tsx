@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import axiosInstance from '@/lib/axios';
-import Image from 'next/image';
-import { FaCheck, FaTimes } from 'react-icons/fa';
-import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
+import { Pagination } from '@/components/common/Pagination';
+import UserImgPlaceholder from '@/components/LeaveRequests/UserImgPlaceholder';
 import Modal from '@/components/modal/Modal';
+import axiosInstance from '@/lib/axios';
+import { RootState } from '@/store/store';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+import { FaCheck, FaTimes } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
+import imageLoader from '../../../../../imageLoader';
 import ConfirmLeave from './confirmleave';
 import Deny from './deny';
-import UserImgPlaceholder from '@/components/LeaveRequests/UserImgPlaceholder';
-import { getSession } from 'next-auth/react';
-import imageLoader from '../../../../../imageLoader';
-import { Pagination } from '@/components/common/Pagination';
 
 const ITEMS_PER_PAGE = 7;
 
@@ -53,16 +53,8 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const [role, setRole] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role || null);
-    };
-
-    fetchSession();
-  }, []);
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
 
   const isAdminOrManager = role === 'SuperAdmin' || role === 'Manager';
 

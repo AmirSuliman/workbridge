@@ -1,9 +1,9 @@
+import { RootState } from '@/store/store';
 import { BTN_HOVER_OPEN_POSITIONS, BTN_SELECT } from '@/utils/const';
 import { checkForOpenPositions } from '@/utils/misc';
 import * as d3 from 'd3';
 import { OrgChart } from 'd3-org-chart';
 import { debounce } from 'lodash';
-import { getSession } from 'next-auth/react';
 import {
   useCallback,
   useEffect,
@@ -11,6 +11,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useSelector } from 'react-redux';
 
 const OrgChartWithPositions = ({
   onSelectedEmployees,
@@ -119,16 +120,9 @@ const OrgChartWithPositions = ({
       processChange();
     }
   }, [processChange, search]);
-  const [role, setRole] = useState<string>();
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-
-    fetchSession();
-  }, []);
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 

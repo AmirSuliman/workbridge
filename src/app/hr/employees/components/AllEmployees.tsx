@@ -40,7 +40,8 @@ export const AllEmployees = () => {
     totalItems,
   } = useSelector((state: RootState) => state.employees);
 
-  const [role, setRole] = useState<string>();
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
   const [filteredEmployees, setFilteredEmployees] = useState<
     AllEmployeeData['items'] | undefined
   >([]);
@@ -48,14 +49,6 @@ export const AllEmployees = () => {
   const [sortOption, setSortOption] = useState('');
   const [filterOption, setFilterOption] = useState('');
   const pageSize = 10;
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-    fetchSession();
-  }, []);
 
   const handlePageChange = useCallback((page: number) => {
     dispatch(setCurrentPage(page));

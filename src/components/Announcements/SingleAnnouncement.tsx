@@ -1,9 +1,10 @@
 import axiosInstance from '@/lib/axios';
+import { RootState } from '@/store/store';
 import { Announcement } from '@/types/common';
-import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BiLoaderCircle } from 'react-icons/bi';
+import { useSelector } from 'react-redux';
 import { AnnouncementImage } from './AnnouncementImage';
 
 const SingleAnnouncement = () => {
@@ -12,16 +13,8 @@ const SingleAnnouncement = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [role, setRole] = useState<string>();
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-
-    fetchSession();
-  }, []);
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 
@@ -66,14 +59,14 @@ const SingleAnnouncement = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center p-4">
-        <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+      <div className='flex justify-center items-center p-4'>
+        <BiLoaderCircle className='h-5 w-5 duration-100 animate-spin' />
       </div>
     );
   }
 
   if (error) {
-    return <div className="text-red-500 p-4">{error}</div>;
+    return <div className='text-red-500 p-4'>{error}</div>;
   }
 
   return (
@@ -89,12 +82,12 @@ const SingleAnnouncement = () => {
                     : `/hr/announcements-&-policies/announcements/${announcement.id}`
                 )
               }
-              className="flex items-center flex-wrap md:flex-nowrap gap-3 py-3 px-4 cursor-pointer hover:bg-background"
+              className='flex items-center flex-wrap md:flex-nowrap gap-3 py-3 px-4 cursor-pointer hover:bg-background'
             >
               <AnnouncementImage type={announcement.type} />
-              <div className="flex flex-row  items-center justify-between gap-1 w-full">
-                <p className="text-sm">{announcement.title}</p>
-                <p className="opacity-50 font-medium text-[12px]">
+              <div className='flex flex-row  items-center justify-between gap-1 w-full'>
+                <p className='text-sm'>{announcement.title}</p>
+                <p className='opacity-50 font-medium text-[12px]'>
                   {announcement.createdAt
                     ? new Date(announcement.createdAt).toLocaleDateString()
                     : 'Date not available'}
@@ -102,12 +95,12 @@ const SingleAnnouncement = () => {
               </div>
             </article>
             {index !== announcements.length - 1 && (
-              <hr className="border-gray-300" />
+              <hr className='border-gray-300' />
             )}
           </div>
         ))
       ) : (
-        <div className="p-4">No announcements available.</div>
+        <div className='p-4'>No announcements available.</div>
       )}
     </div>
   );

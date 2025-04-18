@@ -1,20 +1,19 @@
 'use client';
+import { RootState } from '@/store/store';
 import Image from 'next/image';
-import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import axiosInstance from '@/lib/axios';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const PreviewPolicy = ({ previewData }) => {
-  const { data: session } = useSession();
   const { policyId } = useParams();
-  const [loading, setLoading] = useState(false);
-  const [responseStatus, setResponseStatus] = useState<string | null>(null);
 
-  const employeeId = session?.user?.employeeId;
-  const role = session?.user?.role as string | undefined;
-  console.log(role, 'role');
+  const [responseStatus, setResponseStatus] = useState<string | null>(null);
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
+  const employeeId = user?.user?.employeeId;
+  // const role = session?.user?.role as string | undefined;
+  // console.log(role, 'role');
 
   console.log({ policyId, employeeId, role }, 'Identifiers');
 
@@ -29,79 +28,78 @@ const PreviewPolicy = ({ previewData }) => {
 
   return (
     <>
-      <div className="bg-white mt-8">
-        <div className="p-6 border rounded-[10px]">
-          <h1 className="text-[32px] font-medium">{previewData.title}</h1>
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mt-4">
+      <div className='bg-white mt-8'>
+        <div className='p-6 border rounded-[10px]'>
+          <h1 className='text-[32px] font-medium'>{previewData.title}</h1>
+          <div className='flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mt-4'>
             {previewData.users && (
-              <div className="flex flex-row items-center gap-1">
+              <div className='flex flex-row items-center gap-1'>
                 {previewData.users.profilePictureUrl && (
                   <Image
                     src={previewData.users.profilePictureUrl}
-                    alt="img"
+                    alt='img'
                     width={30}
                     height={30}
-                    className="rounded-full"
+                    className='rounded-full'
                   />
                 )}
-                <p className="text-[13px]">Posted by:</p>
-                <p className="text-[13px] font-semibold">{`${previewData.users.firstName} ${previewData.users.lastName}`}</p>
+                <p className='text-[13px]'>Posted by:</p>
+                <p className='text-[13px] font-semibold'>{`${previewData.users.firstName} ${previewData.users.lastName}`}</p>
               </div>
             )}
 
-            <div className="flex flex-row items-center gap-1">
-              <p className="text-[13px]">Effective Date:</p>
-              <p className="text-[13px] font-semibold">
+            <div className='flex flex-row items-center gap-1'>
+              <p className='text-[13px]'>Effective Date:</p>
+              <p className='text-[13px] font-semibold'>
                 {previewData.effectiveDate?.split('T')[0]}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 p-4">
-          <h2 className="text-[22px] font-semibold mb-2">
+        <div className='mt-8 p-4'>
+          <h2 className='text-[22px] font-semibold mb-2'>
             {previewData.title}
           </h2>
 
           {previewData.previewUrl && (
             <Image
               src={previewData.previewUrl}
-              alt="policy"
+              alt='policy'
               width={1200}
               height={20}
-              className="my-6"
+              className='my-6'
             />
           )}
 
           {previewData.file?.url && (
             <Image
               src={previewData.file.url}
-              alt="policy"
+              alt='policy'
               width={1200}
               height={20}
-              className="my-6"
+              className='my-6'
             />
           )}
-{previewData?.attachment?.url ? (
-  <div className="mt-4">
-    <p className="text-[16px] font-semibold">Attachment:</p>
-    <a
-      href={previewData.attachment.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-blue-600 underline"
-    >
-      {previewData.attachment.fileName || 'Download Attachment'}
-    </a>
-  </div>
-) : (
-  <p className="text-gray-500">No attachment available</p>
-)}
-
+          {previewData?.attachment?.url ? (
+            <div className='mt-4'>
+              <p className='text-[16px] font-semibold'>Attachment:</p>
+              <a
+                href={previewData.attachment.url}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='text-blue-600 underline'
+              >
+                {previewData.attachment.fileName || 'Download Attachment'}
+              </a>
+            </div>
+          ) : (
+            <p className='text-gray-500'>No attachment available</p>
+          )}
 
           {previewData.description && (
             <div
-              className="text-black"
+              className='text-black'
               dangerouslySetInnerHTML={{ __html: previewData.description }}
             ></div>
           )}

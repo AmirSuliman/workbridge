@@ -1,10 +1,9 @@
+import { RootState } from '@/store/store';
+import Link from 'next/link';
 import { FaLocationDot } from 'react-icons/fa6';
 import { GoArrowUpRight } from 'react-icons/go';
-import Button from '../Button';
+import { useSelector } from 'react-redux';
 import UserImgPlaceholder from '../LeaveRequests/UserImgPlaceholder';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { getSession } from 'next-auth/react';
 
 interface NewEmployeeInfoProps {
   name: string;
@@ -23,14 +22,8 @@ const NewEmployeeInfo = ({
   startDate,
   id,
 }: NewEmployeeInfoProps) => {
-  const [role, setRole] = useState<string>();
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-    fetchSession();
-  }, []);
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 

@@ -1,7 +1,8 @@
 'use client';
 import Modal from '@/components/modal/Modal';
 import axiosInstance from '@/lib/axios';
-import { useSession } from 'next-auth/react';
+import { RootState } from '@/store/store';
+import { formatFileSize } from '@/utils/misc';
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -12,14 +13,13 @@ import {
   FaPlusCircle,
   FaUpload,
 } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 import Addfolder from './components/addfolder';
 import AddSubFolder from './components/addSubFolder';
 import Deletedocument from './components/deletedocumnet';
 import Editdocument from './components/editdocument';
 import Editfolder from './components/editfolder';
 import Uploadfiles from './components/uploadfiles';
-import mammoth from 'mammoth';
-import { formatFileSize } from '@/utils/misc';
 
 interface Folder {
   id: string;
@@ -59,11 +59,9 @@ const HrFiles = () => {
   const [documentId, setDocumentId] = useState<string | null>(null);
   const [currentTitle, setCurrentTitle] = useState<string | null>(null);
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
-  const { data: session } = useSession();
-  const role = session?.user.role;
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
-  const [documents, setDocuments] = useState<any[]>([]); // Explicitly specify the type
-  const [files, setFiles] = useState([]);
 
   const handleDocumentOpen = async (doc) => {
     const isEdge = window.navigator.userAgent.indexOf('Edg') > -1;
@@ -128,10 +126,6 @@ const HrFiles = () => {
       createdAt: new Date().toISOString(), // Set createdAt to the current timestamp
       fileType: newFile.fileType || 'unknown', // Fallback to 'unknown' if fileType is missing
     };
-
-    console.log('File with Metadata:', fileWithMetadata);
-    console.log('File Type:', fileWithMetadata.fileType);
-    console.log('File Size:', fileWithMetadata.size);
 
     // Update the state with the new file (with metadata)
     setAllFiles((prevFiles) => [fileWithMetadata, ...prevFiles]);

@@ -1,17 +1,17 @@
 'use client';
+import { getFileExtension } from '@/lib/getFileExtension';
+import { RootState } from '@/store/store';
 import mammoth from 'mammoth';
-import { getSession } from 'next-auth/react';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { GoPlusCircle } from 'react-icons/go';
 import { pdfjs } from 'react-pdf';
+import { useSelector } from 'react-redux';
 import DeleteDocumentModal from './DeleteDocumentModal';
 import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
 import UploadDocumentModal from './UploadDocumentModal';
-import { InnerUser } from '@/types/next-auth';
-import { useParams } from 'next/navigation';
-import { getFileExtension } from '@/lib/getFileExtension';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -33,7 +33,7 @@ interface EmployeeDataType {
 const SelectableCell = (text, document, onClick) => {
   return (
     <div
-      className="text-dark-navy text-md items-center justify-start flex gap-2 cursor-pointer"
+      className='text-dark-navy text-md items-center justify-start flex gap-2 cursor-pointer'
       onClick={() => onClick(document)}
     >
       {/* <input
@@ -66,15 +66,8 @@ const DocumentSection = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const [role, setRole] = useState<string>();
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const session = await getSession();
-      setRole(session?.user?.role);
-    };
-    fetchSession();
-  }, []);
+  const user = useSelector((state: RootState) => state.myInfo);
+  const role = user?.user?.role;
 
   const isUserPanel = role === 'ViewOnly' || role === 'Manager';
 
@@ -187,8 +180,8 @@ const DocumentSection = ({
         ''
       ) : (
         <Image
-          src="/delete.svg"
-          alt="Delete"
+          src='/delete.svg'
+          alt='Delete'
           width={12}
           height={12}
           onClick={() => {
@@ -196,31 +189,31 @@ const DocumentSection = ({
             setOpenDeleteModal(true);
           }}
           key={1}
-          className=" cursor-pointer"
+          className=' cursor-pointer'
         />
       ),
     ];
   });
 
   return (
-    <div className="p-2 md:p-5 rounded-md h-full bg-white border-gray-border">
-      <div className="flex flex-col md:flex-row gap-2 md:gap-0 md:items-center md:justify-between mb-5">
+    <div className='p-2 md:p-5 rounded-md h-full bg-white border-gray-border'>
+      <div className='flex flex-col md:flex-row gap-2 md:gap-0 md:items-center md:justify-between mb-5'>
         <FormHeading
-          icon={<Image src="/document.svg" alt="img" width={15} height={15} />}
-          text="Documents"
+          icon={<Image src='/document.svg' alt='img' width={15} height={15} />}
+          text='Documents'
         />
-        <div className="flex items-center gap-4">
-          <label className="flex gap-3 items-center text-dark-navy ms-2 ">
-            <span className="text-[14px] text-gray-400">Sort</span>{' '}
+        <div className='flex items-center gap-4'>
+          <label className='flex gap-3 items-center text-dark-navy ms-2 '>
+            <span className='text-[14px] text-gray-400'>Sort</span>{' '}
             <select
               value={sortOption}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                 setSortOption(e.target.value as 'size' | 'date')
               }
-              className="outline-none text-xs p-2 border w-[150px] rounded-md"
+              className='outline-none text-xs p-2 border w-[150px] rounded-md'
             >
-              <option value="size">Size</option>
-              <option value="date">Date</option>
+              <option value='size'>Size</option>
+              <option value='date'>Date</option>
             </select>
           </label>
           {isUserPanel && empId ? (
@@ -228,10 +221,10 @@ const DocumentSection = ({
           ) : (
             <button
               onClick={() => setOpenModal(true)}
-              type="button"
-              className="flex items-center p-2 rounded-[4px] w-[6rem] gap-2 text-white bg-dark-navy text-xs"
+              type='button'
+              className='flex items-center p-2 rounded-[4px] w-[6rem] gap-2 text-white bg-dark-navy text-xs'
             >
-              <GoPlusCircle className="w-4" />
+              <GoPlusCircle className='w-4' />
               Upload
             </button>
           )}

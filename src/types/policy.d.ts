@@ -6,7 +6,7 @@ export interface Policy {
   title: string;
   fileId: number | null;
   status: string;
-  uploadBy: number | null;
+  uploadBy: number | undefined;
   description: string;
   previewUrl: string | null; // this is only for the front end manipulation. backend does not have it.
   effectiveDate: string;
