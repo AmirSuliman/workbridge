@@ -83,7 +83,7 @@ const HrSidebar = () => {
       </button>*/}
       {!isOpen && (
         <button
-          className='lg:hidden fixed top-4 left-4 z-50 bg-white  p-2 '
+          className='lg:hidden fixed top-5 left-4 z-50 bg-white  p-2 '
           onClick={toggleSidebar}
           aria-label='Open sidebar'
         >

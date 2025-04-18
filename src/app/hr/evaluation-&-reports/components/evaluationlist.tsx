@@ -62,7 +62,7 @@ const EvaluationList = () => {
 
   return (
     <div className="bg-white p-6 rounded-[10px] border w-full">
-      <div className="flex flex-row items-center justify-between w-full">
+      <div className="flex flex-col sm:flex-row items-start gap-2 sm:items-center justify-between w-full">
         <div className="flex flex-row items-center gap-2">Evaluations List</div>
         <div className="flex flex-row items-center gap-4">
           <div className="text-[12px] text-gray-400 flex flex-row items-center gap-2">
@@ -108,8 +108,10 @@ const EvaluationList = () => {
       </div>
 
       {/* Table */}
-      <table className="w-full mt-4">
-        <thead className="mt-8">
+      <div className="w-full overflow-x-auto mt-4">
+
+      <table className="min-w-[700px] w-full">
+      <thead className="mt-8">
           <tr>
             <th className="p-4 text-gray-400 text-left">Sent By</th>
             <th className="p-4 text-gray-400 text-left">
@@ -198,6 +200,7 @@ const EvaluationList = () => {
           ))}
         </tbody>
       </table>
+      </div>
 <div className='mt-6 flex items-center justify-end w-full'>
 <Pagination
             styles={{ container: 'mt-5 gap-x-2 justify-end' }}
