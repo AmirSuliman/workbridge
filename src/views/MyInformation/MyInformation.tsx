@@ -108,25 +108,25 @@ const MyInformation = () => {
     mode: 'all',
   });
 
-  useEffect(() => {
-    const fetchMyId = async () => {
-      if (session?.user?.accessToken) {
-        try {
-          const response = await axiosInstance.get('/user/my');
-          dispatch(setUser(response.data.data));
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-          toast.error('Failed to load user data!');
-        } finally {
-          setMyInfoLoading(false);
-        }
-      } else {
-        setMyInfoLoading(false);
-        toast.error('Authentication failed. Please try again.');
-      }
-    };
-    fetchMyId();
-  }, [dispatch]);
+  // useEffect(() => {
+  //   const fetchMyId = async () => {
+  //     if (session?.user?.accessToken) {
+  //       try {
+  //         const response = await axiosInstance.get('/user/my');
+  //         dispatch(setUser(response.data.data));
+  //       } catch (error) {
+  //         console.error('Error fetching user data:', error);
+  //         toast.error('Failed to load user data!');
+  //       } finally {
+  //         setMyInfoLoading(false);
+  //       }
+  //     } else {
+  //       setMyInfoLoading(false);
+  //       toast.error('Authentication failed. Please try again.');
+  //     }
+  //   };
+  //   fetchMyId();
+  // }, [dispatch]);
 
   useEffect(() => {
     // Fetch employee data if session and empId are valid
