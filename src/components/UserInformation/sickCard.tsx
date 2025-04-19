@@ -93,7 +93,7 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
         leaveDay: formatDate(start),
         returningDay: formatDate(end),
       });
-  
+
       if (response.status === 200) {
         setsickDaysUsed(response.data.data);
       }
@@ -102,7 +102,6 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
       setsickDaysUsed(0); // fallback or error value
     }
   };
-  console.log(sickDaysUsed, 'sick days');
   useEffect(() => {
     if (startDate && endDate) {
       fetchVacationDuration(startDate, endDate);
@@ -163,12 +162,12 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
       const response = await axiosInstance.post('/timeoff', payload);
       if (response.status === 200) {
         toast.success('Request timeoff made successfuly!');
-         setIsModalOpen(false);
-      setStartDate(null);
-      setEndDate(null);
-      setNote('');
-      setsickDaysUsed(0);
-      setHolidaysErrors([]);
+        setIsModalOpen(false);
+        setStartDate(null);
+        setEndDate(null);
+        setNote('');
+        setsickDaysUsed(0);
+        setHolidaysErrors([]);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -182,10 +181,6 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
         // Check for holidays errors
         if (error.response.data.message?.holidays) {
           setHolidaysErrors(error.response.data.message?.holidays);
-          console.log(
-            'holidays errors: ',
-            error.response.data.message?.holidays
-          );
         }
       } else {
         toast.error('Unknown error occurred');
@@ -222,7 +217,6 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
 
       {isModalOpen && (
         <Modal onClose={handleCloseModal}>
-        
           <div className='p-6 w-full sm:w-[600px]'>
             <div className='flex flex-row items-center gap-2'>
               <Image
@@ -333,7 +327,7 @@ const SickCard = ({ onButtonClick, employeeData }: SickCardProps) => {
             <div className='h-[1px] w-full bg-gray-200 mt-8' />
 
             {/* Display the vacation duration */}
-            
+
             <div className='flex flex-row gap-4 items-center mt-4'>
               <p className='text-[14px]'>Sick days requested:</p>
               <div className='text-[14px] border rounded p-3 px-12 ml-auto mr-0'>

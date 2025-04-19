@@ -46,7 +46,6 @@ const ForgotPassword = () => {
     resolver: zodResolver(step == 'email' ? emailSchema : resetPasswordSchema),
     mode: 'onChange',
   });
-  console.log(errors, 'Errors');
   const onSubmit = async (data: any) => {
     setLoading(true);
     if (step == 'email') {
@@ -62,7 +61,6 @@ const ForgotPassword = () => {
           toast.error(error.response.data.message ?? 'An error occurred');
         });
     } else if (step == 'confirmation') {
-      console.log(data, 'Data confirmation');
       await axiosInstance
         .post(API_ROUTES.CONFIRM_RESET_PASSWORD, {
           token,

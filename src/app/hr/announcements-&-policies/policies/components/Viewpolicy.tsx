@@ -26,7 +26,6 @@ const ViewPolicy = ({ previewData }) => {
         `/policy/${policyId}/employees/${employeeId}/respond`,
         { status: 'accepted' }
       );
-      console.log('API Response:', response.data);
       window.location.reload(); // Refresh to reflect status update
     } catch (error) {
       console.error('Error responding to policy:', error);

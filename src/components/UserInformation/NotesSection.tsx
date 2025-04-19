@@ -19,9 +19,7 @@ import ScreenLoader from '../common/ScreenLoader';
 import Modal from '../modal/Modal';
 import CreateNote from './CreateNote';
 import FormHeading from './FormHeading';
-import imageLoader from '../../../imageLoader';
 import { useParams } from 'next/navigation';
-import { getSession } from 'next-auth/react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 
@@ -112,7 +110,6 @@ const NotesSection = ({ employeeId }) => {
         },
       })
     );
-    console.log('put res: ', putResponse);
     dispatch(closeModals());
     toast.success('Note updated successfully!');
   };

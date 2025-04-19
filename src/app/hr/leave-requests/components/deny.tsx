@@ -23,7 +23,6 @@ const Deny = ({ timeOffRequestId, onClose, onDeny }) => {
           const response = await axiosInstance.get(
             `/timeoff/${timeOffRequestId}`
           );
-          console.log('Time Off Request:', response.data);
           setTimeOffRequest(response.data.data);
         } catch (error) {
           console.error('Failed to fetch time off request:', error);
@@ -34,14 +33,11 @@ const Deny = ({ timeOffRequestId, onClose, onDeny }) => {
     }
   }, [timeOffRequestId]);
 
-  useEffect(() => {
-    console.log('Time off request state:', timeOffRequest);
-  }, [timeOffRequest]);
+  useEffect(() => {}, [timeOffRequest]);
 
   const handleDenyRequest = async () => {
     if (timeOffRequest) {
       try {
-        console.log('Confirming request with ID:', timeOffRequest.id);
         await axiosInstance.put(`/timeoff/${timeOffRequest.id}/confirm`, {
           employeeId: timeOffRequest.employeeId,
           status: 'Denied',
@@ -69,15 +65,15 @@ const Deny = ({ timeOffRequestId, onClose, onDeny }) => {
   };
 
   return (
-    <div className="w-full max-w-[600px] bg-white p-6 rounded-lg">
-      <h1 className="font-semibold text-[22px]">Deny Leave Request</h1>
+    <div className='w-full max-w-[600px] bg-white p-6 rounded-lg'>
+      <h1 className='font-semibold text-[22px]'>Deny Leave Request</h1>
 
-      {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
+      {error && <div className='text-red-500 text-sm mb-4'>{error}</div>}
 
-      <div className="grid grid-cols-2 gap-8 mt-8">
-        <label className="w-full">
-          <span className="mb-2 text-gray-400 text-[12px]">Employee ID</span>
-          <div className="w-full p-3 text-[14px] rounded border border-gray-300 text-gray-600">
+      <div className='grid grid-cols-2 gap-8 mt-8'>
+        <label className='w-full'>
+          <span className='mb-2 text-gray-400 text-[12px]'>Employee ID</span>
+          <div className='w-full p-3 text-[14px] rounded border border-gray-300 text-gray-600'>
             {timeOffRequest
               ? `${timeOffRequest.employee.firstName} ${
                   timeOffRequest.employee.middleName || ''
@@ -86,9 +82,9 @@ const Deny = ({ timeOffRequestId, onClose, onDeny }) => {
           </div>
         </label>
 
-        <label className="w-full">
-          <span className="mb-2 text-gray-400 text-[12px]">Leave Duration</span>
-          <div className="w-full p-3 text-[14px] rounded border border-gray-300 text-gray-600">
+        <label className='w-full'>
+          <span className='mb-2 text-gray-400 text-[12px]'>Leave Duration</span>
+          <div className='w-full p-3 text-[14px] rounded border border-gray-300 text-gray-600'>
             {timeOffRequest
               ? `${timeOffRequest.duration} Days (${new Date(
                   timeOffRequest.leaveDay
@@ -98,22 +94,22 @@ const Deny = ({ timeOffRequestId, onClose, onDeny }) => {
               : 'Loading...'}
           </div>
         </label>
-        <label className="w-full flex flex-col col-span-full">
-          <span className="mb-1 text-gray-400 text-[12px]">Note</span>
+        <label className='w-full flex flex-col col-span-full'>
+          <span className='mb-1 text-gray-400 text-[12px]'>Note</span>
           <textarea
-            className="w-full p-4 outline-none rounded border border-gray-300 text-black "
+            className='w-full p-4 outline-none rounded border border-gray-300 text-black '
             rows={3}
             value={timeOffRequest?.note || 'No note provided'}
             readOnly={true}
           />
         </label>
-        <label className="w-full flex flex-col col-span-full cursor-pointer">
-          <span className="mb-1 text-gray-400 text-[12px]">
+        <label className='w-full flex flex-col col-span-full cursor-pointer'>
+          <span className='mb-1 text-gray-400 text-[12px]'>
             Add Rejection Note
           </span>
           <textarea
-            placeholder=""
-            className="w-full p-4 rounded border outline-none border-gray-300 text-black "
+            placeholder=''
+            className='w-full p-4 rounded border outline-none border-gray-300 text-black '
             rows={3}
             value={note}
             onChange={(e) => {
@@ -122,13 +118,13 @@ const Deny = ({ timeOffRequestId, onClose, onDeny }) => {
           />
         </label>
         {timeOffRequest?.files && (
-          <section className="flex flex-col gap-2 col-span-full">
+          <section className='flex flex-col gap-2 col-span-full'>
             {timeOffRequest?.files.map((file, index) => (
               <Link
                 href={file.file.url}
-                target="_blank"
+                target='_blank'
                 key={index}
-                className="px-4 py-2 bg-[#0F172A] text-white flex justify-between gap-4 rounded"
+                className='px-4 py-2 bg-[#0F172A] text-white flex justify-between gap-4 rounded'
               >
                 {file.file.fileName.replace(/^\d+-/, '')}
                 <FaDownload />
@@ -139,18 +135,18 @@ const Deny = ({ timeOffRequestId, onClose, onDeny }) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-row items-center gap-5 w-full mt-24 px-8">
+      <div className='flex flex-row items-center gap-5 w-full mt-24 px-8'>
         <button
-          type="button"
-          className="p-4 text-center text-white bg-[#F53649] rounded text-[14px] flex items-center justify-center gap-2 w-full hover:bg-red-700"
+          type='button'
+          className='p-4 text-center text-white bg-[#F53649] rounded text-[14px] flex items-center justify-center gap-2 w-full hover:bg-red-700'
           onClick={handleDenyRequest}
         >
           Deny Request <FaTimes />
         </button>
 
         <button
-          type="button"
-          className="p-4 text-center text-black border border-gray-300 rounded text-[14px] w-full hover:bg-gray-100"
+          type='button'
+          className='p-4 text-center text-black border border-gray-300 rounded text-[14px] w-full hover:bg-gray-100'
           onClick={onClose}
         >
           Cancel

@@ -31,7 +31,6 @@ export default function EditAdminUser() {
   const { editModalOpen, userToEdit } = useSelector(
     (state: RootState) => state.users
   );
-  console.log('user to edit: ', userToEdit);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const { items } = useSelector((state: RootState) => state.userRoles.roles);
@@ -131,37 +130,37 @@ export default function EditAdminUser() {
 
   return (
     <Modal onClose={() => dispatch(closeEditModal())}>
-      <div className="bg-white rounded-sm md:min-w-[35rem] md:min-h-[28rem] px-8 p-4">
-        <WorkBridgeLogo classNames="max-w-[9rem] mb-[1.5rem]" />
-        <h1 className="font-bold text-[#282828] mb-2">Edit User</h1>
-        <p className="text-sm text-[#282828] mb-4">
+      <div className='bg-white rounded-sm md:min-w-[35rem] md:min-h-[28rem] px-8 p-4'>
+        <WorkBridgeLogo classNames='max-w-[9rem] mb-[1.5rem]' />
+        <h1 className='font-bold text-[#282828] mb-2'>Edit User</h1>
+        <p className='text-sm text-[#282828] mb-4'>
           Update the details of the user.
         </p>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-2 gap-2">
+          <div className='grid grid-cols-2 gap-2'>
             <InputField
-              name="firstName"
-              placeholder="First Name"
+              name='firstName'
+              placeholder='First Name'
               register={register}
               error={errors.firstName?.message}
             />
             <InputField
-              name="lastName"
-              placeholder="Last Name"
+              name='lastName'
+              placeholder='Last Name'
               register={register}
               error={errors.lastName?.message}
             />
             <InputField
-              name="email"
-              placeholder="Email"
+              name='email'
+              placeholder='Email'
               register={register}
               styles={{ container: 'col-span-2' }}
               error={errors.email?.message}
             />
 
-            <div className="flex flex-col gap-1">
+            <div className='flex flex-col gap-1'>
               <SelectField
-                name="roleId"
+                name='roleId'
                 register={register}
                 error={errors.roleId?.message}
                 options={roles}
@@ -174,24 +173,24 @@ export default function EditAdminUser() {
 
               {(Number(selectedRoleId) === 1 ||
                 Number(selectedRoleId) === 2) && (
-                <div className="flex items-center col-span-2 mt-2 mb-3">
+                <div className='flex items-center col-span-2 mt-2 mb-3'>
                   <input
-                    type="checkbox"
-                    id="isManager"
+                    type='checkbox'
+                    id='isManager'
                     checked={isManager}
                     onChange={(e) => setIsManager(e.target.checked)}
-                    className="mr-2"
+                    className='mr-2'
                   />
-                  <label htmlFor="isManager" className="text-sm">
+                  <label htmlFor='isManager' className='text-sm'>
                     Is Manager
                   </label>
                 </div>
               )}
             </div>
 
-            <article className="w-full">
-              <select {...register('countryId')} className="form-input">
-                <option value="">Select a country*</option>
+            <article className='w-full'>
+              <select {...register('countryId')} className='form-input'>
+                <option value=''>Select a country*</option>
                 {countries.map((country) => (
                   <option key={country.id} value={country.id}>
                     {country.country}
@@ -199,17 +198,17 @@ export default function EditAdminUser() {
                 ))}
               </select>
               {errors.countryId && (
-                <span className="form-error">{errors.countryId.message}</span>
+                <span className='form-error'>{errors.countryId.message}</span>
               )}
             </article>
 
-            <article className="w-full">
+            <article className='w-full'>
               {Number(selectedRoleId) !== 2 && (
                 <select
                   {...register('reportingManagerId', { valueAsNumber: true })}
-                  className="form-input"
+                  className='form-input'
                 >
-                  <option value="">Select Manager</option>
+                  <option value=''>Select Manager</option>
                   {employees
                     .filter((employee) => employee.isManager)
                     .map((manager) => (
@@ -220,45 +219,45 @@ export default function EditAdminUser() {
                 </select>
               )}
               {errors.reportingManagerId && (
-                <span className="form-error">
+                <span className='form-error'>
                   {errors.reportingManagerId.message}
                 </span>
               )}
             </article>
 
-            <div className="relative w-full col-span-2">
-              <div className="relative flex items-center">
+            <div className='relative w-full col-span-2'>
+              <div className='relative flex items-center'>
                 <InputField
-                  name="password"
+                  name='password'
                   type={passwordVisible ? 'text' : 'password'}
-                  placeholder="Password"
+                  placeholder='Password'
                   register={register}
                   error={errors.password?.message && ''}
                 />
                 <button
-                  type="button"
+                  type='button'
                   onClick={() => setPasswordVisible(!passwordVisible)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                  className='absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500'
                 >
-                  <EyeIcon classNames="w-4" />
+                  <EyeIcon classNames='w-4' />
                 </button>
               </div>
               {errors.password && (
-                <p className="text-red-500 text-xs mt-1">
+                <p className='text-red-500 text-xs mt-1'>
                   {errors.password.message}
                 </p>
               )}
             </div>
           </div>
 
-          <div className="flex justify-start mt-4">
+          <div className='flex justify-start mt-4'>
             <button
-              type="submit"
-              className="bg-dark-navy text-white text-xs px-6 py-2 rounded-[3px] min-w-[10rem]"
+              type='submit'
+              className='bg-dark-navy text-white text-xs px-6 py-2 rounded-[3px] min-w-[10rem]'
               disabled={loading}
             >
               {loading ? (
-                <BiLoaderCircle className="h-4 w-4 animate-spin mx-auto" />
+                <BiLoaderCircle className='h-4 w-4 animate-spin mx-auto' />
               ) : (
                 'Update'
               )}

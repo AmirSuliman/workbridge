@@ -12,10 +12,6 @@ const PreviewPolicy = ({ previewData }) => {
   const user = useSelector((state: RootState) => state.myInfo);
   const role = user?.user?.role;
   const employeeId = user?.user?.employeeId;
-  // const role = session?.user?.role as string | undefined;
-  // console.log(role, 'role');
-
-  console.log({ policyId, employeeId, role }, 'Identifiers');
 
   useEffect(() => {
     if (previewData?.employees && employeeId) {

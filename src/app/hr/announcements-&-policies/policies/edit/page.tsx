@@ -64,32 +64,10 @@ const Addnewpolicies = () => {
     },
   });
 
-  // useEffect(() => {
-  //   const fetchMyId = async () => {
-  //     if (session?.user?.accessToken) {
-  //       try {
-  //         const response = await axiosInstance.get('/user/my', {
-  //           headers: { Authorization: `Bearer ${session.user.accessToken}` },
-  //         });
-  //         const userId = response.data.data?.id;
-  //         setMyId(userId);
-  //         dispatch(setUser(response.data.data));
-  //       } catch (error) {
-  //         console.error('Error fetching user data:', error);
-  //         toast.error('Failed to load user data!');
-  //       }
-  //     } else {
-  //       toast.error('Authentication failed. Please try again.');
-  //     }
-  //   };
-  //   fetchMyId();
-  // }, [dispatch, session?.user?.accessToken]);
-
   useEffect(() => {
     const fetchPolicie = async () => {
       try {
         const response = await getPolicy(id);
-        console.log('Full API Response:', response.data); // Log full response
 
         const policy = response.data.data;
         setPolicyData({
@@ -97,8 +75,6 @@ const Addnewpolicies = () => {
           previewUrl: policy?.file?.url || null,
           description: policy?.description || '',
         });
-
-        console.log('Image URL:', policy?.file?.url);
       } catch (error) {
         console.error('Error fetching policy:', error);
         toast.error('Failed to fetch policy.');
@@ -151,9 +127,7 @@ const Addnewpolicies = () => {
     }
   }, [policyData, previewUrl, reset]);
 
-  useEffect(() => {
-    console.log('Fetched Policy Description:', policyData.description);
-  }, [policyData.description]);
+  useEffect(() => {}, [policyData.description]);
 
   const handleFileChange = (event) => {
     if (event.target.files) {
@@ -177,7 +151,6 @@ const Addnewpolicies = () => {
       const uploadedFileId = response.data.data.id;
       setFileId(uploadedFileId);
       setPreviewUrl(response.data.data.url);
-      console.log('img upload: ', response.data);
       return uploadedFileId;
     } catch (err) {
       console.error('File upload failed:', err);
@@ -287,7 +260,6 @@ const Addnewpolicies = () => {
       };
 
       const response = await axiosInstance.put(`/policy/${id}`, payload);
-      console.log('put policy res: ', response.data);
 
       if (id) {
         sessionStorage.setItem('policy', id);

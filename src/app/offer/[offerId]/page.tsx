@@ -35,7 +35,6 @@ const Page = () => {
           params: { token },
         });
         setJobData(response?.data.data);
-        console.log('response', response?.data);
       } catch (error) {
         console.log(error);
       }
@@ -73,65 +72,65 @@ const Page = () => {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 bottom-0 bg-[#000000]/50 flex items-center justify-center z-50">
-      <div className="max-w-4xl my-4 lg:my-8 p-4 bg-white rounded-lg max-h-[calc(100svh-3rem)] overflow-y-auto">
-        <header className="flex items-center gap-4 justify-between pb-4 border-b-[1px] border-[#E0E0E0]">
-          <h2 className="font-semibold text-lg">Offer</h2>
+    <div className='fixed top-0 left-0 right-0 bottom-0 bg-[#000000]/50 flex items-center justify-center z-50'>
+      <div className='max-w-4xl my-4 lg:my-8 p-4 bg-white rounded-lg max-h-[calc(100svh-3rem)] overflow-y-auto'>
+        <header className='flex items-center gap-4 justify-between pb-4 border-b-[1px] border-[#E0E0E0]'>
+          <h2 className='font-semibold text-lg'>Offer</h2>
         </header>
-        <main className="overflow-y-auto my-8">
-          <h6 className="font-medium text-xs opacity-50">Job Title</h6>
-          <h1 className="font-medium text-xl">{jobData?.tittle}</h1>
-          <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 my-6">
+        <main className='overflow-y-auto my-8'>
+          <h6 className='font-medium text-xs opacity-50'>Job Title</h6>
+          <h1 className='font-medium text-xl'>{jobData?.tittle}</h1>
+          <div className='grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 my-6'>
             <div>
-              <h6 className="font-medium text-xs opacity-50">Department</h6>
-              <h4 className="font-medium text-base">
+              <h6 className='font-medium text-xs opacity-50'>Department</h6>
+              <h4 className='font-medium text-base'>
                 {jobData?.department?.name}
               </h4>
             </div>
             <div>
-              <h6 className="font-medium text-xs opacity-50">
+              <h6 className='font-medium text-xs opacity-50'>
                 Employment Type
               </h6>
-              <h4 className="font-medium text-base">
+              <h4 className='font-medium text-base'>
                 {jobData?.employmentType}
               </h4>
             </div>
             <div>
-              <h6 className="font-medium text-xs opacity-50">Min. Exp.</h6>
-              <h4 className="font-medium text-base">
+              <h6 className='font-medium text-xs opacity-50'>Min. Exp.</h6>
+              <h4 className='font-medium text-base'>
                 {jobData?.minYearsExperience}
               </h4>
             </div>
           </div>
-          <h6 className="font-medium text-xs opacity-50">Description</h6>
-          <p className="font-medium text-base">
+          <h6 className='font-medium text-xs opacity-50'>Description</h6>
+          <p className='font-medium text-base'>
             {jobData?.description || 'No description'}
           </p>
-          <h6 className="font-medium text-xs opacity-50 mt-4">Compensation</h6>
-          <h4 className="font-medium text-base">{jobData?.compensation}</h4>
+          <h6 className='font-medium text-xs opacity-50 mt-4'>Compensation</h6>
+          <h4 className='font-medium text-base'>{jobData?.compensation}</h4>
         </main>
         {jobData?.status === 'rejected' && (
-          <p className="text-red-500">Offer rejected.</p>
+          <p className='text-red-500'>Offer rejected.</p>
         )}
 
         {jobData?.status === 'accepted' && (
-          <p className="text-green-500">Offer accepted.</p>
+          <p className='text-green-500'>Offer accepted.</p>
         )}
 
         {jobData?.status === 'negotiation' && (
-          <footer className="flex items-center gap-4 justify-center pt-4 border-t-[1px] border-[#E0E0E0]">
+          <footer className='flex items-center gap-4 justify-center pt-4 border-t-[1px] border-[#E0E0E0]'>
             <Button
               onClick={() => updateOfferStatus('accepted')}
               name={loading && status === 'accepted' ? '' : 'Accept Offer'}
               icon={
                 loading && status === 'accepted' ? (
-                  <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+                  <BiLoaderCircle className='h-5 w-5 duration-100 animate-spin' />
                 ) : (
                   <FaCheck />
                 )
               }
-              bg="#00B87D"
-              className="w-full max-w-sm mx-auto bg-[#00B87D] text-white font-medium"
+              bg='#00B87D'
+              className='w-full max-w-sm mx-auto bg-[#00B87D] text-white font-medium'
             />
 
             <Button
@@ -139,13 +138,13 @@ const Page = () => {
               name={loading && status === 'rejected' ? '' : 'Reject Offer'}
               icon={
                 loading && status === 'rejected' ? (
-                  <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
+                  <BiLoaderCircle className='h-5 w-5 duration-100 animate-spin' />
                 ) : (
                   <IoClose size={22} />
                 )
               }
-              bg="#F53649"
-              className="w-full max-w-sm mx-auto bg-[#F53649] text-white font-medium"
+              bg='#F53649'
+              className='w-full max-w-sm mx-auto bg-[#F53649] text-white font-medium'
             />
           </footer>
         )}

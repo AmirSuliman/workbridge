@@ -13,7 +13,6 @@ export const createFolder = createAsyncThunk(
         name: folderName,
         createdBy: userId,
       });
-      console.log(response);
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError && error.response) {

@@ -171,7 +171,6 @@ const usersSlice = createSlice({
       })
       .addCase(createUser.fulfilled, (state, action) => {
         state.createStatus = 'success';
-        console.log(action.payload, 'action.payload');
         state.users = [action.payload, ...state.users]; // Add new user to the top of the list
         state.total += 1;
       })

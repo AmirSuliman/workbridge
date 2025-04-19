@@ -56,7 +56,6 @@ const EmployeeReport: React.FC = () => {
       }
 
       const response = await axiosInstance.get('/employees/report', { params });
-      // console.log('emp reports: ', response.data.data);
       const newReports = response.data.data;
       setReports(newReports);
 
@@ -112,56 +111,56 @@ const EmployeeReport: React.FC = () => {
   };
 
   return (
-    <section className="bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4">
-      <div className="flex flex-row items-center justify-between w-full">
-        <div className="flex flex-row items-center gap-2">
-          <img src="/Vector (Stroke).png" alt="img" />
-          <h1 className="font-medium text-[18px] text-[#0F172A]">
+    <section className='bg-white rounded-xl border-[1px] border-[#E0E0E0] p-4'>
+      <div className='flex flex-row items-center justify-between w-full'>
+        <div className='flex flex-row items-center gap-2'>
+          <img src='/Vector (Stroke).png' alt='img' />
+          <h1 className='font-medium text-[18px] text-[#0F172A]'>
             Employee Report
           </h1>
         </div>
-        <Link href="/hr/evaluation-&-reports">
+        <Link href='/hr/evaluation-&-reports'>
           <Button
-            name="See All"
+            name='See All'
             icon={<PiArrowUpRightThin size={18} />}
-            bg="transparent"
-            textColor="black"
-            className="!text-[10px]"
+            bg='transparent'
+            textColor='black'
+            className='!text-[10px]'
           />
         </Link>
       </div>
 
-      <div className="flex flex-row items-center justify-between w-full mt-4">
-        <div className="flex flex-row items-center gap-2">
+      <div className='flex flex-row items-center justify-between w-full mt-4'>
+        <div className='flex flex-row items-center gap-2'>
           <FiUsers />
-          <p className="text-[#0F172A] text-[14px]">
+          <p className='text-[#0F172A] text-[14px]'>
             {totalEmployees} total employees
           </p>
         </div>
-        <label className="flex flex-row gap-2 items-center">
-          <p className="text-[#0F172A] text-[12px]">Filter</p>
+        <label className='flex flex-row gap-2 items-center'>
+          <p className='text-[#0F172A] text-[12px]'>Filter</p>
           <select
             value={filter}
             onChange={handleFilterChange}
-            className="p-2 text-[#0F172A] text-[12px] border w-[120px] border-gray-300 rounded-md focus:outline-none"
+            className='p-2 text-[#0F172A] text-[12px] border w-[120px] border-gray-300 rounded-md focus:outline-none'
           >
-            <option value="">All Employees</option>
-            <optgroup label="Gender">
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
+            <option value=''>All Employees</option>
+            <optgroup label='Gender'>
+              <option value='Male'>Male</option>
+              <option value='Female'>Female</option>
             </optgroup>
-            <optgroup label="Age">
-              <option value="Under30">Under 30 years</option>
-              <option value="Above30">Above 30 years</option>
+            <optgroup label='Age'>
+              <option value='Under30'>Under 30 years</option>
+              <option value='Above30'>Above 30 years</option>
             </optgroup>
-            <optgroup label="Experience">
-              <option value="Under5">Under 5 years</option>
-              <option value="Above5">Above 5 years</option>
+            <optgroup label='Experience'>
+              <option value='Under5'>Under 5 years</option>
+              <option value='Above5'>Above 5 years</option>
             </optgroup>
-            <optgroup label="Employment Type">
-              <option value="Fulltime">Fulltime</option>
-              <option value="Part Time">Part Time</option>
-              <option value="Freelance">Freelance</option>
+            <optgroup label='Employment Type'>
+              <option value='Fulltime'>Fulltime</option>
+              <option value='Part Time'>Part Time</option>
+              <option value='Freelance'>Freelance</option>
             </optgroup>
           </select>
         </label>

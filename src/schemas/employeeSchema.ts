@@ -170,7 +170,6 @@ export const emergencyContactSchema = z.object({
 });
 
 export const getEmployeeSchema = (role, empId) => {
-  // console.log('schema role: ', role);
   const baseSchema = z.object({
     location: locationSchema,
     firstName: z.string().min(1, 'First name is required'),

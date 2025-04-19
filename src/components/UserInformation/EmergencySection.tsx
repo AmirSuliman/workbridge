@@ -4,7 +4,6 @@ import { setEmergencyContact } from '@/store/slices/emergencyContactSlice';
 import { AppDispatch, RootState } from '@/store/store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isAxiosError } from 'axios';
-import { getSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -60,7 +59,6 @@ const EmergencySection = ({ employeeData }) => {
         );
         dispatch(setEmergencyContact(response.data.data.items));
       } catch (error) {
-        console.log(error);
         if (isAxiosError(error) && error.response) {
           toast.error(error.response.data.message);
         } else {
@@ -82,7 +80,6 @@ const EmergencySection = ({ employeeData }) => {
   });
 
   const handleEdit = async (data) => {
-    console.log('data: ', data);
     const payload = {
       employeeId: employeeData.id,
       firstName: data.firstName,
@@ -100,13 +97,11 @@ const EmergencySection = ({ employeeData }) => {
         state: data.location.state,
       },
     };
-    console.log('payload: ', payload);
     try {
       const response = await axiosInstance.put(
         `/emergencyContact/${paymentId}`,
         payload
       );
-      console.log('put response: ', response.data);
       toast.success('Contact updated successfully.');
 
       // Update the local state
@@ -121,7 +116,6 @@ const EmergencySection = ({ employeeData }) => {
       } else {
         toast.error('Cannot update contact.');
       }
-      console.log(error);
     }
   };
 

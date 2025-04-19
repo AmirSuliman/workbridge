@@ -35,7 +35,6 @@ const OrgChartWithPositions = ({
 
   const multipleRoots = detectMultipleRoots(employees);
   const hasMultiRoots = multipleRoots.length > 0;
-  console.log('Multiple roots detected:', hasMultiRoots);
 
   function detectCycle(employee) {
     const visited = new Set();
@@ -66,7 +65,6 @@ const OrgChartWithPositions = ({
 
     for (const node of employee) {
       if (hasCycle(node.id, idMap)) {
-        console.log('Cycle detected at node:', node);
         return true;
       }
     }
@@ -75,7 +73,6 @@ const OrgChartWithPositions = ({
   }
 
   const hasCycle = detectCycle(employees);
-  console.log('Cycle detected:', hasCycle);
 
   function filterChart(value: string) {
     refOrgChart.current.clearHighlighting();

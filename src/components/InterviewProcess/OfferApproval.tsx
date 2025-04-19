@@ -34,8 +34,6 @@ const OfferApproval = ({ jobApplication, offerId, token }) => {
       }
 
       try {
-        console.log('Fetching offer data with:', { offerId, token });
-
         const response = await axiosInstance.get(`/offer/${offerId}`, {
           params: {
             token,
@@ -44,7 +42,6 @@ const OfferApproval = ({ jobApplication, offerId, token }) => {
         });
 
         if (response?.data) {
-          console.log('Offer Data Response:', response.data);
           setOfferData(response.data.data);
         } else {
           setError('No data received from the API.');
@@ -108,8 +105,8 @@ const OfferApproval = ({ jobApplication, offerId, token }) => {
   const renderActions = () => {
     if (offerStatus === 'accepted') {
       return (
-        <td colSpan={2} className="p-1 lg:p-3 text-green-600 font-medium">
-          <span className="border border-green-600 p-3 px-4 rounded text-[12px]">
+        <td colSpan={2} className='p-1 lg:p-3 text-green-600 font-medium'>
+          <span className='border border-green-600 p-3 px-4 rounded text-[12px]'>
             Offer Accepted
           </span>
         </td>
@@ -118,8 +115,8 @@ const OfferApproval = ({ jobApplication, offerId, token }) => {
 
     if (offerStatus === 'rejected') {
       return (
-        <td colSpan={2} className="p-1 lg:p-3 text-red-600 font-medium ml-8">
-          <span className="border border-red-600 p-3 px-4 rounded text-[12px]">
+        <td colSpan={2} className='p-1 lg:p-3 text-red-600 font-medium ml-8'>
+          <span className='border border-red-600 p-3 px-4 rounded text-[12px]'>
             Offer Rejected
           </span>
         </td>
@@ -128,22 +125,22 @@ const OfferApproval = ({ jobApplication, offerId, token }) => {
 
     return (
       <>
-        <td className="p-1 lg:p-3">
+        <td className='p-1 lg:p-3'>
           <Button
-            className="text-[10px] cursor-default"
-            name="Offer Accepted"
-            bg="#00B87D"
-            textColor="white"
+            className='text-[10px] cursor-default'
+            name='Offer Accepted'
+            bg='#00B87D'
+            textColor='white'
             icon={<IoCheckmark />}
             // onClick={() => updateOfferStatus('accepted')}
           />
         </td>
-        <td className="p-1 lg:p-3">
+        <td className='p-1 lg:p-3'>
           <Button
-            className="text-[10px] cursor-default"
-            name="Rejected"
-            bg="#F53649"
-            textColor="white"
+            className='text-[10px] cursor-default'
+            name='Rejected'
+            bg='#F53649'
+            textColor='white'
             icon={<RxCross1 />}
             // onClick={() => updateOfferStatus('rejected')}
           />
@@ -153,49 +150,49 @@ const OfferApproval = ({ jobApplication, offerId, token }) => {
   };
 
   return (
-    <section className="overflow-x-auto">
-      <h2 className="flex font-medium text-lg items-center gap-4">
+    <section className='overflow-x-auto'>
+      <h2 className='flex font-medium text-lg items-center gap-4'>
         <PiListChecksLight size={24} />
         Offer Approval
       </h2>
-      <table className="w-full mt-4">
+      <table className='w-full mt-4'>
         <thead>
-          <tr className="w-full border-b">
-            <th className="table-header wide-column opacity-35 font-medium text-sm">
+          <tr className='w-full border-b'>
+            <th className='table-header wide-column opacity-35 font-medium text-sm'>
               Offer sent by
             </th>
-            <th className="table-header narrow-column opacity-35 font-medium text-sm">
+            <th className='table-header narrow-column opacity-35 font-medium text-sm'>
               Date sent
             </th>
-            <th className="table-header narrow-column opacity-35 font-medium text-sm">
+            <th className='table-header narrow-column opacity-35 font-medium text-sm'>
               Time sent
             </th>
-            <th className="table-header narrow-column opacity-35 font-medium text-sm">
+            <th className='table-header narrow-column opacity-35 font-medium text-sm'>
               Offer
             </th>
-            <th className="table-header narrow-column opacity-35 font-medium text-sm"></th>
-            <th className="table-header narrow-column opacity-35 font-medium text-sm"></th>
+            <th className='table-header narrow-column opacity-35 font-medium text-sm'></th>
+            <th className='table-header narrow-column opacity-35 font-medium text-sm'></th>
           </tr>
         </thead>
         <tbody>
-          <tr className="w-full">
-            <td className="table-cell wide-column font-medium text-sm">
+          <tr className='w-full'>
+            <td className='table-cell wide-column font-medium text-sm'>
               {sender}
             </td>
-            <td className="table-cell narrow-column font-medium text-sm">
+            <td className='table-cell narrow-column font-medium text-sm'>
               {dateSent}
             </td>
-            <td className="table-cell narrow-column font-medium text-sm">
+            <td className='table-cell narrow-column font-medium text-sm'>
               {timeSent}
             </td>
-            <td className="table-cell narrow-column">
+            <td className='table-cell narrow-column'>
               <Button
                 onClick={() => setShowOffer(true)}
-                className="text-[10px]"
-                name="See offer"
+                className='text-[10px]'
+                name='See offer'
                 icon={<PiArrowUpRightThin size={18} />}
-                bg="transparent"
-                textColor="black"
+                bg='transparent'
+                textColor='black'
               />
             </td>
             {renderActions()}

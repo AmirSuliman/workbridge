@@ -3,7 +3,6 @@
 import { Pagination } from '@/components/common/Pagination';
 import axiosInstance from '@/lib/axios';
 import { Announcement } from '@/types/common';
-import { getSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -11,18 +10,11 @@ import { HiSpeakerphone } from 'react-icons/hi';
 import { PiPlusCircleBold } from 'react-icons/pi';
 import Policies from '../policies/components/policies';
 import Vacationpolicies from '../VacationPolicies/page';
-import Image from 'next/image';
 import { AnnouncementImage } from '@/components/Announcements/AnnouncementImage';
 import TabButton from '@/components/common/TabsComponent/button';
 import TabComponent from '@/components/common/TabsComponent/TabComponent';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-
-// type Announcement = {
-//   id: string;
-//   title: string;
-//   status: 'Published' | 'Draft';
-// };
 
 const fetchAnnouncements = async (
   status: string,
@@ -77,7 +69,6 @@ const Page = () => {
       );
       setPublishedAnnouncements(publishedData.announcements);
       setTotalPublishedAnnouncements(publishedData.total);
-      // console.log('publishedData.total', publishedData.total);
     };
 
     const fetchDraftData = async () => {

@@ -60,7 +60,6 @@ const CreateEmployee = () => {
         const file = event.target.files[0];
 
         if (!file.type.startsWith('image/')) {
-          console.log('Selected file type: ', file.type);
           return toast.error('Only image files are allowed!');
         }
         setSelectedFile(file);
@@ -86,7 +85,6 @@ const CreateEmployee = () => {
         },
       });
       const uploadedUrl = response.data.data.url;
-      console.log('Uploaded URL:', uploadedUrl);
       setPreviewUrl(uploadedUrl);
       return uploadedUrl;
     } catch (err) {
@@ -106,7 +104,6 @@ const CreateEmployee = () => {
   } = formMethods;
 
   const onSubmit = async (data) => {
-    // console.log('onsubmit data: ', data);
     const payLoad = {
       firstName: data.firstName,
       lastName: data.lastName,
@@ -157,7 +154,6 @@ const CreateEmployee = () => {
       });
       toast.success('Employee created successfully!');
       setShowSuccess(true);
-      console.log('post employee: ', response.data);
       setLoader(false);
     } catch (error) {
       setLoader(false);
@@ -190,8 +186,6 @@ const CreateEmployee = () => {
       toast.error('Some input fields are missing in the Employment tab!');
     }
   }, [hasPersonalErrors, hasEmploymentErrors]);
-
-  console.log('Form errors: ', errors);
 
   return (
     <main>

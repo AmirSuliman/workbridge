@@ -20,9 +20,6 @@ const Employeelist = () => {
   const survey = searchParams.get('survey');
   const employeeId = searchParams.get('employee');
 
-  console.log('searchParams:', searchParams.toString());
-  console.log('surveyId:', survey, 'employeeId:', employeeId);
-
   useEffect(() => {
     const getManagerEmployees = async () => {
       if (!managerId || !survey) return;
@@ -30,7 +27,6 @@ const Employeelist = () => {
         const response = await axiosInstance.get(
           `/survey/${survey}/manager/${managerId}`
         );
-        console.log('API Response:', response.data);
 
         if (response.data?.data?.length > 0) {
           const surveyData = response.data.data[0];
@@ -64,9 +60,9 @@ const Employeelist = () => {
   }, [managerId, survey]);
 
   return (
-    <div className="bg-white border rounded-[10px] mt-8">
-      <h1 className="font-medium text-[18px] p-6">List of Employees</h1>
-      <div className="flex flex-col items-start w-full my-4">
+    <div className='bg-white border rounded-[10px] mt-8'>
+      <h1 className='font-medium text-[18px] p-6'>List of Employees</h1>
+      <div className='flex flex-col items-start w-full my-4'>
         {employees.length > 0 ? (
           employees.map((employee) => (
             <button
@@ -86,20 +82,20 @@ const Employeelist = () => {
                 employee.id === Number(employeeId) ? 'bg-gray-100' : ''
               }`}
             >
-              <div className="flex flex-row items-center gap-2 w-fit">
+              <div className='flex flex-row items-center gap-2 w-fit'>
                 <ProfileAvatarItem
                   src={employee.profilePictureUrl}
                   title={`${employee.firstName} ${employee.lastName}`}
                   subtitle={employee.title}
                 />
               </div>
-              <div className="text-[#00B87D] bg-[#D5F6DD] p-1 px-3 text-[12px] font-medium rounded mr-0 ml-auto w-fit">
+              <div className='text-[#00B87D] bg-[#D5F6DD] p-1 px-3 text-[12px] font-medium rounded mr-0 ml-auto w-fit'>
                 {employee.surveyStatus}
               </div>
             </button>
           ))
         ) : (
-          <div className="flex flex-row items-center justify-between w-full px-6">
+          <div className='flex flex-row items-center justify-between w-full px-6'>
             No employees available
           </div>
         )}

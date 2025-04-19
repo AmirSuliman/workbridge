@@ -105,7 +105,7 @@ const MyInformation = () => {
         })
       );
     } else {
-      console.log('Invalid session or user ID');
+      //Invalid session or user ID
     }
 
     return () => {
@@ -120,7 +120,6 @@ const MyInformation = () => {
         const file = event.target.files[0];
 
         if (!file.type.startsWith('image/')) {
-          console.log('Selected file type: ', file.type);
           return toast.error('Only image files are allowed!');
         }
         setSelectedFile(file);
@@ -304,7 +303,6 @@ const MyInformation = () => {
   if (!employeeData) {
     return <div className='p-4'>No data available.</div>;
   }
-  console.log('Form errors: ', schemaErrors);
 
   return (
     <form className={`my-1 p-4 h-full`}>

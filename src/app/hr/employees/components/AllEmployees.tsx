@@ -13,8 +13,6 @@ import {
   setCurrentPage,
 } from '@/store/slices/allEmployeesSlice';
 import { AllEmployeeData } from '@/types/employee';
-import { getSession } from 'next-auth/react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { CiCirclePlus } from 'react-icons/ci';
@@ -25,7 +23,6 @@ import { saveAs } from 'file-saver';
 import { calculateDuration } from '@/lib/calculateDuration';
 import DeleteEmployeeMoadal from './DeleteEmployeeModal';
 import { AppDispatch, RootState } from '@/store/store';
-import { GoArrowUpRight } from 'react-icons/go';
 import ButtonWithNav from '@/components/common/ButtonWithNav';
 
 export const AllEmployees = () => {

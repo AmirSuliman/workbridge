@@ -2,7 +2,6 @@
 import Button from '@/components/Button';
 import axiosInstance from '@/lib/axios';
 import { isAxiosError } from 'axios';
-import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -98,7 +97,6 @@ const CreateEvaluation = () => {
     try {
       setLoading(true);
       const response = await axiosInstance.post('/survey/', payload);
-      console.log('Survey Created Response:', response.data);
 
       // Always send the survey if status is 'In Progress'
       const surveyId = response.data?.data?.survey?.id;
@@ -129,7 +127,6 @@ const CreateEvaluation = () => {
       setValue('managerIds', []);
       setValue('deadline', '');
     } catch (error) {
-      console.log(error);
       setLoading(false);
       if (isAxiosError(error) && error.response) {
         toast.error(error.response.data.message || 'Failed to create survey.');

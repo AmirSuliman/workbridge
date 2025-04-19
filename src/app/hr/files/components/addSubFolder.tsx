@@ -28,7 +28,6 @@ const AddSubFolder = ({ setIsModalOpen, activeFolder }) => {
         parentId: activeFolder.id,
       });
       toast.success('Sub folder created successfully!');
-      console.log('sub folder response: ', response.data);
       setIsModalOpen(false);
     } catch (error) {
       console.log(error);
