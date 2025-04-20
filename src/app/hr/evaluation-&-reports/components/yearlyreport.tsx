@@ -207,6 +207,7 @@ const YearlyReport = () => {
         });
         setYearlyReports(response.data.data);
       } catch (error) {
+        console.log(error);
         if (isAxiosError(error)) {
           toast.error(error.response?.data?.message || 'Some error occurred.');
         } else {

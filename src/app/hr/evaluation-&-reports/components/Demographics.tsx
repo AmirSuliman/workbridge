@@ -113,8 +113,11 @@ const Demographics = () => {
       try {
         const response = await axiosInstance.get('/report/demographic');
         setDemographicReports(response.data.data);
+        // console.log('demographic report res: ', response.data.data);
       } catch (error) {
+        console.log(error);
         if (isAxiosError(error)) {
+          console.log(error);
           toast.error(error.response?.data?.message || 'Some error occurred.');
         } else {
           toast.error('Some error occurred.');

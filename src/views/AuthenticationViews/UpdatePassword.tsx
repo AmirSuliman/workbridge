@@ -44,10 +44,12 @@ const UpdatePassword = () => {
             headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
+        console.log('put pas: ', response.data);
       }
       toast.success('Password updated successfully!');
       router.replace('/sign-in');
     } catch (error) {
+      console.log(error);
       if (isAxiosError(error) && error.response)
         toast.error(error.response.data.message || 'An error occured');
       else toast.error('An error occured');

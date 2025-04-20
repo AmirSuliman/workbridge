@@ -26,6 +26,7 @@ interface HolidaysErrorsProps {
 const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
   const totalDays = employeeData?.vacationLeaveCounter;
   const totalDaysUsed = employeeData?.vacationDaysUsed;
+  console.log(totalDaysUsed, 'total days used');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [holidaysErrors, setHolidaysErrors] = useState<HolidaysErrorsProps[]>(
     []
@@ -99,6 +100,7 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
       setVacationDaysUsed(0); // fallback or error value
     }
   };
+  console.log(vacationDaysUsed, 'vacation days');
   useEffect(() => {
     if (startDate && endDate) {
       fetchVacationDuration(startDate, endDate);
@@ -143,6 +145,7 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
 
     try {
       setLoading(true);
+      console.log('Payload:', payload);
 
       const response = await axiosInstance.post('/timeoff', payload);
       if (response.status === 200) {
@@ -154,6 +157,7 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
         setVacationDaysUsed(0);
         setApiCalculatedDays(0);
         setHolidaysErrors([]);
+        
       }
     } catch (error) {
       console.error('Error:', error);
@@ -167,6 +171,10 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
         // Check for holidays errors
         if (error.response.data.message?.holidays) {
           setHolidaysErrors(error.response.data.message?.holidays);
+          console.log(
+            'holidays errors: ',
+            error.response.data.message?.holidays
+          );
         }
       } else {
         toast.error('Unknown error occurred');
@@ -191,7 +199,7 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
     setApiCalculatedDays(0);
     setHolidaysErrors([]);
   };
-
+  
   return (
     <>
       <RequestCard
@@ -204,6 +212,7 @@ const VacationsCard = ({ onButtonClick, employeeData }: VacationCardProps) => {
 
       {isModalOpen && (
         <Modal onClose={handleCloseModal}>
+
           <div className='p-6 w-full sm:w-[600px]'>
             <div className='flex flex-row items-center gap-2'>
               <Image

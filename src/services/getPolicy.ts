@@ -31,6 +31,7 @@ export const getPolicybyIdempId = async (id) => {
       }
     );
 
+    console.log(response, 'res');
     return { data: response.data, error: null };
   } catch (error) {
     console.error('Policy error:', error);

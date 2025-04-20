@@ -19,7 +19,7 @@ const LeaveAndVacationCardsCombined = () => {
           userId: Number(employeeId),
         })
       );
-    }
+    } else console.log('Invalid session or employeeId');
   }, [dispatch, employeeId]);
 
   return (

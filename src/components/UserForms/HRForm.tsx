@@ -116,6 +116,8 @@ const HRForm = ({ onClose }) => {
       reportingManagerId: watch('reportingManagerId') || null,
     };
 
+    console.log('Submitting Payload:', payload);
+
     const response = await dispatch(createUser(payload) as any);
     if (response?.type === 'users/createUser/fulfilled') {
       onClose();
@@ -126,36 +128,37 @@ const HRForm = ({ onClose }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className='mt-2 grid grid-cols-2 gap-2 gap-y-1'>
+      <div className="mt-2 grid grid-cols-2 gap-2 gap-y-1">
         <InputField
-          name='firstName'
-          placeholder='First Name'
+          name="firstName"
+          placeholder="First Name"
           register={register}
           error={errors.firstName?.message}
         />
         <InputField
-          name='lastName'
-          placeholder='Last Name'
+          name="lastName"
+          placeholder="Last Name"
           register={register}
           error={errors.lastName?.message}
         />
         <InputField
-          name='email'
-          placeholder='Email'
+          name="email"
+          placeholder="Email"
           register={register}
           styles={{ container: 'col-span-2' }}
           error={errors.email?.message}
         />
 
-        <div className='flex flex-col gap-1'>
+        <div className="flex flex-col gap-1">
           <SelectField
-            name='roleId'
+            name="roleId"
             register={register}
             error={errors.roleId?.message}
             key={'roleId'}
             options={roles}
             onChange={(e) => {
               const roleId = Number(e.target.value);
+              console.log('Selected Role ID:', roleId);
               setValue('roleId', roleId);
               if (selectedRoleId == 2 || selectedRoleId == 4) {
                 setIsManager(true);
@@ -163,30 +166,30 @@ const HRForm = ({ onClose }) => {
             }}
           />
 
-          <div className='flex items-center col-span-2 mt-2 mb-3'>
+          <div className="flex items-center col-span-2 mt-2 mb-3">
             <input
-              type='checkbox'
-              id='isManager'
+              type="checkbox"
+              id="isManager"
               {...register('isManager')}
               checked={isManager}
               onChange={(e) => setIsManager(e.target.checked)}
-              className='mr-2'
+              className="mr-2"
             />
-            <label htmlFor='isManager' className='text-sm'>
+            <label htmlFor="isManager" className="text-sm">
               Is Manager
             </label>
           </div>
         </div>
 
-        <article className='w-full'>
+        <article className="w-full">
           <select
             {...register('countryId', {
               valueAsNumber: true,
               setValueAs: (value) => (value === '' ? null : Number(value)),
             })}
-            className='form-input'
+            className="form-input"
           >
-            <option value=''>Select a country*</option>
+            <option value="">Select a country*</option>
             {countries.map((country) => (
               <option key={country.id} value={country.id}>
                 {country.country}
@@ -194,13 +197,13 @@ const HRForm = ({ onClose }) => {
             ))}
           </select>
           {errors.countryId && (
-            <span className='form-error'>{errors.countryId.message}</span>
+            <span className="form-error">{errors.countryId.message}</span>
           )}
         </article>
 
-        <article className='w-full'>
-          <select {...register('reportingManagerId')} className='form-input'>
-            <option value=''>Select Manager</option>
+        <article className="w-full">
+          <select {...register('reportingManagerId')} className="form-input">
+            <option value="">Select Manager</option>
             {employees
               .filter((employee) => employee.isManager)
               .map((manager) => (
@@ -210,45 +213,45 @@ const HRForm = ({ onClose }) => {
               ))}
           </select>
           {errors.reportingManagerId && (
-            <span className='form-error'>
+            <span className="form-error">
               {errors.reportingManagerId.message}
             </span>
           )}
         </article>
 
-        <div className='relative w-full col-span-2'>
-          <div className='relative flex items-center'>
+        <div className="relative w-full col-span-2">
+          <div className="relative flex items-center">
             <InputField
-              name='password'
+              name="password"
               type={passwordVisible ? 'text' : 'password'}
-              placeholder='Password'
+              placeholder="Password"
               register={register}
               error={errors.password?.message && ''}
             />
             <button
-              type='button'
+              type="button"
               onClick={() => setPasswordVisible(!passwordVisible)}
-              className='absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 pointer-events-auto'
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 pointer-events-auto"
             >
-              <EyeIcon classNames='w-4' />
+              <EyeIcon classNames="w-4" />
             </button>
           </div>
           {errors.password && (
-            <p className='text-red-500 text-xs mt-1'>
+            <p className="text-red-500 text-xs mt-1">
               {errors.password.message}
             </p>
           )}
         </div>
       </div>
 
-      <div className='flex justify-start mt-4'>
+      <div className="flex justify-start mt-4">
         <button
-          type='submit'
-          className='bg-dark-navy text-white font-normal text-xs px-6 py-2 rounded-[3px] min-w-[10rem]'
+          type="submit"
+          className="bg-dark-navy text-white font-normal text-xs px-6 py-2 rounded-[3px] min-w-[10rem]"
           disabled={loading}
         >
           {userState.createStatus == 'loading' ? (
-            <BiLoaderCircle className='h-4 w-4 animate-spin mx-auto' />
+            <BiLoaderCircle className="h-4 w-4 animate-spin mx-auto" />
           ) : (
             'Add'
           )}

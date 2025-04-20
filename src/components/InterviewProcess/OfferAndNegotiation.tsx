@@ -34,6 +34,8 @@ const OfferAndNegotiation = ({ jobApplication }) => {
     // Only open the modal if there are no errors
     if (isValid) {
       handlePopup(e);
+    } else {
+      console.log('Form has errors, modal will not open.');
     }
   };
   const onSubmit = async (data) => {
@@ -66,38 +68,38 @@ const OfferAndNegotiation = ({ jobApplication }) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className='grid grid-cols-2 md:grid-cols-3 gap-4'
+      className="grid grid-cols-2 md:grid-cols-3 gap-4"
     >
-      <h2 className='flex font-medium text-lg items-center gap-4 col-span-full'>
+      <h2 className="flex font-medium text-lg items-center gap-4 col-span-full">
         <PiListChecksLight size={24} />
         Offer and Negotiation
       </h2>
 
-      <label className='font-medium text-sm flex flex-col'>
-        <span className='opacity-35'>Start Date</span>
+      <label className="font-medium text-sm flex flex-col">
+        <span className="opacity-35">Start Date</span>
         <input
-          type='date'
+          type="date"
           {...register('startDate', { required: 'Start date is required' })}
-          className='outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full'
+          className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
         />
         {errors.startDate?.message && (
-          <p className='text-red-500 text-sm'>
+          <p className="text-red-500 text-sm">
             {String(errors.startDate.message)}
           </p>
         )}
       </label>
-      <label className='font-medium text-sm flex flex-col'>
-        <span className='opacity-35'>Compensation</span>
+      <label className="font-medium text-sm flex flex-col">
+        <span className="opacity-35">Compensation</span>
         <input
-          type='text'
+          type="text"
           {...register('compensation', {
             required: 'Compensation is required',
           })}
-          placeholder='$98,000'
-          className='outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full'
+          placeholder="$98,000"
+          className="outline-none rounded border-[1px] border-[#E8E8E8] px-3 py-2 w-full"
         />
         {errors.compensation?.message && (
-          <p className='text-red-500 text-sm'>
+          <p className="text-red-500 text-sm">
             {String(errors.compensation.message)}
           </p>
         )}
@@ -105,7 +107,7 @@ const OfferAndNegotiation = ({ jobApplication }) => {
 
       <Button
         onClick={handleGenerateOfferClick}
-        type='button'
+        type="button"
         disabled={stage === 'Offer'}
         name={`${stage === 'Offer' ? 'Offer Sent!' : 'Generate Offer'}`}
         className={`my-auto ${
@@ -122,7 +124,7 @@ const OfferAndNegotiation = ({ jobApplication }) => {
       )}
 
       <Button
-        type='button'
+        type="button"
         disabled={stage === 'Negotiation'}
         name={`Continue to Offer Approval`}
         className={`w-full max-w-xl mx-auto col-span-full mt-12 disabled:opacity-50`}

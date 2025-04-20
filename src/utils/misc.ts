@@ -3,6 +3,7 @@
 // check if there are open positions like openPositions.length > 0
 export function checkForOpenPositions(node: any): boolean {
   if (node.data.openPositions.length > 0) {
+    // console.log('node.data: ', node.data.openPositions);
     return true;
   }
   if (node.children) {

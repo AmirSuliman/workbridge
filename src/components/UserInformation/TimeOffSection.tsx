@@ -52,7 +52,12 @@ const TimeOffSection = ({ employeeData }) => {
   const user = useSelector((state: RootState) => state.myInfo);
   const role = user?.user?.role;
 
-  useEffect(() => {}, [role, employeeData]);
+  useEffect(() => {
+    if (role && employeeData?.tittle) {
+      console.log('Role:', role);
+      console.log('Employee Title:', employeeData.tittle);
+    }
+  }, [role, employeeData]);
 
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -119,6 +124,7 @@ const TimeOffSection = ({ employeeData }) => {
         const response = await axiosInstance.get(
           `/timeoffs?employeeId=${empId}`
         );
+        console.log('empId timeoffs: ', response.data.data.items);
         setTimeOffData(response.data.data.items);
       }
       toast.success('Time off updated successfully');

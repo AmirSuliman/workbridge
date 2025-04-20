@@ -1,3 +1,5 @@
+import { DefaultUser } from 'next-auth';
+
 export namespace DataTypes {
   export type UserRole = 'SuperAdmin' | 'Admin' | 'User' | 'ViewOnly';
 
@@ -17,13 +19,6 @@ export namespace DataTypes {
     profilePictureUrl: string;
     role: UserRole;
     createdAt: string;
-  }
-
-  export interface DefaultUser {
-    id: string;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
   }
 
   export interface Company {

@@ -48,6 +48,7 @@ const EditDepartment: React.FC<EditDepartmentProps> = ({ setIsModalOpen1 }) => {
       try {
         const response = await axiosInstance.get(`/department/${id}`);
         const { name, employeeId } = response.data.data;
+        console.log('name: ', name, 'head: ', employeeId);
         setValue('name', name);
         setValue('headId', employeeId);
       } catch (error) {

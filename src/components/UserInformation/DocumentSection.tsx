@@ -122,6 +122,7 @@ const DocumentSection = ({
         const response = await fetch(doc.url);
         if (!response.ok)
           throw new Error(`PDF not found, status code: ${response.status}`);
+        console.log('PDF fetched successfully');
         setDocumentContent('');
         setIsLoading(false);
       } catch (error) {
@@ -130,6 +131,7 @@ const DocumentSection = ({
             (error as Error).message
           }`
         );
+        console.log('Error loading PDF:', error);
         setIsLoading(false);
       }
     } else if (
@@ -145,12 +147,14 @@ const DocumentSection = ({
         setIsLoading(false);
       } catch (error) {
         setError('Error loading Word document content.');
+        console.log('Error loading Word document:', error);
         setIsLoading(false);
       }
     } else {
       setDocumentContent(
         'This file type is not supported for content preview.'
       );
+      console.log('Unsupported file type:', doc.fileType);
       setIsLoading(false);
     }
   };

@@ -84,12 +84,14 @@ const HrFiles = () => {
         const response = await fetch(doc.url);
         if (!response.ok)
           throw new Error(`PDF not found, status code: ${response.status}`);
+        console.log('PDF fetched successfully');
       } catch (error) {
         setError(
           `Error loading PDF file. Please check the URL or try again. Details: ${
             (error as Error).message
           }`
         );
+        console.log('Error loading PDF:', error);
       }
     } else if (
       doc.fileType ===
@@ -101,8 +103,10 @@ const HrFiles = () => {
         );
       } catch (error) {
         setError('Error loading Word document content.');
+        console.log('Error loading Word document:', error);
       }
     } else {
+      console.log('Unsupported file type:', doc.fileType);
     }
   };
 
@@ -113,6 +117,8 @@ const HrFiles = () => {
   };
 
   const handleFileUploaded = (newFile) => {
+    console.log('New File:', newFile);
+
     // Check if size and fileType exist in the response data
     const fileWithMetadata = {
       ...newFile, // Spread the newFile object (which should already have the correct fields from the response)
@@ -165,22 +171,30 @@ const HrFiles = () => {
   }, []);
 
   const handleFileUpdate = (updatedFile: File) => {
+    // Log the updated file that was passed to the function
+    console.log('Updated File:', updatedFile);
+
     // Update the file in the active folder or global list of files
     setAllFiles((prevFiles) => {
+      console.log('Previous Files:', prevFiles); // Log the previous state of all files
       const updatedFiles = prevFiles.map((file) =>
         file.id === updatedFile.id ? { ...file, ...updatedFile } : file
       );
+      console.log('Updated Files:', updatedFiles); // Log the updated files
       return updatedFiles;
     });
 
     if (activeFolder) {
       setActiveFolder((prevFolder) => {
+        console.log('Previous Folder:', prevFolder); // Log the previous folder state
+
         if (!prevFolder) return null;
 
         // Update the file within the active folder state
         const updatedFiles = prevFolder.files.map((file) =>
           file.id === updatedFile.id ? { ...file, ...updatedFile } : file
         );
+        console.log('Updated Folder Files:', updatedFiles); // Log the updated files in the folder
 
         return { ...prevFolder, files: updatedFiles };
       });
@@ -231,6 +245,7 @@ const HrFiles = () => {
     setError(null);
     try {
       const response = await axiosInstance.get(`/files/${folder.id}`);
+      console.log('all response:', response.data.data.items);
 
       setAllFiles(response.data.data.items);
       folder.files = response.data.data.items;

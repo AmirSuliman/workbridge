@@ -61,6 +61,7 @@ export const updateNote = createAsyncThunk(
   'notes/updateNote',
   async ({ id, payload }: { id: number; payload: Partial<Note> }) => {
     const response = await axiosInstance.put(`/note/${id}`, payload);
+    console.log('thunk put res: ', response.data);
     return response.data.data;
   }
 );

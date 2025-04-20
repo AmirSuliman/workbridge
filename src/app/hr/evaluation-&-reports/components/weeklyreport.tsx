@@ -301,8 +301,10 @@ const WeeklyReport = () => {
         const response = await axiosInstance.get('/report/weekly', {
           params: { startDate, endDate },
         });
+        console.log('weekly res: ', response.data);
         setWeeklyReports(response.data.data);
       } catch (error) {
+        console.log(error);
         if (isAxiosError(error)) {
           toast.error(error.response?.data?.message || 'Some error occurred.');
         } else {

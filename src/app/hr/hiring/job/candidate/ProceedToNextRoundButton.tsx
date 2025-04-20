@@ -26,6 +26,9 @@ const ProceedToNextRoundButton = () => {
   );
 
   const stage = jobApplication.data?.items[0].stage;
+  // const isRating = jobApplication.data?.items[0].isRatting;
+
+  console.log('jobApplication: ', jobApplication.data?.items[0]);
 
   const RenderButtonText = () => {
     if (stage === 'Applied') return 'Proceed to First Round Interview';
@@ -40,7 +43,7 @@ const ProceedToNextRoundButton = () => {
   return (
     <Link
       href={`/hr/hiring/interview-process?candidate=${candidateId}&job=${jobId}`}
-      className='flex flex-row items-center gap-4 p-3 bg-[#0F172A] text-white text-[12px] rounded-lg'
+      className="flex flex-row items-center gap-4 p-3 bg-[#0F172A] text-white text-[12px] rounded-lg"
     >
       {RenderButtonText()} <FaArrowRight />{' '}
     </Link>

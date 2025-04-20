@@ -37,6 +37,8 @@ const ROLE_ACCESS = {
 };
 
 export function middleware(request: NextRequest) {
+  console.log('Middleware triggered');
+
   const pathname = request.nextUrl.pathname;
 
   // Get the token from the cookies instead of localStorage
@@ -56,6 +58,8 @@ export function middleware(request: NextRequest) {
     // Decode the JWT token
     const decoded = jwtDecode(token) as any;
     const userRole = decoded?.user?.role as UserRole | undefined;
+
+    console.log('User Role:', userRole);
 
     // Skip further processing if no role
     if (!userRole) {

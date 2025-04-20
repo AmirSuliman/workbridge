@@ -67,6 +67,7 @@ const VacationPolicies = () => {
   const handleSave = async () => {
     try {
       const response = await axiosInstance.get(`/country/${selectedCountry}`);
+      console.log(response, 'res');
       const code = response.data.data.code;
       const country = response.data.data.country;
       await axiosInstance.put(`/country/${selectedCountry}`, {
@@ -101,6 +102,7 @@ const VacationPolicies = () => {
     if (!selectedCountry) return; // Ensure country is selected
     try {
       const response = await axiosInstance.get(`/country/${selectedCountry}`);
+      console.log('API Response:', response.data);
 
       if (response.data?.data) {
         setVacationLeave(response.data.data.vacationLeaves?.toString() || '');
@@ -152,6 +154,7 @@ const VacationPolicies = () => {
 
   const deleteModal = (holidayId: number) => {
     setHolidayToDelete(holidayId);
+    console.log(holidayId, 'id');
     setIsModalOpen2(true);
   };
 

@@ -35,8 +35,11 @@ export const addUser = async (user: { isManager?: boolean } & object) => {
   try {
     const payload = {
       ...user,
-      isManager: Boolean(user.isManager),
+      isManager: Boolean(user.isManager), 
     };
+
+    console.log("Final API Payload:", payload);
+
     const response = await axiosInstance.post(API_ROUTES.CREATE_USER, payload);
     toast.success('User created Successfully!');
     return response.data;
@@ -45,3 +48,5 @@ export const addUser = async (user: { isManager?: boolean } & object) => {
     throw error;
   }
 };
+
+

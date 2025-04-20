@@ -12,6 +12,7 @@ export const getAllCandidates = async (page: number, size: number) =>
         // },
         params: { page: page, size: size },
       });
+      console.log('All Candidates:', response);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

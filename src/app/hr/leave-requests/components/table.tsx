@@ -73,6 +73,7 @@ const Table: React.FC<TableProps> = ({ filter, sort }) => {
 
         const response = await axiosInstance.get('/timeoffs', { params });
         const fetchedData = response.data.data.items || [];
+        console.log('response.data.data.items', response.data.data.items);
         setEmployeeData(fetchedData);
         setTotalItems(response.data.data.totalItems);
         setTotalPages(response.data.data.totalPages || 1);

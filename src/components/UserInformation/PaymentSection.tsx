@@ -44,8 +44,10 @@ const PaymentSection = ({ employeeId }) => {
     const fetchPayments = async () => {
       try {
         const response = await axiosInstance.get(`/payments/${employeeId}`);
+        console.log('payments res: ', response.data.data.items);
         setPayments(response.data.data.items);
       } catch (error) {
+        console.log(error);
         if (isAxiosError(error) && error.response) {
           toast.error(error.response.data.message);
         } else {
@@ -78,6 +80,7 @@ const PaymentSection = ({ employeeId }) => {
         `/payment/${paymentId}`,
         payload
       );
+      console.log('put response: ', response.data);
       toast.success('Payment updated successfully.');
 
       // Update the local state
@@ -93,6 +96,7 @@ const PaymentSection = ({ employeeId }) => {
       } else {
         toast.error('Cannot update payment.');
       }
+      console.log(error);
     }
   };
 

@@ -17,6 +17,7 @@ export const fetchSurveys = createAsyncThunk(
         associations: true,
       },
     });
+    console.log('survey response: ', response.data.data.items);
     return response.data;
   }
 );

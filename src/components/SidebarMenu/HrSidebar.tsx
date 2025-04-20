@@ -1,5 +1,6 @@
 'use client';
 
+import { getSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { FaBullhorn, FaUserCircle, FaUsers } from 'react-icons/fa';

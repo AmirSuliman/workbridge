@@ -18,8 +18,10 @@ export const loginUser = async ({
     });
     onSuccess?.();
     toast.success('Login Successful');
+    // alert('Login Successful');
     return response.data;
   } catch (error: any) {
+    console.log(error, 'error');
     toast.error(error?.response?.data?.message ?? 'Network Error');
     throw error;
   }
@@ -28,6 +30,7 @@ export const loginUser = async ({
 export const getUserRoles = async () => {
   try {
     const response = await axiosInstance.get(API_ROUTES.USER_ROLES);
+    // console.log(response, 'res of roles');
     return response.data.data;
   } catch (error: any) {
     toast.error(error?.response?.data?.message ?? 'Network Error');

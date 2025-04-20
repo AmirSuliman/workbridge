@@ -29,6 +29,8 @@ const UploadProfilePicture = () => {
           userId: Number(myId),
         })
       );
+    } else {
+      console.log('Invalid session or user ID');
     }
 
     return () => {
@@ -42,6 +44,7 @@ const UploadProfilePicture = () => {
         const file = event.target.files[0];
 
         if (!file.type.startsWith('image/')) {
+          console.log('Selected file type: ', file.type);
           return toast.error('Only image files are allowed!');
         }
         setSelectedFile(file);
@@ -67,6 +70,7 @@ const UploadProfilePicture = () => {
         },
       });
       const uploadedUrl = response.data.data.url;
+      // console.log('Uploaded URL:', uploadedUrl);
       setPreviewUrl(uploadedUrl);
       return { uploadedUrl, error: null };
     } catch (err) {
@@ -90,6 +94,10 @@ const UploadProfilePicture = () => {
       };
       const response = await axiosInstance.put('/employee/profile/my', payLoad);
 
+      console.log(
+        'Image upload response: ',
+        response.data.data.profilePictureUrl
+      );
       toast.success('Image updated successfully!');
       sessionStorage.setItem(
         'profilePictureUrl',
@@ -102,6 +110,7 @@ const UploadProfilePicture = () => {
       setLoader(false);
     } catch (error) {
       setLoader(false);
+      console.log(error);
       if (isAxiosError(error) && error.response)
         toast.error(error.response.data.message);
     }

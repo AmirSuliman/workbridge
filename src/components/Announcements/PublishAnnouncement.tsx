@@ -11,6 +11,7 @@ const PublishAnnouncement = ({ announcement }) => {
 
   const router = useRouter();
   const { id } = useParams();
+  console.log(announcement);
   const submit = async () => {
     setLoading(true);
     try {
@@ -27,8 +28,10 @@ const PublishAnnouncement = ({ announcement }) => {
       toast.success('Announcement published successfully.');
       setLoading(false);
       router.back();
+      console.log('pub res: ', response.data);
     } catch (error) {
       setLoading(false);
+      console.log(error);
       if (isAxiosError(error) && error.response) {
         toast.error(error.response.data.message || 'Some error occured.');
       }
@@ -40,13 +43,13 @@ const PublishAnnouncement = ({ announcement }) => {
       onClick={submit}
       icon={
         loading ? (
-          <BiLoaderCircle className='h-4 w-4 animate-spin mx-auto' />
+          <BiLoaderCircle className="h-4 w-4 animate-spin mx-auto" />
         ) : (
           ''
         )
       }
       name={loading ? '' : 'Publish Announcement'}
-      className='ml-auto mr-0'
+      className="ml-auto mr-0"
     />
   );
 };

@@ -7,6 +7,8 @@ import EmployeesDropdown from '../DropDowns/EmployeesDropdown';
 import FormField from './FormField';
 import FormHeading from './FormHeading';
 import InfoGrid from './InfoGrid';
+import { getSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { calculateDuration } from '@/lib/calculateDuration';
 import { useSelector } from 'react-redux';
@@ -48,7 +50,13 @@ const EmploymentSection = ({
               <p className='form-error'>{errors?.hireDate.message}</p>
             )}
           </label>
-          {!editEmployee && <FormField label='Duration' value={duration} />}
+          {!editEmployee && (
+            <FormField
+              onChange={() => console.log('')}
+              label='Duration'
+              value={duration}
+            />
+          )}
         </div>
       </div>
 

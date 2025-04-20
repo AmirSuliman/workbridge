@@ -5,6 +5,7 @@ import { fetchUserData } from '@/services/myInfo';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { authSchema } from '@/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { getSession, signIn, signOut } from 'next-auth/react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -92,6 +93,11 @@ const Auth = () => {
       setIsLoggedOut(true);
       // Remove query parameters but keep the page at /sign-in
       window.history.replaceState(null, '', '/sign-in');
+
+      // Show a toast message if needed
+      if (logoutParam === 'success') {
+        toast.success('You have been successfully logged out');
+      }
 
       setIsLoading(false);
     }
@@ -198,11 +204,7 @@ const Auth = () => {
   };
 
   if (isLoading && !isSubmitting) {
-    return (
-      <div className='fixed inset-0 flex items-center justify-center bg-transparent z-50'>
-        <BiLoaderCircle className='h-8 w-8 animate-spin text-[#0F172A]' />
-      </div>
-    );
+    return <ScreenLoader />;
   }
   return (
     <>

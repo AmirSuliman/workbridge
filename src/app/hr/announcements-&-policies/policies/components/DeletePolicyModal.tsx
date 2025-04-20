@@ -20,6 +20,7 @@ const DeletePolicyModal = ({ onClose }) => {
       setLoading(false);
       onClose();
       router.back();
+      console.log(response);
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -33,31 +34,31 @@ const DeletePolicyModal = ({ onClose }) => {
 
   return (
     <Modal onClose={onClose}>
-      <section className='p-8 min-h-80 flex flex-col'>
-        <h1 className='font-semibold text-xl my-4'>Delete</h1>
-        <p className='text-lg text-center'>
+      <section className="p-8 min-h-80 flex flex-col">
+        <h1 className="font-semibold text-xl my-4">Delete</h1>
+        <p className="text-lg text-center">
           Are you sure you want to delete this item?
         </p>
-        <p className='font-semibold text-base text-center mb-auto'>
+        <p className="font-semibold text-base text-center mb-auto">
           This action is irreversible.
         </p>
-        <div className='flex items-center gap-4 justify-center mt-4 mb-0'>
+        <div className="flex items-center gap-4 justify-center mt-4 mb-0">
           <Button
             disabled={loading}
             onClick={handleSubmit}
             name={loading ? '' : 'Confirm'}
             icon={
               loading && (
-                <BiLoaderCircle className='h-5 w-5 duration-100 animate-spin' />
+                <BiLoaderCircle className="h-5 w-5 duration-100 animate-spin" />
               )
             }
-            className='disabled:cursor-not-allowed'
+            className="disabled:cursor-not-allowed"
           />
           <Button
             onClick={onClose}
-            bg='transparent'
-            textColor='black'
-            name='Cancel'
+            bg="transparent"
+            textColor="black"
+            name="Cancel"
           />
         </div>
       </section>

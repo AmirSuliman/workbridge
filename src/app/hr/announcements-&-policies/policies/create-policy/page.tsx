@@ -32,6 +32,27 @@ const CreatePolicy = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 
+  // // Fetch user data and set myId
+  // useEffect(() => {
+  //   const fetchMyId = async () => {
+  //     if (session?.user?.accessToken) {
+  //       try {
+  //         const response = await axiosInstance.get('/user/my', {
+  //           headers: { Authorization: `Bearer ${session.user.accessToken}` },
+  //         });
+  //         const userId = response.data.data?.id;
+  //         setMyId(userId);
+  //         dispatch(setUser(response.data.data));
+  //       } catch (error) {
+  //         toast.error('Failed to load user data!');
+  //       }
+  //     } else {
+  //       toast.error('Authentication failed. Please try again.');
+  //     }
+  //   };
+  //   fetchMyId();
+  // }, [dispatch, session?.user?.accessToken]);
+
   const user = useSelector((state: RootState) => state.myInfo);
 
   const myId = user?.user?.employeeId;

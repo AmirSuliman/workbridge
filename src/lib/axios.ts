@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Session } from 'next-auth';
 import { BASE_URL } from '../constants/apiRoutes';
 
 const axiosInstance = axios.create({
@@ -8,6 +9,10 @@ const axiosInstance = axios.create({
   },
   // withCredentials: true,
 });
+
+export interface CustomSession extends Session {
+  accessToken: string;
+}
 
 axiosInstance.interceptors.request.use(
   async (config) => {

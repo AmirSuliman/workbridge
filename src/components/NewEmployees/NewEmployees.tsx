@@ -18,6 +18,7 @@ const NewEmployees = () => {
         setEmployeesState(data);
         setLoading(false);
       } catch (error) {
+        console.log(error);
         setLoading(false);
       }
     };

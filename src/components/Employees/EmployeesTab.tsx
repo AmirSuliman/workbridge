@@ -16,8 +16,8 @@ const EmployeesTab = () => {
       render: () => (
         <ProfileAvatarItem
           src={IMAGES.dummyImage.src}
-          title='Darlene Peterson'
-          subtitle='#12343'
+          title="Darlene Peterson"
+          subtitle="#12343"
         />
       ),
     },
@@ -27,7 +27,7 @@ const EmployeesTab = () => {
       title: 'Email',
       accessor: 'user.email',
       render: (value: any) => (
-        <a href={`mailto:${value}`} className='text-blue-500'>
+        <a href={`mailto:${value}`} className="text-blue-500">
           {value}
         </a>
       ),
@@ -36,12 +36,12 @@ const EmployeesTab = () => {
       title: 'Hire Date',
       accessor: 'hireDate',
       render: () => (
-        <div className='flex flex-col '>
+        <div className="flex flex-col ">
           {' '}
-          <div className='text-sm text-dark-navy font-[500]'>
+          <div className="text-sm text-dark-navy font-[500]">
             24.01.2024
           </div>{' '}
-          <div className='text-[10px] text-dark-navy font-[500]'>
+          <div className="text-[10px] text-dark-navy font-[500]">
             1 Year 4 Months{' '}
           </div>{' '}
         </div>
@@ -53,7 +53,7 @@ const EmployeesTab = () => {
       title: '',
       accessor: 'actions',
       render: () => (
-        <MdOutlineKeyboardArrowRight className='w-6 h-6 border border-gray-border rounded-sm hover:cursor-pointer hover:bg-gray-100' />
+        <MdOutlineKeyboardArrowRight className="w-6 h-6 border border-gray-border rounded-sm hover:cursor-pointer hover:bg-gray-100" />
       ),
     },
   ];
@@ -129,31 +129,31 @@ const EmployeesTab = () => {
   ];
 
   return (
-    <div className='h-full p-2 '>
+    <div className="h-full p-2 ">
       <FormHeading
-        textClasses='text-xl font-[600] font-semibold '
-        classNames='mb-4'
-        icon={<EmployeesIcon classNames='w-6' />}
-        text='Employees'
+        textClasses="text-xl font-[600] font-semibold "
+        classNames="mb-4"
+        icon={<EmployeesIcon classNames="w-6" />}
+        text="Employees"
       />
 
-      <div className='bg-white border border-gray-border rounded-md p-3 '>
+      <div className="bg-white border border-gray-border rounded-md p-3 ">
         {/* Filters Section */}
-        <div className='flex gap-3 my-3'>
+        <div className="flex gap-3 my-3">
           {' '}
-          <SearchInput placeholder='Search Employees' value='' />
-          <div className='flex gap-2  items-center'>
-            <label className='text-sm text-[#abaeb4]'>Sort</label>
-            <select className='p-2 border w-full max-w-xs border-gray-border rounded-[5px] outline-none focus:outline-none ring-0 text-xs text-dark-gray '>
+          <SearchInput placeholder="Search Employees" value="" />
+          <div className="flex gap-2  items-center">
+            <label className="text-sm text-[#abaeb4]">Sort</label>
+            <select className="p-2 border w-full max-w-xs border-gray-border rounded-[5px] outline-none focus:outline-none ring-0 text-xs text-dark-gray ">
               <option>Select</option>
               <option>Recently Added</option>
               <option>Recently Added</option>
               <option>Recently Added</option>
             </select>
           </div>
-          <div className='flex gap-2  items-center'>
-            <label className='text-sm text-[#abaeb4]'>Filter</label>
-            <select className='p-2 border w-full max-w-xs border-gray-border rounded-[5px] outline-none focus:outline-none ring-0 text-xs text-dark-gray '>
+          <div className="flex gap-2  items-center">
+            <label className="text-sm text-[#abaeb4]">Filter</label>
+            <select className="p-2 border w-full max-w-xs border-gray-border rounded-[5px] outline-none focus:outline-none ring-0 text-xs text-dark-gray ">
               <option>Select</option>
               <option>Recently Added</option>
               <option>Recently Added</option>
@@ -165,7 +165,18 @@ const EmployeesTab = () => {
           headers={headers}
           values={Tvalues}
           tableConfig={{ rowBorder: true, selectable: true }}
+
+          // cols={6}
+          // colSpans={[1, 1, 1, 1, 1]}
+          // tableConfig={{ selectable: false, rowBorder: false }}
+          // onSelectionChange={(selectedRows) => console.log(selectedRows)}
         />
+        {/* <InfoGrid
+                    headers={["Employee ID", "Job Title", "Department", "Email", "Hire Date", ""]}
+                    values={values}
+                    cols={6}
+                    colSpans={[1, 1, 1, 1, 1, 1]}
+                /> */}
       </div>
     </div>
   );

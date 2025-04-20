@@ -11,6 +11,7 @@ const Evaluationform = () => {
   const searchParams = useSearchParams();
   const surveyType = searchParams.get('surveyType'); 
 
+  console.log(surveyType, 'surveyType');
 
   return (
     <main className="p-6">
