@@ -1,11 +1,12 @@
 'use client';
 import InputField from '@/components/common/InputField';
+import ScreenLoader from '@/components/common/ScreenLoader';
 import EyeIcon from '@/components/icons/eye-icon';
+import axiosInstance from '@/lib/axios';
 import { fetchUserData } from '@/services/myInfo';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { authSchema } from '@/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getSession, signIn, signOut } from 'next-auth/react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -18,8 +19,6 @@ import { useDispatch } from 'react-redux';
 import { z } from 'zod';
 import Footer from './footer';
 import Navbar from './nav';
-import ScreenLoader from '@/components/common/ScreenLoader';
-import axiosInstance from '@/lib/axios';
 
 type AuthFormInputs = z.infer<typeof authSchema>;
 
@@ -58,7 +57,7 @@ const Auth = () => {
   }, []);
 
   const handleRedirect = useCallback(
-    (userData: any, token: string) => {
+    (userData: any) => {
       if (userData?.firstTime) {
         router.replace('/update-password');
         return;
@@ -94,7 +93,6 @@ const Auth = () => {
       // Remove query parameters but keep the page at /sign-in
       window.history.replaceState(null, '', '/sign-in');
 
-      // Show a toast message if needed
       if (logoutParam === 'success') {
         toast.success('You have been successfully logged out');
       }
@@ -125,7 +123,7 @@ const Auth = () => {
             if (!isMounted) return;
 
             dispatch(setUser(userData));
-            handleRedirect(userData, token);
+            handleRedirect(userData);
             setIsLoading(false);
           } catch (error) {
             // Token invalid - just continue to login page
@@ -184,7 +182,7 @@ const Auth = () => {
         try {
           const userData = await fetchUserData(accessToken);
           dispatch(setUser(userData));
-          handleRedirect(userData, accessToken);
+          handleRedirect(userData);
         } catch (error) {
           console.error('Error fetching user data:', error);
           toast.error(

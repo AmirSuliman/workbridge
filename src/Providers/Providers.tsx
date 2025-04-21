@@ -7,14 +7,12 @@ import { AuthProvider } from './AuthProvider';
 
 const Providers: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    // <SessionProvider>
     <ReduxProvider store={store}>
       <AuthProvider>
         {children}
         <Toaster position='top-right' reverseOrder={false} gutter={12} />
       </AuthProvider>
     </ReduxProvider>
-    // </SessionProvider>
   );
 };
 

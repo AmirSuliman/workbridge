@@ -1,10 +1,10 @@
 // providers/AuthProvider.tsx
 'use client';
-import { createContext, useContext, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { fetchUserData } from '@/services/myInfo';
 import { setUser } from '@/store/slices/myInfoSlice';
 import { useRouter } from 'next/navigation';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 export const AuthContext = createContext({});
 
